@@ -56,9 +56,7 @@
         >
             <div class="flex h-16 items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
                 <div class="flex items-center gap-2">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 shadow-lg shadow-blue-500/20 text-white font-bold">
-                        G
-                    </div>
+                    <img src="{{ asset('images/logo.png') }}" class="h-9 w-9 object-contain rounded-xl bg-slate-100 dark:bg-slate-800 p-0.5" alt="Logo">
                     <h2 class="text-lg font-black">پنل مدیریت</h2>
                 </div>
                 <button @click="mobileMenu = false" class="lg:hidden text-slate-500 p-2 hover:text-rose-500 transition-colors">
@@ -70,33 +68,38 @@
                 @php
                     $links = [
                         ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard'],
-                        ['r' => 'admin.sources', 'l' => 'منابع دریافت API', 'i' => 'rss'],
+                        ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],
+                        ['r' => 'admin.sources', 'l' => 'منابع دریافت API', 'i' => 'rss', 'super_only' => true],
                         ['r' => 'admin.formulas', 'l' => 'فرمول‌های محاسبه', 'i' => 'variable'],
-                        ['r' => 'admin.display-items', 'l' => 'آیتم‌های تابلوی طلا', 'i' => 'list-checks'],
                         ['r' => 'admin.products.index', 'l' => 'ویترین طلا (اسلایدر)', 'i' => 'gem'],
                         ['r' => 'admin.display-control', 'l' => 'تنظیمات پوسته و نمایش', 'i' => 'sliders-horizontal'],
-                        ['r' => 'admin.logs', 'l' => 'گزارشات سیستم', 'i' => 'file-text'],
+                        ['r' => 'admin.logs', 'l' => 'گزارشات سیستم', 'i' => 'file-text', 'super_only' => true],
                     ];
                 @endphp
                 @foreach($links as $link)
-                    <a href="{{ route($link['r']) }}"
-                       class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all
-                              {{ request()->routeIs($link['r'] . '*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <i data-lucide="{{ $link['i'] }}" class="w-5 h-5"></i>
-                        <span>{{ $link['l'] }}</span>
-                    </a>
+                    @if(!isset($link['super_only']) || auth()->user()->is_super_admin)
+                        <a href="{{ route($link['r']) }}"
+                           class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all
+                                  {{ request()->routeIs($link['r'] . '*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                            <i data-lucide="{{ $link['i'] }}" class="w-5 h-5"></i>
+                            <span>{{ $link['l'] }}</span>
+                        </a>
+                    @endif
                 @endforeach
             </nav>
 
             <div class="p-4 border-t border-slate-200 dark:border-slate-800">
-                <div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/50">
-                    <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                        {{ substr(auth()->user()->name, 0, 1) }}
+                <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/50">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                            {{ mb_substr(auth()->user()->name, 0, 1, 'UTF-8') }}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold truncate">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] opacity-60 uppercase font-black tracking-wider text-slate-500 dark:text-slate-400">Administrator</p>
+                        </div>
                     </div>
-                    <div class="min-w-0">
-                        <p class="text-sm font-bold truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-[10px] opacity-60 uppercase font-black tracking-wider text-slate-500 dark:text-slate-400">Administrator</p>
-                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 self-end select-none">v2.1.4</span>
                 </div>
             </div>
         </aside>

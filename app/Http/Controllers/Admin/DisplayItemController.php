@@ -13,7 +13,7 @@ class DisplayItemController extends Controller
      */
     public function index()
     {
-        $items = DisplayItem::orderBy('order')->get();
+        $items = DisplayItem::where('user_id', auth()->id())->orderBy('order')->get();
 
         if (request()->expectsJson()) {
             return response()->json($items);
@@ -36,12 +36,12 @@ class DisplayItemController extends Controller
         ]);
 
         foreach ($data['items'] as $item) {
-            DisplayItem::where('key', $item['key'])->update([
+            DisplayItem::where('user_id', auth()->id())->where('key', $item['key'])->update([
                 'enabled' => $item['enabled'],
                 'order'   => $item['order'],
             ]);
         }
 
-        return response()->json(DisplayItem::orderBy('order')->get());
+        return response()->json(DisplayItem::where('user_id', auth()->id())->orderBy('order')->get());
     }
 }

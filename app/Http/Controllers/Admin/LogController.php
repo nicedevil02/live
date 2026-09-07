@@ -12,6 +12,10 @@ class LogController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->is_super_admin) {
+            abort(403, 'شما دسترسی به این بخش را ندارید.');
+        }
+
         $logs = AuditLog::latest('created_at')->limit(100)->get();
 
         if (request()->expectsJson()) {

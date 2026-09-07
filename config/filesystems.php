@@ -74,7 +74,9 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        (filter_var(env('USE_PUBLIC_HTML', false), FILTER_VALIDATE_BOOL) || env('APP_ENV') === 'production'
+            ? base_path('public_html/storage')
+            : base_path('public/storage')) => storage_path('app/public'),
     ],
 
 ];

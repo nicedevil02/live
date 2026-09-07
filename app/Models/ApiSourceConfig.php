@@ -19,10 +19,12 @@ class ApiSourceConfig extends Model
         'last_latency_ms',
         'last_checked_at',
         'last_error',
+        'last_logs',
     ];
     protected $casts = [
         'fallback_urls' => 'array',
         'is_active' => 'boolean',
         'last_checked_at' => 'datetime',
+        'last_logs' => 'array',
     ];
 }

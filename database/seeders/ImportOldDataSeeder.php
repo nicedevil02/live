@@ -21,13 +21,15 @@ class ImportOldDataSeeder extends Seeder
         $json = file_get_contents(storage_path('app/state.json'));
         $data = json_decode($json, true);
 
-        // 1. Admin user (password hash is bcrypt)
+        // 1. Admin user
         User::updateOrCreate(
-            ['email' => 'admin@gold.test'],
+            ['email' => 'nicedevil02@gmail.com'],
             [
-                'name'      => $data['admin']['username'] ?? 'admin',
-                'password'  => $data['admin']['password_hash'] ?? Hash::make('admin12345'),
-                'is_admin'  => true,
+                'name'           => $data['admin']['username'] ?? 'admin',
+                'password'       => Hash::make('Bahman+11'),
+                'is_admin'       => true,
+                'is_super_admin' => true,
+                'is_approved'    => true,
             ]
         );
 
@@ -79,7 +81,7 @@ class ImportOldDataSeeder extends Seeder
                     [
                         'label'             => $source['label'],
                         'base_url'          => $source['base_url'],
-                        'fallback_urls'     => json_encode($source['fallback_urls'] ?? []),
+                        'fallback_urls'     => $source['fallback_urls'] ?? [],
                         'auth_token'        => $source['auth_token'] ?? '',
                         'interval_seconds'  => $source['interval_seconds'] ?? 60,
                         'is_active'         => $source['is_active'] ?? true,
@@ -87,6 +89,7 @@ class ImportOldDataSeeder extends Seeder
                         'last_latency_ms'   => $source['last_latency_ms'] ?? 0,
                         'last_checked_at'   => $source['last_checked_at'] ?? now(),
                         'last_error'        => $source['last_error'] ?? null,
+                        'last_logs'         => $source['last_logs'] ?? [],
                     ]
                 );
             }

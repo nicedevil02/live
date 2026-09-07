@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
-        $products = ProductSlide::with('images')->latest()->get();
+        $products = ProductSlide::where('user_id', auth()->id())->with('images')->latest()->get();
 
         // اگر درخواست JSON بود (برای Alpine.js)
         if (request()->wantsJson()) {
@@ -43,6 +43,7 @@ class ProductController extends Controller
 
         $product = ProductSlide::create([
             'id'              => 'p-' . now()->timestamp . rand(10, 99),
+            'user_id'         => auth()->id(),
             'title'           => $data['title'],
             'weight_gram'     => $data['weight_gram'],
             'labor_fee'       => 0,
@@ -75,7 +76,7 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        $product = ProductSlide::findOrFail($id);
+        $product = ProductSlide::where('user_id', auth()->id())->findOrFail($id);
         $data = $request->validate([
             'title'        => 'sometimes|string',
             'weight_gram'  => 'sometimes|numeric',
@@ -97,14 +98,14 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = ProductSlide::findOrFail($id);
+        $product = ProductSlide::where('user_id', auth()->id())->findOrFail($id);
         $product->delete();
         return response()->json(['ok' => true]);
     }
 
     public function addImageUrl(Request $request, $id)
     {
-        $product = ProductSlide::findOrFail($id);
+        $product = ProductSlide::where('user_id', auth()->id())->findOrFail($id);
         $img = $product->images()->create([
             'id' => 'img-' . uniqid(),
             'url' => $request->url,
@@ -119,7 +120,7 @@ class ProductController extends Controller
         $request->validate([
             'image' => 'required|image|max:2048'
         ]);
-        $product = ProductSlide::findOrFail($id);
+        $product = ProductSlide::where('user_id', auth()->id())->findOrFail($id);
         $path = $request->file('image')->store('products', 'public');
         $img = $product->images()->create([
             'id' => 'img-' . uniqid(),
@@ -132,7 +133,9 @@ class ProductController extends Controller
 
     public function deleteImage($id, $imageId)
     {
-        $img = ProductImage::where('product_id', $id)->where('id', $imageId)->firstOrFail();
+        $img = ProductImage::whereHas('product', function($query) {
+            $query->where('user_id', auth()->id());
+        })->where('product_id', $id)->where('id', $imageId)->firstOrFail();
         if (str_contains($img->url, '/storage/')) {
             Storage::disk('public')->delete(str_replace('/storage/', '', $img->url));
         }

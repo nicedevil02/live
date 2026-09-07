@@ -3,7 +3,10 @@
 @section('title', 'مدیریت ویترین (اسلایدر)')
 
 @section('content')
-<div x-data="productsManager" class="space-y-6">
+<div x-data="productsManager"
+     @product-created.window="handleCreated($event.detail)"
+     @product-edited.window="handleEdited($event.detail)"
+     class="space-y-6">
     {{-- Toast Notification --}}
     <div x-show="toast.show" x-transition
          :class="toast.type === 'success'

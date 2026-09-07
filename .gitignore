@@ -24,3 +24,19 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Server / cPanel backups & environment files
+/etc/
+/logs/
+/lscache/
+/mail/
+/ssl/
+/tmp/
+/www/
+/public_ftp/
+/public_html/
+/scratch/
+/core/
+.bash*
+*.zip
+

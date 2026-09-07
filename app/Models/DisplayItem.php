@@ -8,6 +8,7 @@ class DisplayItem extends Model
 {
     protected $table = 'display_items';
     protected $fillable = [
+        'user_id',
         'key',
         'label',
         'enabled',

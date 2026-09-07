@@ -15,7 +15,7 @@ class FormulaController extends Controller
     {
         // فقط یک رکورد در جدول داریم
         $formula = FormulaConfig::firstOrCreate(
-            ['id' => 1],
+            ['user_id' => auth()->id()],
             ['buy_multiplier_a' => 740, 'buy_divisor_b' => 750]
         );
 
@@ -40,7 +40,7 @@ class FormulaController extends Controller
             'buy_divisor_b'    => 'required|numeric|gt:0',
         ]);
 
-        $formula = FormulaConfig::firstOrFail();
+        $formula = FormulaConfig::where('user_id', auth()->id())->firstOrFail();
         $formula->update($validated);
 
         return response()->json($formula);
@@ -53,7 +53,7 @@ class FormulaController extends Controller
     public function global18kPreview()
     {
         $service = resolve(\App\Services\MarketService::class);
-        $feed = collect($service->getPriceFeed())->keyBy('symbol');
+        $feed = collect($service->getPriceFeed(auth()->user()))->keyBy('symbol');
 
         $ouncePrice = $feed->get('ounce')['value'] ?? 0;
         $usdRate    = $feed->get('usd')['value'] ?? 0;
@@ -64,7 +64,7 @@ class FormulaController extends Controller
             ? round(($ouncePrice * $usdRate * 0.75) / 31.1035)
             : 0;
 
-        $formula = FormulaConfig::first();
+        $formula = FormulaConfig::where('user_id', auth()->id())->first();
         $buyGold = ($gold18Tablo * $formula->buy_multiplier_a) / $formula->buy_divisor_b;
 
         return response()->json([

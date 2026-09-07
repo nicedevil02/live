@@ -14,6 +14,10 @@ class SourceController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->is_super_admin) {
+            abort(403, 'شما دسترسی به این بخش را ندارید.');
+        }
+
         $sources = ApiSourceConfig::all();
 
         $today = now()->format('Y-m-d');
@@ -37,6 +41,10 @@ class SourceController extends Controller
      */
     public function update(Request $request, $key)
     {
+        if (!auth()->user()->is_super_admin) {
+            abort(403, 'شما دسترسی به این بخش را ندارید.');
+        }
+
         $source = ApiSourceConfig::where('key', $key)->firstOrFail();
 
         $validated = $request->validate([
@@ -50,7 +58,7 @@ class SourceController extends Controller
         $source->update([
             'base_url'         => $validated['base_url'],
             'interval_seconds' => $validated['interval_seconds'],
-            'fallback_urls'    => json_encode($validated['fallback_urls'] ?? []),
+            'fallback_urls'    => $validated['fallback_urls'] ?? [],
             'auth_token'       => $validated['auth_token'] ?? '',
             'is_active'        => $request->boolean('is_active', $source->is_active),
             'last_checked_at'  => now(),
@@ -73,25 +81,23 @@ class SourceController extends Controller
     /**
      * تست ارتباط با یک منبع
      */
-    public function test($key)
+    public function test(\App\Services\MarketService $marketService, $key)
     {
+        if (!auth()->user()->is_super_admin) {
+            abort(403, 'شما دسترسی به این بخش را ندارید.');
+        }
+
         $source = ApiSourceConfig::where('key', $key)->firstOrFail();
 
-        // این بخش بعداً توسط MarketService تکمیل می‌شود
-        // فعلاً یک پاسخ موفقیت‌آمیز شبیه‌سازی می‌کنیم
-        $latency = rand(80, 400);
-
-        $source->update([
-            'last_status'     => 'ok',
-            'last_latency_ms' => $latency,
-            'last_checked_at' => now(),
-        ]);
+        $marketService->fetchFromGenericApi($source);
+        $source->refresh();
 
         return response()->json([
-            'success'    => true,
-            'latency_ms' => $latency,
-            'checked_at' => now()->toISOString(),
-            'status'     => 'ok',
+            'success'    => $source->last_status === 'ok',
+            'latency_ms' => $source->last_latency_ms ?? 0,
+            'checked_at' => $source->last_checked_at?->toISOString() ?? now()->toISOString(),
+            'status'     => $source->last_status,
+            'error'      => $source->last_error,
         ]);
     }
 }

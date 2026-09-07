@@ -14,20 +14,23 @@ class DisplaySettingController extends Controller
      */
     public function index()
     {
-        $settings = DisplaySetting::firstOrCreate(['id' => 1], [
+        $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()], [
             'theme_mode' => 'dark-glass',
             'slider_interval_sec' => 8,
             'show_weight' => true,
             'show_labor' => true,
             'show_profit' => true,
-            'shop_name' => 'گالری طلای سجاد',
+            'shop_name' => auth()->user()->name ?? 'گالری طلای جدید',
             'phone' => '',
             'instagram' => '',
             'rubika' => '',
+            'qr_link' => '',
+            'qr_label' => '',
+            'qr_desc' => '',
             'published_at' => null,
         ]);
 
-        $items = DisplayItem::orderBy('order')->get();
+        $items = DisplayItem::where('user_id', auth()->id())->orderBy('order')->get();
 
         // پاسخ JSON برای درخواست‌های Alpine
         if (request()->expectsJson()) {
@@ -40,12 +43,9 @@ class DisplaySettingController extends Controller
         return view('admin.display-control.index', compact('settings', 'items'));
     }
 
-    /**
-     * به‌روزرسانی تنظیمات
-     */
     public function update(Request $request)
     {
-        $settings = DisplaySetting::firstOrFail();
+        $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()]);
 
         $validated = $request->validate([
             'theme_mode'          => 'required|string',
@@ -57,7 +57,19 @@ class DisplaySettingController extends Controller
             'phone'               => 'nullable|string|max:20',
             'instagram'           => 'nullable|string|max:255',
             'rubika'              => 'nullable|string|max:255',
+            'qr_link'             => 'nullable|string|max:1000',
+            'qr_label'            => 'nullable|string|max:255',
+            'qr_desc'             => 'nullable|string|max:255',
         ]);
+
+        // تبدیل مقادیر نال شده به رشته‌های خالی یا پیش‌فرض جهت هماهنگی با قیدهای پایگاه‌داده (NOT NULL)
+        $validated['shop_name'] = $validated['shop_name'] ?? 'گالری طلای جدید';
+        $validated['phone'] = $validated['phone'] ?? '';
+        $validated['instagram'] = $validated['instagram'] ?? '';
+        $validated['rubika'] = $validated['rubika'] ?? '';
+        $validated['qr_link'] = $validated['qr_link'] ?? '';
+        $validated['qr_label'] = $validated['qr_label'] ?? '';
+        $validated['qr_desc'] = $validated['qr_desc'] ?? '';
 
         $settings->update($validated);
 
@@ -69,7 +81,7 @@ class DisplaySettingController extends Controller
      */
     public function publish()
     {
-        $settings = DisplaySetting::firstOrFail();
+        $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()]);
         $settings->published_at = now();
         $settings->save();
 

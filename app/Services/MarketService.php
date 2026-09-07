@@ -15,18 +15,21 @@ class MarketService
 {
     protected int $timeout = 15;
 
-    public function refreshIfStale(int $maxAgeSeconds = 60): bool
+    public function refreshIfStale(?int $maxAgeSeconds = null): bool
     {
+        if ($maxAgeSeconds === null) {
+            $hour = now('Asia/Tehran')->hour;
+            $maxAgeSeconds = ($hour >= 9 && $hour < 22) ? 10 : 60;
+        }
+
         return Cache::lock('market_fetch_lock', 30)->get(function () use ($maxAgeSeconds) {
             $lastFetch = $this->getLastFetchTime();
-
             if ($lastFetch && now()->diffInSeconds($lastFetch) <= $maxAgeSeconds) {
                 return false;
             }
 
             $this->fetchAndCache();
             Cache::put('market_last_fetch_at', now()->toISOString(), 3600);
-
             return true;
         }) ?: false;
     }
@@ -34,11 +37,7 @@ class MarketService
     protected function getLastFetchTime(): ?Carbon
     {
         $lastFetchRaw = Cache::get('market_last_fetch_at');
-
-        if (!$lastFetchRaw) {
-            return null;
-        }
-
+        if (!$lastFetchRaw) return null;
         try {
             return Carbon::parse($lastFetchRaw);
         } catch (\Exception $e) {
@@ -47,321 +46,632 @@ class MarketService
         }
     }
 
-    /**
-     * دریافت و ذخیره‌سازی قیمت‌ها از منابع فعال
-     */
     public function fetchAndCache(): void
     {
-        $sources = ApiSourceConfig::where('is_active', true)->get();
+        // ۱. واکشی منبع اصلی (کانال بله talaliveir)
+        $balePrimaryConfig = ApiSourceConfig::where('key', 'bale_channel')->first();
+        $primarySuccess = false;
 
-        if ($sources->isEmpty()) {
-            $this->markAllStale();
-            return;
+        if (!$balePrimaryConfig || $balePrimaryConfig->is_active) {
+            $primarySuccess = $this->fetchFromBalePrimary($balePrimaryConfig);
         }
 
-        // ثبت شروع عملیات در لاگ برای نمایش در پنل ادمین
-        AuditLog::create([
-            'id' => (string) Str::uuid(),
-            'actor' => 'system',
-            'action' => 'schedule_work_run',
-            'entity_type' => 'scheduler',
-            'entity_id' => 'market_fetcher',
-            'payload' => ['message' => 'شروع عملیات دریافت خودکار قیمت‌ها (Schedule)'],
-            'created_at' => now(),
-        ]);
-
-        foreach ($sources as $source) {
-            $this->fetchFromSource($source);
-        }
-    }
-
-    /**
-     * دریافت از یک منبع مشخص
-     */
-    protected function fetchFromSource(ApiSourceConfig $source): void
-    {
-        $started = now();
-        $fallback = $source->fallback_urls;
-
-        // تبدیل fallback_urls به آرایه (اگر رشته‌ی JSON باشد)
-        if (is_string($fallback)) {
-            $fallback = json_decode($fallback, true);
-        }
-        if (!is_array($fallback)) {
-            $fallback = [];
-        }
-
-        $urls = array_values(array_filter(array_merge([$source->base_url], $fallback)));
-
-        foreach ($urls as $url) {
-            $urlStarted = now();
-            // record attempt
-            AuditLog::create([
-                'id' => (string) Str::uuid(),
-                'actor' => 'system',
-                'action' => 'api_request_attempt',
-                'entity_type' => 'api_source',
-                'entity_id' => $source->id,
-                'payload' => [
-                    'key' => $source->key,
-                    'url' => $url,
-                    'started_at' => $urlStarted->toISOString(),
-                ],
-                'created_at' => now(),
-            ]);
-
-            try {
-                $response = Http::withOptions(['verify' => false])
-                    ->connectTimeout(10)
-                    ->timeout($this->timeout)
-                    ->retry(2, 1000)
-                    ->withHeaders($source->auth_token ? ['Authorization' => "Bearer {$source->auth_token}"] : [])
-                    ->get($url);
-
-                if ($response->successful()) {
-                    $payload = $response->json();
-                    if (empty($payload)) {
-                        throw new \Exception('Empty payload');
-                    }
-                    $this->updateCacheFromPayload($payload);
-
-                    $lat = now()->diffInMilliseconds($urlStarted);
-
-                    // record success
-                    AuditLog::create([
-                        'id' => (string) Str::uuid(),
-                        'actor' => 'system',
-                        'action' => 'api_request_success',
-                        'entity_type' => 'api_source',
-                        'entity_id' => $source->id,
-                        'payload' => [
-                            'key' => $source->key,
-                            'url' => $url,
-                            'status' => $response->status(),
-                            'latency_ms' => $lat,
-                            'body_preview' => Str::limit($response->body(), 1000),
-                        ],
-                        'created_at' => now(),
-                    ]);
-
-                    $source->update([
-                        'last_status'     => 'ok',
-                        'last_latency_ms' => $lat,
-                        'last_checked_at' => now(),
-                        'last_error'      => null,
-                    ]);
-                    return;
+        // ۲. در صورت بروز خطا در منبع اصلی، استفاده از فال‌بک اضطراری (کانال بله talanerkh)
+        if (!$primarySuccess) {
+            $baleBackupConfig = ApiSourceConfig::where('key', 'bale_backup')->first();
+            if (!$baleBackupConfig || $baleBackupConfig->is_active) {
+                $backupRates = $this->fetchFromBaleBackup($baleBackupConfig);
+                if ($backupRates) {
+                    $this->updateCacheFromBaleBackup($backupRates);
                 }
-
-                \Illuminate\Support\Facades\Log::warning('Market API returned non-success status', [
-                    'source' => $source->key,
-                    'url' => $url,
-                    'status' => $response->status(),
-                    'body' => Str::limit($response->body(), 200),
-                ]);
-
-                // record non-success
-                AuditLog::create([
-                    'id' => (string) Str::uuid(),
-                    'actor' => 'system',
-                    'action' => 'api_request_non_success',
-                    'entity_type' => 'api_source',
-                    'entity_id' => $source->id,
-                    'payload' => [
-                        'key' => $source->key,
-                        'url' => $url,
-                        'status' => $response->status(),
-                        'body_preview' => Str::limit($response->body(), 1000),
-                    ],
-                    'created_at' => now(),
-                ]);
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::warning('Market API fetch failed', [
-                    'source' => $source->key,
-                    'url' => $url,
-                    'error' => $e->getMessage(),
-                ]);
-
-                // record failure
-                AuditLog::create([
-                    'id' => (string) Str::uuid(),
-                    'actor' => 'system',
-                    'action' => 'api_request_failed',
-                    'entity_type' => 'api_source',
-                    'entity_id' => $source->id,
-                    'payload' => [
-                        'key' => $source->key,
-                        'url' => $url,
-                        'error' => $e->getMessage(),
-                        'latency_ms' => now()->diffInMilliseconds($urlStarted),
-                    ],
-                    'created_at' => now(),
-                ]);
             }
         }
 
-        // همهٔ URLها ناموفق
-        $source->update([
-            'last_status'     => 'error',
-            'last_latency_ms' => now()->diffInMilliseconds($started),
-            'last_checked_at' => now(),
-            'last_error'      => 'All URLs failed',
-        ]);
-        $this->markAllStale();
+        // ۳. واکشی تتر از زیپودو (Zipodo)
+        $usdtConfig = ApiSourceConfig::where('key', 'usdt')->first();
+        if (!$usdtConfig || $usdtConfig->is_active) {
+            $this->fetchUsdt($usdtConfig);
+        }
+    }
+
+    public function fetchFastMovingPrices(): void
+    {
+        // دریافت پرسرعت تتر از زیپودو
+        $usdtConfig = ApiSourceConfig::where('key', 'usdt')->first();
+        if (!$usdtConfig || $usdtConfig->is_active) {
+            $this->fetchUsdt($usdtConfig);
+        }
+    }
+
+    public function fetchFromGenericApi(ApiSourceConfig $source): void
+    {
+        if ($source->key === 'bale_channel') {
+            $this->fetchFromBalePrimary($source);
+        } elseif ($source->key === 'bale_backup') {
+            $backupRates = $this->fetchFromBaleBackup($source);
+            if ($backupRates) {
+                $this->updateCacheFromBaleBackup($backupRates);
+            }
+        } elseif ($source->key === 'usdt') {
+            $this->fetchUsdt($source);
+        }
     }
 
     /**
-     * استخراج قیمت‌ها از ساختار API و ذخیره در market_cache
+     * واکشی و پارس منبع اصلی از کانال بله تالالایو (talaliveir)
      */
-    protected function updateCacheFromPayload(array $payload): void
+    public function fetchFromBalePrimary(?ApiSourceConfig $config = null): bool
     {
-        $allItems = array_merge(
-            $payload['gold'] ?? [],
-            $payload['currency'] ?? [],
-            $payload['cryptocurrency'] ?? []
-        );
-
-        // استخراج زمان از اولین آیتم موجود در پکیج جی‌سان
-        $apiTime = null;
-        if (!empty($allItems)) {
-            $firstItem = $allItems[0];
-            if (isset($firstItem['time'])) {
-                $apiTime = $firstItem['time'];
-                Cache::put('market_api_last_time', $apiTime, 3600);
-            }
+        $url = $config ? $config->base_url : 'https://ble.ir/s/talaliveir';
+        if ($config && !$config->is_active) {
+            return false;
         }
 
-        $map = [
-            'IR_GOLD_18K' => 'gold18', 'IR_GOLD_24K' => 'gold24', 'IR_GOLD_MELTED' => 'mesghal17',
-            'XAUUSD' => 'ounce', 'IR_COIN_1G' => 'coin_gerami', 'IR_COIN_QUARTER' => 'coin_rob',
-            'IR_COIN_HALF' => 'coin_nim', 'IR_COIN_EMAMI' => 'coin_emami', 'IR_COIN_BAHAR' => 'coin_bahar',
-            'USDT_IRT' => 'usdt', 'USD' => 'usd', 'EUR' => 'euro', 'AED' => 'dirham',
-            'BTC' => 'bitcoin',
+        try {
+            $start = microtime(true);
+            $response = Http::retry(3, 2000)->withOptions(['verify' => false])->timeout($this->timeout)->get($url);
+            $latency = (int) round((microtime(true) - $start) * 1000);
+
+            if (!$response->successful()) {
+                if ($config) {
+                    $errStr = 'Status: ' . $response->status();
+                    $config->update([
+                        'last_status' => 'error',
+                        'last_checked_at' => now(),
+                        'last_error' => $errStr,
+                    ]);
+                    $this->logFetchResult($config, 'error', "خطا: کد وضعیت " . $response->status());
+                }
+                return false;
+            }
+
+            $html = $response->body();
+            $parsedRates = $this->parseBalePrimaryContent($html);
+
+            if (empty($parsedRates)) {
+                if ($config) {
+                    $config->update([
+                        'last_status' => 'error',
+                        'last_checked_at' => now(),
+                        'last_error' => 'الگوی پیام‌های بازار در محتوای کانال یافت نشد',
+                    ]);
+                    $this->logFetchResult($config, 'error', 'خطا: الگوی تابلوی نرخ در کانال یافت نشد');
+                }
+                return false;
+            }
+
+            // ذخیره مقادیر استخراج‌شده در کش و دیتابیس
+            $this->saveParsedPrimaryRates($parsedRates);
+
+            if ($config) {
+                $config->update([
+                    'last_status' => 'ok',
+                    'last_latency_ms' => $latency,
+                    'last_checked_at' => now(),
+                    'last_error' => null,
+                ]);
+                $this->logFetchResult($config, 'ok', "دریافت موفق از کانال تالالایو در {$latency}ms");
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            \Log::warning('Fetch from Bale Primary (talaliveir) failed: ' . $e->getMessage());
+            if ($config) {
+                $config->update([
+                    'last_status' => 'error',
+                    'last_checked_at' => now(),
+                    'last_error' => $e->getMessage(),
+                ]);
+                $this->logFetchResult($config, 'error', 'خطا: ' . $e->getMessage());
+            }
+            return false;
+        }
+    }
+
+    /**
+     * پارس کردن محتوای کانال اصلی تالالایو بر اساس ساختار ربات
+     */
+    public function parseBalePrimaryContent(string $html): array
+    {
+        // پیدا کردن موقعیت آخرین پیام تابلوی نرخ
+        $pos = mb_strrpos($html, 'تابلوی_نرخ');
+        if ($pos === false) {
+            $pos = mb_strrpos($html, 'talalive_ir');
+        }
+        if ($pos === false) {
+            $pos = mb_strrpos($html, 'talaliveir');
+        }
+
+        if ($pos === false) {
+            return [];
+        }
+
+        // استخراج بخش پیام و تبدیل کدهای یونیکد و تگ‌های HTML
+        $subHtml = mb_substr($html, max(0, $pos - 200), 5000);
+        $decoded = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($m) {
+            return mb_chr(hexdec($m[1]), 'UTF-8');
+        }, $subHtml);
+
+        $text = strip_tags($decoded);
+        $cleanText = $this->convertPersianDigitsToEnglish($text);
+        // یکسان‌سازی علامت دونقطه فارسی و تمام‌پهنا
+        $cleanText = str_replace(['：', '︓'], ':', $cleanText);
+
+        $mappings = [
+            'mesghal17'    => '/(?:مظنه|آبشده|مثقال)(?:\s*(?:طلا|اتحادیه|۱۷|17))*\s*:\D*([\d,\.]+)/iu',
+            'raw_gold18'   => '/(?:طلای\s*18\s*عیار|گرم\s*18)\s*:\D*([\d,\.]+)/iu',
+            'raw_gold24'   => '/(?:طلای\s*24\s*عیار|گرم\s*24)\s*:\D*([\d,\.]+)/iu',
+            'ounce'        => '/(?:انس|اونس)(?:\s*(?:جهانی|طلا))*\s*:\D*([\d,\.]+)/iu',
+            'coin_emami'   => '/(?:سکه\s*)?امامی\s*:\D*([\d,\.]+)/iu',
+            'coin_bahar'   => '/(?:سکه\s*)?(?:بهار\s*آزادی|طرح\s*قدیم|قدیم)\s*:\D*([\d,\.]+)/iu',
+            'coin_nim'     => '/(?:سکه\s*)?نیم(?:\s*سکه)?\s*:\D*([\d,\.]+)/iu',
+            'coin_rob'     => '/(?:سکه\s*)?ربع(?:\s*سکه)?\s*:\D*([\d,\.]+)/iu',
+            'coin_gerami'  => '/(?:سکه\s*)?گرمی(?:\s*سکه)?\s*:\D*([\d,\.]+)/iu',
+            'usd'          => '/دلار(?:\s*(?:نقدی|سبزه|هرات|تهران|آزاد))*\s*:\D*([\d,\.]+)/iu',
+            'euro'         => '/یورو\s*:\D*([\d,\.]+)/iu',
+            'dirham'       => '/درهم\s*:\D*([\d,\.]+)/iu',
+            'bitcoin'      => '/بیت\s*[\x{200c}\x{200d}]?کوین\s*:\D*([\d,\.]+)/iu',
         ];
 
-        foreach ($allItems as $item) {
-            $symbol = $item['symbol'] ?? null;
-            if (!$symbol || !isset($map[$symbol])) continue;
+        $rates = [];
+        foreach ($mappings as $key => $pattern) {
+            if (preg_match($pattern, $cleanText, $matches)) {
+                $val = (float)str_replace(',', '', $matches[1]);
+                if ($val > 0) {
+                    $rates[$key] = $val;
+                }
+            }
+        }
 
-            $key = $map[$symbol];
-            $value = str_replace(',', '', $item['price'] ?? 0);
+        // استخراج تاریخ یا ساعت آخرین بروزرسانی در صورت وجود
+        if (preg_match('/آخرین\s*بروزرسانی\s*:\s*([0-9:]+)/iu', $cleanText, $timeMatches)) {
+            $rates['update_time'] = trim($timeMatches[1]);
+        }
 
-            if (is_numeric($value) && $value > 0) {
-                $this->setCache($key, $value, $item['unit'] ?? 'تومان', $item['change_value'] ?? null, $item['change_percent'] ?? null);
+        return $rates;
+    }
+
+    /**
+     * ذخیره داده‌های پارس شده منبع اصلی با محاسبه خودکار طلای ۱۸ و ۲۴ عیار از آبشده
+     */
+    protected function saveParsedPrimaryRates(array $rates): void
+    {
+        $apiDate = now()->format('Y-m-d');
+
+        // ۱. محاسبه خودکار طلای ۱۸ و ۲۴ عیار از روی آبشده (mesghal17)
+        if (isset($rates['mesghal17']) && $rates['mesghal17'] > 0) {
+            $mesghalVal = $rates['mesghal17'];
+            $gold18Val = round($mesghalVal / 4.3318);
+            $gold24Val = round($gold18Val / 0.75);
+
+            $this->savePriceItem('mesghal17', $mesghalVal, 'تومان', $apiDate);
+            $this->savePriceItem('gold18', $gold18Val, 'تومان', $apiDate);
+            $this->savePriceItem('gold24', $gold24Val, 'تومان', $apiDate);
+        } elseif (isset($rates['raw_gold18']) && $rates['raw_gold18'] > 0) {
+            // در صورتی که به هر دلیل عنوان آبشده در پیام نباشد ولی طلای ۱۸ باشد
+            $gold18Val = $rates['raw_gold18'];
+            $mesghalVal = round($gold18Val * 4.3318);
+            $gold24Val = round($gold18Val / 0.75);
+
+            $this->savePriceItem('mesghal17', $mesghalVal, 'تومان', $apiDate);
+            $this->savePriceItem('gold18', $gold18Val, 'تومان', $apiDate);
+            $this->savePriceItem('gold24', $gold24Val, 'تومان', $apiDate);
+        }
+
+        // ۲. ذخیره انس جهانی طلا (دلار)
+        if (isset($rates['ounce']) && $rates['ounce'] > 0) {
+            $this->savePriceItem('ounce', round($rates['ounce'], 2), 'دلار', $apiDate);
+        }
+
+        // ۳. ذخیره بیت‌کوین (دلار)
+        if (isset($rates['bitcoin']) && $rates['bitcoin'] > 0) {
+            $this->savePriceItem('bitcoin', round($rates['bitcoin'], 2), 'دلار', $apiDate);
+        }
+
+        // ۴. ذخیره انواع مسکوکات
+        $coinSymbols = ['coin_emami', 'coin_bahar', 'coin_nim', 'coin_rob', 'coin_gerami'];
+        foreach ($coinSymbols as $sym) {
+            if (isset($rates[$sym]) && $rates[$sym] > 0) {
+                $this->savePriceItem($sym, $rates[$sym], 'تومان', $apiDate);
+            }
+        }
+
+        // ۵. ذخیره ارزها (دلار نقدی، یورو، درهم)
+        $currencySymbols = ['usd', 'euro', 'dirham'];
+        foreach ($currencySymbols as $sym) {
+            if (isset($rates[$sym]) && $rates[$sym] > 0) {
+                $this->savePriceItem($sym, $rates[$sym], 'تومان', $apiDate);
             }
         }
     }
 
     /**
-     * ذخیره یک نماد در cache
+     * واکشی منبع پشتیبان اضطراری (کانال بله talanerkh)
      */
-    protected function setCache(string $symbol, float $value, string $unit, $changeValue = null, $changePercent = null): void
+    public function fetchFromBaleBackup(?ApiSourceConfig $config = null): ?array
     {
-        $prev = MarketCache::find($symbol);
-        $prevValue = $prev?->value;
+        try {
+            $baleConfig = $config ?? ApiSourceConfig::where('key', 'bale_backup')->first();
+            if ($baleConfig && !$baleConfig->is_active) {
+                return null;
+            }
+            $url = $baleConfig ? $baleConfig->base_url : 'https://ble.ir/s/talanerkh';
 
-        $changeVal = $changeValue !== null ? $changeValue : (($prevValue && $prevValue > 0) ? round($value - $prevValue, 2) : 0);
-        $changePct = $changePercent !== null ? $changePercent : (($prevValue && $prevValue > 0) ? round(($value - $prevValue) / $prevValue * 100, 2) : 0);
-        $direction = $changeVal > 0 ? 'up' : ($changeVal < 0 ? 'down' : ($prev->direction ?? 'flat'));
+            $start = microtime(true);
+            $response = Http::retry(3, 2000)->withOptions(['verify' => false])->timeout($this->timeout)->get($url);
+            $latency = (int) round((microtime(true) - $start) * 1000);
+
+            if (!$response->successful()) {
+                if ($baleConfig) {
+                    $baleConfig->update([
+                        'last_status' => 'error',
+                        'last_checked_at' => now(),
+                        'last_error' => 'Status: ' . $response->status()
+                    ]);
+                    $this->logFetchResult($baleConfig, 'error', "خطا: کد وضعیت " . $response->status());
+                }
+                return null;
+            }
+
+            if ($baleConfig) {
+                $baleConfig->update([
+                    'last_status' => 'ok',
+                    'last_latency_ms' => $latency,
+                    'last_checked_at' => now(),
+                    'last_error' => null
+                ]);
+                $this->logFetchResult($baleConfig, 'ok', "دریافت موفق قیمت از فال‌بک در {$latency}ms");
+            }
+
+            $html = $response->body();
+            $pos = mb_strrpos($html, 'اعلام نرخ رسمی طلا');
+            if ($pos === false) {
+                if ($baleConfig) {
+                    $this->logFetchResult($baleConfig, 'error', "خطا: الگوی اعلام نرخ در متن کانال فال‌بک یافت نشد");
+                }
+                return null;
+            }
+
+            $subHtml = mb_substr($html, $pos, 5000);
+            $text = strip_tags($subHtml);
+            $cleanText = $this->convertPersianDigitsToEnglish($text);
+
+            $mappings = [
+                'gold18'       => '/هر گرم 18 عیار:\D*([\d,\.]+)\s*تومان/iu',
+                'ounce'        => '/انس جهانی طلا:\D*([\d,\.]+)\s*دلار/iu',
+                'coin_emami'   => '/سکه طرح جدید:\D*([\d,\.]+)\s*تومان/iu',
+                'coin_bahar'   => '/سکه طرح قدیم:\D*([\d,\.]+)\s*تومان/iu',
+                'coin_nim'     => '/سکه نیم:\D*([\d,\.]+)\s*تومان/iu',
+                'coin_rob'     => '/سکه ربع:\D*([\d,\.]+)\s*تومان/iu',
+                'coin_gerami'  => '/سکه یک گرمی:\D*([\d,\.]+)\s*تومان/iu',
+                'usd'          => '/دلار:\D*([\d,\.]+)\s*تومان/iu',
+                'euro'         => '/یورو:\D*([\d,\.]+)\s*تومان/iu',
+                'dirham'       => '/درهم:\D*([\d,\.]+)\s*تومان/iu',
+            ];
+
+            $rates = [];
+            foreach ($mappings as $key => $pattern) {
+                if (preg_match($pattern, $cleanText, $matches)) {
+                    $val = (float)str_replace(',', '', $matches[1]);
+                    if ($val > 0) {
+                        $rates[$key] = $val;
+                    }
+                }
+            }
+
+            if (empty($rates) && $baleConfig) {
+                $this->logFetchResult($baleConfig, 'error', "خطا: قیمت‌های مورد نظر در پیام فال‌بک یافت نشدند");
+            }
+
+            return empty($rates) ? null : $rates;
+        } catch (\Exception $e) {
+            \Log::error('Bale fallback fetch failed: ' . $e->getMessage());
+            $baleConfig = $config ?? ApiSourceConfig::where('key', 'bale_backup')->first();
+            if ($baleConfig) {
+                $baleConfig->update([
+                    'last_status' => 'error',
+                    'last_checked_at' => now(),
+                    'last_error' => $e->getMessage()
+                ]);
+                $this->logFetchResult($baleConfig, 'error', "خطا: " . $e->getMessage());
+            }
+            return null;
+        }
+    }
+
+    /**
+     * ذخیره مقادیر دریافتی از فال‌بک اضطراری
+     */
+    protected function updateCacheFromBaleBackup(array $rates): void
+    {
+        $apiDate = now()->format('Y-m-d');
+
+        $units = [
+            'gold18'       => 'تومان',
+            'gold24'       => 'تومان',
+            'mesghal17'    => 'تومان',
+            'ounce'        => 'دلار',
+            'coin_emami'   => 'تومان',
+            'coin_bahar'   => 'تومان',
+            'coin_nim'     => 'تومان',
+            'coin_rob'     => 'تومان',
+            'coin_gerami'  => 'تومان',
+            'usd'          => 'تومان',
+            'euro'         => 'تومان',
+            'dirham'       => 'تومان',
+            'usdt'         => 'تومان',
+        ];
+
+        // ۱. طلای ۲۴ عیار محاسباتی
+        if (isset($rates['gold18']) && !isset($rates['gold24'])) {
+            $rates['gold24'] = round($rates['gold18'] / 0.75);
+        }
+
+        // ۲. تتر محاسباتی از دلار در صورت نبود منبع زیپودو
+        if (isset($rates['usd']) && !isset($rates['usdt'])) {
+            $rates['usdt'] = $rates['usd'];
+        }
+
+        // ۳. مثقال ۱۷ محاسباتی از روی طلای ۱۸ عیار
+        if (isset($rates['gold18']) && !isset($rates['mesghal17'])) {
+            $rates['mesghal17'] = round($rates['gold18'] * 4.35228);
+        }
+
+        foreach ($rates as $symbol => $val) {
+            if ($val > 0) {
+                $unit = $units[$symbol] ?? 'تومان';
+                $this->savePriceItem($symbol, $val, $unit, $apiDate);
+            }
+        }
+    }
+
+    /**
+     * دریافت نرخ تتر از سرویس زیپودو (Zipodo)
+     */
+    public function fetchUsdt(?ApiSourceConfig $config = null): bool
+    {
+        $usdtConfig = $config ?? ApiSourceConfig::where('key', 'usdt')->first();
+        if ($usdtConfig && !$usdtConfig->is_active) {
+            return false;
+        }
+
+        $url = $usdtConfig ? $usdtConfig->base_url : 'https://api.zipodo.ir/usdt/';
+
+        try {
+            $start = microtime(true);
+            $response = Http::retry(3, 2000)->withOptions(['verify' => false])->timeout($this->timeout)->get($url);
+            $latency = (int) round((microtime(true) - $start) * 1000);
+
+            if ($response->successful() && !empty($payload = $response->json())) {
+                if (isset($payload['price'])) {
+                    $val = (float)$payload['price'];
+                    if ($val > 0) {
+                        $this->savePriceItem('usdt', $val, 'تومان', now()->format('Y-m-d'));
+
+                        if ($usdtConfig) {
+                            $usdtConfig->update([
+                                'last_status' => 'ok',
+                                'last_latency_ms' => $latency,
+                                'last_checked_at' => now(),
+                                'last_error' => null
+                            ]);
+                            $this->logFetchResult($usdtConfig, 'ok', "دریافت موفق تتر در {$latency}ms");
+                        }
+                        return true;
+                    }
+                }
+            }
+
+            if ($usdtConfig) {
+                $errStr = 'Status: ' . $response->status();
+                $usdtConfig->update([
+                    'last_status' => 'error',
+                    'last_checked_at' => now(),
+                    'last_error' => $errStr
+                ]);
+                $this->logFetchResult($usdtConfig, 'error', "خطا در دریافت تتر");
+            }
+            return false;
+        } catch (\Exception $e) {
+            \Log::warning('USDT fetch failed: ' . $e->getMessage());
+            if ($usdtConfig) {
+                $usdtConfig->update([
+                    'last_status' => 'error',
+                    'last_checked_at' => now(),
+                    'last_error' => $e->getMessage()
+                ]);
+                $this->logFetchResult($usdtConfig, 'error', "خطا: " . $e->getMessage());
+            }
+            return false;
+        }
+    }
+
+    /**
+     * متد ذخیره و بروزرسانی قیمت و محاسبه درصد و جهت نوسان
+     */
+    public function savePriceItem(string $symbol, float $val, string $unit, string $apiDate = ''): void
+    {
+        if ($val <= 0) return;
+
+        if ($symbol === 'ounce') {
+            $integerPart = (int)$val;
+            if ($integerPart >= 100000 && $integerPart <= 999999) {
+                $val = $val / 100;
+            }
+        }
+
+        if (!empty($apiDate)) {
+            $lastApiDate = Cache::get('last_api_date_' . $symbol);
+            if ($lastApiDate && $lastApiDate !== $apiDate) {
+                $currentRecord = MarketCache::where('symbol', $symbol)->first();
+                if ($currentRecord && $currentRecord->value > 0) {
+                    Cache::forever('yesterday_price_' . $symbol, (float)$currentRecord->value);
+                }
+            }
+            Cache::put('last_api_date_' . $symbol, $apiDate, now()->addDays(2));
+        }
+
+        $yesterdayPrice = Cache::get('yesterday_price_' . $symbol);
+        if ($yesterdayPrice === null || $yesterdayPrice <= 0) {
+            Cache::forever('yesterday_price_' . $symbol, $val);
+            $yesterdayPrice = $val;
+        }
+
+        $changeValue = $val - $yesterdayPrice;
+        $changePercent = $yesterdayPrice > 0 ? ($changeValue / $yesterdayPrice * 100) : 0;
+
+        $direction = 'flat';
+        if ($changeValue > 0.01) {
+            $direction = 'up';
+        } elseif ($changeValue < -0.01) {
+            $direction = 'down';
+        }
+
+        $this->setCache($symbol, $val, $unit, $changeValue, $changePercent, $direction);
+    }
+
+    /**
+     * سازگاری با متدهای قدیمی تست
+     */
+    public function saveNerkhioItem(string $symbol, float $val, string $unit, string $apiDate = ''): void
+    {
+        $this->savePriceItem($symbol, $val, $unit, $apiDate);
+    }
+
+    protected function convertPersianToEnglish($string): float
+    {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $string = str_replace($persian, $english, $string);
+        $string = str_replace(',', '', $string);
+        $string = preg_replace('/[^0-9.\-]/', '', $string);
+        return (float) $string;
+    }
+
+    public function convertPersianDigitsToEnglish($string): string
+    {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٬'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ','];
+        return str_replace($persian, $english, $string);
+    }
+
+    public function setCache(string $symbol, float $value, string $unit, ?float $changeValue = null, ?float $changePercent = null, ?string $direction = null): void
+    {
+        if ($symbol === 'ounce') {
+            $integerPart = (int)$value;
+            if ($integerPart >= 100000 && $integerPart <= 999999) {
+                $value = $value / 100;
+                if ($changeValue !== null) {
+                    $changeValue = $changeValue / 100;
+                }
+            }
+        }
 
         MarketCache::updateOrCreate(
             ['symbol' => $symbol],
             [
                 'value'          => $value,
                 'unit'           => $unit,
-                'change_value'   => $changeVal,
-                'change_percent' => $changePct,
-                'direction'      => $direction,
+                'change_value'   => $changeValue ?? 0,
+                'change_percent' => $changePercent ?? 0,
+                'direction'      => $direction ?? 'flat',
                 'is_stale'       => false,
                 'fetched_at'     => now(),
             ]
         );
     }
 
-    /**
-     * علامت‌گذاری همهٔ قیمت‌ها به‌عنوان قدیمی
-     */
     protected function markAllStale(): void
     {
         MarketCache::where('is_stale', false)->update(['is_stale' => true, 'fetched_at' => now()]);
     }
 
-    /**
-     * تولید آرایهٔ کامل قیمت‌ها برای نمایشگر (همان getPriceFeed قبلی)
-     */
-    public function getPriceFeed(): array
+    public function currentRefreshIntervalSeconds(): int
     {
-        $cache   = MarketCache::all()->keyBy('symbol');
-        $formula = FormulaConfig::firstOrCreate(['id' => 1], ['buy_multiplier_a' => 740, 'buy_divisor_b' => 750]);
+        $hour = now('Asia/Tehran')->hour;
+        // در ساعات کاری هر ۱۰ ثانیه، خارج از آن هر ۱ دقیقه (۶۰ ثانیه)
+        return ($hour >= 9 && $hour < 22) ? 10 : 60;
+    }
 
-        $ounce = $cache->get('ounce')?->value ?? 3360;
-        $usd   = $cache->get('usd')?->value ?? 85800;
+    public function getPriceFeed(?\App\Models\User $user = null): array
+    {
+        if ($user === null) {
+            $user = \App\Models\User::where('is_super_admin', true)->first() ?? \App\Models\User::first();
+        }
 
-        $gold18       = $cache->get('gold18')?->value ?? round(($ounce * $usd * 0.75) / 31.1035);
-        $gold24       = $cache->get('gold24')?->value ?? round(($gold18 * 24) / 18);
-        $buyGold      = round(($gold18 * $formula->buy_multiplier_a) / $formula->buy_divisor_b);
-        $exchangeGold = round(($gold18 * 745) / 750);
-        $dirham       = $cache->get('dirham')?->value ?? round($usd / 3.67);
-        $gold18ChangeValue = $cache->get('gold18')?->change_value ?? 0;
-        $gold18ChangePercent = $cache->get('gold18')?->change_percent ?? 0;
-        $gold18Stale = $cache->get('gold18')?->is_stale ?? true;
-        $gold18FetchedAt = $cache->get('gold18')?->fetched_at;
+        $cache = MarketCache::all()->keyBy('symbol');
+        
+        $formula = $user 
+            ? FormulaConfig::firstOrCreate(['user_id' => $user->id], ['buy_multiplier_a' => 740, 'buy_divisor_b' => 750])
+            : FormulaConfig::firstOrCreate(['id' => 1], ['buy_multiplier_a' => 740, 'buy_divisor_b' => 750]);
+
+        $gold18 = $cache->get('gold18')?->value ?? 0;
 
         $symbols = [
-            'gold18'        => ['label' => 'طلای ۱۸ عیار',         'value' => $gold18],
-            'buy_gold'      => ['label' => 'گرم خرید ۱۸ عیار',    'value' => $buyGold, 'change_value' => $gold18ChangeValue, 'change_percent' => $gold18ChangePercent, 'base' => 'gold18'],
-            'gold24'        => ['label' => 'طلای ۲۴ عیار',         'value' => $gold24, 'base' => 'gold18'],
-            'mesghal17'     => ['label' => 'مثقال ۱۷',            'value' => $cache->get('mesghal17')?->value ?? 28000000],
-            'ounce'         => ['label' => 'انس جهانی',            'value' => $ounce],
-            'usd'           => ['label' => 'دلار',                'value' => $usd],
-            'euro'          => ['label' => 'یورو',                'value' => $cache->get('euro')?->value ?? 92000],
-            'dirham'        => ['label' => 'درهم',                'value' => $dirham],
-            'bitcoin'       => ['label' => 'بیت کوین',            'value' => $cache->get('bitcoin')?->value ?? 0],
-            'coin_emami'    => ['label' => 'سکه امامی',           'value' => $cache->get('coin_emami')?->value ?? 0],
-            'coin_bahar'    => ['label' => 'سکه بهار آزادی',      'value' => $cache->get('coin_bahar')?->value ?? 0],
-            'coin_nim'      => ['label' => 'نیم سکه',             'value' => $cache->get('coin_nim')?->value ?? 0],
-            'coin_rob'      => ['label' => 'ربع سکه',             'value' => $cache->get('coin_rob')?->value ?? 0],
-            'coin_gerami'   => ['label' => 'سکه گرمی',            'value' => $cache->get('coin_gerami')?->value ?? 0],
-            'usdt'          => ['label' => 'تتر',                 'value' => $cache->get('usdt')?->value ?? 0],
+            'gold18' => 'طلای ۱۸ عیار', 'mesghal17' => 'مثقال ۱۷', 'ounce' => 'انس جهانی',
+            'buy_gold' => 'گرم خرید ۱۸', 'gold24' => 'طلای ۲۴ عیار', 'usd' => 'دلار',
+            'coin_emami' => 'سکه امامی', 'coin_bahar' => 'سکه بهار آزادی', 'coin_nim' => 'نیم سکه',
+            'coin_rob' => 'ربع سکه', 'coin_gerami' => 'سکه گرمی', 'euro' => 'یورو',
+            'dirham' => 'درهم', 'usdt' => 'تتر', 'bitcoin' => 'بیت کوین',
         ];
 
-        $now = now();
         $feed = [];
-        foreach ($symbols as $sym => $meta) {
+        foreach ($symbols as $sym => $label) {
             $c = $cache->get($sym);
 
-            // اگر آیتم محاسباتی باشد، اطلاعات زمانی را از پایه می‌گیرد
-            $fetchedAt = $c ? $c->fetched_at : (isset($meta['base']) ? $gold18FetchedAt : null);
+            if ($sym === 'buy_gold') {
+                $val = round(($gold18 * $formula->buy_multiplier_a) / $formula->buy_divisor_b);
+                $ref = $cache->get('gold18');
+                $changeVal = $ref?->change_value ?? 0;
+                $changePct = $ref?->change_percent ?? 0;
+                $dir = $ref?->direction ?? 'flat';
 
-            $isStale = false;
-            if ($c) {
-                // اگر بیشتر از 10 دقیقه از فچ گذشته باشد (منعطف برای هاست اشتراکی)
-                if ($fetchedAt && $now->diffInSeconds($fetchedAt) > 600) {
-                    $isStale = true;
-                } elseif ($c->is_stale) {
-                    $isStale = true;
+                $isStale = true;
+                if ($ref && $ref->fetched_at) {
+                    $ageSeconds = now()->diffInSeconds($ref->fetched_at);
+                    $isStale = $ageSeconds > ($this->currentRefreshIntervalSeconds() * 3);
                 }
             } else {
-                // برای آیتم‌های محاسباتی مثل buy_gold
-                if (isset($meta['base'])) {
-                    $isStale = $gold18Stale || ($gold18FetchedAt && $now->diffInSeconds($gold18FetchedAt) > 600);
-                } else {
-                    $isStale = true;
+                $val = $c?->value ?? 0;
+                $changeVal = $c?->change_value ?? 0;
+                $changePct = $c?->change_percent ?? 0;
+                $dir = $c?->direction ?? 'flat';
+
+                $isStale = true;
+                if ($c && $c->fetched_at) {
+                    $ageSeconds = now()->diffInSeconds($c->fetched_at);
+                    $isStale = $ageSeconds > ($this->currentRefreshIntervalSeconds() * 3);
                 }
             }
 
             $feed[] = [
-                'symbol'         => $sym,
-                'label'          => $meta['label'],
-                'value'          => $meta['value'],
-                'unit'           => $c->unit ?? 'تومان',
-                'change_value'   => $meta['change_value'] ?? ($c->change_value ?? 0),
-                'change_percent' => $meta['change_percent'] ?? ($c->change_percent ?? 0),
-                'direction'      => $c->direction ?? 'flat',
-                'is_stale'       => $isStale,
-                'fetched_at'     => $fetchedAt?->toISOString() ?? now()->toISOString(),
+                'symbol' => $sym, 'label' => $label, 'value' => $val,
+                'unit' => ($sym === 'ounce' || $sym === 'bitcoin') ? 'دلار' : ($c?->unit ?? 'تومان'),
+                'change_value' => $changeVal, 'change_percent' => $changePct,
+                'direction' => $dir, 'is_stale' => $isStale,
+                'fetched_at' => $c?->fetched_at?->toISOString() ?? now()->toISOString(),
             ];
         }
         return $feed;
+    }
+
+    public function logFetchResult(ApiSourceConfig $config, string $status, string $message): void
+    {
+        $logs = $config->last_logs ?? [];
+        if (!is_array($logs)) {
+            $logs = [];
+        }
+
+        array_unshift($logs, [
+            'time' => now('Asia/Tehran')->format('H:i:s'),
+            'status' => $status,
+            'message' => $message,
+        ]);
+
+        $logs = array_slice($logs, 0, 3);
+
+        $config->update([
+            'last_logs' => $logs
+        ]);
     }
 }

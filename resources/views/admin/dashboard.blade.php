@@ -4,6 +4,74 @@
 
 @section('content')
 <div x-data="dashboardPage()" x-init="init()" class="space-y-6">
+    {{-- لینک صفحه نمایش اختصاصی طلا --}}
+    <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+                <i data-lucide="tv" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-blue-900 dark:text-blue-200">لینک تابلوی نمایشی طلافروشی شما</h3>
+                <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما به نمایش درآید.</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 w-full md:w-auto" dir="ltr">
+            <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
+                   class="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900 rounded-xl px-4 py-2 text-sm text-blue-900 dark:text-blue-300 w-full md:w-80 select-all font-mono">
+            <button onclick="navigator.clipboard.writeText(document.getElementById('displayUrlInput').value); alert('لینک کپی شد!');"
+                    class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors cursor-pointer">
+                کپی لینک
+            </button>
+            <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer">
+                مشاهده تابلو <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </div>
+
+    {{-- اتصال تلویزیون با کد فعال‌سازی --}}
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl">
+                <i data-lucide="key-round" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">اتصال دستی تلویزیون جدید</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">کد ۶ رقمی درج‌شده در تابلوی تلویزیون را وارد کنید تا فوراً به گالری شما متصل شود.</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2.5 w-full md:w-auto" x-data="{ pairCode: '', isPairing: false }">
+            <input type="text" maxlength="6" x-model="pairCode" placeholder="کد ۶ رقمی (مثال: ABC123)" dir="ltr"
+                   class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-850 dark:text-slate-100 w-full md:w-48 text-center font-mono font-bold uppercase placeholder:font-sans placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+            <button @click="
+                if(!pairCode || pairCode.length < 6) { alert('لطفا کد ۶ رقمی معتبر را وارد کنید.'); return; }
+                isPairing = true;
+                fetch('{{ route('admin.pair-code') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ activation_code: pairCode })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        alert(data.message);
+                        pairCode = '';
+                    } else {
+                        alert(data.message || 'خطا در اتصال');
+                    }
+                })
+                .catch(err => alert('خطا در برقراری ارتباط با سرور'))
+                .finally(() => isPairing = false);
+            " :disabled="isPairing"
+                    class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-2 rounded-xl text-sm whitespace-nowrap transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 flex items-center gap-1.5">
+                <span x-text="isPairing ? 'در حال اتصال...' : 'اتصال دستگاه'"></span>
+            </button>
+        </div>
+    </div>
+
     {{-- Header Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         {{-- Status Card --}}
@@ -119,12 +187,14 @@
             </div>
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">تنظیمات تابلو و پوسته</span>
         </a>
+        @if(auth()->user()->is_super_admin)
         <a href="{{ route('admin.sources') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-md transition-all">
             <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i data-lucide="rss" class="w-6 h-6"></i>
             </div>
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">پیکربندی API</span>
         </a>
+        @endif
     </div>
 </div>
 @endsection
@@ -152,9 +222,11 @@ function dashboardPage() {
         async loadData() {
             this.isLoading = true;
             try {
+                const username = '{{ $username }}';
+                const displayToken = '{{ auth()->user()->display_token }}';
                 const [snapshotRes, healthRes, previewRes] = await Promise.all([
-                    fetch('/api/display/snapshot'),
-                    fetch('/api/display/health'),
+                    fetch('/api/display/snapshot/' + username + '?key=' + displayToken),
+                    fetch('/api/display/health/' + username + '?key=' + displayToken),
                     fetch('/admin/formulas/global-18k-preview', { headers: { 'Accept': 'application/json' } })
                 ]);
                 const snapshot = await snapshotRes.json();

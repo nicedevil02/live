@@ -21,13 +21,18 @@
                 </p>
             </div>
         </div>
-        <div class="flex gap-3">
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.dashboard') }}"
+               class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 px-4 py-2.5 rounded-xl font-semibold transition-colors text-sm cursor-pointer">
+                انصراف
+            </a>
             <button @click="saveSettings()" :disabled="isSaving"
-                    class="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-xl font-semibold hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors disabled:opacity-50 text-sm shadow-sm">
-                <i x-show="!isSaving" data-lucide="save" class="w-4 h-4"></i> <span x-text="isSaving ? 'در حال ذخیره...' : 'ذخیره تغییرات'"></span>
+                    class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold transition-all disabled:opacity-50 shadow-sm shadow-emerald-500/20 text-sm cursor-pointer">
+                <i x-show="!isSaving" data-lucide="save" class="w-4 h-4"></i>
+                <span x-text="isSaving ? 'در حال ذخیره...' : 'ذخیره تنظیمات'"></span>
             </button>
             <button @click="publish()" :disabled="isPublishing"
-                    class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-colors disabled:opacity-50 shadow-sm shadow-blue-500/20 text-sm">
+                    class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-colors disabled:opacity-50 shadow-sm shadow-blue-500/20 text-sm cursor-pointer">
                 <i x-show="!isPublishing" data-lucide="send" class="w-4 h-4"></i> <span x-text="isPublishing ? 'در حال انتشار...' : 'انتشار روی تابلو'"></span>
             </button>
         </div>
@@ -128,6 +133,34 @@
                     </div>
                 </div>
             </div>
+
+            {{-- QR Code Setting --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="qr-code" class="w-5 h-5 text-indigo-500"></i>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">تنظیم کد QR اختصاصی (لینک دعوت یا وب‌سایت)</h3>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+                    می‌توانید لینک دعوت کانال ایتا، روبیکا، تلگرام یا آدرس وب‌سایت خود را اینجا وارد کنید. این لینک به شکل یک کد QR در سربرگ تلویزیون نمایش داده می‌شود تا مشتریان بتوانند با اسکن آن عضو شوند.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="link" class="w-4 h-4"></i> لینک دعوت / آدرس (URL)</label>
+                        <input type="text" dir="ltr" x-model="settings.qr_link" placeholder="https://rubika.ir/my_channel"
+                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left">
+                    </div>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="tag" class="w-4 h-4"></i> عنوان کد QR (بالا)</label>
+                        <input type="text" x-model="settings.qr_label" placeholder="مثال: نوبت‌دهی آنلاین / کانال روبیکا"
+                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    </div>
+                    <div>
+                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="tag" class="w-4 h-4"></i> توضیح زیر کد QR (پایین)</label>
+                        <input type="text" x-model="settings.qr_desc" placeholder="مثال: عضویت در شبکه‌های اجتماعی"
+                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- Right Column: Display Items Toggles --}}
@@ -167,6 +200,19 @@
             </div>
         </div>
     </div>
+
+    {{-- Footer Actions --}}
+    <div class="flex justify-end gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+        <a href="{{ route('admin.dashboard') }}"
+           class="flex items-center gap-2 bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-colors text-sm cursor-pointer">
+            انصراف
+        </a>
+        <button @click="saveSettings()" :disabled="isSaving"
+                class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all disabled:opacity-50 shadow-md shadow-blue-500/20 text-sm cursor-pointer">
+            <i x-show="!isSaving" data-lucide="save" class="w-4 h-4"></i>
+            <span x-text="isSaving ? 'در حال ذخیره...' : 'ذخیره تنظیمات'"></span>
+        </button>
+    </div>
 </div>
 @endsection
 
@@ -174,7 +220,7 @@
 <script>
 function displayControlPage() {
     return {
-        settings: { theme_mode: 'dark-glass', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, shop_name: '', phone: '', instagram: '', rubika: '', published_at: null },
+        settings: { theme_mode: 'dark-glass', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
         items: [],
         message: { text: '', type: '' },
         isSaving: false,

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +12,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // این خط برای کارکرد صحیح پوشه public_html ضروری است
+        // Host keeps assets in public_html; local development uses Laravel's public directory.
+        if ($this->app->environment('production') || filter_var(env('USE_PUBLIC_HTML', false), FILTER_VALIDATE_BOOL)) {
+            $this->app->usePublicPath(base_path('public_html'));
+        }
     }
 
     /**
@@ -19,15 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        try {
-            $didFetch = resolve(\App\Services\MarketService::class)->refreshIfStale(60);
-
-            if ($didFetch) {
-                \Log::info('Fetching market data on boot...', ['timestamp' => now()->toISOString()]);
-                \Log::info('Market data fetch completed and cached');
-            }
-        } catch (\Throwable $e) {
-            \Log::error('Failed to fetch market data on boot', ['error' => $e->getMessage(), 'trace' => substr($e->getTraceAsString(), 0, 500)]);
+        // اجبار به استفاده از HTTPS (فقط در حالتی که صریحاً از فایل env درخواست شود، برای رفع مشکل آپلود روی هاست‌های بدون SSL)
+        if (env('FORCE_HTTPS', false)) {
+            URL::forceScheme('https');
         }
     }
 }

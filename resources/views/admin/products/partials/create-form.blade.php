@@ -70,15 +70,25 @@
                 </div>
 
                 <div class="space-y-3">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">تصویر محصول</label>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">تصویر محصول <span class="text-xs font-normal text-slate-400">(حداکثر ۲ مگابایت)</span></label>
                     <div class="flex items-center gap-3">
                         <label class="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-4 hover:border-blue-500 transition-colors cursor-pointer bg-slate-50 dark:bg-slate-800">
                             <span class="text-xs text-slate-500" x-text="imageFile ? imageFile.name : 'انتخاب فایل تصویر...'"></span>
-                            <input type="file" class="hidden" @change="imageFile = $event.target.files[0]">
+                            <input type="file" class="hidden" x-ref="createFileInput" @change="
+                                const file = $event.target.files[0];
+                                if (file && file.size > 2 * 1024 * 1024) {
+                                    alert('حداکثر حجم مجاز برای تصویر ۲ مگابایت می‌باشد.');
+                                    $event.target.value = '';
+                                    imageFile = null;
+                                } else {
+                                    imageFile = file;
+                                }
+                            ">
                         </label>
                         <div class="text-slate-300 text-sm">یا</div>
                         <input type="text" x-model="imageUrl" placeholder="لینک مستقیم تصویر (URL)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
+                    <template x-if="errors.image_file"><span class="text-red-500 text-xs mt-1" x-text="errors.image_file[0]"></span></template>
                 </div>
             </div>
         </div>
@@ -109,6 +119,7 @@
                     $dispatch('product-created', result);
                     form = { title: '', weight_gram: '', profit_value: '', profit_type: 'percent', base_gold_price: {{ $latestGoldPrice }} };
                     imageUrl = ''; imageFile = null; open = false;
+                    if ($refs.createFileInput) $refs.createFileInput.value = '';
                 } catch(e) { alert('خطا در ارتباط با سرور'); }
                 finally { isCreating = false; }
             }" :disabled="isCreating" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25">

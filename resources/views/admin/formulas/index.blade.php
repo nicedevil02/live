@@ -90,7 +90,7 @@
                 </p>
                 <div class="flex flex-col gap-1 mt-2">
                     <p class="text-xs text-slate-500">
-                        اونس: <span x-text="preview ? formatNumber(preview.ouncePrice) : '-'"></span> $ · دلار: <span x-text="preview ? formatNumber(preview.usdRate) : '-'"></span> تومان
+                        اونس: <span x-text="preview ? formatNumber(preview.ouncePrice, 2) : '-'"></span> $ · دلار: <span x-text="preview ? formatNumber(preview.usdRate) : '-'"></span> تومان
                     </p>
                 </div>
             </div>
@@ -117,7 +117,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4">
                 <p class="text-xs text-slate-500 mb-1">قیمت اونس جهانی (USD)</p>
-                <p class="text-2xl font-black text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.ouncePrice) : '---'"></p>
+                <p class="text-2xl font-black text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.ouncePrice, 2) : '---'"></p>
             </div>
             <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4">
                 <p class="text-xs text-slate-500 mb-1">نرخ دلار (تومان)</p>
@@ -205,7 +205,8 @@ function formulasPage() {
             setTimeout(() => this.message = { text: '', type: '' }, 3500);
         },
 
-        formatNumber(value) {
+        formatNumber(value, decimals = 0) {
+            if (decimals > 0) return new Intl.NumberFormat('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
             return new Intl.NumberFormat('fa-IR').format(Math.round(value));
         }
     };

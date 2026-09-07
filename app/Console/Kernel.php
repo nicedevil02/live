@@ -11,7 +11,9 @@ class Kernel extends ConsoleKernel
     {
         // روش 1: اجرای مستقیم command (اگر queue worker اجرا شود)
         $schedule->command('market:fetch')
-            ->everyFiveMinutes()
+            ->everyMinute()
+            ->timezone('Asia/Tehran')
+            ->between('09:00', '22:00')
             ->withoutOverlapping()
             ->onSuccess(function () {
                 \Log::info('Scheduler: قیمت‌های بازار با موفقیت آپدیت شدند');
@@ -21,8 +23,10 @@ class Kernel extends ConsoleKernel
             });
 
         // روش 2: dispatch کردن Job برای Queue (بهتر برای production)
-        $schedule->job(new \App\Jobs\FetchMarketPrices)
+        $schedule->command('market:fetch')
             ->everyFiveMinutes()
+            ->timezone('Asia/Tehran')
+            ->unlessBetween('09:00', '22:00')
             ->withoutOverlapping();
     }
 

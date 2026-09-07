@@ -76,7 +76,16 @@
                 <div class="flex gap-2">
                     <label class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-[10px] text-slate-500 cursor-pointer flex items-center truncate">
                         <span x-text="imageFile ? imageFile.name : 'انتخاب فایل تصویر...'"></span>
-                        <input type="file" class="hidden" @change="imageFile = $event.target.files[0]">
+                        <input type="file" class="hidden" x-ref="fileInput" @change="
+                            const file = $event.target.files[0];
+                            if (file && file.size > 2 * 1024 * 1024) {
+                                alert('حداکثر حجم مجاز برای تصویر ۲ مگابایت می‌باشد.');
+                                $event.target.value = '';
+                                imageFile = null;
+                            } else {
+                                imageFile = file;
+                            }
+                        ">
                     </label>
                     <button @click="handleUploadFile" :disabled="!imageFile" class="px-4 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors">آپلود</button>
                 </div>
@@ -127,7 +136,7 @@ function editProductForm() {
             try {
                 const res = await fetch(`/admin/products/${this.id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                     body: JSON.stringify(this.form)
                 });
                 const updated = await res.json();
@@ -144,7 +153,7 @@ function editProductForm() {
             try {
                 const res = await fetch(`/admin/products/${this.id}/images`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                     body: JSON.stringify({ url: this.imageUrl })
                 });
                 const img = await res.json();
@@ -160,12 +169,22 @@ function editProductForm() {
             try {
                 const res = await fetch(`/admin/products/${this.id}/images/upload`, {
                     method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                     body: fd
                 });
+                if (!res.ok) {
+                    const result = await res.json();
+                    if (res.status === 422) {
+                        alert(result.message || 'فایل نامعتبر است (حداکثر ۲ مگابایت)');
+                    } else {
+                        alert('خطا در سرور');
+                    }
+                    return;
+                }
                 const img = await res.json();
                 this.localProduct.images.push(img);
                 this.imageFile = null;
+                if (this.$refs.fileInput) this.$refs.fileInput.value = '';
             } catch(e) { alert('خطا در آپلود'); }
         },
 
@@ -174,7 +193,7 @@ function editProductForm() {
             try {
                 await fetch(`/admin/products/${this.id}/images/${imageId}`, {
                     method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                    headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 });
                 this.localProduct.images = this.localProduct.images.filter(i => i.id !== imageId);
             } catch(e) { alert('خطا در حذف تصویر'); }

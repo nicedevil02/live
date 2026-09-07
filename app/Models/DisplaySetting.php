@@ -8,6 +8,7 @@ class DisplaySetting extends Model
 {
     protected $table = 'display_settings';
     protected $fillable = [
+        'user_id',
         'theme_mode',
         'slider_interval_sec',
         'show_weight',
@@ -17,6 +18,9 @@ class DisplaySetting extends Model
         'phone',
         'instagram',
         'rubika',
+        'qr_link',
+        'qr_label',
+        'qr_desc',
         'published_at',
     ];
     protected $casts = [
