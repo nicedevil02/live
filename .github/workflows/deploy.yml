@@ -8,32 +8,17 @@ on:
   workflow_dispatch:
 jobs:
   deploy:
-    name: ⚡ Sync to cPanel
+    name: ⚡ Trigger cPanel Live Sync
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Sync changed files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          security: loose
-          server-dir: ./
-          dry-run: false
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/.env*
-            **/vendor/**
-            **/node_modules/**
-            **/storage/**
-            **/tests/**
-            *.zip
-            .cpanel.yml
+      - name: 🚀 Ping Deployment Webhook
+        run: |
+          response=$(curl -k -s -w "\n%{http_code}" "https://talalive.ir/deploy-run.php?key=tala_deploy_7f8c9b1e2a3d4f5")
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          echo "Server Response:"
+          echo "$body"
+          if [ "$http_code" -ne 200 ]; then
+            echo "Deployment failed with HTTP $http_code"
+            exit 1
+          fi
