@@ -26,6 +26,7 @@ Homestead.yaml
 Thumbs.db
 
 # Server / cPanel backups & environment files
+/public/
 /etc/
 /logs/
 /lscache/
@@ -34,9 +35,26 @@ Thumbs.db
 /tmp/
 /www/
 /public_ftp/
-/public_html/
 /scratch/
 /core/
+/vendor1/
 .bash*
 *.zip
+.cagefs/
+.cpanel/
+.cphorde/
+.htpasswds/
+.koality/
+.spamassassin/
+.spamassassin*
+.trash/
+.cl.selector/
+.myimunify_id
+.lastlogin
+error_log
+111/
+public_html/error_log
+public_html/storage_old*
+public_html/storage/*
+!public_html/storage/.gitignore
 

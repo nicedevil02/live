@@ -92,11 +92,15 @@ document.addEventListener('alpine:init', () => {
         async handleDelete(id) {
             if (!confirm('آیا مطمئن هستید؟')) return;
             try {
-                await fetch(`/admin/products/${id}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+                const res = await fetch(`/admin/products/${id}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.message || 'خطا در حذف محصول از سرور');
+                }
                 this.products = this.products.filter(p => p.id !== id);
                 this.showToast('محصول با موفقیت حذف شد.', 'success');
             } catch (e) {
-                this.showToast('خطا در حذف محصول', 'error');
+                this.showToast(e.message || 'خطا در حذف محصول', 'error');
             }
         },
 
@@ -104,16 +108,19 @@ document.addEventListener('alpine:init', () => {
             try {
                 const res = await fetch(`/admin/products/${id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                     body: JSON.stringify({ is_visible: visible })
                 });
+                if (!res.ok) {
+                    throw new Error('خطا در تغییر وضعیت نمایش محصول در سرور');
+                }
                 const updated = await res.json();
                 const index = this.products.findIndex(p => p.id === id);
                 if (index !== -1) this.products[index] = updated;
                 this.$nextTick(() => lucide.createIcons());
                 this.showToast(visible ? 'محصول نمایش داده می‌شود.' : 'محصول مخفی شد.', 'success');
             } catch (e) {
-                this.showToast('خطا در تغییر وضعیت', 'error');
+                this.showToast(e.message || 'خطا در تغییر وضعیت', 'error');
             }
         },
 

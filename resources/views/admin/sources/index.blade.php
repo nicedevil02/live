@@ -312,7 +312,11 @@ function sourcesManager() {
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 });
                 const result = await res.json();
-                this.showMessage(`تست اتصال موفقیت‌آمیز بود. پینگ: ${result.latency_ms}ms`, 'success');
+                if (res.ok && result.success) {
+                    this.showMessage(`تست اتصال موفقیت‌آمیز بود. پینگ: ${result.latency_ms || 0}ms`, 'success');
+                } else {
+                    this.showMessage(result.error || result.message || 'خطا در برقراری ارتباط با منبع نرخ', 'error');
+                }
                 await this.loadData();
             } catch (e) {
                 this.showMessage(e.message, 'error');

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\MarketService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class FetchMarketData extends Command
 {
@@ -17,17 +18,17 @@ class FetchMarketData extends Command
         $now = \Illuminate\Support\Carbon::now('Asia/Tehran');
         $hour = $now->hour;
         
-        if ($hour >= 9 && $hour < 22) {
-            // در ساعات کاری (۹ الی ۲۲): بروزرسانی همه قیمت‌ها هر ۱۰ ثانیه (۶ بار در دقیقه)
-            for ($i = 0; $i < 6; $i++) {
+        $iterations = ($hour >= 9 && $hour < 22) ? 6 : 1;
+
+        for ($i = 0; $i < $iterations; $i++) {
+            Cache::lock('market_fetch_lock', 25)->get(function () use ($service) {
                 $service->fetchAndCache();
-                if ($i < 5) {
-                    sleep(10);
-                }
+                Cache::put('market_last_fetch_at', now()->toISOString(), 3600);
+            });
+
+            if ($i < $iterations - 1) {
+                sleep(10);
             }
-        } else {
-            // خارج از ساعات کاری: یک بروزرسانی در هر دقیقه
-            $service->fetchAndCache();
         }
         
         $this->info('Done.');

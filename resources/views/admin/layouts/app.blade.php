@@ -26,7 +26,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="{{ asset('vendor/lucide.min.js') }}"></script>
     <style>
         [x-cloak] { display: none !important; }
         body { font-family: 'Vazirmatn', sans-serif; }
@@ -69,6 +69,7 @@
                     $links = [
                         ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard'],
                         ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],
+                        ['r' => 'admin.sms-status', 'l' => 'درگاه پیامک (s.api.ir)', 'i' => 'message-square', 'super_only' => true],
                         ['r' => 'admin.sources', 'l' => 'منابع دریافت API', 'i' => 'rss', 'super_only' => true],
                         ['r' => 'admin.formulas', 'l' => 'فرمول‌های محاسبه', 'i' => 'variable'],
                         ['r' => 'admin.products.index', 'l' => 'ویترین طلا (اسلایدر)', 'i' => 'gem'],
@@ -158,7 +159,17 @@
     </script>
     @stack('scripts')
     <script>
-        lucide.createIcons();
+        function renderLucideIcons() {
+            if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderLucideIcons);
+        } else {
+            renderLucideIcons();
+        }
+        window.addEventListener('alpine:initialized', renderLucideIcons);
     </script>
 </body>
 </html>

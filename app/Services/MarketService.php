@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 
 class MarketService
 {
+    public const MESGHAL_TO_GRAM_18K = 4.3318;
     protected int $timeout = 15;
 
     public function refreshIfStale(?int $maxAgeSeconds = null): bool
@@ -24,8 +25,11 @@ class MarketService
 
         return Cache::lock('market_fetch_lock', 30)->get(function () use ($maxAgeSeconds) {
             $lastFetch = $this->getLastFetchTime();
-            if ($lastFetch && now()->diffInSeconds($lastFetch) <= $maxAgeSeconds) {
-                return false;
+            if ($lastFetch) {
+                $ageSeconds = max(0, now()->timestamp - $lastFetch->timestamp);
+                if ($ageSeconds <= $maxAgeSeconds) {
+                    return false;
+                }
             }
 
             $this->fetchAndCache();
@@ -109,7 +113,7 @@ class MarketService
 
         try {
             $start = microtime(true);
-            $response = Http::retry(3, 2000)->withOptions(['verify' => false])->timeout($this->timeout)->get($url);
+            $response = Http::retry(3, 2000)->withOptions(['verify' => config('services.market.verify_ssl', true)])->timeout($this->timeout)->get($url);
             $latency = (int) round((microtime(true) - $start) * 1000);
 
             if (!$response->successful()) {
@@ -197,35 +201,61 @@ class MarketService
         // یکسان‌سازی علامت دونقطه فارسی و تمام‌پهنا
         $cleanText = str_replace(['：', '︓'], ':', $cleanText);
 
+        // استفاده از [^\d\r\n:]{0,30} به جای \D* تا از خط جاری خارج نشود و نرخ خطوط دیگر را نخواند
         $mappings = [
-            'mesghal17'    => '/(?:مظنه|آبشده|مثقال)(?:\s*(?:طلا|اتحادیه|۱۷|17))*\s*:\D*([\d,\.]+)/iu',
-            'raw_gold18'   => '/(?:طلای\s*18\s*عیار|گرم\s*18)\s*:\D*([\d,\.]+)/iu',
-            'raw_gold24'   => '/(?:طلای\s*24\s*عیار|گرم\s*24)\s*:\D*([\d,\.]+)/iu',
-            'ounce'        => '/(?:انس|اونس)(?:\s*(?:جهانی|طلا))*\s*:\D*([\d,\.]+)/iu',
-            'coin_emami'   => '/(?:سکه\s*)?امامی\s*:\D*([\d,\.]+)/iu',
-            'coin_bahar'   => '/(?:سکه\s*)?(?:بهار\s*آزادی|طرح\s*قدیم|قدیم)\s*:\D*([\d,\.]+)/iu',
-            'coin_nim'     => '/(?:سکه\s*)?نیم(?:\s*سکه)?\s*:\D*([\d,\.]+)/iu',
-            'coin_rob'     => '/(?:سکه\s*)?ربع(?:\s*سکه)?\s*:\D*([\d,\.]+)/iu',
-            'coin_gerami'  => '/(?:سکه\s*)?گرمی(?:\s*سکه)?\s*:\D*([\d,\.]+)/iu',
-            'usd'          => '/دلار(?:\s*(?:نقدی|سبزه|هرات|تهران|آزاد))*\s*:\D*([\d,\.]+)/iu',
-            'euro'         => '/یورو\s*:\D*([\d,\.]+)/iu',
-            'dirham'       => '/درهم\s*:\D*([\d,\.]+)/iu',
-            'bitcoin'      => '/بیت\s*[\x{200c}\x{200d}]?کوین\s*:\D*([\d,\.]+)/iu',
+            'mesghal17'    => '/(?:مظنه|آبشده|مثقال)(?:\s*(?:طلا|اتحادیه|۱۷|17))*\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'raw_gold18'   => '/(?:طلای\s*18\s*عیار|گرم\s*18)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'raw_gold24'   => '/(?:طلای\s*24\s*عیار|گرم\s*24)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'ounce'        => '/(?:انس|اونس)(?:\s*(?:جهانی|طلا))*\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'coin_emami'   => '/(?:سکه\s*)?امامی\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'coin_bahar'   => '/(?:سکه\s*)?(?:بهار\s*آزادی|طرح\s*قدیم|قدیم)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'coin_nim'     => '/(?:سکه\s*)?نیم(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'coin_rob'     => '/(?:سکه\s*)?ربع(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'coin_gerami'  => '/(?:سکه\s*)?گرمی(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'usd'          => '/دلار(?:\s*(?:نقدی|سبزه|هرات|تهران|آزاد))*\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'euro'         => '/یورو\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'dirham'       => '/درهم\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'bitcoin'      => '/بیت\s*[\x{200c}\x{200d}]?کوین\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
         ];
 
         $rates = [];
         foreach ($mappings as $key => $pattern) {
             if (preg_match($pattern, $cleanText, $matches)) {
                 $val = (float)str_replace(',', '', $matches[1]);
+
+                // Circuit Breaker & بررسی سلامت دامنه قیمت:
+                // نرخ طلای ۱۸ و ۲۴ عیار نمی‌تواند زیر ۱ میلیون تومان باشد (مثلاً نشت قیمت ارز)
+                if (in_array($key, ['raw_gold18', 'raw_gold24']) && $val < 1000000) {
+                    \Log::warning("MarketService: Extracted abnormal low value for {$key}: {$val}");
+                    continue;
+                }
+                // نرخ مثقال نمی‌تواند زیر ۴ میلیون تومان باشد
+                if ($key === 'mesghal17' && $val < 4000000) {
+                    \Log::warning("MarketService: Extracted abnormal low value for mesghal17: {$val}");
+                    continue;
+                }
+                // نرخ سکه تمام و قطعات نمی‌تواند زیر ۱.۵ میلیون تومان باشد
+                if (str_starts_with($key, 'coin_') && $val < 1500000) {
+                    \Log::warning("MarketService: Extracted abnormal low value for {$key}: {$val}");
+                    continue;
+                }
+
                 if ($val > 0) {
                     $rates[$key] = $val;
                 }
             }
         }
 
+        // بررسی اینکه آیا حداقل یکی از نرخ‌های پایه طلا (مثقال یا طلای ۱۸) استخراج شده است یا خیر
+        if (!isset($rates['mesghal17']) && !isset($rates['raw_gold18'])) {
+            \Log::warning('MarketService: Bale primary content parsed without core gold rates (mesghal/gold18).');
+            return [];
+        }
+
         // استخراج تاریخ یا ساعت آخرین بروزرسانی در صورت وجود
         if (preg_match('/آخرین\s*بروزرسانی\s*:\s*([0-9:]+)/iu', $cleanText, $timeMatches)) {
             $rates['update_time'] = trim($timeMatches[1]);
+            Cache::put('market_api_last_time', $rates['update_time'], 3600);
         }
 
         return $rates;
@@ -238,10 +268,10 @@ class MarketService
     {
         $apiDate = now()->format('Y-m-d');
 
-        // ۱. محاسبه خودکار طلای ۱۸ و ۲۴ عیار از روی آبشده (mesghal17)
+        // ۱. محاسبه خودکار طلای ۱۸ و ۲۴ عیار از روی آبشده (mesghal17) طبق ضریب استاندارد اتحادیه ۷۰۵
         if (isset($rates['mesghal17']) && $rates['mesghal17'] > 0) {
             $mesghalVal = $rates['mesghal17'];
-            $gold18Val = round($mesghalVal / 4.3318);
+            $gold18Val = round($mesghalVal / self::MESGHAL_TO_GRAM_18K);
             $gold24Val = round($gold18Val / 0.75);
 
             $this->savePriceItem('mesghal17', $mesghalVal, 'تومان', $apiDate);
@@ -250,7 +280,7 @@ class MarketService
         } elseif (isset($rates['raw_gold18']) && $rates['raw_gold18'] > 0) {
             // در صورتی که به هر دلیل عنوان آبشده در پیام نباشد ولی طلای ۱۸ باشد
             $gold18Val = $rates['raw_gold18'];
-            $mesghalVal = round($gold18Val * 4.3318);
+            $mesghalVal = round($gold18Val * self::MESGHAL_TO_GRAM_18K);
             $gold24Val = round($gold18Val / 0.75);
 
             $this->savePriceItem('mesghal17', $mesghalVal, 'تومان', $apiDate);
@@ -412,9 +442,9 @@ class MarketService
             $rates['usdt'] = $rates['usd'];
         }
 
-        // ۳. مثقال ۱۷ محاسباتی از روی طلای ۱۸ عیار
+        // ۳. مثقال ۱۷ محاسباتی از روی طلای ۱۸ عیار طبق ضریب اتحادیه ۷۰۵
         if (isset($rates['gold18']) && !isset($rates['mesghal17'])) {
-            $rates['mesghal17'] = round($rates['gold18'] * 4.35228);
+            $rates['mesghal17'] = round($rates['gold18'] * self::MESGHAL_TO_GRAM_18K);
         }
 
         foreach ($rates as $symbol => $val) {
@@ -628,7 +658,7 @@ class MarketService
 
                 $isStale = true;
                 if ($ref && $ref->fetched_at) {
-                    $ageSeconds = now()->diffInSeconds($ref->fetched_at);
+                    $ageSeconds = max(0, now()->timestamp - $ref->fetched_at->timestamp);
                     $isStale = $ageSeconds > ($this->currentRefreshIntervalSeconds() * 3);
                 }
             } else {
@@ -639,7 +669,7 @@ class MarketService
 
                 $isStale = true;
                 if ($c && $c->fetched_at) {
-                    $ageSeconds = now()->diffInSeconds($c->fetched_at);
+                    $ageSeconds = max(0, now()->timestamp - $c->fetched_at->timestamp);
                     $isStale = $ageSeconds > ($this->currentRefreshIntervalSeconds() * 3);
                 }
             }

@@ -97,85 +97,139 @@
             <table class="w-full text-right border-collapse">
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-800/40 text-slate-500 dark:text-slate-400 text-xs font-bold border-b border-slate-100 dark:border-slate-800">
-                        <th class="px-6 py-4">نام طلافروشی</th>
-                        <th class="px-6 py-4">نام کاربری (مغازه)</th>
-                        <th class="px-6 py-4">تاریخ انقضای اشتراک</th>
-                        <th class="px-6 py-4">وضعیت تایید</th>
-                        <th class="px-6 py-4">وضعیت اشتراک</th>
-                        <th class="px-6 py-4 text-center">عملیات مدیریت</th>
+                        <th class="px-6 py-4">مشخصات طلافروشی</th>
+                        <th class="px-6 py-4">اطلاعات تماس</th>
+                        <th class="px-6 py-4">تاریخ انقضا (شمسی)</th>
+                        <th class="px-6 py-4">وضعیت حساب</th>
+                        <th class="px-6 py-4 text-center">عملیات</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
                     @forelse($users as $user)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                            <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">
-                                {{ $user->name }}
-                            </td>
-                            <td class="px-6 py-4 font-mono text-slate-600 dark:text-slate-400">
-                                {{ $user->username }}
-                            </td>
-                            <td class="px-6 py-4 text-slate-600 dark:text-slate-400 tabular-nums">
-                                {{ $user->expires_at ? $user->expires_at->format('Y/m/d H:i') : 'نامحدود' }}
-                            </td>
+                            {{-- ۱. مشخصات طلافروشی --}}
                             <td class="px-6 py-4">
-                                @if($user->is_approved)
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span>
-                                        تایید شده
-                                    </span>
+                                <div class="font-bold text-slate-800 dark:text-slate-200">
+                                    {{ $user->name }}
+                                </div>
+                                <div class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1">
+                                    <i data-lucide="at-sign" class="w-3 h-3 text-slate-400"></i>
+                                    <span>{{ $user->username }}</span>
+                                </div>
+                            </td>
+
+                            {{-- ۲. اطلاعات تماس --}}
+                            <td class="px-6 py-4">
+                                @if($user->phone)
+                                    <a href="tel:{{ $user->phone }}" class="inline-flex items-center gap-1.5 font-mono font-bold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-xs" dir="ltr">
+                                        <i data-lucide="phone" class="w-3.5 h-3.5 text-blue-500"></i>
+                                        <span>{{ $user->phone }}</span>
+                                    </a>
                                 @else
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 animate-pulse">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400"></span>
-                                        در انتظار تایید
-                                    </span>
+                                    <span class="text-xs text-slate-400">بدون شماره تماس</span>
                                 @endif
+                                <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1">
+                                    @if($user->email)
+                                        <a href="mailto:{{ $user->email }}" class="hover:underline text-slate-500 dark:text-slate-400 flex items-center gap-1 truncate max-w-[180px]" title="{{ $user->email }}">
+                                            <i data-lucide="mail" class="w-3 h-3 text-slate-400 shrink-0"></i>
+                                            <span class="truncate">{{ $user->email }}</span>
+                                        </a>
+                                    @else
+                                        <span class="text-slate-400 flex items-center gap-1">
+                                            <i data-lucide="mail" class="w-3 h-3 text-slate-400 shrink-0"></i>
+                                            <span>بدون ایمیل</span>
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
+
+                            {{-- ۳. تاریخ انقضای اشتراک (شمسی) --}}
                             <td class="px-6 py-4">
-                                @if($user->expires_at && $user->expires_at->isPast())
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400">
-                                        منقضی شده
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                        فعال / معتبر
-                                    </span>
-                                @endif
+                                <div class="font-bold text-slate-700 dark:text-slate-300 tabular-nums flex items-center gap-1.5 text-xs">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+                                    <span>{{ $user->shamsi_expires_at }}</span>
+                                </div>
+                                <div class="mt-1">
+                                    @if(!$user->expires_at)
+                                        <span class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">دسترسی دائمی</span>
+                                    @elseif($user->expires_at->isPast())
+                                        <span class="text-xs text-rose-600 dark:text-rose-400 font-bold">منقضی شده</span>
+                                    @else
+                                        @php $days = $user->trialDaysRemaining(); @endphp
+                                        @if($days > 0)
+                                            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">({{ $days }} روز مانده)</span>
+                                        @else
+                                            <span class="text-xs text-amber-600 dark:text-amber-400 font-bold">(پایان امروز)</span>
+                                        @endif
+                                    @endif
+                                </div>
                             </td>
+
+                            {{-- ۴. وضعیت حساب --}}
                             <td class="px-6 py-4">
-                                <div class="flex items-center justify-center gap-2">
+                                <div class="flex flex-col items-start gap-1">
+                                    @if($user->is_approved)
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400"></span>
+                                            تایید شده
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 animate-pulse">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400"></span>
+                                            در انتظار تایید
+                                        </span>
+                                    @endif
+
+                                    @if(!$user->expires_at)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/30">
+                                            اشتراک نامحدود
+                                        </span>
+                                    @elseif($user->expires_at->isPast())
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400">
+                                            اشتراک منقضی
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/30">
+                                            اشتراک فعال
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
+
+                            {{-- ۵. عملیات مدیریت (طرح ۱: آیکون‌باتن‌های مدرن و فشرده) --}}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center gap-1.5">
                                     {{-- Approve Button --}}
                                     @if(!$user->is_approved)
                                         <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" class="flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm shadow-emerald-500/10">
-                                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                                                <span>تأیید عضویت</span>
+                                            <button type="submit" title="تأیید عضویت و فعال‌سازی حساب" class="w-8 h-8 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950/40 dark:text-emerald-400 dark:hover:bg-emerald-600 dark:hover:text-white border border-emerald-200 dark:border-emerald-800/50 shadow-sm transition-all">
+                                                <i data-lucide="check" class="w-4 h-4"></i>
                                             </button>
                                         </form>
                                     @endif
 
                                     {{-- Extend Subscription Button --}}
-                                    <button @click="openExtendModal({{ $user->id }}, '{{ $user->name }}')" 
-                                            class="flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm shadow-blue-500/10">
-                                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                        <span>تمدید اعتبار</span>
+                                    <button @click="openExtendModal({{ $user->id }}, '{{ addslashes($user->name) }}')" 
+                                            title="تمدید اعتبار اشتراک" 
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white border border-blue-200 dark:border-blue-800/50 shadow-sm transition-all">
+                                        <i data-lucide="calendar" class="w-4 h-4"></i>
                                     </button>
 
                                     {{-- Change Password Button --}}
-                                    <button @click="openPasswordModal({{ $user->id }}, '{{ $user->name }}')" 
-                                            class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-slate-200 dark:border-slate-700">
-                                        <i data-lucide="key-round" class="w-3.5 h-3.5"></i>
-                                        <span>رمز جدید</span>
+                                    <button @click="openPasswordModal({{ $user->id }}, '{{ addslashes($user->name) }}')" 
+                                            title="تنظیم رمز عبور جدید" 
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-700 hover:text-white dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-200 dark:hover:text-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm transition-all">
+                                        <i data-lucide="key-round" class="w-4 h-4"></i>
                                     </button>
 
                                     {{-- Delete User Button --}}
                                     <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" 
-                                          onsubmit="return confirm('آیا از حذف کامل حساب کاربری «{{ $user->name }}» و تمامی داده‌های مربوط به آن (پیکربندی‌ها، محصولات، فرمول‌ها) اطمینان صددرصد دارید؟ این عمل غیر قابل بازگشت است.');">
+                                          onsubmit="return confirm('آیا از حذف کامل حساب کاربری «{{ addslashes($user->name) }}» و تمامی داده‌های مربوط به آن (پیکربندی‌ها، محصولات، فرمول‌ها) اطمینان صددرصد دارید؟ این عمل غیر قابل بازگشت است.');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="flex items-center gap-1 px-3 py-1.5 bg-rose-500/10 hover:bg-rose-600 hover:text-white text-rose-600 rounded-xl text-xs font-bold transition-all border border-rose-500/20">
-                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                            <span>حذف</span>
+                                        <button type="submit" title="حذف حساب کاربری" class="w-8 h-8 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white dark:bg-rose-950/40 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white border border-rose-200 dark:border-rose-800/50 shadow-sm transition-all">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -183,7 +237,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-slate-400 dark:text-slate-600">
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400 dark:text-slate-600">
                                 <div class="flex flex-col items-center justify-center gap-2">
                                     <i data-lucide="users" class="w-10 h-10 opacity-30"></i>
                                     <span class="font-bold">هیچ کاربر طلافروشی دیگری در سیستم ثبت نشده است.</span>

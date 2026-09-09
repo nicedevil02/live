@@ -50,10 +50,14 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($id);
+        $months = (int) $validated['months'];
         
         // اگر تاریخ انقضا در آینده باشد، به انتهای آن اضافه می‌شود، در غیر این صورت از زمان حال شروع می‌شود
-        $currentExpire = ($user->expires_at && $user->expires_at->isFuture()) ? $user->expires_at : now();
-        $newExpire = $currentExpire->addMonths($validated['months']);
+        $currentExpire = ($user->expires_at && $user->expires_at->isFuture()) 
+            ? $user->expires_at->copy() 
+            : now();
+
+        $newExpire = $currentExpire->addMonths($months);
 
         $user->update([
             'expires_at' => $newExpire,
@@ -66,11 +70,11 @@ class UserController extends Controller
             'action'      => 'extend_subscription',
             'entity_type' => 'user',
             'entity_id'   => (string) $user->id,
-            'payload'     => json_encode(['months' => $validated['months'], 'new_expires_at' => $newExpire->toISOString()]),
+            'payload'     => json_encode(['months' => $months, 'new_expires_at' => $newExpire->toISOString()]),
             'created_at'  => now(),
         ]);
 
-        return back()->with('success', 'اعتبار حساب کاربری ' . $user->name . ' با موفقیت به مدت ' . $validated['months'] . ' ماه تمدید شد.');
+        return back()->with('success', 'اعتبار حساب کاربری ' . $user->name . ' با موفقیت به مدت ' . $months . ' ماه تمدید شد.');
     }
 
     /**

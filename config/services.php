@@ -35,4 +35,18 @@ return [
         ],
     ],
 
+    'smsir' => [
+        'api_key'     => env('SMSIR_API_KEY', 'MtHdSU31WeTLNQuzwSeN5bmk8OBRvvzhW6hiUL64o1EdJr4x'),
+        'line_number' => env('SMSIR_LINE_NUMBER', null),
+        'template_id' => env('SMSIR_TEMPLATE_ID', null),
+        'admin_phone' => env('ADMIN_PHONE', '09187009064'),
+    ],
+
+    's_api' => [
+        'token'       => env('S_API_TOKEN', 'YHXBYFzp8RGLVUgspjKKtwrm/h4WkEKr2zRHnmv2t3auZQKdvKmz4hdD6H8WwQoYYg6ONc9bEO6pMf5rnLoo4y1d5G3uFr1FmOUs+kzq0Os='),
+        'endpoint'    => env('S_API_ENDPOINT', 'https://s.api.ir/api/sw1/SmsOTP'),
+        'template'    => (int) env('S_API_TEMPLATE', 1),
+        'admin_phone' => env('ADMIN_PHONE', '09187009064'),
+    ],
+
 ];

@@ -41,6 +41,11 @@ class ProductController extends Controller
             'image_file'      => 'nullable|image|max:2048',
         ]);
 
+        $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
+        $base = ($latestGoldPrice * $data['weight_gram']);
+        $profit = $data['profit_type'] === 'percent' ? ($base * ($data['profit_value'] / 100)) : (float)$data['profit_value'];
+        $finalPrice = round($base + $profit);
+
         $product = ProductSlide::create([
             'id'              => 'p-' . now()->timestamp . rand(10, 99),
             'user_id'         => auth()->id(),
@@ -49,13 +54,14 @@ class ProductController extends Controller
             'labor_fee'       => 0,
             'profit_value'    => $data['profit_value'],
             'profit_type'     => $data['profit_type'],
-            'base_gold_price' => 0,
-            'final_price'     => 0, // قیمت به صورت زنده محاسبه می‌شود
+            'base_gold_price' => $latestGoldPrice,
+            'final_price'     => $finalPrice,
             'is_visible'      => true,
         ]);
 
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('products', 'public');
+            $userId = auth()->id();
+            $path = $request->file('image_file')->store("products/{$userId}", 'public');
             $product->images()->create([
                 'id' => 'img-' . uniqid(),
                 'url' => '/storage/' . $path,
@@ -105,6 +111,15 @@ class ProductController extends Controller
 
     public function addImageUrl(Request $request, $id)
     {
+        $request->validate([
+            'url' => 'required|url',
+        ]);
+
+        // جلوگیری از سوءاستفاده با ارسال آدرس‌های محلی استوریج سرور
+        if (str_contains($request->url, '/storage/')) {
+            return response()->json(['message' => 'ثبت آدرس فایل‌های داخلی مجاز نیست. لطفاً از دکمه آپلود فایل استفاده کنید.'], 422);
+        }
+
         $product = ProductSlide::where('user_id', auth()->id())->findOrFail($id);
         $img = $product->images()->create([
             'id' => 'img-' . uniqid(),
@@ -120,8 +135,9 @@ class ProductController extends Controller
         $request->validate([
             'image' => 'required|image|max:2048'
         ]);
-        $product = ProductSlide::where('user_id', auth()->id())->findOrFail($id);
-        $path = $request->file('image')->store('products', 'public');
+        $userId = auth()->id();
+        $product = ProductSlide::where('user_id', $userId)->findOrFail($id);
+        $path = $request->file('image')->store("products/{$userId}", 'public');
         $img = $product->images()->create([
             'id' => 'img-' . uniqid(),
             'url' => '/storage/' . $path,
@@ -133,12 +149,20 @@ class ProductController extends Controller
 
     public function deleteImage($id, $imageId)
     {
-        $img = ProductImage::whereHas('product', function($query) {
-            $query->where('user_id', auth()->id());
+        $userId = auth()->id();
+        $img = ProductImage::whereHas('product', function($query) use ($userId) {
+            $query->where('user_id', $userId);
         })->where('product_id', $id)->where('id', $imageId)->firstOrFail();
-        if (str_contains($img->url, '/storage/')) {
-            Storage::disk('public')->delete(str_replace('/storage/', '', $img->url));
+
+        // حذف امن فایل فقط در صورتی که در پوشه اختصاصی همین کاربر باشد
+        $userPrefix = "/storage/products/{$userId}/";
+        if (str_starts_with($img->url, $userPrefix)) {
+            $storagePath = str_replace('/storage/', '', $img->url);
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);
+            }
         }
+
         $img->delete();
         return response()->json(['ok' => true]);
     }

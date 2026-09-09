@@ -34,12 +34,18 @@
 
             <form method="POST" action="{{ route('admin.login') }}" class="mt-3 grid gap-3">
                 @csrf
-                <input type="text" name="email" required
-                       class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm"
-                       placeholder="نام کاربری" value="{{ old('email', 'admin') }}">
-                <input type="password" name="password" required
-                       class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm"
-                       placeholder="رمز عبور">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">شناسه ورود (شماره موبایل، نام کاربری یا ایمیل)</label>
+                    <input type="text" name="email" required
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm"
+                           placeholder="مثال: 09187009064 یا نام کاربری" value="{{ old('email') }}">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">رمز عبور</label>
+                    <input type="password" name="password" required
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm"
+                           placeholder="رمز عبور">
+                </div>
                 <button type="submit"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition-colors">
                     ورود

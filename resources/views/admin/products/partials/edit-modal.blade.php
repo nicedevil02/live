@@ -140,9 +140,18 @@ function editProductForm() {
                     body: JSON.stringify(this.form)
                 });
                 const updated = await res.json();
+                if (!res.ok) {
+                    if (res.status === 422 && updated.errors) {
+                        const msg = Object.values(updated.errors).flat().join('\n');
+                        alert('خطای اعتبارسنجی:\n' + msg);
+                    } else {
+                        alert(updated.message || 'خطا در بروزرسانی محصول');
+                    }
+                    return;
+                }
                 this.$dispatch('product-edited', updated);
             } catch(e) {
-                alert('خطا در بروزرسانی');
+                alert('خطا در ارتباط با سرور');
             } finally {
                 this.isSaving = false;
             }
@@ -157,6 +166,10 @@ function editProductForm() {
                     body: JSON.stringify({ url: this.imageUrl })
                 });
                 const img = await res.json();
+                if (!res.ok) {
+                    alert(img.message || 'خطا در افزودن آدرس تصویر');
+                    return;
+                }
                 this.localProduct.images.push(img);
                 this.imageUrl = '';
             } catch(e) { alert('خطا در افزودن لینک'); }
@@ -191,10 +204,15 @@ function editProductForm() {
         async handleDeleteImage(imageId) {
             if(!confirm('تصویر حذف شود؟')) return;
             try {
-                await fetch(`/admin/products/${this.id}/images/${imageId}`, {
+                const res = await fetch(`/admin/products/${this.id}/images/${imageId}`, {
                     method: 'DELETE',
                     headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    alert(err.message || 'خطا در حذف تصویر');
+                    return;
+                }
                 this.localProduct.images = this.localProduct.images.filter(i => i.id !== imageId);
             } catch(e) { alert('خطا در حذف تصویر'); }
         }

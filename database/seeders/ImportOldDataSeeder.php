@@ -18,20 +18,40 @@ class ImportOldDataSeeder extends Seeder
 {
     public function run(): void
     {
-        $json = file_get_contents(storage_path('app/state.json'));
-        $data = json_decode($json, true);
+        $stateFile = storage_path('app/state.json');
+        $data = [];
+        if (file_exists($stateFile)) {
+            $json = file_get_contents($stateFile);
+            $data = json_decode($json, true) ?: [];
+        }
 
         // 1. Admin user
-        User::updateOrCreate(
-            ['email' => 'nicedevil02@gmail.com'],
-            [
+        $adminEmail = 'nicedevil02@gmail.com';
+        $user = User::where('email', $adminEmail)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'email'          => $adminEmail,
                 'name'           => $data['admin']['username'] ?? 'admin',
-                'password'       => Hash::make('Bahman+11'),
+                'username'       => 'admin',
+                'display_token'  => \Illuminate\Support\Str::random(40),
+                'password'       => Hash::make(env('ADMIN_INITIAL_PASSWORD', 'Bahman+11')),
                 'is_admin'       => true,
                 'is_super_admin' => true,
                 'is_approved'    => true,
-            ]
-        );
+            ]);
+        } else {
+            if (empty($user->username)) {
+                $user->username = 'admin';
+            }
+            if (empty($user->display_token)) {
+                $user->display_token = \Illuminate\Support\Str::random(40);
+            }
+            $user->is_admin = true;
+            $user->is_super_admin = true;
+            $user->is_approved = true;
+            $user->save();
+        }
 
         // 2. FormulaConfig
         FormulaConfig::updateOrCreate(

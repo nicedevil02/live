@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\DisplaySettingController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\PublicDisplayController;
+use App\Http\Controllers\PublicPageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SourceController;
 use App\Http\Controllers\Admin\FormulaController;
@@ -31,6 +32,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // ثبت نام طلافروشی جدید
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register/send-otp', [AuthController::class, 'sendRegisterOtp'])->name('register.send-otp')->middleware('throttle:5,1');
     Route::post('/register', [AuthController::class, 'register']);
 });
 
@@ -68,6 +70,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
             abort(403, 'دسترسی غیرمجاز');
         }
         try {
+            cache()->forget('smsir_default_line');
+            cache()->forget('smsir_default_template_id');
             \Illuminate\Support\Facades\Artisan::call('cache:clear');
             \Illuminate\Support\Facades\Artisan::call('config:clear');
             \Illuminate\Support\Facades\Artisan::call('route:clear');
@@ -76,6 +80,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
                 <h3 style='color: #34d399; margin-top: 0;'>✅ تمامی کش‌های سیستم با موفقیت پاک شدند:</h3>
                 <ul style='color: #f8fafc; font-size: 14px; line-height: 1.8;'>
                     <li>کش عمومی برنامه (Cache) پاک شد.</li>
+                    <li>کش خطوط و قالب‌های پیامکی SMS.ir بازنشانی شد.</li>
                     <li>تنظیمات پیکربندی (Config) پاک شد.</li>
                     <li>مسیرها و روت‌های کش شده (Routes) پاک شد.</li>
                     <li>تمپلیت‌های کامپایل شده (Views) پاک شد.</li>
@@ -90,6 +95,20 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
             </div>", 500);
         }
     })->name('clear-cache');
+
+    // بررسی وضعیت درگاه پیامک، خطوط فعال و تست ارسال (مخصوص سوپرادمین)
+    Route::get('/sms-status', function (\App\Services\SmsService $smsService) {
+        if (!auth()->user()->is_super_admin) {
+            abort(403, 'دسترسی غیرمجاز');
+        }
+        $diag = $smsService->getDiagnostics();
+        $testResult = null;
+        if (request()->has('test')) {
+            $testMobile = request('test') ?: '09187009064';
+            $testResult = $smsService->sendOtp($testMobile, (string) rand(11111, 99999));
+        }
+        return view('admin.sms-status', compact('diag', 'testResult'));
+    })->name('sms-status');
 
     // مدیریت کاربران (سوپر ادمین)
     Route::middleware(['super_admin'])->group(function () {
@@ -123,9 +142,15 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/security', [AuthController::class, 'editSecurity'])->name('security');
     Route::put('/security', [AuthController::class, 'updateSecurity'])->name('security.update');
     
-    // جفت‌سازی تلویزیون هوشمند با گوشی
-    Route::get('/pair/{session_code}', [PublicDisplayController::class, 'pairDevice'])->name('pair');
+    // جفت‌سازی تلویزیون هوشمند با گوشی (نیازمند تایید کاربر با متد POST)
+    Route::match(['get', 'post'], '/pair/{session_code}', [PublicDisplayController::class, 'pairDevice'])->name('pair');
 });
+
+// صفحات فرود و سئوی هدفمند طلالایو (Pillar Pages & B2B SEO)
+Route::get('/smart-gold-board', [PublicPageController::class, 'smartGoldBoard'])->name('public.smart-gold-board');
+Route::get('/tv-setup-guide', [PublicPageController::class, 'tvSetupGuide'])->name('public.tv-setup-guide');
+Route::get('/gold-calculator', [PublicPageController::class, 'goldCalculator'])->name('public.gold-calculator');
+Route::get('/guides', [PublicPageController::class, 'guidesIndex'])->name('public.guides');
 
 // صفحه نمایشگر اختصاصی مغازه (باید آخرین مسیر باشد تا با سایر آدرس‌ها تداخل نداشته باشد)
 Route::get('/{username}', [PublicDisplayController::class, 'show'])->name('display.live');

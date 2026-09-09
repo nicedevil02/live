@@ -116,7 +116,7 @@
                     {{-- QR Code (بدون کادر بیرونی) --}}
                     <div class="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] shrink-0">
                         <div class="bg-white p-1.5 rounded-2xl shadow-lg shrink-0">
-                            <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(settings.qr_link || window.location.href)" 
+                            <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(settings.qr_link || (window.location.origin + '/' + (snapshotData.username || '')))" 
                                  alt="QR Code" class="w-24 h-24 xl:w-28 xl:h-28 object-contain">
                         </div>
                         <div class="flex flex-col justify-center max-w-[150px] pr-1">
@@ -183,18 +183,19 @@
             <div class="flex flex-1 flex-row gap-3 min-h-0">
                 {{-- Product Slider --}}
                 <section :class="[theme.card, themeKey === 'light-modern' ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0">
-                    <template x-if="activeProduct" x-key="activeIndex">
+                    <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
-                            <img :src="activeProduct.images?.[0]?.url || '/icons/icon-512x512.png'" x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[20s] ease-linear group-hover:scale-105">
-                            <!-- نشان پیشنهاد شگفت‌انگیز -->
-                            <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
+                            <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
+                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[20s] ease-linear group-hover:scale-105">
+                            <!-- نشان پیشنهاد ویژه -->
+                            <div x-show="Boolean(activeProduct.is_special)" class="absolute top-5 left-5 z-20 select-none pointer-events-none">
                                 <div class="relative flex items-center gap-3 rounded-full border border-red-200/35 bg-gradient-to-br from-red-500/20 via-rose-500/14 to-white/10 px-4 py-3 backdrop-blur-xl shadow-[0_18px_40px_rgba(0,0,0,0.28),0_0_28px_rgba(239,68,68,0.18)] ring-1 ring-inset ring-white/10">
                                     <span class="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-500 via-rose-500 to-red-700 shadow-[0_0_18px_rgba(239,68,68,0.45)] ring-1 ring-white/20 animate-[pulse_1.8s_ease-in-out_infinite]">
                                         <span class="h-2.5 w-2.5 rounded-full bg-white/90 animate-ping"></span>
                                     </span>
                                     <div class="flex flex-col pl-3 pr-2">
                                         <span class="text-xl font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
-                                            پیشنهاد شگفت‌انگیز
+                                            پیشنهاد ویژه
                                         </span>
                                     </div>
                                 </div>
@@ -211,15 +212,24 @@
                                                         وزن: <span x-text="activeProduct.weight_gram"></span> گرم
                                                     </span>
                                                 </template>
-                                                <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3.5 py-1.5 text-sm font-bold text-white/90 backdrop-blur-xl">
-                                                    سود: <span x-text="activeProductProfitPercent"></span>%
-                                                </span>
+                                                <template x-if="settings.show_profit">
+                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3.5 py-1.5 text-sm font-bold text-white/90 backdrop-blur-xl">
+                                                        سود: <span x-text="activeProductProfitPercent"></span>%
+                                                    </span>
+                                                </template>
                                             </div>
                                         </div>
                                         <div class="shrink-0 rounded-2xl border border-amber-200/35 bg-gradient-to-br from-amber-300 to-amber-500 px-4 py-2.5 text-black">
                                             <span class="block text-[9px] font-black uppercase opacity-60 tracking-[0.35em] mb-1">قیمت نهایی</span>
-                                            <span class="text-3xl font-black tabular-nums" x-text="formatNumber(activeProductFinalPrice)"></span>
-                                            <span class="text-xs font-black opacity-80 whitespace-nowrap"> تومان</span>
+                                            <template x-if="activeProductFinalPrice > 0">
+                                                <div>
+                                                    <span class="text-3xl font-black tabular-nums" x-text="formatNumber(activeProductFinalPrice)"></span>
+                                                    <span class="text-xs font-black opacity-80 whitespace-nowrap"> تومان</span>
+                                                </div>
+                                            </template>
+                                            <template x-if="activeProductFinalPrice <= 0">
+                                                <span class="text-xs font-black text-amber-950 bg-amber-200/70 rounded px-2 py-1 block">در حال استعلام نرخ...</span>
+                                            </template>
                                         </div>
                                     </div>
                                 </div>
@@ -518,6 +528,8 @@
                 connectionState: 'online',
                 errorMessage: '',
                 activeIndex: 0,
+                productImageIndex: 0,
+                sliderTimer: null,
                 now: new Date(),
                 refreshTimer: null,
                 isFullscreen: false,
@@ -543,9 +555,11 @@
                 },
                 get activeProductFinalPrice() {
                     if (!this.activeProduct) return 0;
-                    const gold18 = this.snapshotData.priceFeed?.find(p => p.symbol === 'gold18')?.value || 0;
-                    const base = (gold18 * this.activeProduct.weight_gram) + Number(this.activeProduct.labor_fee);
-                    const profit = this.activeProduct.profit_type === 'percent' ? base * (this.activeProduct.profit_value / 100) : Number(this.activeProduct.profit_value);
+                    const gold18 = this.snapshotData.priceFeed?.find(p => p.symbol === 'gold18')?.value;
+                    // اگر نرخ طلای ۱۸ عیار موجود نباشد، قیمت صفر بازگردانده می‌شود تا نرخ نامعتبر نمایش داده نشود
+                    if (!gold18 || Number(gold18) <= 0) return 0;
+                    const base = (Number(gold18) * Number(this.activeProduct.weight_gram)) + Number(this.activeProduct.labor_fee);
+                    const profit = this.activeProduct.profit_type === 'percent' ? base * (Number(this.activeProduct.profit_value) / 100) : Number(this.activeProduct.profit_value);
                     return Math.round(base + profit);
                 },
                 get weekDay() { return this.now.toLocaleDateString('fa-IR', { weekday: 'long' }); },
@@ -554,6 +568,28 @@
                 get refreshIntervalMs() {
                     const seconds = Number(this.snapshotData?.refreshIntervalSeconds || 60);
                     return Math.max(seconds, 5) * 1000;
+                },
+
+                startSlider() {
+                    if (this.sliderTimer) {
+                        clearInterval(this.sliderTimer);
+                    }
+                    const intervalSec = Number(this.settings?.slider_interval_sec) || 8;
+                    this.sliderTimer = setInterval(() => {
+                        if (this.products.length > 0) {
+                            // چرخش تصاویر در صورتی که محصول چند تصویر داشته باشد
+                            if (this.activeProduct && this.activeProduct.images && this.activeProduct.images.length > 1) {
+                                this.productImageIndex++;
+                                if (this.productImageIndex % this.activeProduct.images.length === 0) {
+                                    this.activeIndex = (this.activeIndex + 1) % this.products.length;
+                                    this.productImageIndex = 0;
+                                }
+                            } else {
+                                this.activeIndex = (this.activeIndex + 1) % this.products.length;
+                                this.productImageIndex = 0;
+                            }
+                        }
+                    }, Math.max(intervalSec, 3) * 1000);
                 },
 
                 scheduleSnapshotRefresh() {
@@ -568,15 +604,21 @@
                         const username = this.snapshotData?.username || 'admin';
                         const displayToken = new URLSearchParams(window.location.search).get('key') || '';
                         const res = await fetch('/api/display/snapshot/' + username + '?key=' + displayToken + '&t=' + Date.now());
-                        if (!res.ok) throw new Error('Network response was not ok');
+                        if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
                         const newData = await res.json();
 
                         if (newData && newData.settings) {
                             const oldPub = this.snapshotData?.settings?.published_at;
                             const newPub = newData.settings.published_at;
-                            if (oldPub && newPub && oldPub !== newPub) {
+                            // بررسی تغییر وضعیت انتشار (شامل اولین انتشار)
+                            if ((!oldPub && newPub) || (oldPub && newPub && oldPub !== newPub)) {
                                 window.location.reload();
                                 return;
+                            }
+
+                            if (this.settings.slider_interval_sec !== newData.settings.slider_interval_sec) {
+                                this.snapshotData.settings.slider_interval_sec = newData.settings.slider_interval_sec;
+                                this.startSlider();
                             }
                         }
  
@@ -631,13 +673,17 @@
                         this.errorMessage = '';
                     } catch (e) {
                         console.error('Fetch error:', e);
-                        this.connectionState = 'fallback';
+                        if (!navigator.onLine) {
+                            this.connectionState = 'offline';
+                            this.errorMessage = 'اتصال اینترنت قطع شده است';
+                        } else {
+                            this.connectionState = 'fallback';
+                            this.errorMessage = 'عدم ارتباط با سرور، نمایش آخرین داده‌ها';
+                        }
                     } finally {
                         this.scheduleSnapshotRefresh();
                     }
                 },
-
-
 
                 toggleFullscreen() {
                     if (!document.fullscreenElement) {
@@ -694,13 +740,9 @@
                     this.$watch('themeKey', val => document.documentElement.className = (val === 'light-modern' ? 'light' : 'dark'));
                     document.documentElement.className = (this.themeKey === 'light-modern' ? 'light' : 'dark');
 
-                    // اسلایدر
-                    const interval = (this.settings.slider_interval_sec || 8) * 1000;
-                    setInterval(() => {
-                        if (this.products.length > 0) {
-                            this.activeIndex = (this.activeIndex + 1) % this.products.length;
-                        }
-                    }, interval);
+                    // شروع هوشمند اسلایدر با قابلیت تنظیم داینامیک
+                    this.startSlider();
+                    this.$watch('settings.slider_interval_sec', () => this.startSlider());
 
                     // ساعت
                     setInterval(() => { this.now = new Date(); }, 1000);

@@ -68,7 +68,7 @@ class PublicDisplayController extends Controller
         }
 
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
-        $isHealthy = $lastFetch && \Illuminate\Support\Carbon::parse($lastFetch)->diffInMinutes(now()) < 10;
+        $isHealthy = $lastFetch && (max(0, now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp) < 600);
 
         return response()->json([
             'status'              => $isHealthy ? 'ok' : 'degraded',
@@ -135,19 +135,70 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * جفت‌سازی دستگاه تلویزیون توسط گوشی طلافروش
+     * جفت‌سازی دستگاه تلویزیون توسط گوشی طلافروش با تأییدیه امن و جلوگیری از CSRF
      */
-    public function pairDevice($session_code)
+    public function pairDevice(Request $request, $session_code)
     {
         $user = auth()->user();
         
+        // اعتبارسنجی کد سشن
+        if (!preg_match('/^[a-zA-Z0-9_\-]+$/', $session_code)) {
+            abort(400, 'شناسه سشن نامعتبر است.');
+        }
+
+        // اگر درخواست GET بود، صفحه تأیید صریح نمایش داده می‌شود تا از حملات CSRF جلوگیری شود
+        if ($request->isMethod('GET')) {
+            $csrf = csrf_token();
+            $actionUrl = route('admin.pair', ['session_code' => $session_code]);
+            return response("
+                <!DOCTYPE html>
+                <html lang='fa' dir='rtl'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>تأیید اتصال تلویزیون</title>
+                    <style>
+                        body { font-family: Tahoma, system-ui, sans-serif; background: #0f172a; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+                        .card { background: #1e293b; border: 1px solid #334155; border-radius: 24px; padding: 40px 30px; max-width: 440px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+                        .icon { font-size: 50px; margin-bottom: 20px; }
+                        h2 { margin: 0 0 12px 0; font-size: 20px; color: #38bdf8; }
+                        p { color: #94a3b8; font-size: 14px; line-height: 1.7; margin: 0 0 24px 0; }
+                        .btn { background: #2563eb; color: #fff; border: none; border-radius: 14px; padding: 14px 28px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; transition: background 0.2s; }
+                        .btn:hover { background: #1d4ed8; }
+                        .meta { background: #0f172a; border-radius: 12px; padding: 12px; margin-bottom: 20px; font-size: 13px; color: #cbd5e1; }
+                    </style>
+                </head>
+                <body>
+                    <div class='card'>
+                        <div class='icon'>📺</div>
+                        <h2>تأیید اتصال تلویزیون جدید</h2>
+                        <p>آیا می‌خواهید این نمایشگر را به تابلوی گالری اختصاصی خود متصل نمایید؟</p>
+                        <div class='meta'>کاربر: <b>" . e($user->name) . "</b> (" . e($user->username) . ")</div>
+                        <form method='POST' action='{$actionUrl}'>
+                            <input type='hidden' name='_token' value='{$csrf}'>
+                            <button type='submit' class='btn'>✅ تأیید و اتصال به تلویزیون</button>
+                        </form>
+                    </div>
+                </body>
+                </html>
+            ");
+        }
+
+        // انجام اتصال با متد POST و تایید توکن CSRF
         Cache::put('pairing_' . $session_code, [
             'user_id' => $user->id,
             'username' => $user->username,
             'token' => $user->display_token
         ], 300); // انقضا بعد از ۵ دقیقه
 
-        return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 80px 20px; background: #f8fafc; min-height: 100vh; display: flex; items-center: center; justify-content: center;'><div style='max-width: 400px; background: #fff; border: 1px solid #e2e8f0; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);'><div style='font-size: 56px; margin-bottom: 24px;'>✅</div><h2 style='color: #0f172a; margin-bottom: 12px; font-weight: 800;'>اتصال با موفقیت انجام شد</h2><p style='color: #64748b; font-size: 15px; line-height: 1.7; margin: 0;'>تلویزیون شما با موفقیت به اکانت متصل شد و اکنون قیمت‌های طلای گالری شما را نمایش می‌دهد. می‌توانید این صفحه را در گوشی خود ببندید.</p></div></div>");
+        if ($request->wantsJson() || $request->ajax() || $request->isJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تلویزیون با موفقیت متصل شد.'
+            ]);
+        }
+
+        return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 80px 20px; background: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 400px; background: #fff; border: 1px solid #e2e8f0; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);'><div style='font-size: 56px; margin-bottom: 24px;'>✅</div><h2 style='color: #0f172a; margin-bottom: 12px; font-weight: 800;'>اتصال با موفقیت انجام شد</h2><p style='color: #64748b; font-size: 15px; line-height: 1.7; margin: 0;'>تلویزیون شما با موفقیت به اکانت متصل شد و اکنون قیمت‌های طلای گالری شما را نمایش می‌دهد. می‌توانید این صفحه را در گوشی خود ببندید.</p></div></div>");
     }
 
     /**
