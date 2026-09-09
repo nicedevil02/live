@@ -8,7 +8,7 @@ deployment:
     - /bin/cp -R database $DEPLOYPATH/
     - /bin/cp -R resources $DEPLOYPATH/
     - /bin/cp -R routes $DEPLOYPATH/
-    - /bin/cp -R public_html/* $DEPLOYPATH/public_html/
+    - /bin/cp -R public_html/. $DEPLOYPATH/public_html/
     - /bin/cp artisan $DEPLOYPATH/
     - /bin/cp composer.json $DEPLOYPATH/
     - /bin/cp package.json $DEPLOYPATH/
