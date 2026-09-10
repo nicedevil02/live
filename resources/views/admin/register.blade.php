@@ -112,60 +112,60 @@
 
                 {{-- مرحله ۱: شماره موبایل طلافروش و ارسال پیامک --}}
                 <div class="space-y-1.5">
-                    <label for="phoneInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <label for="phoneInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
                         ۱. شماره موبایل طلافروش
                     </label>
-                    <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="flex flex-col sm:flex-row gap-2.5">
                         <div class="relative flex-1">
                             <input type="tel" name="phone" id="phoneInput" required
-                                   class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white font-mono text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                                   class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg text-slate-900 dark:text-white font-mono text-center sm:text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-bold tracking-wider"
                                    dir="ltr" placeholder="09187009064" maxlength="11" value="{{ old('phone') }}"
                                    autocomplete="tel" inputmode="numeric">
                         </div>
                         
                         <button type="button" id="sendOtpBtn"
-                                class="h-11 px-4 sm:px-5 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
+                                class="h-13 sm:h-14 px-5 rounded-2xl text-xs sm:text-sm font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
                             <span id="btnText">ارسال کد پیامکی</span>
                         </button>
                     </div>
                 </div>
 
                 {{-- مرحله ۲: کد تأیید ۵ رقمی پیامک --}}
-                <div class="space-y-2 bg-amber-500/5 dark:bg-slate-950/40 p-3.5 sm:p-4 rounded-2xl border border-amber-500/20 dark:border-slate-800">
+                <div class="space-y-2 bg-amber-500/5 dark:bg-slate-950/40 p-4 rounded-2xl border border-amber-500/20 dark:border-slate-800">
                     <div class="flex items-center justify-between">
-                        <label for="otpInput" class="block text-xs font-bold text-amber-700 dark:text-amber-400">
+                        <label for="otpInput" class="block text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-400">
                             ۲. کد ۵ رقمی پیامک‌شده:
                         </label>
-                        <span id="otpStatusHint" class="text-[10px] text-slate-500 dark:text-slate-400">کد به موبایل شما پیامک می‌شود</span>
+                        <span id="otpStatusHint" class="text-[11px] text-slate-500 dark:text-slate-400">کد به موبایل شما پیامک می‌شود</span>
                     </div>
                     <input type="text" name="otp" id="otpInput" required maxlength="5" inputmode="numeric"
-                           class="w-full h-12 bg-white dark:bg-slate-950 border border-amber-500/40 rounded-xl px-4 text-center text-2xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 dark:placeholder-slate-700 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                           class="w-full h-14 bg-white dark:bg-slate-950 border-2 border-amber-500/50 rounded-2xl px-4 text-center text-3xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 dark:placeholder-slate-700 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
                            placeholder="-----" value="{{ old('otp') }}" autocomplete="one-time-code">
                 </div>
 
                 {{-- نام طلافروشی / گالری --}}
                 <div class="space-y-1.5">
-                    <label for="shopNameInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <label for="shopNameInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
                         ۳. نام گالری یا طلافروشی شما
                     </label>
                     <input type="text" name="name" id="shopNameInput" required
-                           class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                           class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
                            placeholder="مثال: گالری طلای کیمیا" value="{{ old('name') }}" autocomplete="off">
                 </div>
 
                 {{-- رمز عبور ساده با آیکون چشم --}}
                 <div class="space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <label for="passwordInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <label for="passwordInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
                             ۴. رمز عبور انتخابی
                         </label>
-                        <span class="text-[10px] text-slate-400">حداقل ۴ کاراکتر</span>
+                        <span class="text-[11px] text-slate-400 font-medium">حداقل ۴ رقم یا کاراکتر (مثلاً: 1234)</span>
                     </div>
                     <div class="relative">
                         <input type="password" name="password" id="passwordInput" required minlength="4"
-                               class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all"
-                               placeholder="رمز عبور دلخواه شما">
-                        <button type="button" id="toggleRegPasswordBtn" class="absolute left-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                               class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 pl-12 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-left" dir="ltr"
+                               placeholder="رمز عبور دلخواه شما (حداقل ۴ رقم)">
+                        <button type="button" id="toggleRegPasswordBtn" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         </button>
                     </div>
@@ -173,7 +173,7 @@
 
                 {{-- دکمه نهایی ثبت نام --}}
                 <button type="submit" id="submitBtn"
-                        class="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-3 flex items-center justify-center gap-1.5">
+                        class="w-full h-13 sm:h-14 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm sm:text-base shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-3 flex items-center justify-center gap-1.5">
                     <span>ایجاد تابلوی گالری و فعال‌سازی فوری تست ۷ روزه</span>
                     <span>&larr;</span>
                 </button>

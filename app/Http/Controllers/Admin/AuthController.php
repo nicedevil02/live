@@ -239,7 +239,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'currentPassword' => 'required|string',
             'newUsername'     => 'nullable|string|min:3',
-            'newPassword'     => 'nullable|string|min:6|confirmed',
+            'newPassword'     => 'nullable|string|min:4|confirmed',
         ]);
 
         $user = auth()->user();
@@ -433,10 +433,10 @@ class AuthController extends Controller
             }
         }
 
-        // رمز عبور: در صورت خالی بودن، رمز پیش‌فرض ۶ رقمی تولید می‌شود
+        // رمز عبور: در صورت خالی بودن، رمز پیش‌فرض ۴ رقمی تولید می‌شود
         $password = $request->input('password');
         if (empty($password)) {
-            $password = substr($normalizedPhone, -6) ?: '123456';
+            $password = substr($normalizedPhone, -4) ?: '1234';
         }
 
         $request->merge([

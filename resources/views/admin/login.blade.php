@@ -91,95 +91,132 @@
                 <span id="otpErrorText"></span>
             </div>
 
-            {{-- تب‌های انتخاب روش ورود (دوگانه) --}}
+            @php
+                $initialMode = ($errors->has('otp') || old('otp') || (old('phone') && !$errors->has('email'))) ? 'otp' : 'password';
+            @endphp
+
+            {{-- تب‌های انتخاب روش ورود (پیش‌فرض: ورود با رمز عبور / ثانویه: فراموشی رمز عبور پیامکی) --}}
             <div class="flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
-                <button type="button" id="tabOtpBtn"
-                        class="flex-1 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 shadow-sm">
-                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    <span>ورود سریع با پیامک</span>
-                </button>
                 <button type="button" id="tabPasswordBtn"
-                        class="flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        class="flex-1 py-2.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 {{ $initialMode === 'password' ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 font-black shadow-sm' : 'text-slate-500 dark:text-slate-400 font-bold hover:text-slate-800 dark:hover:text-slate-200' }}">
+                    <svg class="w-4 h-4 {{ $initialMode === 'password' ? 'text-amber-500' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                     <span>ورود با رمز عبور</span>
                 </button>
+                <button type="button" id="tabOtpBtn"
+                        class="flex-1 py-2.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 {{ $initialMode === 'otp' ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 font-black shadow-sm' : 'text-slate-500 dark:text-slate-400 font-bold hover:text-slate-800 dark:hover:text-slate-200' }}">
+                    <svg class="w-4 h-4 {{ $initialMode === 'otp' ? 'text-amber-500' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    <span>فراموشی رمز عبور (پیامکی)</span>
+                </button>
             </div>
 
-            {{-- ۱. فرم ورود با کد پیامکی (روش پیش‌فرض و ساده بدون نیاز به حفظ رمز) --}}
-            <div id="otpSection" class="space-y-3.5">
-                <form method="POST" action="{{ route('admin.login.otp') }}" id="otpLoginForm" class="space-y-3.5">
+            {{-- ۱. فرم ورود با رمز عبور (حالت پیش‌فرض سامانه) --}}
+            <div id="passwordSection" class="space-y-4 {{ $initialMode === 'password' ? '' : 'hidden' }}">
+                <form method="POST" action="{{ route('admin.login') }}" class="space-y-4" id="passwordLoginForm">
                     @csrf
-                    
-                    {{-- مرحله ۱: شماره موبایل --}}
                     <div class="space-y-1.5">
-                        <label for="loginPhoneInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                            شماره موبایل طلافروش
-                        </label>
-                        <div class="flex flex-col sm:flex-row gap-2">
-                            <input type="tel" name="phone" id="loginPhoneInput" required
-                                   class="flex-1 h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white font-mono text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                                   dir="ltr" placeholder="09187009064" maxlength="11" value="{{ old('phone') }}"
-                                   autocomplete="tel" inputmode="numeric">
-                            
-                            <button type="button" id="sendLoginOtpBtn"
-                                    class="h-11 px-4 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
-                                <span id="loginOtpBtnText">ارسال کد پیامکی</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- مرحله ۲: کادر کد ۵ رقمی (پس از زدن دکمه فعال می‌شود) --}}
-                    <div id="otpInputContainer" class="space-y-1.5 hidden">
-                        <div class="flex items-center justify-between">
-                            <label for="loginOtpInput" class="block text-xs font-bold text-amber-700 dark:text-amber-400">
-                                کد ۵ رقمی پیامک‌شده:
-                            </label>
-                            <span id="countdownTimer" class="text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400"></span>
-                        </div>
-                        <input type="text" name="otp" id="loginOtpInput" maxlength="5" inputmode="numeric"
-                               class="w-full h-12 bg-white dark:bg-slate-950 border border-amber-500/50 rounded-xl px-4 text-center text-2xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
-                               placeholder="-----" autocomplete="one-time-code">
-                        
-                        <button type="submit" id="loginOtpSubmitBtn"
-                                class="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-2 flex items-center justify-center gap-1.5">
-                            <span>تأیید و ورود به پنل تابلو</span>
-                            <span>&larr;</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {{-- ۲. فرم ورود با رمز عبور (کلاسیک) --}}
-            <div id="passwordSection" class="space-y-3.5 hidden">
-                <form method="POST" action="{{ route('admin.login') }}" class="space-y-3.5">
-                    @csrf
-                    <div>
-                        <label for="loginEmailInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                            شماره موبایل یا نام کاربری
+                        <label for="loginEmailInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                            شماره موبایل یا نام کاربری گالری
                         </label>
                         <input type="text" name="email" id="loginEmailInput" required
-                               class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                               placeholder="مثال: 09187009064 یا نام کاربری" value="{{ old('email') }}">
+                               class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-left" dir="ltr"
+                               placeholder="09187009064 یا نام کاربری" value="{{ old('email') }}"
+                               autocomplete="username">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label for="loginPasswordInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                            رمز عبور
-                        </label>
+                        <div class="flex items-center justify-between">
+                            <label for="loginPasswordInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                                رمز عبور
+                            </label>
+                            <span class="text-[11px] text-slate-400 font-medium">حداقل ۴ رقم یا کاراکتر</span>
+                        </div>
                         <div class="relative">
-                            <input type="password" name="password" id="loginPasswordInput" required
-                                   class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                            <input type="password" name="password" id="loginPasswordInput" required minlength="4"
+                                   class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 pl-12 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-left" dir="ltr"
                                    placeholder="رمز عبور شما">
-                            <button type="button" id="togglePasswordBtn" class="absolute left-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <button type="button" id="togglePasswordBtn" aria-label="نمایش رمز"
+                                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer">
                                 <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </div>
                     </div>
 
+                    {{-- دکمه لینک فراموشی رمز عبور با پیامک --}}
+                    <div class="flex items-center justify-between pt-0.5">
+                        <button type="button" id="forgotPasswordLink"
+                                class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:underline cursor-pointer flex items-center gap-1">
+                            <span>🔑 رمز عبور را فراموش کرده‌اید؟ (ورود سریع با پیامک)</span>
+                        </button>
+                    </div>
+
                     <button type="submit"
-                            class="w-full h-11 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-md shadow-amber-500/20 transition-all cursor-pointer mt-1">
-                        ورود به پنل با رمز عبور
+                            class="w-full h-13 sm:h-14 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-lg shadow-amber-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 hover:scale-[1.01]">
+                        <span>ورود به پنل کاربری تابلو</span>
+                        <span>&larr;</span>
                     </button>
+                </form>
+            </div>
+
+            {{-- ۲. فرم ورود با کد پیامکی (مختص فراموشی رمز عبور و ورود بدون پسورد) --}}
+            <div id="otpSection" class="space-y-4 {{ $initialMode === 'otp' ? '' : 'hidden' }}">
+                <div class="bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 rounded-2xl p-3.5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                    <div class="font-black text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span>فراموشی رمز عبور / ورود بدون رمز</span>
+                    </div>
+                    <p class="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                        شماره موبایل ثبت‌شده گالری خود را وارد نمایید تا کد تأیید ۵ رقمی بلافاصله برایتان پیامک شود.
+                    </p>
+                </div>
+
+                <form method="POST" action="{{ route('admin.login.otp') }}" id="otpLoginForm" class="space-y-3.5">
+                    @csrf
+                    
+                    {{-- کادر درشت شماره موبایل و دکمه ارسال پیامک --}}
+                    <div class="space-y-1.5">
+                        <label for="loginPhoneInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                            شماره موبایل طلافروش
+                        </label>
+                        <div class="flex flex-col sm:flex-row gap-2.5">
+                            <input type="tel" name="phone" id="loginPhoneInput" required
+                                   class="flex-1 h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg text-slate-900 dark:text-white font-mono text-center sm:text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-bold tracking-wider"
+                                   dir="ltr" placeholder="09187009064" maxlength="11" value="{{ old('phone') }}"
+                                   autocomplete="tel" inputmode="numeric">
+                            
+                            <button type="button" id="sendLoginOtpBtn"
+                                    class="h-13 sm:h-14 px-5 rounded-2xl text-xs sm:text-sm font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
+                                <span id="loginOtpBtnText">ارسال کد پیامکی</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- کادر کد ۵ رقمی (پس از ارسال کد نمایش داده می‌شود) --}}
+                    <div id="otpInputContainer" class="space-y-2 {{ old('phone') ? '' : 'hidden' }} pt-2">
+                        <div class="flex items-center justify-between">
+                            <label for="loginOtpInput" class="block text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-400">
+                                کد ۵ رقمی پیامک‌شده:
+                            </label>
+                            <span id="countdownTimer" class="text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400"></span>
+                        </div>
+                        <input type="text" name="otp" id="loginOtpInput" maxlength="5" inputmode="numeric"
+                               class="w-full h-14 bg-white dark:bg-slate-950 border-2 border-amber-500 rounded-2xl px-4 text-center text-3xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+                               placeholder="-----" autocomplete="one-time-code">
+                        
+                        <button type="submit" id="loginOtpSubmitBtn"
+                                class="w-full h-13 sm:h-14 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm sm:text-base shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-2 flex items-center justify-center gap-1.5">
+                            <span>تأیید کد و ورود به پنل تابلو</span>
+                            <span>&larr;</span>
+                        </button>
+                    </div>
+
+                    {{-- دکمه بازگشت به ورود با رمز عبور --}}
+                    <div class="pt-2 text-center">
+                        <button type="button" id="backToPasswordBtn"
+                                class="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer inline-flex items-center gap-1">
+                            <span>&rarr;</span>
+                            <span>بازگشت به ورود با رمز عبور</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -224,9 +261,12 @@
             const tabPasswordBtn = document.getElementById('tabPasswordBtn');
             const otpSection = document.getElementById('otpSection');
             const passwordSection = document.getElementById('passwordSection');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const backToPasswordBtn = document.getElementById('backToPasswordBtn');
             
             const sendLoginOtpBtn = document.getElementById('sendLoginOtpBtn');
             const loginPhoneInput = document.getElementById('loginPhoneInput');
+            const loginEmailInput = document.getElementById('loginEmailInput');
             const loginOtpBtnText = document.getElementById('loginOtpBtnText');
             const otpInputContainer = document.getElementById('otpInputContainer');
             const loginOtpInput = document.getElementById('loginOtpInput');
@@ -248,26 +288,46 @@
                 });
             }
 
-            // ۲. تب‌های ورود
+            // ۲. تعویض تب
             function switchTab(mode) {
+                const activeClasses = "flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 shadow-sm";
+                const inactiveClasses = "flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
+
                 if (mode === 'otp') {
-                    tabOtpBtn.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 shadow-sm";
-                    tabPasswordBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
-                    otpSection.classList.remove('hidden');
-                    passwordSection.classList.add('hidden');
+                    if (tabOtpBtn) tabOtpBtn.className = activeClasses;
+                    if (tabPasswordBtn) tabPasswordBtn.className = inactiveClasses;
+                    if (otpSection) otpSection.classList.remove('hidden');
+                    if (passwordSection) passwordSection.classList.add('hidden');
+                    
+                    // انتقال خودکار شماره موبایل اگر در فیلد قبلی وارد شده باشد
+                    if (loginEmailInput && loginEmailInput.value) {
+                        const val = loginEmailInput.value.trim();
+                        if (/^09\d{9}$/.test(val) && loginPhoneInput && !loginPhoneInput.value) {
+                            loginPhoneInput.value = val;
+                        }
+                    }
+                    if (loginPhoneInput && !loginPhoneInput.value) {
+                        loginPhoneInput.focus();
+                    }
                 } else {
-                    tabPasswordBtn.className = "flex-1 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 shadow-sm";
-                    tabOtpBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200";
-                    passwordSection.classList.remove('hidden');
-                    otpSection.classList.add('hidden');
+                    if (tabPasswordBtn) tabPasswordBtn.className = activeClasses;
+                    if (tabOtpBtn) tabOtpBtn.className = inactiveClasses;
+                    if (passwordSection) passwordSection.classList.remove('hidden');
+                    if (otpSection) otpSection.classList.add('hidden');
+                    
+                    if (loginPhoneInput && loginPhoneInput.value && loginEmailInput && !loginEmailInput.value) {
+                        loginEmailInput.value = loginPhoneInput.value.trim();
+                    }
                 }
             }
 
-            tabOtpBtn.addEventListener('click', () => switchTab('otp'));
-            tabPasswordBtn.addEventListener('click', () => switchTab('password'));
+            if (tabOtpBtn) tabOtpBtn.addEventListener('click', () => switchTab('otp'));
+            if (tabPasswordBtn) tabPasswordBtn.addEventListener('click', () => switchTab('password'));
+            if (forgotPasswordLink) forgotPasswordLink.addEventListener('click', () => switchTab('otp'));
+            if (backToPasswordBtn) backToPasswordBtn.addEventListener('click', () => switchTab('password'));
 
             // ۳. مشاهده رمز عبور
-            if (togglePasswordBtn) {
+            if (togglePasswordBtn && loginPasswordInput) {
                 togglePasswordBtn.addEventListener('click', () => {
                     const isPass = loginPasswordInput.type === 'password';
                     loginPasswordInput.type = isPass ? 'text' : 'password';
@@ -278,6 +338,7 @@
             let timerInterval = null;
             function startCountdown(duration) {
                 let timeLeft = duration;
+                if (!sendLoginOtpBtn) return;
                 sendLoginOtpBtn.disabled = true;
                 sendLoginOtpBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
@@ -285,65 +346,67 @@
                 timerInterval = setInterval(() => {
                     if (timeLeft <= 0) {
                         clearInterval(timerInterval);
-                        countdownTimer.textContent = '';
-                        loginOtpBtnText.textContent = 'ارسال مجدد کد';
+                        if (countdownTimer) countdownTimer.textContent = '';
+                        if (loginOtpBtnText) loginOtpBtnText.textContent = 'ارسال مجدد کد';
                         sendLoginOtpBtn.disabled = false;
                         sendLoginOtpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                     } else {
-                        countdownTimer.textContent = `ارسال مجدد تا ${timeLeft} ثانیه`;
-                        loginOtpBtnText.textContent = `${timeLeft} ثانیه`;
+                        if (countdownTimer) countdownTimer.textContent = `ارسال مجدد تا ${timeLeft} ثانیه`;
+                        if (loginOtpBtnText) loginOtpBtnText.textContent = `${timeLeft} ثانیه`;
                         timeLeft--;
                     }
                 }, 1000);
             }
 
-            sendLoginOtpBtn.addEventListener('click', async () => {
-                const phone = loginPhoneInput.value.trim();
-                otpSuccessAlert.classList.add('hidden');
-                otpErrorAlert.classList.add('hidden');
+            if (sendLoginOtpBtn) {
+                sendLoginOtpBtn.addEventListener('click', async () => {
+                    const phone = loginPhoneInput.value.trim();
+                    otpSuccessAlert.classList.add('hidden');
+                    otpErrorAlert.classList.add('hidden');
 
-                if (!phone || phone.length < 10) {
-                    otpErrorText.textContent = 'لطفاً شماره موبایل ۱۱ رقمی خود را وارد فرمایید.';
-                    otpErrorAlert.classList.remove('hidden');
-                    loginPhoneInput.focus();
-                    return;
-                }
+                    if (!phone || phone.length < 10) {
+                        otpErrorText.textContent = 'لطفاً شماره موبایل ۱۱ رقمی خود را وارد فرمایید.';
+                        otpErrorAlert.classList.remove('hidden');
+                        loginPhoneInput.focus();
+                        return;
+                    }
 
-                loginOtpBtnText.textContent = 'در حال ارسال...';
-                sendLoginOtpBtn.disabled = true;
+                    loginOtpBtnText.textContent = 'در حال ارسال...';
+                    sendLoginOtpBtn.disabled = true;
 
-                try {
-                    const response = await fetch("{{ route('admin.login.send-otp') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ phone })
-                    });
+                    try {
+                        const response = await fetch("{{ route('admin.login.send-otp') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ phone })
+                        });
 
-                    const data = await response.json();
+                        const data = await response.json();
 
-                    if (response.ok && data.success) {
-                        otpSuccessText.textContent = data.message;
-                        otpSuccessAlert.classList.remove('hidden');
-                        otpInputContainer.classList.remove('hidden');
-                        loginOtpInput.focus();
-                        startCountdown(60);
-                    } else {
-                        otpErrorText.textContent = data.message || 'خطا در ارسال پیامک.';
+                        if (response.ok && data.success) {
+                            otpSuccessText.textContent = data.message;
+                            otpSuccessAlert.classList.remove('hidden');
+                            otpInputContainer.classList.remove('hidden');
+                            loginOtpInput.focus();
+                            startCountdown(60);
+                        } else {
+                            otpErrorText.textContent = data.message || 'خطا در ارسال پیامک.';
+                            otpErrorAlert.classList.remove('hidden');
+                            loginOtpBtnText.textContent = 'ارسال کد پیامکی';
+                            sendLoginOtpBtn.disabled = false;
+                        }
+                    } catch (err) {
+                        otpErrorText.textContent = 'خطا در ارتباط با سرور. لطفاً مجدداً تلاش فرمایید.';
                         otpErrorAlert.classList.remove('hidden');
                         loginOtpBtnText.textContent = 'ارسال کد پیامکی';
                         sendLoginOtpBtn.disabled = false;
                     }
-                } catch (err) {
-                    otpErrorText.textContent = 'خطا در ارتباط با سرور. لطفاً مجدداً تلاش فرمایید.';
-                    otpErrorAlert.classList.remove('hidden');
-                    loginOtpBtnText.textContent = 'ارسال کد پیامکی';
-                    sendLoginOtpBtn.disabled = false;
-                }
-            });
+                });
+            }
         });
     </script>
 </body>

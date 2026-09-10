@@ -368,14 +368,14 @@
                 {{-- Password Input --}}
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">رمز عبور جدید:</label>
-                    <input type="password" name="password" required minlength="6" placeholder="حداقل ۶ کاراکتر"
+                    <input type="password" name="password" required minlength="4" placeholder="حداقل ۴ رقم یا کاراکتر"
                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-left" dir="ltr">
                 </div>
 
                 {{-- Confirm Password Input --}}
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">تکرار رمز عبور جدید:</label>
-                    <input type="password" name="password_confirmation" required minlength="6" placeholder="تکرار رمز عبور"
+                    <input type="password" name="password_confirmation" required minlength="4" placeholder="تکرار رمز عبور"
                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-left" dir="ltr">
                 </div>
 

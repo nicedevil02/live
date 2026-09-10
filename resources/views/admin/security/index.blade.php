@@ -52,7 +52,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"><i data-lucide="lock" class="w-4 h-4 text-slate-400"></i> رمز عبور جدید</label>
-                    <input type="password" dir="ltr" placeholder="حداقل ۶ کاراکتر"
+                    <input type="password" dir="ltr" placeholder="حداقل ۴ رقم یا کاراکتر"
                            x-model="newPassword"
                            class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
                 </div>
@@ -97,8 +97,8 @@ function securityPage() {
             if (this.newPassword && this.newPassword !== this.confirmPassword) {
                 return this.showMessage('رمز عبور جدید و تکرار آن یکسان نیستند.', 'error');
             }
-            if (this.newPassword && this.newPassword.length < 6) {
-                return this.showMessage('رمز عبور جدید باید حداقل ۶ کاراکتر باشد.', 'error');
+            if (this.newPassword && this.newPassword.length < 4) {
+                return this.showMessage('رمز عبور جدید باید حداقل ۴ رقم یا کاراکتر باشد.', 'error');
             }
 
             this.isSaving = true;
