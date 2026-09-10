@@ -201,7 +201,7 @@
                         <span>📞 پشتیبانی فنی طلالایو:</span>
                         <span class="font-mono text-amber-600 dark:text-amber-400" dir="ltr">0918 700 9064</span>
                     </a>
-                    <a href="https://rubika.ir/09187009064" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                    <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
                         <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                         <span>پشتیبانی روبیکا</span>
                     </a>

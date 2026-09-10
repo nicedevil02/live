@@ -38,7 +38,7 @@
                     <a href="tel:09187009064" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
                         <span>📞 خرید اشتراک: ۰۹۱۸۷۰۰۹۰۶۴</span>
                     </a>
-                    <a href="https://rubika.ir/09187009064" target="_blank"
+                    <a href="https://rubika.ir/talalive" target="_blank"
                        class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
                         <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                         <span>روبیکا</span>
@@ -69,7 +69,7 @@
                     <a href="tel:09187009064" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
                         <span>📞 تمدید اشتراک: ۰۹۱۸۷۰۰۹۰۶۴</span>
                     </a>
-                    <a href="https://rubika.ir/09187009064" target="_blank"
+                    <a href="https://rubika.ir/talalive" target="_blank"
                        class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
                         <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                         <span>روبیکا</span>
@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
-                    <a href="https://rubika.ir/09187009064" target="_blank"
+                    <a href="https://rubika.ir/talalive" target="_blank"
                        class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
                         <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                         <span>پشتیبانی روبیکا</span>

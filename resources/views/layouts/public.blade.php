@@ -344,7 +344,7 @@
                         <a href="tel:08135223847" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">081 3522 3847</a>
                     </p>
                     <div class="pt-1">
-                        <a href="https://rubika.ir/09187009064" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                        <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
                             <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                             <span>ارتباط در پیام‌رسان روبیکا</span>
                         </a>
