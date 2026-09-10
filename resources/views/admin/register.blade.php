@@ -106,42 +106,15 @@
                 <span id="otpErrorText"></span>
             </div>
 
-            {{-- فرم اصلی ثبت نام --}}
+            {{-- فرم اصلی ثبت نام (ساده‌سازی شده در ۲ مرحله بدون نیاز به اسلاگ انگلیسی و تکرار پسورد) --}}
             <form method="POST" action="{{ route('admin.register') }}" class="space-y-4" id="registerForm">
                 @csrf
 
-                {{-- نام طلافروشی / گالری --}}
+                {{-- مرحله ۱: شماره موبایل طلافروش و ارسال پیامک --}}
                 <div class="space-y-1.5">
-                    <label for="shopNameInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">نام طلافروشی / گالری</label>
-                    <input type="text" name="name" id="shopNameInput" required
-                           class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                           placeholder="مثال: گالری طلای پرنیا" value="{{ old('name') }}" autocomplete="off">
-                </div>
-
-                {{-- شناسه اختصاصی آدرس تابلوی تلویزیون (اسلاگ انگلیسی) --}}
-                <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                        <label for="shopSlugInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">شناسه اختصاصی آدرس تابلو (انگلیسی)</label>
-                        <span class="text-[10px] text-slate-400">خودکار از نام مغازه ساخته می‌شود</span>
-                    </div>
-                    <div class="relative">
-                        <input type="text" name="slug" id="shopSlugInput" required
-                               class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white font-mono text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                               dir="ltr" placeholder="parnia-gold" value="{{ old('slug', old('username')) }}"
-                               autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true">
-                    </div>
-                    {{-- پیش‌نمایش کاملاً پویا و زنده آدرس تلویزیون --}}
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 flex-wrap pt-0.5">
-                        <span>آدرس تابلوی اختصاصی تلویزیون شما:</span>
-                        <span class="font-mono font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20" dir="ltr">
-                            talalive.ir/<span id="previewSlug">...</span>
-                        </span>
-                    </p>
-                </div>
-
-                {{-- شماره موبایل طلافروش و دکمه ارسال کد پیامکی --}}
-                <div class="space-y-1.5">
-                    <label for="phoneInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">شماره موبایل طلافروش (شناسه اصلی ورود به پنل)</label>
+                    <label for="phoneInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        ۱. شماره موبایل طلافروش
+                    </label>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <div class="relative flex-1">
                             <input type="tel" name="phone" id="phoneInput" required
@@ -151,55 +124,82 @@
                         </div>
                         
                         <button type="button" id="sendOtpBtn"
-                                class="h-11 px-4 sm:px-5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
+                                class="h-11 px-4 sm:px-5 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
                             <span id="btnText">ارسال کد پیامکی</span>
                         </button>
                     </div>
                 </div>
 
-                {{-- کادر کد تأیید ۵ رقمی پیامک --}}
-                <div class="space-y-2 bg-amber-500/5 dark:bg-slate-950/40 p-4 rounded-2xl border border-amber-500/20 dark:border-slate-800">
+                {{-- مرحله ۲: کد تأیید ۵ رقمی پیامک --}}
+                <div class="space-y-2 bg-amber-500/5 dark:bg-slate-950/40 p-3.5 sm:p-4 rounded-2xl border border-amber-500/20 dark:border-slate-800">
                     <div class="flex items-center justify-between">
-                        <label for="otpInput" class="block text-xs font-bold text-amber-700 dark:text-amber-400">کد تأیید ۵ رقمی پیامک‌شده:</label>
-                        <span id="otpStatusHint" class="text-[10px] text-slate-500 dark:text-slate-400">پس از فشردن «ارسال کد»، کد به موبایل شما فرستاده می‌شود</span>
+                        <label for="otpInput" class="block text-xs font-bold text-amber-700 dark:text-amber-400">
+                            ۲. کد ۵ رقمی پیامک‌شده:
+                        </label>
+                        <span id="otpStatusHint" class="text-[10px] text-slate-500 dark:text-slate-400">کد به موبایل شما پیامک می‌شود</span>
                     </div>
                     <input type="text" name="otp" id="otpInput" required maxlength="5" inputmode="numeric"
-                           class="w-full h-12 bg-white dark:bg-slate-950 border border-amber-500/40 rounded-xl px-4 text-center text-xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 dark:placeholder-slate-700 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                           class="w-full h-12 bg-white dark:bg-slate-950 border border-amber-500/40 rounded-xl px-4 text-center text-2xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 dark:placeholder-slate-700 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                            placeholder="-----" value="{{ old('otp') }}" autocomplete="one-time-code">
                 </div>
 
-                {{-- کلمات عبور --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="space-y-1.5">
-                        <label for="passwordInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">رمز عبور (حداقل ۶ کاراکتر)</label>
-                        <input type="password" name="password" id="passwordInput" required
-                               class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all"
-                               placeholder="******" autocomplete="new-password">
+                {{-- نام طلافروشی / گالری --}}
+                <div class="space-y-1.5">
+                    <label for="shopNameInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        ۳. نام گالری یا طلافروشی شما
+                    </label>
+                    <input type="text" name="name" id="shopNameInput" required
+                           class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                           placeholder="مثال: گالری طلای کیمیا" value="{{ old('name') }}" autocomplete="off">
+                </div>
+
+                {{-- رمز عبور ساده با آیکون چشم --}}
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label for="passwordInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                            ۴. رمز عبور انتخابی
+                        </label>
+                        <span class="text-[10px] text-slate-400">حداقل ۴ کاراکتر</span>
                     </div>
-                    <div class="space-y-1.5">
-                        <label for="passwordConfirmInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300">تکرار رمز عبور</label>
-                        <input type="password" name="password_confirmation" id="passwordConfirmInput" required
+                    <div class="relative">
+                        <input type="password" name="password" id="passwordInput" required minlength="4"
                                class="w-full h-11 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl px-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all"
-                               placeholder="******" autocomplete="new-password">
+                               placeholder="رمز عبور دلخواه شما">
+                        <button type="button" id="toggleRegPasswordBtn" class="absolute left-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
                     </div>
                 </div>
 
                 {{-- دکمه نهایی ثبت نام --}}
                 <button type="submit" id="submitBtn"
-                        class="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-3 flex items-center justify-center">
-                    ایجاد مغازه و فعال‌سازی فوری تست ۷ روزه
+                        class="w-full h-12 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-3 flex items-center justify-center gap-1.5">
+                    <span>ایجاد تابلوی گالری و فعال‌سازی فوری تست ۷ روزه</span>
+                    <span>&larr;</span>
                 </button>
             </form>
 
             {{-- لینک ورود --}}
-            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
+            <div class="pt-3.5 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
                 <span>قبلاً در طلالایو ثبت‌نام کرده‌اید؟</span>
                 <a href="{{ route('admin.login') }}" class="font-bold text-amber-600 dark:text-amber-400 hover:underline mr-1">وارد شوید</a>
             </div>
 
-            {{-- راهنمای تلفنی --}}
-            <div class="text-center text-[11px] text-slate-500 pt-1">
-                نیاز به راهنمایی دارید؟ <a href="tel:09187009064" class="text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 font-bold" dir="ltr">0918 700 9064</a>
+            {{-- بخش پشتیبانی فنی طلالایو و روبیکا --}}
+            <div class="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-center space-y-2">
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
+                    ثبت‌نام یا تنظیمات براتون سخته؟ تلفنی در ۳ دقیقه وصل می‌کنیم:
+                </p>
+                <div class="flex items-center justify-center gap-2 flex-wrap">
+                    <a href="tel:09187009064" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold hover:border-amber-500 transition-all">
+                        <span>📞 پشتیبانی فنی طلالایو:</span>
+                        <span class="font-mono text-amber-600 dark:text-amber-400" dir="ltr">0918 700 9064</span>
+                    </a>
+                    <a href="https://rubika.ir/09187009064" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                        <span>پشتیبانی روبیکا</span>
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -214,8 +214,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.getElementById('shopNameInput');
-            const slugInput = document.getElementById('shopSlugInput');
-            const previewSlug = document.getElementById('previewSlug');
             const phoneInput = document.getElementById('phoneInput');
             const sendOtpBtn = document.getElementById('sendOtpBtn');
             const btnText = document.getElementById('btnText');
@@ -226,6 +224,8 @@
             const errorAlert = document.getElementById('otpErrorAlert');
             const errorText = document.getElementById('otpErrorText');
             const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const toggleRegPasswordBtn = document.getElementById('toggleRegPasswordBtn');
+            const passwordInput = document.getElementById('passwordInput');
 
             // ۱. تغییر تم روشن / تاریک
             if (themeToggleBtn) {
@@ -235,23 +235,15 @@
                 });
             }
 
-            // ۲. جدول جامع تبدیل حروف فارسی به انگلیسی برای ساخت آدرس اختصاصی تابلو (Slug)
-            function transliteratePersian(str) {
-                const map = {
-                    'آ': 'a', 'ا': 'a', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ث': 's', 'ج': 'j', 'چ': 'ch', 'ح': 'h', 'خ': 'kh',
-                    'د': 'd', 'ذ': 'z', 'ر': 'r', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'z', 'ط': 't',
-                    'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'gh', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n',
-                    'و': 'u', 'ه': 'h', 'ی': 'y', 'ي': 'y', 'ك': 'k', 'ئ': 'y', 'ء': '', 'أ': 'a', 'إ': 'e', 'ؤ': 'o',
-                    'ة': 'h', ' ': '-', '‌': '-'
-                };
-                return str.toLowerCase().split('').map(char => {
-                    if (map[char] !== undefined) return map[char];
-                    if (/[a-z0-9\-]/.test(char)) return char;
-                    return '';
-                }).join('').replace(/-+/g, '-').replace(/^-|-$/g, '');
+            // ۲. تغییر نمایش رمز عبور
+            if (toggleRegPasswordBtn && passwordInput) {
+                toggleRegPasswordBtn.addEventListener('click', () => {
+                    const isPass = passwordInput.type === 'password';
+                    passwordInput.type = isPass ? 'text' : 'password';
+                });
             }
 
-            // تبدیل اعداد فارسی و عربی به انگلیسی
+            // ۳. تبدیل اعداد فارسی و عربی به انگلیسی
             function toEnglishDigits(str) {
                 const fa = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
                 const en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -261,46 +253,6 @@
                 }
                 return res;
             }
-
-            // ردیابی اینکه آیا کاربر شناسه را به صورت دستی دستکاری کرده است یا خیر
-            let userCustomizedSlug = false;
-
-            // جلوگیری از اتوفیل ایمیل توسط کروم در فیلد اسلاگ
-            if (slugInput.value && slugInput.value.includes('@')) {
-                slugInput.value = '';
-            }
-
-            function updatePreview() {
-                const currentSlug = slugInput.value.trim();
-                if (currentSlug) {
-                    previewSlug.innerText = currentSlug;
-                } else {
-                    previewSlug.innerText = '...';
-                }
-            }
-
-            // با تایپ نام طلافروشی، آدرس تابلو به صورت خودکار ساخته می‌شود
-            nameInput.addEventListener('input', () => {
-                if (!userCustomizedSlug) {
-                    const generated = transliteratePersian(nameInput.value);
-                    slugInput.value = generated;
-                    updatePreview();
-                }
-            });
-
-            // در صورتی که کاربر مستقیماً اسلاگ را ویرایش کند
-            slugInput.addEventListener('input', () => {
-                userCustomizedSlug = true;
-                // حذف کاراکترهای غیرمجاز و تبدیل به حروف کوچک
-                slugInput.value = slugInput.value.toLowerCase().replace(/[^a-z0-9\-]/g, '');
-                updatePreview();
-            });
-
-            // مقداردهی اولیه پیش‌نمایش در بارگذاری صفحه
-            if (nameInput.value && !slugInput.value) {
-                slugInput.value = transliteratePersian(nameInput.value);
-            }
-            updatePreview();
 
             // ۳. نرمال‌سازی شماره موبایل به صورت آنی هنگام تایپ
             phoneInput.addEventListener('input', () => {

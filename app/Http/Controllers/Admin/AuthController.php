@@ -56,12 +56,12 @@ class AuthController extends Controller
 
             // بررسی تایید بودن اکانت
             if (!$user->is_approved && !$user->is_super_admin) {
-                return back()->withErrors(['email' => 'حساب کاربری شما در انتظار تأیید است. جهت فعال‌سازی فوری با پشتیبانی تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
+                return back()->withErrors(['email' => 'حساب کاربری شما در انتظار تأیید است. جهت فعال‌سازی فوری با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
             }
 
             // بررسی انقضای حساب کاربری
             if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
-                return back()->withErrors(['email' => 'اعتبار حساب کاربری شما به پایان رسیده است. جهت تمدید اشتراک با مدیریت تماس حاصل فرمایید: ۰۹۱۸۷۰۰۹۰۶۴']);
+                return back()->withErrors(['email' => 'اعتبار حساب کاربری شما به پایان رسیده است. جهت تمدید اشتراک با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
             }
 
             Auth::login($user, $request->boolean('remember'));
@@ -78,6 +78,149 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('admin.login');
+    }
+
+    /**
+     * ارسال کد تأیید ۵ رقمی پیامکی برای ورود سریع طلافروش به پنل
+     */
+    public function sendLoginOtp(Request $request, SmsService $smsService)
+    {
+        $inputPhone = $request->input('phone');
+        if (!$inputPhone) {
+            return response()->json(['success' => false, 'message' => 'لطفاً شماره موبایل خود را وارد نمایید.'], 422);
+        }
+
+        $phone = SmsService::normalizeMobile($inputPhone);
+        if (!preg_match('/^09[0-9]{9}$/', $phone)) {
+            return response()->json(['success' => false, 'message' => 'شماره موبایل نامعتبر است. فرمت صحیح: ۰۹xxxxxxxxx'], 422);
+        }
+
+        // بررسی وجود کاربر با این شماره
+        $user = \App\Models\User::where('phone', $phone)->first();
+        if (!$user) {
+            return response()->json([
+                'success'        => false,
+                'message'        => 'این شماره موبایل در سامانه ثبت نشده است. لطفاً ابتدا از بخش ثبت‌نام، حساب گالری خود را بسازید.',
+                'not_registered' => true
+            ], 404);
+        }
+
+        if (!$user->isAdmin()) {
+            return response()->json(['success' => false, 'message' => 'این حساب کاربری دسترسی به پنل مدیریت ندارد.'], 403);
+        }
+
+        if (!$user->is_approved && !$user->is_super_admin) {
+            return response()->json(['success' => false, 'message' => 'حساب شما در انتظار تأیید است. جهت فعال‌سازی فوری با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴'], 403);
+        }
+
+        if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
+            return response()->json(['success' => false, 'message' => 'اعتبار زمانی حساب شما به پایان رسیده است. جهت تمدید اشتراک با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴'], 403);
+        }
+
+        // ایجاد جدول otp_verifications در صورت عدم اجرا
+        if (!\Illuminate\Support\Facades\Schema::hasTable('otp_verifications')) {
+            \Illuminate\Support\Facades\Schema::create('otp_verifications', function ($table) {
+                $table->id();
+                $table->string('phone', 20)->index();
+                $table->string('code', 10);
+                $table->timestamp('expires_at')->index();
+                $table->string('ip_address', 45)->nullable();
+                $table->timestamps();
+            });
+        }
+
+        // محدودیت ۶۰ ثانیه‌ای
+        $recentOtp = DB::table('otp_verifications')
+            ->where('phone', $phone)
+            ->where('created_at', '>', now()->subSeconds(60))
+            ->first();
+
+        if ($recentOtp) {
+            $secondsLeft = 60 - now()->diffInSeconds(\Illuminate\Support\Carbon::parse($recentOtp->created_at));
+            return response()->json(['success' => false, 'message' => "لطفاً {$secondsLeft} ثانیه دیگر مجدداً تلاش نمایید."], 429);
+        }
+
+        $code = (string) rand(11111, 99999);
+
+        DB::table('otp_verifications')->insert([
+            'phone'      => $phone,
+            'code'       => $code,
+            'expires_at' => now()->addMinutes(3),
+            'ip_address' => $request->ip(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $smsResult = $smsService->sendOtp($phone, $code);
+
+        if (!$smsResult['success']) {
+            $msg = $smsResult['message'] ?? 'خطا در ارسال پیامک از طریق درگاه.';
+            \Log::warning("Login OTP SMS failed for {$phone}: " . $msg);
+            return response()->json(['success' => false, 'message' => $msg], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'کد تأیید ۵ رقمی ورود با موفقیت به موبایل شما پیامک شد.',
+            'ttl'     => 120,
+        ]);
+    }
+
+    /**
+     * ورود مستقیم به پنل با کد یکبار مصرف پیامکی
+     */
+    public function loginWithOtp(Request $request)
+    {
+        $inputPhone = $request->input('phone');
+        $code = trim($request->input('otp', ''));
+
+        $phone = SmsService::normalizeMobile((string) $inputPhone);
+
+        $request->validate([
+            'phone' => ['required', 'string'],
+            'otp'   => ['required', 'string', 'size:5'],
+        ], [
+            'phone.required' => 'شماره موبایل الزامی است.',
+            'otp.required'   => 'کد تأیید پیامک‌شده را وارد نمایید.',
+            'otp.size'       => 'کد تأیید باید ۵ رقم باشد.',
+        ]);
+
+        $user = \App\Models\User::where('phone', $phone)->first();
+        if (!$user) {
+            return back()->withInput()->withErrors(['phone' => 'حساب کاربری با این شماره موبایل یافت نشد.']);
+        }
+
+        if (!$user->isAdmin()) {
+            return back()->withErrors(['phone' => 'این حساب کاربری دسترسی به پنل مدیریت ندارد.']);
+        }
+
+        if (!$user->is_approved && !$user->is_super_admin) {
+            return back()->withErrors(['phone' => 'حساب کاربری شما در انتظار تأیید است. تماس با پشتیبانی فنی طلالایو: ۰۹۱۸۷۰۰۹۰۶۴']);
+        }
+
+        if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
+            return back()->withErrors(['phone' => 'اعتبار زمانی حساب شما به پایان رسیده است. تماس با پشتیبانی فنی طلالایو: ۰۹۱۸۷۰۰۹۰۶۴']);
+        }
+
+        // بررسی کد پیامکی
+        $validOtp = DB::table('otp_verifications')
+            ->where('phone', $phone)
+            ->where('code', $code)
+            ->where('expires_at', '>', now())
+            ->latest()
+            ->first();
+
+        if (!$validOtp) {
+            return back()->withInput()->withErrors(['otp' => 'کد تأیید پیامک‌شده اشتباه است یا زمان آن منقضی شده است.']);
+        }
+
+        // حذف کدهای مصرف‌شده
+        DB::table('otp_verifications')->where('phone', $phone)->delete();
+
+        Auth::login($user, true);
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('admin.dashboard'));
     }
 
     /**
@@ -225,16 +368,81 @@ class AuthController extends Controller
     }
 
     /**
+     * تولید خودکار شناسه انگلیسی یکتا برای آدرس تلویزیون از روی نام مغازه یا شماره موبایل
+     */
+    public static function generateUniqueSlug(string $shopName, string $phone): string
+    {
+        $map = [
+            'آ' => 'a', 'ا' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't', 'ث' => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh',
+            'د' => 'd', 'ذ' => 'z', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ش' => 'sh', 'ص' => 's', 'ض' => 'z', 'ط' => 't',
+            'ظ' => 'z', 'ع' => 'a', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'gh', 'ک' => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n',
+            'و' => 'u', 'ه' => 'h', 'ی' => 'y', 'ي' => 'y', 'ك' => 'k', 'ئ' => 'y', 'ء' => '', 'أ' => 'a', 'إ' => 'e', 'ؤ' => 'o',
+            'ة' => 'h', ' ' => '-', '‌' => '-'
+        ];
+
+        $chars = preg_split('//u', mb_strtolower(trim($shopName), 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+        $transliterated = '';
+        foreach ($chars as $ch) {
+            if (isset($map[$ch])) {
+                $transliterated .= $map[$ch];
+            } elseif (preg_match('/[a-z0-9\-]/', $ch)) {
+                $transliterated .= $ch;
+            }
+        }
+
+        $slug = preg_replace('/-+/', '-', $transliterated);
+        $slug = trim($slug, '-');
+
+        if (strlen($slug) < 3) {
+            $lastDigits = substr(preg_replace('/[^\d]/', '', $phone), -4);
+            $slug = 'gold-' . ($lastDigits ?: rand(1000, 9999));
+        }
+
+        if (strlen($slug) > 25) {
+            $slug = substr($slug, 0, 25);
+            $slug = rtrim($slug, '-');
+        }
+
+        // بررسی یکتایی در جدول users
+        $originalSlug = $slug;
+        $counter = 2;
+        while (\App\Models\User::where('username', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    /**
      * ثبت نام طلافروشی جدید با شماره موبایل و فعال‌سازی فوری تست ۷ روزه
      */
     public function register(Request $request, SmsService $smsService)
     {
         $normalizedPhone = SmsService::normalizeMobile($request->input('phone', ''));
-        $slug = $request->input('slug') ?: $request->input('username');
+        $shopName = trim($request->input('name', ''));
+        $inputSlug = trim($request->input('slug') ?: $request->input('username', ''));
+
+        // اگر اسلاگ دستی وارد نشده باشد، خودکار و بدون نیاز به تفکر طلافروش ساخته می‌شود
+        if (empty($inputSlug)) {
+            $slug = self::generateUniqueSlug($shopName, $normalizedPhone);
+        } else {
+            $slug = strtolower(preg_replace('/[^a-z0-9_-]/', '', $inputSlug));
+            if (strlen($slug) < 3) {
+                $slug = self::generateUniqueSlug($shopName, $normalizedPhone);
+            }
+        }
+
+        // رمز عبور: در صورت خالی بودن، رمز پیش‌فرض ۶ رقمی تولید می‌شود
+        $password = $request->input('password');
+        if (empty($password)) {
+            $password = substr($normalizedPhone, -6) ?: '123456';
+        }
 
         $request->merge([
             'phone'    => $normalizedPhone,
             'username' => $slug,
+            'password' => $password,
         ]);
 
         // ایجاد خودکار ستون شماره در صورت اجرا نشدن مایگریشن
@@ -247,18 +455,17 @@ class AuthController extends Controller
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
-            'username' => 'required|string|min:3|max:50|alpha_dash|unique:users,username',
             'phone'    => ['required', 'string', 'regex:/^09[0-9]{9}$/', 'unique:users,phone'],
             'otp'      => 'required|string|size:5',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'nullable|string|min:4',
             'email'    => 'nullable|string|email|max:255|unique:users,email',
         ], [
+            'name.required' => 'نام گالری / طلافروشی الزامی است.',
             'phone.regex'   => 'فرمت شماره موبایل نامعتبر است (مثال: 09187009064).',
-            'phone.unique'  => 'این شماره موبایل قبلاً در سامانه ثبت شده است.',
+            'phone.unique'  => 'این شماره موبایل قبلاً در سامانه ثبت شده است. لطفاً وارد شوید.',
             'otp.required'  => 'کد تأیید ۵ رقمی پیامک‌شده را وارد کنید.',
             'otp.size'      => 'کد تأیید باید ۵ رقم باشد.',
-            'username.required' => 'شناسه اختصاصی آدرس تابلوی تلویزیون الزامی است.',
-            'username.unique'   => 'این شناسه آدرس تابلو قبلاً توسط گالری دیگری رزرو شده است.',
+            'password.min'  => 'رمز عبور باید حداقل ۴ کاراکتر باشد.',
         ]);
 
         // اعتبارسنجی کد پیامکی
@@ -279,11 +486,11 @@ class AuthController extends Controller
         // ایجاد کاربر جدید با نقش ادمین، فعال فوری و دارای ۷ روز دوره تست رایگان
         $user = \App\Models\User::create([
             'name'              => $validated['name'],
-            'username'          => $validated['username'],
+            'username'          => $slug,
             'phone'             => $validated['phone'],
             'phone_verified_at' => now(),
-            'email'             => !empty($validated['email']) ? $validated['email'] : ($validated['username'] . '@talalive.ir'),
-            'password'          => Hash::make($validated['password']),
+            'email'             => !empty($validated['email']) ? $validated['email'] : ($slug . '@talalive.ir'),
+            'password'          => Hash::make($password),
             'is_admin'          => true,
             'is_super_admin'    => false,
             'is_approved'       => true, // فعال فوری جهت تست بدون اصطکاک!
@@ -343,6 +550,9 @@ class AuthController extends Controller
 
         // اطلاع‌رسانی پیامکی آنی به مدیریت
         $smsService->notifyAdminNewRegistration($user->name, $user->phone);
+
+        // ارسال پیامک خوش‌آمد و لینک تابلوی تلویزیون به طلافروش
+        $smsService->sendWelcomeSms($user->phone, $user->name, $user->username);
 
         // لاگ ثبت‌نام
         \App\Models\AuditLog::create([

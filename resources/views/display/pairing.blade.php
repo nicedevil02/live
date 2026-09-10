@@ -528,14 +528,20 @@
                 </div>
 
                 {{-- کادر ارتباط مستقیم با پشتیبانی --}}
-                <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-center text-xs space-y-1.5 backdrop-blur-xl shadow-md">
-                    <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">پشتیبانی فنی و راه‌اندازی تابلوی طلافروشی:</p>
+                <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-center text-xs space-y-2 backdrop-blur-xl shadow-md">
+                    <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">پشتیبانی فنی و راه‌اندازی فوری تابلوی طلافروشی:</p>
                     <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
                         <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
                         &nbsp;&middot;&nbsp;
                         <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
                     </p>
-                    <p class="text-slate-700 dark:text-slate-300 font-semibold text-[11px]">مدیریت: شاکری</p>
+                    <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
+                        <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
+                        <a href="https://rubika.ir/09187009064" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
+                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
+                            <span>پشتیبانی روبیکا</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -563,6 +569,96 @@
                 <div class="text-2xl lg:text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">لحظه‌ای</div>
                 <div class="text-xs font-bold text-slate-700 dark:text-slate-300">بروزرسانی خودکار نرخ‌ها</div>
                 <div class="text-[11px] text-slate-500">اتصال به معتبرترین مراجع رسمی طلا</div>
+            </div>
+        </div>
+    </section>
+
+    {{-- بخش آموزش بصری سریع: چگونه مرورگر اینترنت تلویزیون مغازه را پیدا کنیم؟ --}}
+    <section class="py-14 px-4 sm:px-6 lg:px-8 bg-slate-100/60 dark:bg-slate-900/40 border-b border-slate-200/80 dark:border-slate-800/80">
+        <div class="max-w-6xl mx-auto space-y-10">
+            <div class="text-center space-y-3">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
+                    <span>📺 راهنمای سریع ریموت کنترل</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                    مرورگر تلویزیون مغازه من کجاست؟
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                    برای باز کردن تابلوی طلالایو، کافیست با کنترل تلویزیون خود وارد برنامه مرورگر اینترنت شوید. روی برند تلویزیون مغازه‌تان کلیک کنید:
+                </p>
+            </div>
+
+            {{-- کارت‌های تصویری برندهای تلویزیون --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {{-- سامسونگ --}}
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-sm hover:border-amber-500/50 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black text-amber-600 dark:text-amber-400">سامسونگ (Samsung)</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 font-bold">Tizen</span>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        دکمه‌ی <span class="font-bold text-slate-900 dark:text-white">Home (عکس خانه)</span> روی ریموت را بزنید و آیکون کُره زمین آبی با نام <span class="font-bold text-amber-600 dark:text-amber-400">Internet</span> را انتخاب کنید.
+                    </p>
+                </div>
+
+                {{-- ال‌جی --}}
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-sm hover:border-amber-500/50 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black text-amber-600 dark:text-amber-400">ال‌جی (LG)</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 font-bold">WebOS</span>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        دکمه‌ی <span class="font-bold text-slate-900 dark:text-white">Home (علامت خانه)</span> کنترل جادویی را فشرده و آیکون بنفش <span class="font-bold text-amber-600 dark:text-amber-400">Web Browser</span> را باز کنید.
+                    </p>
+                </div>
+
+                {{-- اندروید و سونی و اسنوا --}}
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-sm hover:border-amber-500/50 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black text-amber-600 dark:text-amber-400">اسنوا، دوو، سونی، شیائومی</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 font-bold">Android TV</span>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        در منوی برنامه‌ها (Apps)، برنامه <span class="font-bold text-amber-600 dark:text-amber-400">مرورگر، کروم (Chrome)</span> یا Browser را باز کنید و آدرس را وارد فرمایید.
+                    </p>
+                </div>
+
+                {{-- تلویزیون‌های ساده و غیر هوشمند --}}
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-sm hover:border-amber-500/50 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black text-amber-600 dark:text-amber-400">تلویزیون معمولی (غیر هوشمند)</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 font-bold">HDMI</span>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        با اتصال یک <span class="font-bold text-amber-600 dark:text-amber-400">اندروید باکس</span> (مانند تسکو یا شیائومی) به پورت HDMI، هر تلویزیونی هوشمند و آماده پخش تابلو می‌شود.
+                    </p>
+                </div>
+            </div>
+
+            {{-- چتر نجات VIP Concierge --}}
+            <div class="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-purple-500/10 border border-amber-500/30 dark:border-amber-500/20 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-right">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🤝</span>
+                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                            کنترل تلویزیون یا تنظیمات براتون سخته؟ اصلاً نگران نباشید!
+                        </h3>
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+                        کارشناسان پشتیبانی فنی طلالایو در تمام ساعات کاری پشت خط هستند تا به صورت تلفنی در کمتر از ۳ دقیقه تلویزیون گالری شما را روشن و به تابلوی زنده متصل کنند.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3 shrink-0 flex-wrap justify-center">
+                    <a href="tel:09187009064" class="px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer">
+                        <span>📞 تماس مستقیم با پشتیبانی فنی:</span>
+                        <span class="font-mono text-sm" dir="ltr">0918 700 9064</span>
+                    </a>
+                    <a href="https://rubika.ir/09187009064" target="_blank" class="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20 cursor-pointer">
+                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                        <span>پشتیبانی در روبیکا</span>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -1111,18 +1207,24 @@
                 <div class="font-bold text-white text-sm">ارتباط و پشتیبانی</div>
                 <div class="space-y-2 text-xs">
                     <p class="text-slate-300">
-                        <span class="text-slate-400">مدیریت سامانه:</span>
-                        <span class="font-bold text-amber-400">شاکری</span>
+                        <span class="text-slate-400">مرکز ارتباط:</span>
+                        <span class="font-bold text-amber-400">پشتیبانی فنی طلالایو</span>
                     </p>
                     <p class="text-slate-300">
-                        <span class="text-slate-400">تلفن همراه پشتیبانی:</span>
+                        <span class="text-slate-400">تلفن همراه و روبیکا:</span>
                         <a href="tel:09187009064" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">0918 700 9064</a>
                     </p>
                     <p class="text-slate-300">
                         <span class="text-slate-400">تلفن ثابت دفتر:</span>
                         <a href="tel:08135223847" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">081 3522 3847</a>
                     </p>
-                    <p class="text-slate-400 text-[11px] leading-relaxed">
+                    <div class="pt-1">
+                        <a href="https://rubika.ir/09187009064" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                            <span>ارتباط در پیام‌رسان روبیکا</span>
+                        </a>
+                    </div>
+                    <p class="text-slate-400 text-[11px] leading-relaxed pt-1">
                         پاسخگویی شنبه تا پنج‌شنبه از ساعت ۹ الی ۲۱
                     </p>
                 </div>

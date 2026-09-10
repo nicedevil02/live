@@ -332,18 +332,24 @@
                 <div class="font-bold text-white text-sm">ارتباط و پشتیبانی</div>
                 <div class="space-y-2 text-xs">
                     <p class="text-slate-300">
-                        <span class="text-slate-500">مدیریت سامانه:</span>
-                        <span class="font-bold text-amber-400">شاکری</span>
+                        <span class="text-slate-500">مرکز ارتباط:</span>
+                        <span class="font-bold text-amber-400">پشتیبانی فنی طلالایو</span>
                     </p>
                     <p class="text-slate-300">
-                        <span class="text-slate-500">تلفن همراه پشتیبانی:</span>
+                        <span class="text-slate-500">تلفن همراه و روبیکا:</span>
                         <a href="tel:09187009064" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">0918 700 9064</a>
                     </p>
                     <p class="text-slate-300">
                         <span class="text-slate-500">تلفن ثابت دفتر:</span>
                         <a href="tel:08135223847" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">081 3522 3847</a>
                     </p>
-                    <p class="text-slate-500 text-[11px] leading-relaxed">
+                    <div class="pt-1">
+                        <a href="https://rubika.ir/09187009064" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                            <span>ارتباط در پیام‌رسان روبیکا</span>
+                        </a>
+                    </div>
+                    <p class="text-slate-500 text-[11px] leading-relaxed pt-1">
                         پاسخگویی شنبه تا پنج‌شنبه از ساعت ۹ الی ۲۱
                     </p>
                 </div>

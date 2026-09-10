@@ -113,6 +113,26 @@ class SmsService
     }
 
     /**
+     * ثبت لاگ و اطلاع‌رسانی پیامکی لینک اختصاصی تابلو به طلافروش
+     */
+    public function sendWelcomeSms(string $mobile, string $shopName, string $slug): bool
+    {
+        $mobile = self::normalizeMobile($mobile);
+        if (empty($mobile)) {
+            return false;
+        }
+
+        $this->logSms('customer_welcome_event', $mobile, [
+            'shop' => $shopName,
+            'slug' => $slug,
+            'url'  => 'https://talalive.ir/' . $slug,
+            'note' => 'لینک تابلوی اختصاصی برای طلافروش ثبت شد.',
+        ]);
+
+        return true;
+    }
+
+    /**
      * دریافت وضعیت جامع اتصال به درگاه s.api.ir
      */
     public function getDiagnostics(): array

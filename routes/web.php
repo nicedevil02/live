@@ -28,6 +28,8 @@ Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->name('
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login/send-otp', [AuthController::class, 'sendLoginOtp'])->name('login.send-otp')->middleware('throttle:5,1');
+    Route::post('/login/otp', [AuthController::class, 'loginWithOtp'])->name('login.otp');
     Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
     // ثبت نام طلافروشی جدید

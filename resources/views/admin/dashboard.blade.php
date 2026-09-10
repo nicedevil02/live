@@ -29,7 +29,7 @@
                             </span>
                         </div>
                         <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                            شما می‌توانید از تمامی امکانات تابلوی تلویزیون، فرمول‌ساز و اسلایدشوی محصولات بدون محدودیت استفاده نمایید. جهت خرید اشتراک سالانه با مدیریت تماس بگیرید.
+                            شما می‌توانید از تمامی امکانات تابلوی تلویزیون، فرمول‌ساز و اسلایدشوی محصولات بدون محدودیت استفاده نمایید. جهت خرید اشتراک سالانه با پشتیبانی فنی طلالایو تماس بگیرید.
                         </p>
                     </div>
                 </div>
@@ -38,9 +38,10 @@
                     <a href="tel:09187009064" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
                         <span>📞 خرید اشتراک: ۰۹۱۸۷۰۰۹۰۶۴</span>
                     </a>
-                    <a href="https://wa.me/989187009064?text={{ urlencode('سلام، متقاضی ارتقا و تمدید اشتراک سالانه تابلوی طلالایو هستم. گالری: ' . auth()->user()->name) }}" target="_blank"
-                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20">
-                        <span>واتساپ</span>
+                    <a href="https://rubika.ir/09187009064" target="_blank"
+                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
+                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                        <span>روبیکا</span>
                     </a>
                 </div>
             </div>
@@ -68,9 +69,10 @@
                     <a href="tel:09187009064" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
                         <span>📞 تمدید اشتراک: ۰۹۱۸۷۰۰۹۰۶۴</span>
                     </a>
-                    <a href="https://wa.me/989187009064?text={{ urlencode('سلام، متقاضی تمدید اشتراک تابلوی طلالایو هستم. گالری: ' . auth()->user()->name) }}" target="_blank"
-                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20">
-                        <span>واتساپ</span>
+                    <a href="https://rubika.ir/09187009064" target="_blank"
+                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
+                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                        <span>روبیکا</span>
                     </a>
                 </div>
             </div>
@@ -95,9 +97,10 @@
                 </div>
 
                 <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0">
-                    <a href="https://wa.me/989187009064?text={{ urlencode('سلام، اشتراک فعال دارم و سوال پشتیبانی داشتم. گالری: ' . auth()->user()->name) }}" target="_blank"
-                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20">
-                        <span>💬 پشتیبانی طلالایو</span>
+                    <a href="https://rubika.ir/09187009064" target="_blank"
+                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
+                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                        <span>پشتیبانی روبیکا</span>
                     </a>
                 </div>
             </div>
