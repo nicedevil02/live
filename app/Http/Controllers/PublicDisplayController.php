@@ -97,6 +97,15 @@ class PublicDisplayController extends Controller
 
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
 
+        $bingWallpaper = null;
+        if (($settings->theme_mode ?? '') === 'bing-daily') {
+            try {
+                $bingWallpaper = app(\App\Services\BingWallpaperService::class)->getTodayWallpaper();
+            } catch (\Throwable $e) {
+                \Log::warning('Bing wallpaper snapshot error: ' . $e->getMessage());
+            }
+        }
+
         return [
             'username'     => $user->username,
             'updatedAt'    => $lastFetch ? \Illuminate\Support\Carbon::parse($lastFetch)->toISOString() : now()->toISOString(),
@@ -106,6 +115,7 @@ class PublicDisplayController extends Controller
             'priceFeed'    => $priceFeed,
             'products'     => $products,
             'settings'     => $settings,
+            'bingWallpaper'=> $bingWallpaper,
         ];
     }
 

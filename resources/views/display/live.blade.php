@@ -204,8 +204,19 @@
         }
     </style>
 </head>
-<body :class="themeKey === 'light-modern' ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
+<body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
     <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
+
+        {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلتر کنتراست داینامیک اپل) --}}
+        <template x-if="themeKey === 'bing-daily'">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+                <img :src="bingWallpaperUrl"
+                     alt="Bing Daily Wallpaper" 
+                     class="w-full h-full object-cover transition-opacity duration-1000">
+                {{-- Apple Dynamic Scrim: کنتراست هوشمند برای تضمین خوانایی ۱۰۰٪ --}}
+                <div class="absolute inset-0 bg-slate-950/20 backdrop-contrast-[1.05]"></div>
+            </div>
+        </template>
 
         {{-- Luxury Silk Wave Vector (اختصاصی تم روشن - کاملاً استاتیک و بدون هیچ‌گونه بار پردازنده) --}}
         <template x-if="themeKey === 'light-modern'">
@@ -240,7 +251,7 @@
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
                     <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
-                            <div :class="themeKey === 'light-modern' ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
@@ -248,7 +259,7 @@
                         </template>
                         
                         <template x-if="settings.instagram">
-                            <div :class="themeKey === 'light-modern' ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.instagram"></span>
@@ -256,7 +267,7 @@
                         </template>
  
                         <template x-if="settings.rubika">
-                            <div :class="themeKey === 'light-modern' ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" class="w-5 h-5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
@@ -283,9 +294,9 @@
 
                 {{-- نام فروشگاه (وسط) --}}
                 <div class="order-2 flex w-[24%] flex-col items-center justify-center text-center">
-                    <h1 :class="themeKey === 'light-modern' ? 'text-slate-900' : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
+                    <h1 :class="isLightTheme ? 'text-slate-900' : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
                         class="max-w-full break-words text-4xl xl:text-5xl font-black tracking-tight leading-tight" x-text="settings.shop_name"></h1>
-                    <div :class="themeKey === 'light-modern' ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20'" 
+                    <div :class="isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20'" 
                          class="mt-1 px-4 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
                          ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
                     </div>
@@ -336,7 +347,7 @@
                     </div>
 
                     {{-- خط عمودی جداکننده --}}
-                    <div :class="themeKey === 'light-modern' ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-16"></div>
+                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-16"></div>
 
                     {{-- ساعت و تاریخ --}}
                     <div class="flex flex-col items-center justify-center text-center">
@@ -350,7 +361,7 @@
             {{-- Main Content --}}
             <div class="flex flex-1 flex-row gap-3 min-h-0">
                 {{-- Product Slider --}}
-                <section :class="[theme.card, themeKey === 'light-modern' ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0">
+                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0">
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
@@ -425,7 +436,7 @@
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
                                  item.symbol === 'gold18'
-                                 ? (themeKey === 'light-modern'
+                                 ? (isLightTheme
                                     ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
                                     : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl')
                                  : theme.card + ' ' + theme.cardHover,
@@ -435,14 +446,14 @@
 
                                 <template x-if="item.symbol === 'gold18'">
                                     <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                                        <div class="absolute inset-0" :class="themeKey === 'light-modern' ? 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.18),transparent_75%)]' : 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.28),transparent_75%)]'"></div>
+                                        <div class="absolute inset-0" :class="isLightTheme ? 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.18),transparent_75%)]' : 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.28),transparent_75%)]'"></div>
                                         <div class="absolute inset-0 animate-gold-shine bg-gradient-to-r from-transparent via-amber-400/25 to-transparent w-1/2 h-full"></div>
                                     </div>
                                 </template>
 
                                 {{-- هدر کارت: عنوان نماد و فلش روند اپلی --}}
                                 <div class="relative flex justify-between items-center gap-3">
-                                    <p :class="[item.symbol === 'gold18' ? (themeKey === 'light-modern' ? 'text-amber-900' : 'text-amber-300') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
+                                    <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-900' : 'text-amber-300') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
                                        class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
@@ -473,17 +484,17 @@
 
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
-                                    item.symbol === 'gold18' ? (themeKey === 'light-modern' ? 'text-amber-800' : 'text-amber-300') : theme.priceColor,
+                                    item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-800' : 'text-amber-300') : theme.priceColor,
                                     index < 3 ? 'py-3' : 'py-1.5'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex items-baseline justify-center whitespace-nowrap w-full gap-1.5">
                                          <span :class="[index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl', theme.priceGlow]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md" x-html="item.displayHtml"></span>
-                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'light-modern' ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10']" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
+                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10']" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
-                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', themeKey === 'light-modern' ? 'border-black/5' : 'border-white/10']">
+                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks) --}}
                                     <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
                                         item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10'),
@@ -497,14 +508,14 @@
                                     <div class="flex items-center">
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
                                             <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
-                                                  :class="themeKey === 'light-modern' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
+                                                  :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
                                             <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
-                                                  :class="themeKey === 'light-modern' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'">
+                                                  :class="isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'">
                                                 <span class="relative flex h-2 w-2">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -530,21 +541,30 @@
                 <div class="flex items-center gap-3 h-full z-10">
                     <a href="https://talalive.ir" target="_blank" 
                        class="group flex items-center gap-2.5 px-4 py-1.5 rounded-full border transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer"
-                       :class="themeKey === 'light-modern' ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'">
+                       :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'">
                         <span class="flex h-2.5 w-2.5 relative">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
                         </span>
                         <span class="text-xs font-black tracking-wide">راه‌اندازی این تابلوی هوشمند برای فروشگاه شما:</span>
-                        <span class="font-mono font-black text-xs px-2.5 py-0.5 rounded-full" :class="themeKey === 'light-modern' ? 'bg-amber-300/80 text-amber-950' : 'bg-amber-400/30 text-amber-300 border border-amber-400/40'">TalaLive.ir</span>
+                        <span class="font-mono font-black text-xs px-2.5 py-0.5 rounded-full" :class="isLightTheme ? 'bg-amber-300/80 text-amber-950' : 'bg-amber-400/30 text-amber-300 border border-amber-400/40'">TalaLive.ir</span>
                     </a>
                 </div>
+
+
+                {{-- تگ عنوان عکس روز بینگ در تم bing-daily --}}
+                <template x-if="themeKey === 'bing-daily' && (bingWallpaper?.title || bingWallpaper?.copyright)">
+                    <div class="hidden 2xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 backdrop-blur-xl border border-white/10 text-white/90 text-[11px] font-bold shadow-sm" dir="ltr">
+                        <span>📷</span>
+                        <span class="truncate max-w-[240px]" x-text="bingWallpaper.title || bingWallpaper.copyright"></span>
+                    </div>
+                </template>
 
                 {{-- مرکز: هویت و فناوری پلتفرم کشوری --}}
                 <div class="hidden xl:flex items-center gap-2 justify-center z-10 text-xs font-black" :class="theme.textPrimary">
                     <span class="opacity-90">پلتفرم هوشمند نمایش نرخ و ویترین آنلاین طلا</span>
                     <span class="opacity-25">✦</span>
-                    <span :class="themeKey === 'light-modern' ? 'text-slate-500' : 'text-slate-400'" class="font-normal font-mono">By <span class="font-bold text-slate-400 dark:text-slate-300">Bahman Dev</span></span>
+                    <span :class="isLightTheme ? 'text-slate-500' : 'text-slate-400'" class="font-normal font-mono">By <span class="font-bold text-slate-400 dark:text-slate-300">Bahman Dev</span></span>
                 </div>
 
                 {{-- سمت چپ: وضعیت اتصال و بروزرسانی لحظه‌ای --}}
@@ -747,6 +767,9 @@
                     const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
                     return feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
                 },
+                                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-daily'; },
+                get bingWallpaper() { return this.snapshotData?.bingWallpaper || { url: '/images/bing/today.jpg', title: 'عکس روز بینگ', copyright: 'Bing Daily Wallpaper' }; },
+                get bingWallpaperUrl() { return this.bingWallpaper?.url || '/images/bing/today.jpg'; },
                 get themeKey() { return this.settings.theme_mode && THEMES[this.settings.theme_mode] ? this.settings.theme_mode : 'dark-glass'; },
                 get theme() { return THEMES[this.themeKey]; },
                 get activeProductProfitPercent() {
@@ -946,8 +969,8 @@
                     document.documentElement.style.fontSize = Math.round(this.zoomLevel * 100) + '%';
 
                     // Sync theme class
-                    this.$watch('themeKey', val => document.documentElement.className = (val === 'light-modern' ? 'light' : 'dark'));
-                    document.documentElement.className = (this.themeKey === 'light-modern' ? 'light' : 'dark');
+                    this.$watch('themeKey', () => document.documentElement.className = (this.isLightTheme ? 'light' : 'dark'));
+                    document.documentElement.className = (this.isLightTheme ? 'light' : 'dark');
 
                     // شروع هوشمند اسلایدر با قابلیت تنظیم داینامیک
                     this.startSlider();
