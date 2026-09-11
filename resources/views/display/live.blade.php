@@ -52,6 +52,12 @@
         .animate-float-slow-2 { animation: float-slow-2 36s ease-in-out infinite; will-change: transform; }
         .animate-float-slow-3 { animation: float-slow-3 24s ease-in-out infinite; will-change: transform; }
         .animate-float-slow-4 { animation: float-slow-4 32s ease-in-out infinite; will-change: transform; }
+        @keyframes float-slow-5 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            35% { transform: translate(-70px, 60px) scale(1.12); }
+            70% { transform: translate(60px, -45px) scale(0.92); }
+        }
+        .animate-float-slow-5 { animation: float-slow-5 30s ease-in-out infinite; will-change: transform; }
         @keyframes ticker-rtl {
             0% { transform: translateX(-100vw); }
             100% { transform: translateX(100%); }
@@ -139,9 +145,9 @@
         }
 
         .neu-card-imperial-onyx {
-            background: linear-gradient(145deg, rgba(22, 28, 42, 0.82) 0%, rgba(9, 12, 19, 0.94) 100%) !important;
-            backdrop-filter: blur(28px) saturate(160%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+            background: linear-gradient(145deg, rgba(22, 28, 42, 0.52) 0%, rgba(10, 14, 23, 0.68) 100%) !important;
+            backdrop-filter: blur(28px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
             border: 1px solid rgba(251, 191, 36, 0.38) !important;
             box-shadow: 
                 inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.22),
@@ -435,9 +441,9 @@
         }
 
         .neu-card-dark-glass {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.75)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.48), rgba(15, 23, 42, 0.65)) !important;
+            backdrop-filter: blur(28px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), -4px -4px 14px rgba(255, 255, 255, 0.04), 8px 12px 28px rgba(0, 0, 0, 0.65) !important;
             border: 1px solid rgba(255, 255, 255, 0.12) !important;
         }
@@ -535,7 +541,7 @@
         }
 
         /* =========================================================================
-           BULLETPROOF AMBIENT FLOATING ORB ENGINE (گوی‌های نورانی متحرک لوکس - ۱۰۰٪ مستقل)
+           APPLE PREMIUM COLORFUL AMBIENT FLOATING ORBS ENGINE (گوی‌های فوق‌العاده رنگی و پرمیوم اپل)
            ========================================================================= */
         .ambient-orb-container {
             position: absolute;
@@ -550,188 +556,124 @@
             border-radius: 50%;
             pointer-events: none;
             will-change: transform;
+            opacity: 0.92;
         }
 
+        /* ۱. گوی فیروزه‌ای و یاقوت کبود اپل (Apple Electric Cyan & Sapphire Blue) - بالا چپ */
         .orb-1 {
             top: -10%;
-            left: 5%;
+            left: 4%;
             width: 48vw;
             height: 48vw;
             min-width: 460px;
             min-height: 460px;
             max-width: 760px;
             max-height: 760px;
+            background: radial-gradient(circle at 45% 45%, #06b6d4 0%, #2563eb 38%, rgba(30, 58, 138, 0.35) 65%, transparent 78%) !important;
+            filter: blur(48px) !important;
+            -webkit-filter: blur(48px) !important;
+            mix-blend-mode: screen;
             animation: float-slow-1 28s ease-in-out infinite;
         }
 
+        /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Sunset Orchid) - پایین راست */
         .orb-2 {
             bottom: -10%;
             right: 4%;
-            width: 44vw;
-            height: 44vw;
-            min-width: 430px;
-            min-height: 430px;
-            max-width: 700px;
-            max-height: 700px;
+            width: 46vw;
+            height: 46vw;
+            min-width: 440px;
+            min-height: 440px;
+            max-width: 720px;
+            max-height: 720px;
+            background: radial-gradient(circle at 50% 50%, #f43f5e 0%, #d946ef 38%, rgba(126, 34, 206, 0.35) 65%, transparent 78%) !important;
+            filter: blur(48px) !important;
+            -webkit-filter: blur(48px) !important;
+            mix-blend-mode: screen;
             animation: float-slow-2 36s ease-in-out infinite;
         }
 
+        /* ۳. گوی طلای درخشان ۲۴ عیار و خورشیدی اپل (Apple 24K Liquid Gold & Amber) - مرکز */
         .orb-3 {
-            top: 30%;
-            left: 40%;
+            top: 25%;
+            left: 36%;
+            width: 40vw;
+            height: 40vw;
+            min-width: 400px;
+            min-height: 400px;
+            max-width: 640px;
+            max-height: 640px;
+            background: radial-gradient(circle at 45% 45%, #fef08a 0%, #f59e0b 35%, rgba(180, 83, 9, 0.40) 65%, transparent 78%) !important;
+            filter: blur(42px) !important;
+            -webkit-filter: blur(42px) !important;
+            mix-blend-mode: screen;
+            animation: float-slow-3 24s ease-in-out infinite;
+        }
+
+        /* ۴. گوی شفق زمردین و فیروزه‌ای نعنایی اپل (Apple Aurora Emerald & Mint) - پایین چپ */
+        .orb-4 {
+            bottom: 5%;
+            left: 12%;
             width: 38vw;
             height: 38vw;
             min-width: 380px;
             min-height: 380px;
-            max-width: 620px;
-            max-height: 620px;
-            animation: float-slow-3 24s ease-in-out infinite;
-        }
-
-        .orb-4 {
-            bottom: 8%;
-            left: 12%;
-            width: 36vw;
-            height: 36vw;
-            min-width: 360px;
-            min-height: 360px;
-            max-width: 580px;
-            max-height: 580px;
+            max-width: 600px;
+            max-height: 600px;
+            background: radial-gradient(circle at 50% 50%, #34d399 0%, #10b981 38%, rgba(6, 78, 59, 0.35) 65%, transparent 78%) !important;
+            filter: blur(46px) !important;
+            -webkit-filter: blur(46px) !important;
+            mix-blend-mode: screen;
             animation: float-slow-4 32s ease-in-out infinite;
         }
 
-        /* ۱. پالت گوی‌های اونیکس شاهنشاهی ۲۴ عیار (Imperial Onyx - طلای مذاب و کهربا) */
-        .theme-imperial-onyx .orb-1 {
-            background: radial-gradient(circle at 45% 45%, rgba(251, 191, 36, 0.58) 0%, rgba(217, 119, 6, 0.38) 40%, rgba(180, 83, 9, 0.12) 65%, transparent 75%) !important;
-            filter: blur(60px) !important;
-            -webkit-filter: blur(60px) !important;
-        }
-        .theme-imperial-onyx .orb-2 {
-            background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.52) 0%, rgba(217, 119, 6, 0.32) 45%, rgba(146, 64, 14, 0.10) 70%, transparent 80%) !important;
-            filter: blur(65px) !important;
-            -webkit-filter: blur(65px) !important;
-        }
-        .theme-imperial-onyx .orb-3 {
-            background: radial-gradient(circle at 45% 45%, rgba(252, 211, 77, 0.48) 0%, rgba(234, 88, 12, 0.28) 45%, transparent 75%) !important;
-            filter: blur(55px) !important;
-            -webkit-filter: blur(55px) !important;
-        }
-        .theme-imperial-onyx .orb-4 {
-            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.50) 0%, rgba(217, 119, 6, 0.25) 40%, transparent 75%) !important;
-            filter: blur(60px) !important;
-            -webkit-filter: blur(60px) !important;
+        /* ۵. گوی بنفش کیهانی و نیلگون اپل (Apple Cosmic Violet & Royal Indigo) - بالا راست */
+        .orb-5 {
+            top: 8%;
+            right: 14%;
+            width: 42vw;
+            height: 42vw;
+            min-width: 410px;
+            min-height: 410px;
+            max-width: 660px;
+            max-height: 660px;
+            background: radial-gradient(circle at 45% 45%, #c084fc 0%, #6366f1 38%, rgba(49, 46, 129, 0.35) 65%, transparent 78%) !important;
+            filter: blur(50px) !important;
+            -webkit-filter: blur(50px) !important;
+            mix-blend-mode: screen;
+            animation: float-slow-5 30s ease-in-out infinite;
         }
 
-        /* ۲. پالت گوی‌های مروارید و طلای شاهنشاهی (Imperial Pearl - طلای شامپاینی و بلور ابریشمی) */
-        .theme-imperial-pearl .orb-1 {
-            background: radial-gradient(circle at 45% 45%, rgba(251, 191, 36, 0.52) 0%, rgba(245, 158, 11, 0.28) 45%, transparent 75%) !important;
-            filter: blur(60px) !important;
-            -webkit-filter: blur(60px) !important;
+        /* پالت تم روشن شاهنشاهی و روشن مدرن (Light Mode Apple Palette) */
+        .theme-imperial-pearl .orb-1,
+        .theme-light-modern .orb-1 {
+            mix-blend-mode: multiply !important;
+            opacity: 0.65 !important;
+            background: radial-gradient(circle at 45% 45%, rgba(56, 189, 248, 0.70) 0%, rgba(96, 165, 250, 0.40) 45%, transparent 70%) !important;
         }
-        .theme-imperial-pearl .orb-2 {
-            background: radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.70) 0%, rgba(147, 197, 253, 0.35) 45%, transparent 75%) !important;
-            filter: blur(55px) !important;
-            -webkit-filter: blur(55px) !important;
+        .theme-imperial-pearl .orb-2,
+        .theme-light-modern .orb-2 {
+            mix-blend-mode: multiply !important;
+            opacity: 0.65 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(244, 114, 182, 0.65) 0%, rgba(192, 132, 252, 0.35) 45%, transparent 70%) !important;
         }
-        .theme-imperial-pearl .orb-3 {
-            background: radial-gradient(circle at 45% 45%, rgba(254, 215, 170, 0.62) 0%, rgba(251, 146, 60, 0.28) 45%, transparent 75%) !important;
-            filter: blur(65px) !important;
-            -webkit-filter: blur(65px) !important;
+        .theme-imperial-pearl .orb-3,
+        .theme-light-modern .orb-3 {
+            mix-blend-mode: multiply !important;
+            opacity: 0.70 !important;
+            background: radial-gradient(circle at 45% 45%, rgba(251, 191, 36, 0.75) 0%, rgba(245, 158, 11, 0.40) 45%, transparent 70%) !important;
         }
-        .theme-imperial-pearl .orb-4 {
-            background: radial-gradient(circle at 50% 50%, rgba(253, 230, 138, 0.52) 0%, rgba(245, 158, 11, 0.22) 45%, transparent 75%) !important;
-            filter: blur(55px) !important;
-            -webkit-filter: blur(55px) !important;
+        .theme-imperial-pearl .orb-4,
+        .theme-light-modern .orb-4 {
+            mix-blend-mode: multiply !important;
+            opacity: 0.65 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.60) 0%, rgba(45, 212, 191, 0.30) 45%, transparent 70%) !important;
         }
-
-        /* ۳. پالت طلایی سلطنتی (Gold Royal) */
-        .theme-gold-royal .orb-1 {
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.48) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-        .theme-gold-royal .orb-2 {
-            background: radial-gradient(circle, rgba(217, 119, 6, 0.42) 0%, transparent 70%) !important;
-            filter: blur(70px) !important;
-        }
-        .theme-gold-royal .orb-3 {
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.38) 0%, transparent 70%) !important;
-            filter: blur(60px) !important;
-        }
-        .theme-gold-royal .orb-4 {
-            background: radial-gradient(circle, rgba(180, 83, 9, 0.35) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-
-        /* ۴. پالت آبی اقیانوسی (Blue Ocean) */
-        .theme-blue-ocean .orb-1 {
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.52) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-        .theme-blue-ocean .orb-2 {
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.46) 0%, transparent 70%) !important;
-            filter: blur(70px) !important;
-        }
-        .theme-blue-ocean .orb-3 {
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.42) 0%, transparent 70%) !important;
-            filter: blur(60px) !important;
-        }
-        .theme-blue-ocean .orb-4 {
-            background: radial-gradient(circle, rgba(14, 165, 233, 0.38) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-
-        /* ۵. پالت بنفش مه‌آلود (Purple Haze) */
-        .theme-purple-haze .orb-1 {
-            background: radial-gradient(circle, rgba(192, 38, 211, 0.52) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-        .theme-purple-haze .orb-2 {
-            background: radial-gradient(circle, rgba(147, 51, 234, 0.46) 0%, transparent 70%) !important;
-            filter: blur(70px) !important;
-        }
-        .theme-purple-haze .orb-3 {
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.42) 0%, transparent 70%) !important;
-            filter: blur(60px) !important;
-        }
-        .theme-purple-haze .orb-4 {
-            background: radial-gradient(circle, rgba(126, 34, 206, 0.38) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-
-        /* ۶. پالت سبز شب (Emerald Night) */
-        .theme-emerald-night .orb-1 {
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.52) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-        .theme-emerald-night .orb-2 {
-            background: radial-gradient(circle, rgba(13, 148, 136, 0.46) 0%, transparent 70%) !important;
-            filter: blur(70px) !important;
-        }
-        .theme-emerald-night .orb-3 {
-            background: radial-gradient(circle, rgba(5, 150, 105, 0.42) 0%, transparent 70%) !important;
-            filter: blur(60px) !important;
-        }
-        .theme-emerald-night .orb-4 {
-            background: radial-gradient(circle, rgba(4, 120, 87, 0.38) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-
-        /* ۷. پالت رز تیره (Rose Dark) */
-        .theme-rose-dark .orb-1 {
-            background: radial-gradient(circle, rgba(244, 63, 94, 0.52) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
-        }
-        .theme-rose-dark .orb-2 {
-            background: radial-gradient(circle, rgba(225, 29, 72, 0.46) 0%, transparent 70%) !important;
-            filter: blur(70px) !important;
-        }
-        .theme-rose-dark .orb-3 {
-            background: radial-gradient(circle, rgba(244, 63, 94, 0.42) 0%, transparent 70%) !important;
-            filter: blur(60px) !important;
-        }
-        .theme-rose-dark .orb-4 {
-            background: radial-gradient(circle, rgba(190, 18, 60, 0.38) 0%, transparent 70%) !important;
-            filter: blur(65px) !important;
+        .theme-imperial-pearl .orb-5,
+        .theme-light-modern .orb-5 {
+            mix-blend-mode: multiply !important;
+            opacity: 0.65 !important;
+            background: radial-gradient(circle at 45% 45%, rgba(167, 139, 250, 0.60) 0%, rgba(129, 140, 248, 0.30) 45%, transparent 70%) !important;
         }
     </style>
 </head>
@@ -783,12 +725,13 @@
             </div>
         </template>
 
-        {{-- Ambient Floating Orbs Engine (گوی‌های نورانی متحرک لوکس - ۱۰۰٪ خالص در CSS با حرکت شناور کُند سینمایی) --}}
-        <div x-show="theme.orbs" class="ambient-orb-container" :class="'theme-' + themeKey">
+        {{-- Apple Premium Colorful Ambient Floating Orbs Engine (۵ گوی نورانی و پرمیوم رنگی اپل) --}}
+        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="themeKey !== 'pure-black'">
             <div class="ambient-orb orb-1"></div>
             <div class="ambient-orb orb-2"></div>
             <div class="ambient-orb orb-3"></div>
             <div class="ambient-orb orb-4"></div>
+            <div class="ambient-orb orb-5"></div>
         </div>
 
         <div class="display-shell relative z-10 flex min-h-[100dvh] flex-col gap-3 p-4 xl:h-screen xl:min-h-screen xl:p-5">
