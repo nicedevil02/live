@@ -61,6 +61,7 @@
             animation: flash-red 2.3s ease-out forwards;
         }
         .glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.4), 0 0 20px rgba(245, 158, 11, 0.2); }
+        .glow-amber-imperial { text-shadow: 0 0 12px rgba(251, 191, 36, 0.60), 0 0 26px rgba(217, 119, 6, 0.40), 0 2px 4px rgba(0, 0, 0, 0.9); }
         .glow-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.45), 0 0 20px rgba(6, 182, 212, 0.2); }
         .glow-purple { text-shadow: 0 0 10px rgba(217, 70, 239, 0.45), 0 0 20px rgba(217, 70, 239, 0.2); }
         .glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.45), 0 0 20px rgba(16, 185, 129, 0.2); }
@@ -101,6 +102,61 @@
         .neu-card-light-modern:hover {
             transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 0 rgba(255, 255, 255, 0.5), -7px -7px 18px rgba(255, 255, 255, 1), 7px 12px 26px rgba(148, 163, 184, 0.28) !important;
+        }
+
+        /* 0. Imperial Onyx & 24K Gold VIP Theme (شاهکار اونیکس شاهنشاهی ۲۴ عیار - فوق‌العاده باوقار و لوکس) */
+        .theme-imperial-onyx {
+            background-color: #05070c !important;
+            background-image: 
+                radial-gradient(circle 900px at 50% 35%, rgba(217, 119, 6, 0.12) 0%, transparent 65%),
+                radial-gradient(ellipse 65% 50% at 15% 15%, rgba(251, 191, 36, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 45% at 85% 85%, rgba(180, 83, 9, 0.09) 0%, transparent 60%),
+                linear-gradient(145deg, #07090f 0%, #030407 50%, #000103 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .neu-card-imperial-onyx {
+            background: linear-gradient(145deg, rgba(22, 28, 42, 0.82) 0%, rgba(9, 12, 19, 0.94) 100%) !important;
+            backdrop-filter: blur(28px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+            border: 1px solid rgba(251, 191, 36, 0.38) !important;
+            box-shadow: 
+                inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(251, 191, 36, 0.18),
+                0 16px 40px -8px rgba(0, 0, 0, 0.88),
+                0 0 20px -2px rgba(245, 158, 11, 0.10) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-card-imperial-onyx:hover {
+            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.35),
+                0 24px 52px -6px rgba(0, 0, 0, 0.98),
+                0 0 32px rgba(251, 191, 36, 0.30) !important;
+            border-color: rgba(251, 191, 36, 0.80) !important;
+        }
+
+        .neu-hero-gold-imperial {
+            background: linear-gradient(135deg, rgba(146, 64, 14, 0.80) 0%, rgba(69, 26, 3, 0.90) 50%, rgba(26, 10, 1, 0.96) 100%) !important;
+            backdrop-filter: blur(28px) saturate(220%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.88) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 0.50),
+                inset 0 -1px 0 0 rgba(251, 191, 36, 0.35),
+                0 18px 48px -6px rgba(217, 119, 6, 0.65),
+                0 0 40px rgba(251, 191, 36, 0.40) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-imperial:hover {
+            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.65),
+                0 28px 62px -6px rgba(217, 119, 6, 0.80),
+                0 0 50px rgba(251, 191, 36, 0.55) !important;
+            border-color: #fef08a !important;
         }
 
         /* 1. Apple Vision Pro / Dark Obsidian Glass (پیشنهاد اول - شیشه دودی ابسیدین با لبه طلایی ۲۴ عیار و اسکیل) */
@@ -382,7 +438,7 @@
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
                     <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
@@ -390,7 +446,7 @@
                         </template>
                         
                         <template x-if="settings.instagram">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.instagram"></span>
@@ -398,7 +454,7 @@
                         </template>
  
                         <template x-if="settings.rubika">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" class="w-5 h-5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
@@ -798,6 +854,21 @@
                 priceGlow: '',
                 orbs: false, 
                 orbColors: [] 
+            },
+            'imperial-onyx': { 
+                bg: 'theme-imperial-onyx', 
+                headerBg: 'neu-card-imperial-onyx', 
+                card: 'neu-card-imperial-onyx', 
+                cardHover: '', 
+                accent: 'text-amber-400', 
+                textPrimary: 'text-amber-100', 
+                textSecondary: 'text-amber-200/85', 
+                textMuted: 'text-amber-300/45', 
+                footerBg: 'neu-card-imperial-onyx', 
+                priceColor: 'text-white', 
+                priceGlow: 'glow-amber-imperial', 
+                orbs: true, 
+                orbColors: ['bg-amber-600/10 blur-[130px]', 'bg-yellow-500/8 blur-[110px]', 'bg-orange-700/6 blur-[140px]'] 
             },
             'gold-royal': { 
                 bg: 'bg-[radial-gradient(ellipse_at_top,#2b1502_0%,#140800_50%,#050200_100%)]', 
