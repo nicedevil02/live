@@ -344,6 +344,10 @@
                     </div>
                 </div>
 
+                <a href="#pricing" class="px-3.5 py-2 rounded-xl text-amber-600 dark:text-amber-400 font-black hover:bg-white dark:hover:bg-slate-800/70 transition-all flex items-center gap-1">
+                    <span>تعرفه‌ها و اشتراک</span>
+                    <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">آنلاین</span>
+                </a>
                 <a href="#faq" class="px-3.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all">
                     سوالات متداول
                 </a>
@@ -416,6 +420,10 @@
                 </a>
                 <a href="#comparison" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
                     <span>مقایسه با تابلوهای سنتی</span>
+                </a>
+                <a href="#pricing" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between text-amber-600 dark:text-amber-400">
+                    <span>تعرفه‌ها و خرید اشتراک</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/20 font-bold">ویژه</span>
                 </a>
                 <a href="#faq" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
                     <span>سوالات متداول طلافروشان</span>
@@ -1044,6 +1052,266 @@
                 </table>
             </div>
 
+        </div>
+    </section>
+
+    {{-- بخش تعرفه‌ها و خرید اشتراک آنلاین (Pricing Matrix) --}}
+    <section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto space-y-12 relative z-10">
+            <div class="text-center space-y-3 max-w-2xl mx-auto">
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-black">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>تعرفه‌های اقتصادی و شفاف</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">
+                    پلن‌های اشتراک تابلوی هوشمند طلالایو
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+                    اتصال آنی به درگاه‌های پرداخت امن شاپرک (<strong class="text-slate-800 dark:text-slate-200">زرین‌پال و زیبال</strong>) و فعال‌سازی فوری بدون معطلی. کلیه کاربران جدید از <strong class="text-amber-600 dark:text-amber-400">۱۴ روز مهلت تست رایگان</strong> برخوردارند.
+                </p>
+            </div>
+
+            {{-- ماتریس ۴ تایی قیمت‌گذاری --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+                
+                {{-- پلن ۱: ۱ ماهه --}}
+                <div class="rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white">اشتراک ۱ ماهه</h3>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">کوتاه‌مدت</span>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-3xl font-black text-slate-900 dark:text-white font-mono">۶۹۰,۰۰۰</span>
+                                <span class="text-xs font-bold text-slate-500">تومان</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mt-1">ماهیانه ۶۹۰,۰۰۰ تومان</div>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                            مناسب جهت بررسی اولیه و تست امکانات تابلوی هوشمند تلویزیون در مغازه.
+                        </p>
+                        <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-5">
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>پخش زنده تلویزیون 4K</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>فرمول‌ساز سود و مظنه</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>ویترین و اسلایدر محصولات</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>پشتیبانی روبیکا و تلفنی</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4">
+                        @auth
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-all flex items-center justify-center gap-1.5">
+                                <span>انتخاب و تمدید آنلاین</span>
+                                <span>&larr;</span>
+                            </a>
+                        @else
+                            <a href="{{ route('admin.register') }}" class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-all flex items-center justify-center gap-1.5">
+                                <span>شروع با تست رایگان</span>
+                                <span>&larr;</span>
+                            </a>
+                        @endauth
+                    </div>
+                </div>
+
+                {{-- پلن ۲: ۳ ماهه --}}
+                <div class="rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white">اشتراک ۳ ماهه</h3>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400">۱۵٪ صرفه‌جویی</span>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-3xl font-black text-slate-900 dark:text-white font-mono">۱,۷۹۰,۰۰۰</span>
+                                <span class="text-xs font-bold text-slate-500">تومان</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mt-1">معادل ۵۹۶,۰۰۰ تومان / ماه</div>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                            انتخاب فصلی با ثبات نرخ و دسترسی کامل به کلیه قابلیت‌ها.
+                        </p>
+                        <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-5">
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>پخش زنده تلویزیون 4K</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>فرمول‌ساز سود و مظنه</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>ویترین و اسلایدر محصولات</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>پشتیبانی روبیکا و تلفنی</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4">
+                        @auth
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-all flex items-center justify-center gap-1.5">
+                                <span>انتخاب و تمدید آنلاین</span>
+                                <span>&larr;</span>
+                            </a>
+                        @else
+                            <a href="{{ route('admin.register') }}" class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-all flex items-center justify-center gap-1.5">
+                                <span>شروع با تست رایگان</span>
+                                <span>&larr;</span>
+                            </a>
+                        @endauth
+                    </div>
+                </div>
+
+                {{-- پلن ۳: ۶ ماهه --}}
+                <div class="rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white">اشتراک ۶ ماهه</h3>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400">۳۰٪ صرفه‌جویی</span>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-3xl font-black text-slate-900 dark:text-white font-mono">۲,۸۹۰,۰۰۰</span>
+                                <span class="text-xs font-bold text-slate-500">تومان</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mt-1">معادل ۴۸۱,۰۰۰ تومان / ماه</div>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                            پلن نیم‌سال با تخفیف طلایی و پایداری تضمین‌شده سرورها.
+                        </p>
+                        <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-5">
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>پخش زنده تلویزیون 4K</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>فرمول‌ساز سود و مظنه</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>ویترین و اسلایدر محصولات</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>پشتیبانی روبیکا و تلفنی</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4">
+                        @auth
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-all flex items-center justify-center gap-1.5">
+                                <span>انتخاب و تمدید آنلاین</span>
+                                <span>&larr;</span>
+                            </a>
+                        @else
+                            <a href="{{ route('admin.register') }}" class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black transition-all flex items-center justify-center gap-1.5">
+                                <span>شروع با تست رایگان</span>
+                                <span>&larr;</span>
+                            </a>
+                        @endauth
+                    </div>
+                </div>
+
+                {{-- پلن ۴: ۱۲ ماهه (پیشنهاد ویژه و محبوب‌ترین طلالایو - HERO PLAN) --}}
+                <div class="relative rounded-3xl p-6 sm:p-7 border-2 border-amber-500 dark:border-amber-400 bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-white dark:to-slate-900 shadow-2xl shadow-amber-500/20 flex flex-col justify-between -translate-y-2">
+                    <div class="absolute -top-4 right-1/2 translate-x-1/2 px-4 py-1 rounded-full text-[11px] font-black tracking-wide bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/30 whitespace-nowrap">
+                        ★ محبوب‌ترین انتخاب طلافروشان ★
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-4 pt-2">
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white">اشتراک سالانه (۱۲ ماه)</h3>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-slate-950">بیش از ۵۰٪ تخفیف</span>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-3xl font-black text-amber-500 font-mono">۳,۹۹۰,۰۰۰</span>
+                                <span class="text-xs font-bold text-slate-500">تومان</span>
+                            </div>
+                            <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold mt-1">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                            بیشترین صرفه اقتصادی برای یک سال کامل بدون دغدغه نوسان قیمت، همراه با اولویت پشتیبانی.
+                        </p>
+                        <ul class="space-y-3 text-xs text-slate-700 dark:text-slate-200 border-t border-amber-500/20 pt-5">
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span class="font-bold">پخش زنده تلویزیون 4K نامحدود</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>فرمول‌ساز اختصاصی سود و مظنه</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>ویترین و اسلایدر نامحدود محصولات</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>کارکرد هوشمند در قطعی اینترنت</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span class="font-bold text-amber-500">پشتیبانی VIP روبیکا و تلفنی مستقیم</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4">
+                        @auth
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition-all shadow-lg shadow-amber-500/25 flex items-center justify-center gap-1.5 cursor-pointer">
+                                <span>خرید سالانه با تخفیف ۵۰٪</span>
+                                <span>&larr;</span>
+                            </a>
+                        @else
+                            <a href="{{ route('admin.register') }}" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black transition-all shadow-lg shadow-amber-500/25 flex items-center justify-center gap-1.5 cursor-pointer">
+                                <span>ثبت‌نام و شروع ۱۴ روز رایگان</span>
+                                <span>&larr;</span>
+                            </a>
+                        @endauth
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- بنر ضمانت و امنیت پرداخت --}}
+            <div class="rounded-3xl bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    </div>
+                    <div>
+                        <div class="font-black text-slate-900 dark:text-white">تضمین حفظ روزها (No Day Lost)</div>
+                        <p class="text-slate-500 dark:text-slate-400 mt-0.5">در صورت تمدید پیش از موعد، کلیه روزهای باقیمانده حفظ شده و اشتراک جدید به پایان آن افزوده می‌شود.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 shrink-0">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>اتصال شاپرک (زرین‌پال و زیبال)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                        <span>صدور فاکتور رسمی دیجیتال</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

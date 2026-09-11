@@ -68,6 +68,8 @@
                 @php
                     $links = [
                         ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard'],
+                        ['r' => 'admin.subscription.index', 'l' => 'خرید و تمدید اشتراک', 'i' => 'crown'],
+                        ['r' => 'admin.transactions.index', 'l' => 'تراکنش‌ها و مالی', 'i' => 'wallet', 'super_only' => true],
                         ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],
                         ['r' => 'admin.sms-status', 'l' => 'درگاه پیامک (s.api.ir)', 'i' => 'message-square', 'super_only' => true],
                         ['r' => 'admin.sources', 'l' => 'منابع دریافت API', 'i' => 'rss', 'super_only' => true],

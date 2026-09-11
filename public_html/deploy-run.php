@@ -136,6 +136,21 @@ if (is_dir($viewCacheDir)) {
     }
 }
 
+// 5. Run Artisan migrations and optimize cache
+$migrateOutput = '';
+if (function_exists('shell_exec')) {
+    $disabled = explode(',', (string)ini_get('disable_functions'));
+    $disabled = array_map('trim', $disabled);
+    if (!in_array('shell_exec', $disabled)) {
+        $phpBin = PHP_BINARY ?: 'php';
+        $migrateCmd = 'cd ' . escapeshellarg($targetDir) . ' && ' . escapeshellarg($phpBin) . ' artisan migrate --force 2>&1';
+        $migrateOutput = @shell_exec($migrateCmd);
+        if ($migrateOutput) {
+            $log[] = 'Migrate output: ' . trim($migrateOutput);
+        }
+    }
+}
+
 $duration = round(microtime(true) - $startTime, 3);
 
 header('Content-Type: application/json; charset=utf-8');

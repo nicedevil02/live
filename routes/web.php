@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\SourceController;
 use App\Http\Controllers\Admin\FormulaController;
 use App\Http\Controllers\Admin\DisplayItemController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\TransactionController;
 
 // ریشه سایت → نمایش صفحه جفت‌سازی تلویزیون (یا ریدایرکت به داشبورد در صورت لاگین)
 Route::get('/', function () {
@@ -23,6 +25,9 @@ Route::get('/', function () {
 
 // مسیر جفت‌سازی تلویزیون
 Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->name('display.tv');
+
+// بازگشت از درگاه پرداخت شاپرک (عمومی)
+Route::match(['get', 'post'], '/payment/callback/{gateway}', [SubscriptionController::class, 'callback'])->name('admin.subscription.callback');
 
 // احراز هویت
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -122,10 +127,22 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
         Route::post('/users/{id}/change-password', [UserController::class, 'changePassword'])->name('users.password');
         Route::post('/users/{id}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        // مدیریت مالی و تراکنش‌ها (سوپر ادمین)
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::post('/transactions/manual', [TransactionController::class, 'storeManual'])->name('transactions.manual');
+        Route::post('/transactions/coupons', [TransactionController::class, 'storeCoupon'])->name('transactions.coupons.store');
+        Route::post('/transactions/coupons/{coupon}/toggle', [TransactionController::class, 'toggleCoupon'])->name('transactions.coupons.toggle');
     });
 
     // خروج از حساب کاربری طلافروش و بازگشت به سوپرادمین
     Route::post('/leave-impersonate', [UserController::class, 'leaveImpersonate'])->name('impersonate.leave');
+
+    // خرید و مدیریت اشتراک
+    Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::post('/subscription/apply-coupon', [SubscriptionController::class, 'applyCoupon'])->name('subscription.apply-coupon');
+    Route::post('/subscription/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+    Route::get('/subscription/invoice/{payment}', [SubscriptionController::class, 'invoice'])->name('subscription.invoice');
 
     // محصولات (ویترین)
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');

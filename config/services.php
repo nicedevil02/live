@@ -49,4 +49,13 @@ return [
         'admin_phone' => env('ADMIN_PHONE', '09187009064'),
     ],
 
+    'zarinpal' => [
+        'merchant_id' => env('ZARINPAL_MERCHANT_ID', 'sandbox'),
+        'sandbox'     => env('ZARINPAL_SANDBOX', true),
+        'zaringate'   => env('ZARINPAL_ZARINGATE', false),
+    ],
+
+    'zibal' => [
+        'merchant_id' => env('ZIBAL_MERCHANT_ID', 'zibal'),
+    ],
 ];

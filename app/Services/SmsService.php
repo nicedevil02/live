@@ -166,4 +166,45 @@ class SmsService
             // نادیده گرفتن خطای لاگ جهت عدم توقف عملیات اصلی
         }
     }
+
+    /**
+     * ارسال پیامک تأیید پرداخت و تمدید اشتراک به طلافروش
+     */
+    public function sendPaymentSuccess(string $mobile, string $planName, int $amount, string $refId, string $expiryDate): bool
+    {
+        $mobile = self::normalizeMobile($mobile);
+        if (empty($mobile)) return false;
+
+        $amountFormatted = number_format($amount);
+        $this->logSms('payment_success_sms', $mobile, [
+            'plan'        => $planName,
+            'amount'      => $amountFormatted,
+            'ref_id'      => $refId,
+            'expiry_date' => $expiryDate,
+            'message'     => "طلافروش گرامی، پرداخت {$amountFormatted} تومان بابت {$planName} با پیگیری {$refId} انجام شد. اعتبار تابلوی شما تا {$expiryDate} تمدید گردید. طلالایو",
+        ]);
+
+        return true;
+    }
+
+    /**
+     * اطلاع‌رسانی خرید اشتراک به مدیر سامانه
+     */
+    public function notifyAdminPayment(string $customerName, string $phone, string $planName, int $amount, string $refId): bool
+    {
+        $adminPhone = self::normalizeMobile($this->adminPhone);
+        if (empty($adminPhone)) return false;
+
+        $amountFormatted = number_format($amount);
+        $this->logSms('admin_payment_notification', $adminPhone, [
+            'customer' => $customerName,
+            'phone'    => $phone,
+            'plan'     => $planName,
+            'amount'   => $amountFormatted,
+            'ref_id'   => $refId,
+            'message'  => "مدیر گرامی، خرید جدید در طلالایو ثبت شد: {$customerName} ({$phone}) - پلن: {$planName} - مبلغ: {$amountFormatted} تومان - پیگیری: {$refId}",
+        ]);
+
+        return true;
+    }
 }
