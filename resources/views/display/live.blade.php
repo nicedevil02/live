@@ -103,51 +103,128 @@
             box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 0 rgba(255, 255, 255, 0.5), -7px -7px 18px rgba(255, 255, 255, 1), 7px 12px 26px rgba(148, 163, 184, 0.28) !important;
         }
 
-        /* Apple HIG Liquid Glass (پوسته شیشه‌ای کریستالی فوق‌العاده شفاف با انکسار نوری و اسکیل داینامیک) */
-        .neu-card-bing-daily {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
-            backdrop-filter: blur(20px) saturate(200%) brightness(108%) contrast(102%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(200%) brightness(108%) contrast(102%) !important;
+        /* 1. Apple Vision Pro / Dark Obsidian Glass (پیشنهاد اول - شیشه دودی ابسیدین با لبه طلایی ۲۴ عیار و اسکیل) */
+        .neu-card-bing-obsidian {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.70) 0%, rgba(2, 6, 23, 0.86) 100%) !important;
+            backdrop-filter: blur(28px) saturate(170%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+            border: 1px solid rgba(251, 191, 36, 0.30) !important;
             box-shadow: 
-                inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.75),
-                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.18),
-                0 10px 32px 0 rgba(15, 23, 42, 0.20),
-                0 2px 8px 0 rgba(0, 0, 0, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.48) !important;
-            transform: scale(1) translateZ(0);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease !important;
-        }
-        .neu-card-bing-daily:hover {
-            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.18) 100%) !important;
-            box-shadow: 
-                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.90),
-                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.25),
-                0 22px 50px -6px rgba(15, 23, 42, 0.32),
-                0 6px 16px 0 rgba(0, 0, 0, 0.12) !important;
-            border-color: rgba(255, 255, 255, 0.75) !important;
-        }
-
-        /* Apple Royal Champagne Hero Glass (کارت ویژه طلای ۱۸ در تم بینگ - شفافیت شاهکار با انوار کهربایی و اسکیل داینامیک) */
-        .neu-hero-gold-bing {
-            background: linear-gradient(135deg, rgba(254, 243, 199, 0.42) 0%, rgba(255, 251, 235, 0.20) 50%, rgba(251, 191, 36, 0.18) 100%) !important;
-            backdrop-filter: blur(20px) saturate(220%) brightness(110%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(220%) brightness(110%) !important;
-            box-shadow: 
-                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.90),
-                inset 0 -1px 1px 0 rgba(245, 158, 11, 0.35),
-                0 14px 38px -4px rgba(217, 119, 6, 0.32),
-                0 4px 14px 0 rgba(0, 0, 0, 0.10) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.65) !important;
+                inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.18),
+                inset 0 -1px 0 0 rgba(251, 191, 36, 0.15),
+                0 14px 36px -4px rgba(0, 0, 0, 0.75),
+                0 4px 14px 0 rgba(0, 0, 0, 0.35) !important;
             transform: scale(1) translateZ(0);
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
-        .neu-hero-gold-bing:hover {
+        .neu-card-bing-obsidian:hover {
+            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.28),
+                0 24px 50px -6px rgba(0, 0, 0, 0.90),
+                0 0 25px rgba(245, 158, 11, 0.22) !important;
+            border-color: rgba(251, 191, 36, 0.65) !important;
+        }
+
+        .neu-hero-gold-obsidian {
+            background: linear-gradient(145deg, rgba(69, 26, 3, 0.75) 0%, rgba(20, 8, 0, 0.92) 100%) !important;
+            backdrop-filter: blur(28px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.65) !important;
+            box-shadow: 
+                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.32),
+                inset 0 -1px 0 0 rgba(251, 191, 36, 0.25),
+                0 16px 42px -4px rgba(217, 119, 6, 0.50),
+                0 4px 16px 0 rgba(0, 0, 0, 0.4) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-obsidian:hover {
+            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 0.45),
+                0 26px 56px -6px rgba(217, 119, 6, 0.65),
+                0 0 30px rgba(251, 191, 36, 0.35) !important;
+            border-color: rgba(251, 191, 36, 0.95) !important;
+        }
+
+        /* 2. Apple Studio Unified Canvas (پیشنهاد دوم - استیج شیشه‌ای مات و یکدست) */
+        .neu-card-bing-studio {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.82) 100%) !important;
+            backdrop-filter: blur(22px) !important;
+            -webkit-backdrop-filter: blur(22px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.16),
+                0 10px 28px -4px rgba(0, 0, 0, 0.55) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-card-bing-studio:hover {
+            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.25),
+                0 18px 40px -4px rgba(0, 0, 0, 0.70) !important;
+            border-color: rgba(99, 102, 241, 0.50) !important;
+        }
+
+        .neu-hero-gold-studio {
+            background: linear-gradient(145deg, rgba(69, 26, 3, 0.70) 0%, rgba(20, 8, 0, 0.88) 100%) !important;
+            backdrop-filter: blur(22px) !important;
+            -webkit-backdrop-filter: blur(22px) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.60) !important;
+            box-shadow: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.28), 0 14px 34px -4px rgba(217, 119, 6, 0.45) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-studio:hover {
+            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            border-color: rgba(251, 191, 36, 0.90) !important;
+        }
+
+        /* 3. Apple Ceramic Porcelain (پیشنهاد سوم - سرامیک پرسلین سفید با وقار و کنتراست شفاف) */
+        .neu-card-bing-ceramic {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.90) 0%, rgba(248, 250, 252, 0.84) 100%) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+                inset 0 -1px 0 0 rgba(255, 255, 255, 0.4),
+                -4px -4px 14px rgba(255, 255, 255, 0.85),
+                0 14px 34px -4px rgba(15, 23, 42, 0.18),
+                0 4px 10px 0 rgba(0, 0, 0, 0.06) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-card-bing-ceramic:hover {
+            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                -6px -6px 18px rgba(255, 255, 255, 1),
+                0 22px 48px -6px rgba(15, 23, 42, 0.26),
+                0 6px 16px 0 rgba(0, 0, 0, 0.10) !important;
+            border-color: #ffffff !important;
+        }
+
+        .neu-hero-gold-ceramic {
+            background: linear-gradient(145deg, rgba(254, 243, 199, 0.92) 0%, rgba(255, 251, 235, 0.88) 100%) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.70) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                0 14px 36px -4px rgba(217, 119, 6, 0.28),
+                0 4px 12px 0 rgba(0, 0, 0, 0.06) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-ceramic:hover {
             transform: scale(1.028) translateY(-4px) translateZ(0) !important;
             box-shadow: 
                 inset 0 2px 2px 0 rgba(255, 255, 255, 1),
-                0 24px 54px -6px rgba(217, 119, 6, 0.45),
-                0 8px 20px 0 rgba(0, 0, 0, 0.15) !important;
+                0 24px 50px -6px rgba(217, 119, 6, 0.40),
+                0 6px 16px 0 rgba(0, 0, 0, 0.10) !important;
             border-color: rgba(251, 191, 36, 0.95) !important;
         }
 
@@ -255,14 +332,21 @@
 <body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
     <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
 
-        {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلتر کنتراست داینامیک اپل) --}}
-        <div x-show="themeKey === 'bing-daily'" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+        {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
+        <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
             <img :src="bingWallpaperUrl" 
                  alt="Bing Wallpaper" 
                  class="w-full h-full object-cover transition-opacity duration-1000"
                  x-on:error="$el.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop'">
-            {{-- Apple Dynamic Scrim: کنتراست هوشمند برای تضمین خوانایی ۱۰۰٪ متون روی هر عکسی --}}
-            <div class="absolute inset-0 bg-slate-950/25 backdrop-contrast-[1.05]"></div>
+
+            {{-- 1. Scrim ابسیدین لوکس: لایه مخملین سینمایی برای مهار اشعه زننده و حفظ زیبایی تصویر --}}
+            <div x-show="themeKey === 'bing-daily'" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/65 to-slate-950/50 backdrop-blur-[1px] backdrop-contrast-[1.10]"></div>
+
+            {{-- 2. Scrim استودیو: لایه ملایم نیمه‌تاریک --}}
+            <div x-show="themeKey === 'bing-studio'" class="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px]"></div>
+
+            {{-- 3. Scrim پرسلین سرامیک: لایه روشن طبیعی --}}
+            <div x-show="themeKey === 'bing-ceramic'" class="absolute inset-0 bg-slate-950/20 backdrop-contrast-[1.05]"></div>
         </div>
 
         {{-- Luxury Silk Wave Vector (اختصاصی تم روشن - کاملاً استاتیک و بدون هیچ‌گونه بار پردازنده) --}}
@@ -298,7 +382,7 @@
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
                     <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
-                            <div :class="themeKey === 'bing-daily' ? 'bg-white/35 hover:bg-white/50 border-white/60 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]' : (isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
@@ -306,7 +390,7 @@
                         </template>
                         
                         <template x-if="settings.instagram">
-                            <div :class="themeKey === 'bing-daily' ? 'bg-white/35 hover:bg-white/50 border-white/60 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]' : (isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.instagram"></span>
@@ -314,7 +398,7 @@
                         </template>
  
                         <template x-if="settings.rubika">
-                            <div :class="themeKey === 'bing-daily' ? 'bg-white/35 hover:bg-white/50 border-white/60 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]' : (isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
+                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" class="w-5 h-5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
@@ -484,10 +568,14 @@
                             <div :class="[
                                  item.symbol === 'gold18'
                                  ? (themeKey === 'bing-daily'
-                                    ? 'neu-hero-gold-bing'
-                                    : (isLightTheme
-                                       ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
-                                       : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl'))
+                                    ? 'neu-hero-gold-obsidian'
+                                    : (themeKey === 'bing-studio'
+                                       ? 'neu-hero-gold-studio'
+                                       : (themeKey === 'bing-ceramic'
+                                          ? 'neu-hero-gold-ceramic'
+                                          : (isLightTheme
+                                             ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
+                                             : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl'))))
                                  : theme.card + ' ' + theme.cardHover,
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
@@ -604,7 +692,7 @@
 
 
                 {{-- تگ عنوان عکس روز بینگ در تم bing-daily --}}
-                <template x-if="themeKey === 'bing-daily' && (bingWallpaper?.title || bingWallpaper?.copyright)">
+                <template x-if="isBingTheme && (bingWallpaper?.title || bingWallpaper?.copyright)">
                     <div class="hidden 2xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 backdrop-blur-xl border border-white/10 text-white/90 text-[11px] font-bold shadow-sm" dir="ltr">
                         <span>📷</span>
                         <span class="truncate max-w-[240px]" x-text="bingWallpaper.title || bingWallpaper.copyright"></span>
@@ -676,14 +764,44 @@
             },
             'bing-daily': { 
                 bg: 'bg-slate-950', 
-                headerBg: 'neu-card-bing-daily', 
-                card: 'neu-card-bing-daily', 
+                headerBg: 'neu-card-bing-obsidian', 
+                card: 'neu-card-bing-obsidian', 
+                cardHover: '', 
+                accent: 'text-amber-400', 
+                textPrimary: 'text-white', 
+                textSecondary: 'text-white/75', 
+                textMuted: 'text-white/45', 
+                footerBg: 'neu-card-bing-obsidian', 
+                priceColor: 'text-white', 
+                priceGlow: 'glow-amber',
+                orbs: false, 
+                orbColors: [] 
+            },
+            'bing-studio': { 
+                bg: 'bg-slate-950', 
+                headerBg: 'neu-card-bing-studio', 
+                card: 'neu-card-bing-studio', 
+                cardHover: '', 
+                accent: 'text-indigo-400', 
+                textPrimary: 'text-white', 
+                textSecondary: 'text-white/75', 
+                textMuted: 'text-white/45', 
+                footerBg: 'neu-card-bing-studio', 
+                priceColor: 'text-white', 
+                priceGlow: 'glow-cyan',
+                orbs: false, 
+                orbColors: [] 
+            },
+            'bing-ceramic': { 
+                bg: 'bg-slate-950', 
+                headerBg: 'neu-card-bing-ceramic', 
+                card: 'neu-card-bing-ceramic', 
                 cardHover: '', 
                 accent: 'text-amber-700', 
                 textPrimary: 'text-slate-900', 
                 textSecondary: 'text-slate-800/85', 
                 textMuted: 'text-slate-600', 
-                footerBg: 'neu-card-bing-daily', 
+                footerBg: 'neu-card-bing-ceramic', 
                 priceColor: 'text-slate-950', 
                 priceGlow: '',
                 orbs: false, 
@@ -833,7 +951,8 @@
                     const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
                     return feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
                 },
-                                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-daily'; },
+                                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic'; },
+                get isBingTheme() { return this.themeKey === 'bing-daily' || this.themeKey === 'bing-studio' || this.themeKey === 'bing-ceramic'; },
                 get bingWallpaper() { return this.snapshotData?.bingWallpaper || { url: '/images/bing/today.jpg', title: 'عکس روز بینگ', copyright: 'Bing Daily Wallpaper' }; },
                 get bingWallpaperUrl() { return this.bingWallpaper?.url || '/images/bing/today.jpg'; },
                 get themeKey() { return this.settings.theme_mode && THEMES[this.settings.theme_mode] ? this.settings.theme_mode : 'dark-glass'; },

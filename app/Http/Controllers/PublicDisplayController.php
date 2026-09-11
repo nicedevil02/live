@@ -98,7 +98,7 @@ class PublicDisplayController extends Controller
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
 
         $bingWallpaper = null;
-        if (($settings->theme_mode ?? '') === 'bing-daily') {
+        if (str_starts_with($settings->theme_mode ?? '', 'bing-')) {
             try {
                 $bingWallpaper = app(\App\Services\BingWallpaperService::class)->getTodayWallpaper();
             } catch (\Throwable $e) {

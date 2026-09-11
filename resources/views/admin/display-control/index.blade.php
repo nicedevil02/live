@@ -235,7 +235,9 @@ function displayControlPage() {
             { id: 'emerald-night', name: 'سبز شب', desc: 'سبز تیره، حس فناوری', preview: 'bg-emerald-950 border-emerald-800', dot: 'bg-emerald-400' },
             { id: 'rose-dark', name: 'رز تیره', desc: 'قرمز تیره، زیبایی خاص', preview: 'bg-rose-950 border-rose-900', dot: 'bg-rose-400' },
             { id: 'pure-black', name: 'خالص مشکی', desc: 'پس‌زمینه کاملا مشکی و مینیمال', preview: 'bg-black border-slate-800', dot: 'bg-zinc-400' },
-            { id: 'bing-daily', name: 'عکس روز بینگ', desc: 'طبیعت روزانه Bing با شیشه مات', preview: 'bg-gradient-to-br from-sky-400 via-emerald-400 to-amber-400 border-sky-300', dot: 'bg-amber-300' },
+            { id: 'bing-daily', name: 'عکس بینگ: شیشه ابسیدین (پیشنهادی)', desc: 'شیشه دودی تیتانیوم اپل با لبه طلایی ۲۴ عیار', preview: 'bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950 border-amber-500/50', dot: 'bg-amber-400' },
+            { id: 'bing-studio', name: 'عکس بینگ: استودیو شیشه‌ای', desc: 'استیج یکپارچه مات اپل با وقار و خوانایی بالا', preview: 'bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 border-indigo-500/40', dot: 'bg-indigo-400' },
+            { id: 'bing-ceramic', name: 'عکس بینگ: پرسلین سفید', desc: 'سرامیک سفید براق اپل، بدون شلوغی پس‌زمینه', preview: 'bg-gradient-to-br from-white via-slate-100 to-slate-200 border-slate-300', dot: 'bg-slate-700' },
         ],
 
         init(settingsData, itemsData) {
