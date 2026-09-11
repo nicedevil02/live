@@ -510,7 +510,6 @@
                         </span>
                         <span class="text-xs font-black tracking-wide">راه‌اندازی این تابلوی هوشمند برای فروشگاه شما:</span>
                         <span class="font-mono font-black text-xs px-2.5 py-0.5 rounded-full" :class="themeKey === 'light-modern' ? 'bg-amber-300/80 text-amber-950' : 'bg-amber-400/30 text-amber-300 border border-amber-400/40'">TalaLive.ir</span>
-                        <span class="hidden xl:inline text-[11px] opacity-80 font-bold">| تست رایگان</span>
                     </a>
                 </div>
 
