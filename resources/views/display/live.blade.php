@@ -533,6 +533,206 @@
             border: 1px solid rgba(251, 191, 36, 0.38);
             box-shadow: 0 16px 40px -10px rgba(217, 119, 6, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
+
+        /* =========================================================================
+           BULLETPROOF AMBIENT FLOATING ORB ENGINE (گوی‌های نورانی متحرک لوکس - ۱۰۰٪ مستقل)
+           ========================================================================= */
+        .ambient-orb-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .orb-1 {
+            top: -10%;
+            left: 5%;
+            width: 48vw;
+            height: 48vw;
+            min-width: 460px;
+            min-height: 460px;
+            max-width: 760px;
+            max-height: 760px;
+            animation: float-slow-1 28s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            bottom: -10%;
+            right: 4%;
+            width: 44vw;
+            height: 44vw;
+            min-width: 430px;
+            min-height: 430px;
+            max-width: 700px;
+            max-height: 700px;
+            animation: float-slow-2 36s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            top: 30%;
+            left: 40%;
+            width: 38vw;
+            height: 38vw;
+            min-width: 380px;
+            min-height: 380px;
+            max-width: 620px;
+            max-height: 620px;
+            animation: float-slow-3 24s ease-in-out infinite;
+        }
+
+        .orb-4 {
+            bottom: 8%;
+            left: 12%;
+            width: 36vw;
+            height: 36vw;
+            min-width: 360px;
+            min-height: 360px;
+            max-width: 580px;
+            max-height: 580px;
+            animation: float-slow-4 32s ease-in-out infinite;
+        }
+
+        /* ۱. پالت گوی‌های اونیکس شاهنشاهی ۲۴ عیار (Imperial Onyx - طلای مذاب و کهربا) */
+        .theme-imperial-onyx .orb-1 {
+            background: radial-gradient(circle at 45% 45%, rgba(251, 191, 36, 0.58) 0%, rgba(217, 119, 6, 0.38) 40%, rgba(180, 83, 9, 0.12) 65%, transparent 75%) !important;
+            filter: blur(60px) !important;
+            -webkit-filter: blur(60px) !important;
+        }
+        .theme-imperial-onyx .orb-2 {
+            background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.52) 0%, rgba(217, 119, 6, 0.32) 45%, rgba(146, 64, 14, 0.10) 70%, transparent 80%) !important;
+            filter: blur(65px) !important;
+            -webkit-filter: blur(65px) !important;
+        }
+        .theme-imperial-onyx .orb-3 {
+            background: radial-gradient(circle at 45% 45%, rgba(252, 211, 77, 0.48) 0%, rgba(234, 88, 12, 0.28) 45%, transparent 75%) !important;
+            filter: blur(55px) !important;
+            -webkit-filter: blur(55px) !important;
+        }
+        .theme-imperial-onyx .orb-4 {
+            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.50) 0%, rgba(217, 119, 6, 0.25) 40%, transparent 75%) !important;
+            filter: blur(60px) !important;
+            -webkit-filter: blur(60px) !important;
+        }
+
+        /* ۲. پالت گوی‌های مروارید و طلای شاهنشاهی (Imperial Pearl - طلای شامپاینی و بلور ابریشمی) */
+        .theme-imperial-pearl .orb-1 {
+            background: radial-gradient(circle at 45% 45%, rgba(251, 191, 36, 0.52) 0%, rgba(245, 158, 11, 0.28) 45%, transparent 75%) !important;
+            filter: blur(60px) !important;
+            -webkit-filter: blur(60px) !important;
+        }
+        .theme-imperial-pearl .orb-2 {
+            background: radial-gradient(circle at 50% 50%, rgba(186, 230, 253, 0.70) 0%, rgba(147, 197, 253, 0.35) 45%, transparent 75%) !important;
+            filter: blur(55px) !important;
+            -webkit-filter: blur(55px) !important;
+        }
+        .theme-imperial-pearl .orb-3 {
+            background: radial-gradient(circle at 45% 45%, rgba(254, 215, 170, 0.62) 0%, rgba(251, 146, 60, 0.28) 45%, transparent 75%) !important;
+            filter: blur(65px) !important;
+            -webkit-filter: blur(65px) !important;
+        }
+        .theme-imperial-pearl .orb-4 {
+            background: radial-gradient(circle at 50% 50%, rgba(253, 230, 138, 0.52) 0%, rgba(245, 158, 11, 0.22) 45%, transparent 75%) !important;
+            filter: blur(55px) !important;
+            -webkit-filter: blur(55px) !important;
+        }
+
+        /* ۳. پالت طلایی سلطنتی (Gold Royal) */
+        .theme-gold-royal .orb-1 {
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.48) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+        .theme-gold-royal .orb-2 {
+            background: radial-gradient(circle, rgba(217, 119, 6, 0.42) 0%, transparent 70%) !important;
+            filter: blur(70px) !important;
+        }
+        .theme-gold-royal .orb-3 {
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.38) 0%, transparent 70%) !important;
+            filter: blur(60px) !important;
+        }
+        .theme-gold-royal .orb-4 {
+            background: radial-gradient(circle, rgba(180, 83, 9, 0.35) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+
+        /* ۴. پالت آبی اقیانوسی (Blue Ocean) */
+        .theme-blue-ocean .orb-1 {
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.52) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+        .theme-blue-ocean .orb-2 {
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.46) 0%, transparent 70%) !important;
+            filter: blur(70px) !important;
+        }
+        .theme-blue-ocean .orb-3 {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.42) 0%, transparent 70%) !important;
+            filter: blur(60px) !important;
+        }
+        .theme-blue-ocean .orb-4 {
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.38) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+
+        /* ۵. پالت بنفش مه‌آلود (Purple Haze) */
+        .theme-purple-haze .orb-1 {
+            background: radial-gradient(circle, rgba(192, 38, 211, 0.52) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+        .theme-purple-haze .orb-2 {
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.46) 0%, transparent 70%) !important;
+            filter: blur(70px) !important;
+        }
+        .theme-purple-haze .orb-3 {
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.42) 0%, transparent 70%) !important;
+            filter: blur(60px) !important;
+        }
+        .theme-purple-haze .orb-4 {
+            background: radial-gradient(circle, rgba(126, 34, 206, 0.38) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+
+        /* ۶. پالت سبز شب (Emerald Night) */
+        .theme-emerald-night .orb-1 {
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.52) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+        .theme-emerald-night .orb-2 {
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.46) 0%, transparent 70%) !important;
+            filter: blur(70px) !important;
+        }
+        .theme-emerald-night .orb-3 {
+            background: radial-gradient(circle, rgba(5, 150, 105, 0.42) 0%, transparent 70%) !important;
+            filter: blur(60px) !important;
+        }
+        .theme-emerald-night .orb-4 {
+            background: radial-gradient(circle, rgba(4, 120, 87, 0.38) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+
+        /* ۷. پالت رز تیره (Rose Dark) */
+        .theme-rose-dark .orb-1 {
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.52) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
+        .theme-rose-dark .orb-2 {
+            background: radial-gradient(circle, rgba(225, 29, 72, 0.46) 0%, transparent 70%) !important;
+            filter: blur(70px) !important;
+        }
+        .theme-rose-dark .orb-3 {
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.42) 0%, transparent 70%) !important;
+            filter: blur(60px) !important;
+        }
+        .theme-rose-dark .orb-4 {
+            background: radial-gradient(circle, rgba(190, 18, 60, 0.38) 0%, transparent 70%) !important;
+            filter: blur(65px) !important;
+        }
     </style>
 </head>
 <body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
@@ -543,7 +743,7 @@
             <img :src="bingWallpaperUrl" 
                  alt="Bing Wallpaper" 
                  class="w-full h-full object-cover transition-opacity duration-1000"
-                 x-on:error="$el.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop'">
+                 x-on:error="$el.src = '/images/bing/today.jpg'">
 
             {{-- 1. Scrim ابسیدین لوکس: لایه مخملین سینمایی برای مهار اشعه زننده و حفظ زیبایی تصویر --}}
             <div x-show="themeKey === 'bing-daily'" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/65 to-slate-950/50 backdrop-blur-[1px] backdrop-contrast-[1.10]"></div>
@@ -569,14 +769,27 @@
             </div>
         </template>
 
-        {{-- Orbs --}}
-        <template x-if="theme.orbs">
-            <div>
-                <template x-for="(cls, i) in theme.orbColors" :key="i">
-                    <div class="pointer-events-none absolute rounded-full opacity-100" :class="cls + ' ' + orbPositions[i]" style="transition: background 1s"></div>
-                </template>
+        {{-- Imperial Royal Gold Silk Mesh (تارهای طلای شاهنشاهی ۲۴ عیار - ۱۰۰٪ استاتیک و بدون بار پردازنده) --}}
+        <template x-if="themeKey === 'imperial-onyx' || themeKey === 'imperial-pearl'">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none opacity-60">
+                <svg class="w-full h-full object-cover" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+                    <path d="M-100 200 C350 100, 700 450, 1100 240 C1380 90, 1520 340, 1600 300" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.24)' : 'rgba(217,119,6,0.20)'" stroke-width="2"/>
+                    <path d="M-100 240 C400 140, 750 490, 1150 280 C1420 130, 1550 380, 1600 340" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.18)' : 'rgba(217,119,6,0.15)'" stroke-width="1.6"/>
+                    <path d="M-100 280 C450 180, 800 530, 1200 320 C1460 170, 1580 420, 1600 380" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.12)' : 'rgba(217,119,6,0.10)'" stroke-width="1.2"/>
+                    <path d="M-100 640 C420 450, 800 840, 1200 640 C1440 500, 1560 700, 1600 640" :stroke="themeKey === 'imperial-onyx' ? 'rgba(245,158,11,0.20)' : 'rgba(217,119,6,0.18)'" stroke-width="2"/>
+                    <path d="M-100 680 C470 490, 840 880, 1240 680 C1480 540, 1580 740, 1600 680" :stroke="themeKey === 'imperial-onyx' ? 'rgba(245,158,11,0.14)' : 'rgba(217,119,6,0.12)'" stroke-width="1.5"/>
+                    <path d="M-100 720 C520 530, 880 920, 1280 720 C1510 580, 1600 780, 1600 720" :stroke="themeKey === 'imperial-onyx' ? 'rgba(245,158,11,0.08)' : 'rgba(217,119,6,0.08)'" stroke-width="1.2"/>
+                </svg>
             </div>
         </template>
+
+        {{-- Ambient Floating Orbs Engine (گوی‌های نورانی متحرک لوکس - ۱۰۰٪ خالص در CSS با حرکت شناور کُند سینمایی) --}}
+        <div x-show="theme.orbs" class="ambient-orb-container" :class="'theme-' + themeKey">
+            <div class="ambient-orb orb-1"></div>
+            <div class="ambient-orb orb-2"></div>
+            <div class="ambient-orb orb-3"></div>
+            <div class="ambient-orb orb-4"></div>
+        </div>
 
         <div class="display-shell relative z-10 flex min-h-[100dvh] flex-col gap-3 p-4 xl:h-screen xl:min-h-screen xl:p-5">
 
@@ -1144,7 +1357,7 @@
                 orbColors: [] 
             },
         };
-        const orbPositions = ["top-[-10%] left-[10%] w-[40vw] h-[40vw]", "bottom-[5%] right-[5%] w-[35vw] h-[35vw]", "top-[40%] left-[50%] w-[30vw] h-[30vw]", "bottom-[18%] left-[18%] w-[32vw] h-[32vw]"];
+
 
         function formatNumber(value, decimals = 0) {
             if (decimals > 0) return new Intl.NumberFormat('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);

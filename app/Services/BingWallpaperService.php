@@ -31,8 +31,12 @@ class BingWallpaperService
         if (File::exists($this->imagePath) && File::exists($this->metaPath)) {
             try {
                 $meta = json_decode(File::get($this->metaPath), true);
-                if (is_array($meta) && isset($meta['date']) && $meta['date'] === $today && !empty($meta['url'])) {
-                    return $meta;
+                if (is_array($meta) && !empty($meta['url'])) {
+                    $metaDate = $meta['date'] ?? '';
+                    $cleanToday = str_replace('-', '', $today);
+                    if ($metaDate === $today || $metaDate === $cleanToday || File::exists($this->imagePath)) {
+                        return $meta;
+                    }
                 }
             } catch (\Throwable $e) {
                 // در صورت خطا، دانلود مجدد انجام می‌شود
@@ -53,7 +57,7 @@ class BingWallpaperService
         }
 
         $fallbackData = [
-            'url'       => File::exists($this->imagePath) ? '/images/bing/today.jpg?d=' . $today : 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop',
+            'url'       => File::exists($this->imagePath) ? '/images/bing/today.jpg?d=' . $today : '/images/bing/today.jpg',
             'title'     => 'منظره طبیعی روز',
             'copyright' => 'Bing Daily Wallpaper',
             'date'      => $today,
