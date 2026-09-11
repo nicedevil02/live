@@ -113,7 +113,7 @@
                         <span class="text-base">🛡️</span>
                         <span>شما هم‌اکنون در حال مدیریت و پشتیبانی پنل «{{ auth()->user()->name }}» هستید.</span>
                     </div>
-                    <form method="POST" action="{{ route('impersonate.leave') }}" class="m-0">
+                    <form method="POST" action="{{ Route::has('admin.impersonate.leave') ? route('admin.impersonate.leave') : (Route::has('impersonate.leave') ? route('impersonate.leave') : url('/admin/leave-impersonate')) }}" class="m-0">
                         @csrf
                         <button type="submit" class="px-3 py-1 bg-white text-slate-950 rounded-lg hover:bg-amber-100 transition-colors shadow-sm font-black flex items-center gap-1 cursor-pointer">
                             <span>بازگشت به پنل سوپرادمین</span>

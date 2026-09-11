@@ -154,6 +154,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::match(['get', 'post'], '/pair/{session_code}', [PublicDisplayController::class, 'pairDevice'])->name('pair');
 });
 
+// نام مستعار خروج از ورود کمکی جهت سازگاری کامل
+Route::post('/admin/leave-impersonate', [UserController::class, 'leaveImpersonate'])->name('impersonate.leave');
+
 // صفحات فرود و سئوی هدفمند طلالایو (Pillar Pages & B2B SEO)
 Route::get('/smart-gold-board', [PublicPageController::class, 'smartGoldBoard'])->name('public.smart-gold-board');
 Route::get('/tv-setup-guide', [PublicPageController::class, 'tvSetupGuide'])->name('public.tv-setup-guide');
