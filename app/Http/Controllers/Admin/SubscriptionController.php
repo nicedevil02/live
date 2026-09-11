@@ -12,17 +12,144 @@ use App\Services\Payment\CouponService;
 use App\Services\Payment\PaymentService;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class SubscriptionController extends Controller
 {
+    /**
+     * اطمینان از وجود جداول پایگاه داده در سرور
+     */
+    protected function ensureTablesExist(): void
+    {
+        if (!Schema::hasTable('subscription_plans') || !Schema::hasTable('payments')) {
+            try {
+                Artisan::call('migrate', ['--force' => true]);
+                Log::info('Auto-migrated subscription tables successfully.');
+            } catch (\Throwable $e) {
+                Log::error('Auto-migration failed: ' . $e->getMessage());
+            }
+        }
+
+        if (Schema::hasTable('subscription_plans') && DB::table('subscription_plans')->count() === 0) {
+            try {
+                DB::table('subscription_plans')->insert([
+                    [
+                        'name'           => 'اشتراک ۱ ماهه استاندارد',
+                        'slug'           => '1-month',
+                        'duration_days'  => 30,
+                        'price'          => 690000,
+                        'original_price' => 690000,
+                        'badge_text'     => null,
+                        'features'       => json_encode([
+                            'دسترسی به کلیه مظنه‌ها و حباب‌ها',
+                            'اتصال آنی به تلویزیون هوشمند',
+                            'شخصی‌سازی نام و لوگوی گالری',
+                            'پشتیبانی فنی و آپدیت لحظه‌ای'
+                        ], JSON_UNESCAPED_UNICODE),
+                        'is_popular'     => false,
+                        'is_active'      => true,
+                        'sort_order'     => 1,
+                        'created_at'     => now(),
+                        'updated_at'     => now(),
+                    ],
+                    [
+                        'name'           => 'اشتراک ۳ ماهه نقره‌ای',
+                        'slug'           => '3-months',
+                        'duration_days'  => 90,
+                        'price'          => 1790000,
+                        'original_price' => 2070000,
+                        'badge_text'     => '۱۵٪ تخفیف',
+                        'features'       => json_encode([
+                            'دسترسی به تمامی امکانات تابلو',
+                            'فرمول‌ساز پیشرفته محاسبه سود',
+                            'پایداری ۱۰۰٪ بدون قطعی',
+                            'پشتیبانی اولویت‌دار'
+                        ], JSON_UNESCAPED_UNICODE),
+                        'is_popular'     => false,
+                        'is_active'      => true,
+                        'sort_order'     => 2,
+                        'created_at'     => now(),
+                        'updated_at'     => now(),
+                    ],
+                    [
+                        'name'           => 'اشتراک ۶ ماهه طلایی',
+                        'slug'           => '6-months',
+                        'duration_days'  => 180,
+                        'price'          => 2890000,
+                        'original_price' => 4140000,
+                        'badge_text'     => '۳۰٪ تخفیف',
+                        'features'       => json_encode([
+                            'دسترسی نامحدود به تمامی امکانات',
+                            'اسلایدشوی لوکس ویترین محصولات',
+                            'شخصی‌سازی کامل تابلو و رنگ‌ها',
+                            'پشتیبانی ویژه VIP'
+                        ], JSON_UNESCAPED_UNICODE),
+                        'is_popular'     => false,
+                        'is_active'      => true,
+                        'sort_order'     => 3,
+                        'created_at'     => now(),
+                        'updated_at'     => now(),
+                    ],
+                    [
+                        'name'           => 'اشتراک ۱ ساله الماس (ویژه)',
+                        'slug'           => '12-months',
+                        'duration_days'  => 365,
+                        'price'          => 3990000,
+                        'original_price' => 8280000,
+                        'badge_text'     => 'بیشترین صرفه اقتصادی - محبوب‌ترین',
+                        'features'       => json_encode([
+                            'پکیج کامل تمام امکانات سامانه',
+                            'بیش از ۵۰٪ تخفیف طلایی و استثنایی',
+                            'سرور اختصاصی ابری پرسرعت',
+                            'پشتیبانی اختصاصی ۲۴ ساعته',
+                            'فرمول‌ساز و اسلایدشو نامحدود'
+                        ], JSON_UNESCAPED_UNICODE),
+                        'is_popular'     => true,
+                        'is_active'      => true,
+                        'sort_order'     => 4,
+                        'created_at'     => now(),
+                        'updated_at'     => now(),
+                    ],
+                ]);
+                Log::info('Auto-seeded subscription plans successfully.');
+            } catch (\Throwable $e) {
+                Log::error('Auto-seed subscription_plans failed: ' . $e->getMessage());
+            }
+        }
+
+        if (Schema::hasTable('coupons') && DB::table('coupons')->count() === 0) {
+            try {
+                DB::table('coupons')->insert([
+                    'code'         => 'TALALIVE10',
+                    'title'        => 'تخفیف ۱۰ درصدی راه‌اندازی طلالایو',
+                    'type'         => 'percent',
+                    'value'        => 10,
+                    'min_amount'   => 500000,
+                    'max_discount' => 500000,
+                    'usage_limit'  => 1000,
+                    'used_count'   => 0,
+                    'is_active'    => true,
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
+                ]);
+                Log::info('Auto-seeded default coupon successfully.');
+            } catch (\Throwable $e) {
+                Log::error('Auto-seed coupons failed: ' . $e->getMessage());
+            }
+        }
+    }
+
     /**
      * نمایش پرتال مدیریت اشتراک، انتخاب پکیج و سوابق پرداخت
      */
     public function index()
     {
+        $this->ensureTablesExist();
+
         $user = Auth::user();
         $plans = SubscriptionPlan::active()->get();
         $payments = $user->payments()->with(['plan', 'coupon'])->paginate(10);
@@ -55,6 +182,8 @@ class SubscriptionController extends Controller
      */
     public function checkout(Request $request, PaymentService $paymentService, CouponService $couponService)
     {
+        $this->ensureTablesExist();
+
         $request->validate([
             'plan_id'     => ['required', 'exists:subscription_plans,id'],
             'gateway'     => ['required', 'in:zarinpal,zibal'],

@@ -10,16 +10,36 @@ use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class TransactionController extends Controller
 {
+    /**
+     * اطمینان از وجود جداول پایگاه داده در سرور
+     */
+    protected function ensureTablesExist(): void
+    {
+        if (!Schema::hasTable('subscription_plans') || !Schema::hasTable('payments')) {
+            try {
+                Artisan::call('migrate', ['--force' => true]);
+                Log::info('Auto-migrated subscription tables from TransactionController.');
+            } catch (\Throwable $e) {
+                Log::error('Auto-migration failed in TransactionController: ' . $e->getMessage());
+            }
+        }
+    }
+
     /**
      * نمایش پرتال تراکنش‌های مالی و گزارشات برای سوپرادمین
      */
     public function index(Request $request)
     {
+        $this->ensureTablesExist();
+
         $query = Payment::with(['user', 'plan', 'coupon'])->latest();
 
         // فیلترها

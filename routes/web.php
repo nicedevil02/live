@@ -29,6 +29,29 @@ Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->name('
 // بازگشت از درگاه پرداخت شاپرک (عمومی)
 Route::match(['get', 'post'], '/payment/callback/{gateway}', [SubscriptionController::class, 'callback'])->name('admin.subscription.callback');
 
+// اجرای مستقیم مایگریشن دیتابیس با کلید امنیتی (بدون نیاز به لاگین)
+Route::get('/deploy/migrate', function () {
+    $secretKey = 'tala_deploy_7f8c9b1e2a3d4f5';
+    if (request('key') !== $secretKey) {
+        abort(403, 'کلید امنیتی نامعتبر است.');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; padding: 30px; background: #0f172a; color: #38bdf8; border-radius: 20px; margin: 40px auto; max-width: 700px;'>
+            <h3 style='color: #34d399; margin-top: 0;'>✅ مایگریشن‌های پایگاه داده با موفقیت اجرا شدند:</h3>
+            <pre style='background: #1e293b; color: #f8fafc; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 14px; text-align: left;' dir='ltr'>" . ($output ?: 'Nothing to migrate. (جداول از قبل موجود هستند)') . "</pre>
+            <br>
+            <a href='" . route('admin.subscription.index') . "' style='color: #fbbf24; text-decoration: none; font-weight: bold;'>← رفتن به صفحه خرید و تمدید اشتراک</a>
+        </div>");
+    } catch (\Throwable $e) {
+        return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; padding: 30px; background: #0f172a; color: #f87171; border-radius: 20px; margin: 40px auto; max-width: 700px;'>
+            <h3 style='margin-top: 0;'>❌ خطا در اجرای مایگریشن:</h3>
+            <pre style='background: #1e293b; color: #f8fafc; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 14px; text-align: left;' dir='ltr'>" . $e->getMessage() . "</pre>
+        </div>", 500);
+    }
+})->name('public.deploy-migrate');
+
 // احراز هویت
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

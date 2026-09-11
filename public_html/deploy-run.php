@@ -151,6 +151,21 @@ if (function_exists('shell_exec')) {
     }
 }
 
+// Fallback: in-process migration if shell_exec was disabled or failed
+if (empty($migrateOutput) && file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/bootstrap/app.php")) {
+    try {
+        require_once "$targetDir/vendor/autoload.php";
+        $app = require_once "$targetDir/bootstrap/app.php";
+        $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+        $kernel->bootstrap();
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
+        $log[] = 'In-process migrate output: ' . trim($migrateOutput);
+    } catch (\Throwable $e) {
+        $log[] = 'In-process migrate error: ' . $e->getMessage();
+    }
+}
+
 $duration = round(microtime(true) - $startTime, 3);
 
 header('Content-Type: application/json; charset=utf-8');
@@ -163,6 +178,7 @@ echo json_encode([
         'directories_created' => $copiedDirs,
         'views_cache_cleared' => $clearedViews,
     ],
+    'log' => $log,
     'git' => $gitOutput ? trim($gitOutput) : 'Synchronized from repository snapshot',
     'timestamp' => date('Y-m-d H:i:s T')
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
