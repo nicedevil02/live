@@ -29,6 +29,29 @@
         .animate-float1 { animation: float1 20s ease-in-out infinite; }
         .animate-float2 { animation: float2 25s ease-in-out infinite; }
         .animate-float3 { animation: float3 18s ease-in-out infinite; }
+        @keyframes float-slow-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(60px, -45px) scale(1.08); }
+            66% { transform: translate(-45px, 50px) scale(0.94); }
+        }
+        @keyframes float-slow-2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-55px, 50px) scale(1.06); }
+            66% { transform: translate(50px, -40px) scale(0.92); }
+        }
+        @keyframes float-slow-3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(45px, 55px) scale(1.10); }
+        }
+        @keyframes float-slow-4 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            40% { transform: translate(-40px, -50px) scale(1.07); }
+            80% { transform: translate(35px, 30px) scale(0.95); }
+        }
+        .animate-float-slow-1 { animation: float-slow-1 28s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-2 { animation: float-slow-2 36s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-3 { animation: float-slow-3 24s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-4 { animation: float-slow-4 32s ease-in-out infinite; will-change: transform; }
         @keyframes ticker-rtl {
             0% { transform: translateX(-100vw); }
             100% { transform: translateX(100%); }
@@ -157,6 +180,133 @@
                 0 28px 62px -6px rgba(217, 119, 6, 0.80),
                 0 0 50px rgba(251, 191, 36, 0.55) !important;
             border-color: #fef08a !important;
+        }
+
+        /* 0.1 Imperial Pearl & 24K Gold VIP Theme (مروارید و طلای شاهنشاهی ۲۴ عیار - روشن VIP) */
+        .theme-imperial-pearl {
+            background-color: #f6f7fb !important;
+            background-image: 
+                radial-gradient(circle 900px at 50% 30%, rgba(251, 191, 36, 0.16) 0%, transparent 65%),
+                radial-gradient(ellipse 70% 55% at 15% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 65% 50% at 85% 85%, rgba(217, 119, 6, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 85% 15%, rgba(224, 231, 255, 0.45) 0%, transparent 60%),
+                linear-gradient(145deg, #fafafa 0%, #f4f5f9 50%, #ebedf5 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .neu-card-imperial-pearl {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.72) 100%) !important;
+            backdrop-filter: blur(28px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+            border: 1.5px solid rgba(217, 119, 6, 0.35) !important;
+            box-shadow: 
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+                inset 0 -1px 0 0 rgba(217, 119, 6, 0.15),
+                -6px -6px 18px rgba(255, 255, 255, 0.95),
+                8px 16px 32px rgba(148, 163, 184, 0.22),
+                0 0 16px rgba(245, 158, 11, 0.08) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-card-imperial-pearl:hover {
+            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                -8px -8px 24px rgba(255, 255, 255, 1),
+                12px 24px 44px rgba(148, 163, 184, 0.30),
+                0 0 28px rgba(217, 119, 6, 0.22) !important;
+            border-color: rgba(217, 119, 6, 0.75) !important;
+        }
+
+        .neu-hero-gold-pearl {
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.94) 0%, rgba(253, 230, 138, 0.88) 50%, rgba(245, 158, 11, 0.22) 100%) !important;
+            backdrop-filter: blur(28px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+            border: 1.5px solid rgba(217, 119, 6, 0.75) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                inset 0 -1px 0 0 rgba(217, 119, 6, 0.35),
+                -6px -6px 18px rgba(255, 255, 255, 0.95),
+                10px 20px 40px rgba(217, 119, 6, 0.25),
+                0 0 30px rgba(251, 191, 36, 0.30) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-pearl:hover {
+            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2.5px 2px 0 rgba(255, 255, 255, 1),
+                -8px -8px 24px rgba(255, 255, 255, 1),
+                14px 28px 50px rgba(217, 119, 6, 0.35),
+                0 0 45px rgba(251, 191, 36, 0.45) !important;
+            border-color: #b45309 !important;
+        }
+
+        /* Neumorphic Inset Badges (کپسول فرورفته تومان) */
+        .neu-inset-onyx {
+            background: rgba(10, 14, 23, 0.75) !important;
+            box-shadow: inset 1.5px 1.5px 3px rgba(0, 0, 0, 0.85), inset -1px -1px 2px rgba(251, 191, 36, 0.18) !important;
+            border: 1px solid rgba(251, 191, 36, 0.25) !important;
+            color: #fef08a !important;
+        }
+        .neu-inset-pearl {
+            background: rgba(235, 239, 245, 0.85) !important;
+            box-shadow: inset 1.5px 1.5px 3px rgba(148, 163, 184, 0.45), inset -1.5px -1.5px 3px rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(217, 119, 6, 0.25) !important;
+            color: #92400e !important;
+        }
+
+        /* Neumorphic Convex Pills (کپسول نوسان و درصد) */
+        .neu-pill-convex-dark-up {
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.50), rgba(4, 47, 36, 0.75)) !important;
+            border: 1px solid rgba(52, 211, 153, 0.45) !important;
+            color: #34d399 !important;
+            box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.20), 0 4px 10px rgba(0, 0, 0, 0.50), 0 0 12px rgba(16, 185, 129, 0.25) !important;
+        }
+        .neu-pill-convex-dark-down {
+            background: linear-gradient(135deg, rgba(136, 19, 55, 0.50), rgba(76, 5, 25, 0.75)) !important;
+            border: 1px solid rgba(251, 113, 133, 0.45) !important;
+            color: #fb7185 !important;
+            box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.20), 0 4px 10px rgba(0, 0, 0, 0.50), 0 0 12px rgba(244, 63, 94, 0.25) !important;
+        }
+        .neu-pill-convex-dark-flat {
+            background: rgba(15, 23, 42, 0.60) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            color: #94a3b8 !important;
+            box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.10), 0 4px 8px rgba(0, 0, 0, 0.40) !important;
+        }
+
+        .neu-pill-convex-light-up {
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.92), rgba(167, 243, 208, 0.80)) !important;
+            border: 1px solid rgba(5, 150, 105, 0.35) !important;
+            color: #065f46 !important;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 1), 0 4px 12px rgba(5, 150, 105, 0.18), -2px -2px 6px rgba(255, 255, 255, 0.90) !important;
+        }
+        .neu-pill-convex-light-down {
+            background: linear-gradient(135deg, rgba(255, 228, 230, 0.92), rgba(254, 205, 211, 0.80)) !important;
+            border: 1px solid rgba(225, 29, 72, 0.35) !important;
+            color: #9f1239 !important;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 1), 0 4px 12px rgba(225, 29, 72, 0.18), -2px -2px 6px rgba(255, 255, 255, 0.90) !important;
+        }
+        .neu-pill-convex-light-flat {
+            background: rgba(241, 245, 249, 0.85) !important;
+            border: 1px solid rgba(203, 213, 225, 0.60) !important;
+            color: #475569 !important;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 1), 0 4px 8px rgba(148, 163, 184, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.90) !important;
+        }
+
+        /* Neumorphic Live Status Badge (کپسول وضعیت لحظه‌ای) */
+        .neu-status-pill-dark {
+            background: rgba(6, 78, 59, 0.35) !important;
+            border: 1px solid rgba(52, 211, 153, 0.35) !important;
+            color: #6ee7b7 !important;
+            box-shadow: inset 1px 1px 1.5px rgba(255, 255, 255, 0.20), 0 2px 8px rgba(0, 0, 0, 0.50), 0 0 10px rgba(16, 185, 129, 0.20) !important;
+        }
+        .neu-status-pill-light {
+            background: rgba(236, 253, 245, 0.85) !important;
+            border: 1px solid rgba(16, 185, 129, 0.40) !important;
+            color: #047857 !important;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 1), -2px -2px 6px rgba(255, 255, 255, 0.90), 0 2px 8px rgba(16, 185, 129, 0.15) !important;
         }
 
         /* 1. Apple Vision Pro / Dark Obsidian Glass (پیشنهاد اول - شیشه دودی ابسیدین با لبه طلایی ۲۴ عیار و اسکیل) */
@@ -438,7 +588,7 @@
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
                     <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
+                            <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
@@ -446,7 +596,7 @@
                         </template>
                         
                         <template x-if="settings.instagram">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
+                            <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.instagram"></span>
@@ -454,7 +604,7 @@
                         </template>
  
                         <template x-if="settings.rubika">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
+                            <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" class="w-5 h-5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
@@ -481,9 +631,9 @@
 
                 {{-- نام فروشگاه (وسط) --}}
                 <div class="order-2 flex w-[24%] flex-col items-center justify-center text-center">
-                    <h1 :class="isLightTheme ? 'text-slate-900' : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
+                    <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
                         class="max-w-full break-words text-4xl xl:text-5xl font-black tracking-tight leading-tight" x-text="settings.shop_name"></h1>
-                    <div :class="isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20'" 
+                    <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
                          class="mt-1 px-4 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
                          ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
                     </div>
@@ -629,9 +779,13 @@
                                        ? 'neu-hero-gold-studio'
                                        : (themeKey === 'bing-ceramic'
                                           ? 'neu-hero-gold-ceramic'
-                                          : (isLightTheme
-                                             ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
-                                             : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl'))))
+                                          : (themeKey === 'imperial-onyx'
+                                             ? 'neu-hero-gold-imperial'
+                                             : (themeKey === 'imperial-pearl'
+                                                ? 'neu-hero-gold-pearl'
+                                                : (isLightTheme
+                                                   ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
+                                                   : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl'))))))
                                  : theme.card + ' ' + theme.cardHover,
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
@@ -682,17 +836,21 @@
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex items-baseline justify-center whitespace-nowrap w-full gap-1.5">
                                          <span :class="[index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl', theme.priceGlow]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md" x-html="item.displayHtml"></span>
-                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'bing-daily' ? 'text-slate-900 bg-white/45 border border-white/60 backdrop-blur-md shadow-xs' : (isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10')]" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
+                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'imperial-onyx' ? 'neu-inset-onyx' : (themeKey === 'imperial-pearl' ? 'neu-inset-pearl' : (themeKey === 'bing-daily' ? 'text-slate-900 bg-white/45 border border-white/60 backdrop-blur-md shadow-xs' : (isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10')))]" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
                                 <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
-                                    {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks) --}}
+                                    {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
                                     <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
-                                        themeKey === 'bing-daily'
-                                            ? (item.change_percent > 0 ? 'bg-emerald-500/25 text-emerald-950 border-emerald-400/50 shadow-xs' : (item.change_percent < 0 ? 'bg-rose-500/25 text-rose-950 border-rose-400/50 shadow-xs' : 'bg-white/30 text-slate-800 border-white/40 shadow-xs'))
-                                            : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10')),
+                                        themeKey === 'imperial-onyx'
+                                            ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
+                                            : (themeKey === 'imperial-pearl'
+                                                ? (item.change_percent > 0 ? 'neu-pill-convex-light-up' : (item.change_percent < 0 ? 'neu-pill-convex-light-down' : 'neu-pill-convex-light-flat'))
+                                                : (themeKey === 'bing-daily'
+                                                    ? (item.change_percent > 0 ? 'bg-emerald-500/25 text-emerald-950 border-emerald-400/50 shadow-xs' : (item.change_percent < 0 ? 'bg-rose-500/25 text-rose-950 border-rose-400/50 shadow-xs' : 'bg-white/30 text-slate-800 border-white/40 shadow-xs'))
+                                                    : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10')))),
                                     ]" dir="ltr">
                                         <span x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
                                         <span class="opacity-30">|</span>
@@ -710,7 +868,7 @@
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
                                             <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
-                                                  :class="isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'">
+                                                  :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
                                                 <span class="relative flex h-2 w-2">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -868,7 +1026,32 @@
                 priceColor: 'text-white', 
                 priceGlow: 'glow-amber-imperial', 
                 orbs: true, 
-                orbColors: ['bg-amber-600/10 blur-[130px]', 'bg-yellow-500/8 blur-[110px]', 'bg-orange-700/6 blur-[140px]'] 
+                orbColors: [
+                    'bg-amber-500/18 blur-[130px] animate-float-slow-1',
+                    'bg-yellow-500/12 blur-[110px] animate-float-slow-2',
+                    'bg-orange-600/12 blur-[140px] animate-float-slow-3',
+                    'bg-amber-600/10 blur-[120px] animate-float-slow-4'
+                ] 
+            },
+            'imperial-pearl': { 
+                bg: 'theme-imperial-pearl', 
+                headerBg: 'neu-card-imperial-pearl', 
+                card: 'neu-card-imperial-pearl', 
+                cardHover: '', 
+                accent: 'text-amber-600', 
+                textPrimary: 'text-slate-900', 
+                textSecondary: 'text-slate-700', 
+                textMuted: 'text-slate-500', 
+                footerBg: 'neu-card-imperial-pearl', 
+                priceColor: 'text-slate-950', 
+                priceGlow: '', 
+                orbs: true, 
+                orbColors: [
+                    'bg-amber-400/22 blur-[130px] animate-float-slow-1',
+                    'bg-yellow-300/20 blur-[110px] animate-float-slow-2',
+                    'bg-orange-400/15 blur-[140px] animate-float-slow-3',
+                    'bg-amber-300/18 blur-[120px] animate-float-slow-4'
+                ] 
             },
             'gold-royal': { 
                 bg: 'bg-[radial-gradient(ellipse_at_top,#2b1502_0%,#140800_50%,#050200_100%)]', 
@@ -961,7 +1144,7 @@
                 orbColors: [] 
             },
         };
-        const orbPositions = ["top-[-10%] left-[10%] w-[40vw] h-[40vw]", "bottom-[5%] right-[5%] w-[35vw] h-[35vw]", "top-[40%] left-[50%] w-[30vw] h-[30vw]"];
+        const orbPositions = ["top-[-10%] left-[10%] w-[40vw] h-[40vw]", "bottom-[5%] right-[5%] w-[35vw] h-[35vw]", "top-[40%] left-[50%] w-[30vw] h-[30vw]", "bottom-[18%] left-[18%] w-[32vw] h-[32vw]"];
 
         function formatNumber(value, decimals = 0) {
             if (decimals > 0) return new Intl.NumberFormat('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
@@ -1014,7 +1197,7 @@
                     const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
                     return feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
                 },
-                                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic'; },
+                                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic' || this.themeKey === 'imperial-pearl'; },
                 get isBingTheme() { return this.themeKey === 'bing-daily' || this.themeKey === 'bing-studio' || this.themeKey === 'bing-ceramic'; },
                 get bingWallpaper() { return this.snapshotData?.bingWallpaper || { url: '/images/bing/today.jpg', title: 'عکس روز بینگ', copyright: 'Bing Daily Wallpaper' }; },
                 get bingWallpaperUrl() { return this.bingWallpaper?.url || '/images/bing/today.jpg'; },
