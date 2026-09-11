@@ -103,19 +103,52 @@
             box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 0 rgba(255, 255, 255, 0.5), -7px -7px 18px rgba(255, 255, 255, 1), 7px 12px 26px rgba(148, 163, 184, 0.28) !important;
         }
 
-        /* Apple Liquid Glass (اختصاصی تم عکس روز بینگ با بلور عمیق و کنتراست شفاف) */
+        /* Apple HIG Liquid Glass (پوسته شیشه‌ای کریستالی فوق‌العاده شفاف با انکسار نوری و اسکیل داینامیک) */
         .neu-card-bing-daily {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(241, 245, 249, 0.65) 100%) !important;
-            backdrop-filter: blur(28px) saturate(190%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 0 rgba(255, 255, 255, 0.35), 0 12px 30px -4px rgba(15, 23, 42, 0.28), 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-            border: 1px solid rgba(255, 255, 255, 0.85) !important;
-            transform: translateZ(0);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
+            backdrop-filter: blur(20px) saturate(200%) brightness(108%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(200%) brightness(108%) contrast(102%) !important;
+            box-shadow: 
+                inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.75),
+                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.18),
+                0 10px 32px 0 rgba(15, 23, 42, 0.20),
+                0 2px 8px 0 rgba(0, 0, 0, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.48) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease !important;
         }
         .neu-card-bing-daily:hover {
-            transform: translateY(-2px) scale(1.008) translateZ(0);
-            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 1), 0 18px 38px -4px rgba(15, 23, 42, 0.35), 0 6px 14px rgba(0, 0, 0, 0.14) !important;
-            border-color: rgba(255, 255, 255, 0.95) !important;
+            transform: scale(1.025) translateY(-4px) translateZ(0) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.18) 100%) !important;
+            box-shadow: 
+                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.90),
+                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.25),
+                0 22px 50px -6px rgba(15, 23, 42, 0.32),
+                0 6px 16px 0 rgba(0, 0, 0, 0.12) !important;
+            border-color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        /* Apple Royal Champagne Hero Glass (کارت ویژه طلای ۱۸ در تم بینگ - شفافیت شاهکار با انوار کهربایی و اسکیل داینامیک) */
+        .neu-hero-gold-bing {
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.42) 0%, rgba(255, 251, 235, 0.20) 50%, rgba(251, 191, 36, 0.18) 100%) !important;
+            backdrop-filter: blur(20px) saturate(220%) brightness(110%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(220%) brightness(110%) !important;
+            box-shadow: 
+                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.90),
+                inset 0 -1px 1px 0 rgba(245, 158, 11, 0.35),
+                0 14px 38px -4px rgba(217, 119, 6, 0.32),
+                0 4px 14px 0 rgba(0, 0, 0, 0.10) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.65) !important;
+            transform: scale(1) translateZ(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-bing:hover {
+            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                0 24px 54px -6px rgba(217, 119, 6, 0.45),
+                0 8px 20px 0 rgba(0, 0, 0, 0.15) !important;
+            border-color: rgba(251, 191, 36, 0.95) !important;
         }
 
         .neu-card-dark-glass {
@@ -265,7 +298,7 @@
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
                     <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
+                            <div :class="themeKey === 'bing-daily' ? 'bg-white/35 hover:bg-white/50 border-white/60 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]' : (isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
@@ -273,7 +306,7 @@
                         </template>
                         
                         <template x-if="settings.instagram">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
+                            <div :class="themeKey === 'bing-daily' ? 'bg-white/35 hover:bg-white/50 border-white/60 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]' : (isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.instagram"></span>
@@ -281,7 +314,7 @@
                         </template>
  
                         <template x-if="settings.rubika">
-                            <div :class="isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'" 
+                            <div :class="themeKey === 'bing-daily' ? 'bg-white/35 hover:bg-white/50 border-white/60 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(0,0,0,0.08)]' : (isLightTheme ? 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]')" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" class="w-5 h-5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
@@ -375,7 +408,7 @@
             {{-- Main Content --}}
             <div class="flex flex-1 flex-row gap-3 min-h-0">
                 {{-- Product Slider --}}
-                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0">
+                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
@@ -450,9 +483,11 @@
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
                                  item.symbol === 'gold18'
-                                 ? (isLightTheme
-                                    ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
-                                    : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl')
+                                 ? (themeKey === 'bing-daily'
+                                    ? 'neu-hero-gold-bing'
+                                    : (isLightTheme
+                                       ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
+                                       : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl'))
                                  : theme.card + ' ' + theme.cardHover,
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
@@ -503,7 +538,7 @@
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex items-baseline justify-center whitespace-nowrap w-full gap-1.5">
                                          <span :class="[index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl', theme.priceGlow]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md" x-html="item.displayHtml"></span>
-                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10']" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
+                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'bing-daily' ? 'text-slate-900 bg-white/45 border border-white/60 backdrop-blur-md shadow-xs' : (isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10')]" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
@@ -511,7 +546,9 @@
                                 <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks) --}}
                                     <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
-                                        item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10'),
+                                        themeKey === 'bing-daily'
+                                            ? (item.change_percent > 0 ? 'bg-emerald-500/25 text-emerald-950 border-emerald-400/50 shadow-xs' : (item.change_percent < 0 ? 'bg-rose-500/25 text-rose-950 border-rose-400/50 shadow-xs' : 'bg-white/30 text-slate-800 border-white/40 shadow-xs'))
+                                            : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10')),
                                     ]" dir="ltr">
                                         <span x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
                                         <span class="opacity-30">|</span>
