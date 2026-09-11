@@ -227,7 +227,7 @@
             <img :src="bingWallpaperUrl" 
                  alt="Bing Wallpaper" 
                  class="w-full h-full object-cover transition-opacity duration-1000"
-                 @error="$el.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop'">
+                 x-on:error="$el.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop'">
             {{-- Apple Dynamic Scrim: کنتراست هوشمند برای تضمین خوانایی ۱۰۰٪ متون روی هر عکسی --}}
             <div class="absolute inset-0 bg-slate-950/25 backdrop-contrast-[1.05]"></div>
         </div>
