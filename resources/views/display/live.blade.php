@@ -78,16 +78,29 @@
         }
 
         /* Neumorphic + Apple HIG Soft Physics Engine (8 Luxury Themes) */
+        /* Royal Champagne & Silk Mesh (Light Theme Canvas - Zero CPU, 100% GPU) */
+        .theme-light-champagne-silk {
+            background-color: #fbfbfd !important;
+            background-image: 
+                radial-gradient(ellipse 65% 55% at 15% 15%, rgba(251, 191, 36, 0.25) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 85% 18%, rgba(186, 230, 253, 0.38) 0%, transparent 70%),
+                radial-gradient(ellipse 70% 60% at 50% 85%, rgba(254, 215, 170, 0.30) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 85% 85%, rgba(224, 231, 255, 0.28) 0%, transparent 70%),
+                linear-gradient(135deg, #fdfbf7 0%, #f7f5f0 50%, #f1f4f9 100%) !important;
+            background-attachment: fixed !important;
+        }
+
         .neu-card-light-modern {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.88)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
-            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 1), -6px -6px 16px rgba(255, 255, 255, 0.95), 6px 10px 22px rgba(148, 163, 184, 0.3) !important;
-            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.72) 0%, rgba(248, 250, 252, 0.50) 100%) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 0 rgba(255, 255, 255, 0.4), -5px -5px 14px rgba(255, 255, 255, 0.9), 5px 8px 20px rgba(148, 163, 184, 0.22) !important;
+            border: 1px solid rgba(255, 255, 255, 0.88) !important;
+            transform: translateZ(0);
         }
         .neu-card-light-modern:hover {
-            transform: translateY(-2px) scale(1.008);
-            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 1), -8px -8px 22px rgba(255, 255, 255, 1), 8px 14px 28px rgba(148, 163, 184, 0.38) !important;
+            transform: translateY(-2px) scale(1.008) translateZ(0);
+            box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 0 rgba(255, 255, 255, 0.5), -7px -7px 18px rgba(255, 255, 255, 1), 7px 12px 26px rgba(148, 163, 184, 0.28) !important;
         }
 
         .neu-card-dark-glass {
@@ -193,6 +206,20 @@
 </head>
 <body :class="themeKey === 'light-modern' ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
     <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
+
+        {{-- Luxury Silk Wave Vector (اختصاصی تم روشن - کاملاً استاتیک و بدون هیچ‌گونه بار پردازنده) --}}
+        <template x-if="themeKey === 'light-modern'">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+                <svg class="w-full h-full object-cover opacity-70" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+                    <path d="M-100 180 C300 80, 650 420, 1050 220 C1350 80, 1500 320, 1600 280" stroke="rgba(217,119,6,0.18)" stroke-width="1.8"/>
+                    <path d="M-100 220 C350 120, 700 460, 1100 260 C1380 120, 1520 360, 1600 320" stroke="rgba(217,119,6,0.14)" stroke-width="1.5"/>
+                    <path d="M-100 260 C400 160, 750 500, 1150 300 C1410 160, 1540 400, 1600 360" stroke="rgba(217,119,6,0.10)" stroke-width="1.2"/>
+                    <path d="M-100 620 C400 430, 780 820, 1180 620 C1420 480, 1540 680, 1600 620" stroke="rgba(14,165,233,0.15)" stroke-width="1.8"/>
+                    <path d="M-100 660 C450 470, 820 860, 1220 660 C1460 520, 1560 720, 1600 660" stroke="rgba(14,165,233,0.12)" stroke-width="1.5"/>
+                    <path d="M-100 700 C500 510, 860 900, 1260 700 C1490 560, 1580 760, 1600 700" stroke="rgba(14,165,233,0.08)" stroke-width="1.2"/>
+                </svg>
+            </div>
+        </template>
 
         {{-- Orbs --}}
         <template x-if="theme.orbs">
@@ -399,7 +426,7 @@
                             <div :class="[
                                  item.symbol === 'gold18'
                                  ? (themeKey === 'light-modern'
-                                    ? 'ring-2 ring-amber-400 bg-gradient-to-br from-amber-100/80 via-white to-amber-50/90 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
+                                    ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
                                     : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl')
                                  : theme.card + ' ' + theme.cardHover,
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
@@ -562,19 +589,19 @@
                 orbColors: ['bg-indigo-600/10 blur-[120px]', 'bg-violet-600/10 blur-[100px]', 'bg-amber-500/5 blur-[120px]'] 
             },
             'light-modern': { 
-                bg: 'bg-gradient-to-br from-slate-100 via-white to-blue-50', 
+                bg: 'theme-light-champagne-silk', 
                 headerBg: 'neu-card-light-modern', 
                 card: 'neu-card-light-modern', 
                 cardHover: '', 
-                accent: 'text-blue-600', 
+                accent: 'text-amber-700', 
                 textPrimary: 'text-slate-900', 
-                textSecondary: 'text-slate-900/75', 
-                textMuted: 'text-slate-900/40', 
+                textSecondary: 'text-slate-800/80', 
+                textMuted: 'text-slate-600', 
                 footerBg: 'neu-card-light-modern', 
-                priceColor: 'text-slate-900', 
+                priceColor: 'text-slate-950', 
                 priceGlow: '',
-                orbs: true, 
-                orbColors: ['bg-blue-400/20 blur-[120px]', 'bg-purple-300/20 blur-[120px]', 'bg-emerald-300/20 blur-[120px]'] 
+                orbs: false, 
+                orbColors: [] 
             },
             'gold-royal': { 
                 bg: 'bg-[radial-gradient(ellipse_at_top,#2b1502_0%,#140800_50%,#050200_100%)]', 
