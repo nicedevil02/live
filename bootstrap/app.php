@@ -22,7 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(\App\Http\Middleware\FetchMarketDataMiddleware::class);
 
         $middleware->validateCsrfTokens(except: [
-            'admin/logout'
+            'admin/logout',
+            'payment/callback/*',
         ]);
 
         $middleware->alias([

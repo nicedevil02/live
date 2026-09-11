@@ -94,6 +94,11 @@ class Payment extends Model
         };
     }
 
+    public function getAuthorityAttribute(): ?string
+    {
+        return $this->transaction_id;
+    }
+
     /**
      * تولید شماره فاکتور یکتای استاندارد
      */

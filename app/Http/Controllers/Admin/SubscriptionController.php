@@ -219,6 +219,11 @@ class SubscriptionController extends Controller
                 $lockedPayment->reference_id ?? '---'
             );
 
+            // ۵. لاگین خودکار کاربر در صورت منقضی شدن سشن هنگام بازگشت از درگاه شاپرک
+            if (!Auth::check() && $user) {
+                Auth::login($user);
+            }
+
             return redirect()->route('admin.subscription.invoice', $lockedPayment->id)
                 ->with('success', 'پرداخت با موفقیت انجام شد و اعتبار تابلوی شما تمدید گردید.');
         });

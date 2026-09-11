@@ -74,4 +74,20 @@ class SubscriptionPlan extends Model
     {
         return $this->original_price ? number_format($this->original_price) : null;
     }
+
+    /**
+     * برچسب پکیج (سازگاری با badge و badge_text)
+     */
+    public function getBadgeAttribute(): ?string
+    {
+        return $this->badge_text;
+    }
+
+    /**
+     * توضیحات پکیج
+     */
+    public function getDescriptionAttribute(): ?string
+    {
+        return 'دسترسی کامل به مظنه لحظه‌ای، فرمول محاسبه سود و اتصال به تلویزیون هوشمند.';
+    }
 }
