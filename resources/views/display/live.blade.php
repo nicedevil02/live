@@ -77,90 +77,108 @@
             animation: laser-sweep 3.5s ease-in-out infinite;
         }
 
-        /* Neumorphic Soft Physics Engine (8 Luxury Themes) */
+        /* Neumorphic + Apple HIG Soft Physics Engine (8 Luxury Themes) */
         .neu-card-light-modern {
-            background: linear-gradient(145deg, #ffffff, #f1f5f9) !important;
-            box-shadow: -5px -5px 14px rgba(255, 255, 255, 0.95), 6px 8px 18px rgba(148, 163, 184, 0.32) !important;
-            border: 1px solid rgba(255, 255, 255, 0.85) !important;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.88)) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 1), -6px -6px 16px rgba(255, 255, 255, 0.95), 6px 10px 22px rgba(148, 163, 184, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
         }
         .neu-card-light-modern:hover {
-            box-shadow: -6px -6px 18px rgba(255, 255, 255, 1), 8px 12px 24px rgba(148, 163, 184, 0.42) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 1), -8px -8px 22px rgba(255, 255, 255, 1), 8px 14px 28px rgba(148, 163, 184, 0.38) !important;
         }
 
         .neu-card-dark-glass {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.75)) !important;
-            box-shadow: -4px -4px 12px rgba(255, 255, 255, 0.04), 7px 9px 22px rgba(0, 0, 0, 0.65), inset 1px 1px 0 rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.09) !important;
-            backdrop-filter: blur(20px) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), -4px -4px 14px rgba(255, 255, 255, 0.04), 8px 12px 28px rgba(0, 0, 0, 0.65) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
         }
         .neu-card-dark-glass:hover {
-            box-shadow: -5px -5px 16px rgba(255, 255, 255, 0.06), 9px 12px 28px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(255, 255, 255, 0.12) !important;
-            border-color: rgba(99, 102, 241, 0.35) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22), -5px -5px 18px rgba(255, 255, 255, 0.07), 10px 16px 34px rgba(0, 0, 0, 0.75) !important;
+            border-color: rgba(99, 102, 241, 0.4) !important;
         }
 
         .neu-card-gold-royal {
-            background: linear-gradient(145deg, rgba(69, 26, 3, 0.5), rgba(20, 8, 0, 0.78)) !important;
-            box-shadow: -4px -4px 14px rgba(245, 158, 11, 0.07), 7px 9px 24px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(251, 191, 36, 0.12) !important;
-            border: 1px solid rgba(245, 158, 11, 0.2) !important;
-            backdrop-filter: blur(20px) !important;
+            background: linear-gradient(145deg, rgba(69, 26, 3, 0.55), rgba(20, 8, 0, 0.8)) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.22), -4px -4px 14px rgba(245, 158, 11, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
+            border: 1px solid rgba(245, 158, 11, 0.22) !important;
         }
         .neu-card-gold-royal:hover {
-            box-shadow: -5px -5px 18px rgba(245, 158, 11, 0.12), 9px 12px 30px rgba(0, 0, 0, 0.85), inset 1px 1px 0 rgba(251, 191, 36, 0.22) !important;
-            border-color: rgba(245, 158, 11, 0.4) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.3), -6px -6px 20px rgba(245, 158, 11, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
+            border-color: rgba(245, 158, 11, 0.45) !important;
         }
 
         .neu-card-blue-ocean {
-            background: linear-gradient(145deg, rgba(10, 25, 47, 0.55), rgba(2, 12, 27, 0.8)) !important;
-            box-shadow: -4px -4px 14px rgba(6, 182, 212, 0.07), 7px 9px 24px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(34, 211, 238, 0.1) !important;
-            border: 1px solid rgba(6, 182, 212, 0.18) !important;
-            backdrop-filter: blur(20px) !important;
+            background: linear-gradient(145deg, rgba(10, 25, 47, 0.55), rgba(2, 12, 27, 0.82)) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(34, 211, 238, 0.18), -4px -4px 14px rgba(6, 182, 212, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
+            border: 1px solid rgba(6, 182, 212, 0.2) !important;
         }
         .neu-card-blue-ocean:hover {
-            box-shadow: -5px -5px 18px rgba(6, 182, 212, 0.12), 9px 12px 30px rgba(0, 0, 0, 0.85), inset 1px 1px 0 rgba(34, 211, 238, 0.22) !important;
-            border-color: rgba(6, 182, 212, 0.4) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(34, 211, 238, 0.26), -6px -6px 20px rgba(6, 182, 212, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
+            border-color: rgba(6, 182, 212, 0.45) !important;
         }
 
         .neu-card-purple-haze {
-            background: linear-gradient(145deg, rgba(30, 11, 54, 0.55), rgba(15, 5, 29, 0.8)) !important;
-            box-shadow: -4px -4px 14px rgba(217, 70, 239, 0.07), 7px 9px 24px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(232, 121, 249, 0.1) !important;
-            border: 1px solid rgba(217, 70, 239, 0.18) !important;
-            backdrop-filter: blur(20px) !important;
+            background: linear-gradient(145deg, rgba(30, 11, 54, 0.55), rgba(15, 5, 29, 0.82)) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(232, 121, 249, 0.18), -4px -4px 14px rgba(217, 70, 239, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
+            border: 1px solid rgba(217, 70, 239, 0.2) !important;
         }
         .neu-card-purple-haze:hover {
-            box-shadow: -5px -5px 18px rgba(217, 70, 239, 0.12), 9px 12px 30px rgba(0, 0, 0, 0.85), inset 1px 1px 0 rgba(232, 121, 249, 0.22) !important;
-            border-color: rgba(217, 70, 239, 0.4) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(232, 121, 249, 0.26), -6px -6px 20px rgba(217, 70, 239, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
+            border-color: rgba(217, 70, 239, 0.45) !important;
         }
 
         .neu-card-emerald-night {
-            background: linear-gradient(145deg, rgba(2, 44, 34, 0.55), rgba(1, 28, 21, 0.8)) !important;
-            box-shadow: -4px -4px 14px rgba(16, 185, 129, 0.07), 7px 9px 24px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(52, 211, 153, 0.1) !important;
-            border: 1px solid rgba(16, 185, 129, 0.18) !important;
-            backdrop-filter: blur(20px) !important;
+            background: linear-gradient(145deg, rgba(2, 44, 34, 0.55), rgba(1, 28, 21, 0.82)) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.18), -4px -4px 14px rgba(16, 185, 129, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
+            border: 1px solid rgba(16, 185, 129, 0.2) !important;
         }
         .neu-card-emerald-night:hover {
-            box-shadow: -5px -5px 18px rgba(16, 185, 129, 0.12), 9px 12px 30px rgba(0, 0, 0, 0.85), inset 1px 1px 0 rgba(52, 211, 153, 0.22) !important;
-            border-color: rgba(16, 185, 129, 0.4) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.26), -6px -6px 20px rgba(16, 185, 129, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
+            border-color: rgba(16, 185, 129, 0.45) !important;
         }
 
         .neu-card-rose-dark {
-            background: linear-gradient(145deg, rgba(63, 2, 18, 0.55), rgba(28, 0, 7, 0.8)) !important;
-            box-shadow: -4px -4px 14px rgba(244, 63, 94, 0.07), 7px 9px 24px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(251, 113, 133, 0.1) !important;
-            border: 1px solid rgba(244, 63, 94, 0.18) !important;
-            backdrop-filter: blur(20px) !important;
+            background: linear-gradient(145deg, rgba(63, 2, 18, 0.55), rgba(28, 0, 7, 0.82)) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(251, 113, 133, 0.18), -4px -4px 14px rgba(244, 63, 94, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
+            border: 1px solid rgba(244, 63, 94, 0.2) !important;
         }
         .neu-card-rose-dark:hover {
-            box-shadow: -5px -5px 18px rgba(244, 63, 94, 0.12), 9px 12px 30px rgba(0, 0, 0, 0.85), inset 1px 1px 0 rgba(251, 113, 133, 0.22) !important;
-            border-color: rgba(244, 63, 94, 0.4) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(251, 113, 133, 0.26), -6px -6px 20px rgba(244, 63, 94, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
+            border-color: rgba(244, 63, 94, 0.45) !important;
         }
 
         .neu-card-pure-black {
             background: linear-gradient(145deg, rgba(24, 24, 27, 0.75), rgba(9, 9, 11, 0.92)) !important;
-            box-shadow: -3px -3px 10px rgba(255, 255, 255, 0.03), 6px 8px 22px rgba(0, 0, 0, 0.95), inset 1px 1px 0 rgba(255, 255, 255, 0.06) !important;
-            border: 1px solid rgba(255, 255, 255, 0.09) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), -3px -3px 10px rgba(255, 255, 255, 0.03), 6px 8px 24px rgba(0, 0, 0, 0.95) !important;
+            border: 1px solid rgba(255, 255, 255, 0.11) !important;
         }
         .neu-card-pure-black:hover {
-            box-shadow: -4px -4px 12px rgba(255, 255, 255, 0.05), 8px 10px 26px rgba(0, 0, 0, 1), inset 1px 1px 0 rgba(255, 255, 255, 0.1) !important;
-            border-color: rgba(255, 255, 255, 0.22) !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), -4px -4px 14px rgba(255, 255, 255, 0.06), 8px 12px 28px rgba(0, 0, 0, 1) !important;
+            border-color: rgba(255, 255, 255, 0.25) !important;
         }
 
         /* Frosted Glass Champagne Showcase */
@@ -381,43 +399,44 @@
                             <div :class="[
                                  item.symbol === 'gold18'
                                  ? (themeKey === 'light-modern'
-                                    ? 'ring-2 ring-amber-400 bg-gradient-to-br from-amber-100/70 via-white to-amber-50 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_12px_24px_rgba(245,158,11,0.25)] border border-amber-300'
-                                    : 'ring-2 ring-amber-500/70 bg-gradient-to-br from-amber-600/35 via-slate-900/60 to-slate-900/95 shadow-[-4px_-4px_14px_rgba(245,158,11,0.15),9px_12px_32px_rgba(0,0,0,0.85)] border border-amber-500/40')
+                                    ? 'ring-2 ring-amber-400 bg-gradient-to-br from-amber-100/80 via-white to-amber-50/90 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
+                                    : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl')
                                  : theme.card + ' ' + theme.cardHover,
-                                 index < 3 ? 'col-span-4 px-4 xl:px-6 pb-6 pt-5' : 'col-span-3 px-3 xl:px-4 pb-4 pt-4'
+                                 index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
-                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-2xl transition-all duration-500 h-full">
+                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-all duration-300 h-full">
 
                                 <template x-if="item.symbol === 'gold18'">
                                     <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                                        <div class="absolute inset-0" :class="themeKey === 'light-modern' ? 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.15),transparent_75%)]' : 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.25),transparent_75%)]'"></div>
-                                        <div class="absolute inset-0 animate-gold-shine bg-gradient-to-r from-transparent via-amber-400/20 to-transparent w-1/2 h-full"></div>
+                                        <div class="absolute inset-0" :class="themeKey === 'light-modern' ? 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.18),transparent_75%)]' : 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.28),transparent_75%)]'"></div>
+                                        <div class="absolute inset-0 animate-gold-shine bg-gradient-to-r from-transparent via-amber-400/25 to-transparent w-1/2 h-full"></div>
                                     </div>
                                 </template>
 
-                                <div class="relative flex justify-between items-start gap-4">
-                                    <p :class="[item.symbol === 'gold18' ? (themeKey === 'light-modern' ? 'text-amber-800' : 'text-amber-400') : theme.textSecondary, index < 3 ? 'text-2xl' : 'text-lg']"
-                                       class="market-tile-label min-w-0 font-black drop-shadow-sm line-clamp-2 shrink-0 max-w-none" style="line-height:1.2;" x-text="item.label"></p>
+                                {{-- هدر کارت: عنوان نماد و فلش روند اپلی --}}
+                                <div class="relative flex justify-between items-center gap-3">
+                                    <p :class="[item.symbol === 'gold18' ? (themeKey === 'light-modern' ? 'text-amber-900' : 'text-amber-300') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
+                                       class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
-                                            <div :class="index < 3 ? 'p-2 rounded-lg' : 'p-1 xl:p-1.5 rounded-md'" class="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 animate-pulse">
-                                                <svg :class="index < 3 ? 'w-6 h-6 xl:w-8 xl:h-8' : 'w-5 h-5 xl:w-6 xl:h-6'" class="text-emerald-500 filter drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                                                     <polyline points="17 6 23 6 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent < 0">
-                                            <div :class="index < 3 ? 'p-2 rounded-lg' : 'p-1 xl:p-1.5 rounded-md'" class="flex items-center justify-center bg-rose-500/10 border border-rose-500/20 animate-pulse">
-                                                <svg :class="index < 3 ? 'w-6 h-6 xl:w-8 xl:h-8' : 'w-5 h-5 xl:w-6 xl:h-6'" class="text-rose-500 filter drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                                                     <polyline points="17 18 23 18 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent == 0">
-                                            <div class="flex items-center justify-center p-2">
-                                                <svg class="w-5 h-5 text-slate-400 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                                 </svg>
                                             </div>
@@ -425,35 +444,39 @@
                                     </div>
                                 </div>
 
+                                {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
-                                    item.symbol === 'gold18' ? (themeKey === 'light-modern' ? 'text-amber-700' : 'text-amber-400') : theme.priceColor,
-                                    index < 3 ? 'py-3 xl:py-4' : 'pt-2 pb-1'
+                                    item.symbol === 'gold18' ? (themeKey === 'light-modern' ? 'text-amber-800' : 'text-amber-300') : theme.priceColor,
+                                    index < 3 ? 'py-3' : 'py-1.5'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex items-baseline justify-center whitespace-nowrap w-full gap-1.5">
-                                         <span :class="[index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl', theme.priceGlow]" class="market-price-number font-black tabular-nums tracking-tight drop-shadow-md" x-html="item.displayHtml"></span>
-                                         <span :class="[index < 3 ? 'text-lg xl:text-xl' : 'text-xs xl:text-sm', themeKey === 'light-modern' ? 'text-slate-600' : 'text-white/60']" class="font-bold whitespace-nowrap select-none" x-text="item.unit"></span>
+                                         <span :class="[index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl', theme.priceGlow]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md" x-html="item.displayHtml"></span>
+                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'light-modern' ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10']" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
-                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2' : 'mt-0 pt-1', themeKey === 'light-modern' ? 'border-amber-200/40' : 'border-white/5']">
-                                    <div class="flex items-center gap-2 font-bold" :class="[
-                                        item.change_percent > 0 ? 'text-emerald-500' : (item.change_percent < 0 ? 'text-rose-500' : 'text-slate-400'),
-                                        index < 3 ? 'text-lg' : 'text-base'
+                                {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
+                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', themeKey === 'light-modern' ? 'border-black/5' : 'border-white/10']">
+                                    {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks) --}}
+                                    <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
+                                        item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10'),
                                     ]" dir="ltr">
                                         <span x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
-                                        <span class="opacity-20">|</span>
-                                        <span class="tabular-nums" x-text="(item.symbol === 'ounce' || item.symbol === 'bitcoin') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value)"></span>
+                                        <span class="opacity-30">|</span>
+                                        <span x-text="(item.symbol === 'ounce' || item.symbol === 'bitcoin') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value)"></span>
                                     </div>
+
+                                    {{-- وضعیت زنده با میکرو-پالس اپلی --}}
                                     <div class="flex items-center">
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2 py-0.5 font-bold border shadow-sm"
+                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
                                                   :class="themeKey === 'light-modern' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-full shadow-sm"
+                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
                                                   :class="themeKey === 'light-modern' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'">
                                                 <span class="relative flex h-2 w-2">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -463,40 +486,46 @@
                                             </span>
                                         </template>
                                     </div>
+                                </div>
                             </div>
-                        </div>
                         </template>
                     </div>
                 </div>
             </div>
 
             {{-- Premium Glassmorphic Footer --}}
-            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.5rem] border flex items-center justify-between shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
+            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
                 
                 {{-- Background decorative glows inside the footer --}}
                 <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.15),transparent_50%)]"></div>
 
-                {{-- Right Side (visually): Developer Info --}}
+                {{-- سمت راست: کپسول تبلیغ و راه‌اندازی اختصاصی TalaLive جهت جذب همکاران و طلافروشان --}}
                 <div class="flex items-center gap-3 h-full z-10">
-                    <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                        <span :class="themeKey === 'light-modern' ? 'text-slate-500' : 'text-slate-400'" class="text-xs font-bold">طراحی و توسعه:</span>
-                        <span :class="themeKey === 'light-modern' ? 'text-blue-600' : 'text-amber-400'" class="font-black tracking-wide text-sm">Bahman Dev</span>
-                    </div>
+                    <a href="https://talalive.ir" target="_blank" 
+                       class="group flex items-center gap-2.5 px-4 py-1.5 rounded-full border transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer"
+                       :class="themeKey === 'light-modern' ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'">
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+                        </span>
+                        <span class="text-xs font-black tracking-wide">راه‌اندازی این تابلوی هوشمند برای فروشگاه شما:</span>
+                        <span class="font-mono font-black text-xs px-2.5 py-0.5 rounded-full" :class="themeKey === 'light-modern' ? 'bg-amber-300/80 text-amber-950' : 'bg-amber-400/30 text-amber-300 border border-amber-400/40'">TalaLive.ir</span>
+                        <span class="hidden xl:inline text-[11px] opacity-80 font-bold">| تست رایگان</span>
+                    </a>
                 </div>
 
-                {{-- Center: App Signature & Powered By --}}
-                <div class="hidden md:flex items-center gap-2 justify-center z-10 text-xs font-black" :class="theme.textPrimary">
-                    <span>سیستم هوشمند نمایش نرخ طلا و ارز</span>
-                    <span class="opacity-30">|</span>
-                    <span :class="themeKey === 'light-modern' ? 'text-slate-400' : 'text-slate-500'" class="font-normal font-mono">Powered by <span class="font-bold text-slate-400 dark:text-slate-300">TalaLive.ir</span> <span class="text-[10px] opacity-65">v2.1.4</span></span>
+                {{-- مرکز: هویت و فناوری پلتفرم کشوری --}}
+                <div class="hidden xl:flex items-center gap-2 justify-center z-10 text-xs font-black" :class="theme.textPrimary">
+                    <span class="opacity-90">پلتفرم هوشمند نمایش نرخ و ویترین آنلاین طلا</span>
+                    <span class="opacity-25">✦</span>
+                    <span :class="themeKey === 'light-modern' ? 'text-slate-500' : 'text-slate-400'" class="font-normal font-mono">By <span class="font-bold text-slate-400 dark:text-slate-300">Bahman Dev</span></span>
                 </div>
 
-                {{-- Left Side (visually): Market Update Status with live status dot --}}
+                {{-- سمت چپ: وضعیت اتصال و بروزرسانی لحظه‌ای --}}
                 <div class="flex items-center gap-3 z-10 font-bold text-xs" :class="theme.textSecondary">
-                    <span class="flex items-center gap-1.5 bg-black/10 dark:bg-white/5 border border-white/5 rounded-full px-3.5 py-1.5">
+                    <span class="flex items-center gap-2 bg-black/15 dark:bg-white/10 border border-white/10 rounded-full px-4 py-1.5 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-[pulse_1.5s_infinite]"></span>
-                        <span dir="ltr" x-text="errorMessage || 'بروزرسانی: ' + (snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---')"></span>
+                        <span dir="ltr" class="font-mono" x-text="errorMessage || 'بروزرسانی: ' + (snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---')"></span>
                     </span>
                 </div>
 
