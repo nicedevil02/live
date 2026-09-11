@@ -103,6 +103,11 @@ class PublicDisplayController extends Controller
                 $bingWallpaper = app(\App\Services\BingWallpaperService::class)->getTodayWallpaper();
             } catch (\Throwable $e) {
                 \Log::warning('Bing wallpaper snapshot error: ' . $e->getMessage());
+                $bingWallpaper = [
+                    'url' => '/images/bing/today.jpg',
+                    'title' => 'عکس روز بینگ',
+                    'copyright' => 'Bing Daily Wallpaper',
+                ];
             }
         }
 

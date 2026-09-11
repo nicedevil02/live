@@ -14,7 +14,8 @@ class BingWallpaperService
 
     public function __construct()
     {
-        $this->storageDir = public_path('images/bing');
+        $basePublic = is_dir(base_path('public_html')) ? base_path('public_html') : public_path();
+        $this->storageDir = $basePublic . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'bing';
         $this->imagePath  = $this->storageDir . DIRECTORY_SEPARATOR . 'today.jpg';
         $this->metaPath   = $this->storageDir . DIRECTORY_SEPARATOR . 'meta.json';
     }

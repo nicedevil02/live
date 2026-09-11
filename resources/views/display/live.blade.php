@@ -103,6 +103,21 @@
             box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 0 rgba(255, 255, 255, 0.5), -7px -7px 18px rgba(255, 255, 255, 1), 7px 12px 26px rgba(148, 163, 184, 0.28) !important;
         }
 
+        /* Apple Liquid Glass (اختصاصی تم عکس روز بینگ با بلور عمیق و کنتراست شفاف) */
+        .neu-card-bing-daily {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(241, 245, 249, 0.65) 100%) !important;
+            backdrop-filter: blur(28px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 0 rgba(255, 255, 255, 0.35), 0 12px 30px -4px rgba(15, 23, 42, 0.28), 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.85) !important;
+            transform: translateZ(0);
+        }
+        .neu-card-bing-daily:hover {
+            transform: translateY(-2px) scale(1.008) translateZ(0);
+            box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 1), 0 18px 38px -4px rgba(15, 23, 42, 0.35), 0 6px 14px rgba(0, 0, 0, 0.14) !important;
+            border-color: rgba(255, 255, 255, 0.95) !important;
+        }
+
         .neu-card-dark-glass {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.75)) !important;
             backdrop-filter: blur(28px) !important;
@@ -209,8 +224,10 @@
 
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلتر کنتراست داینامیک اپل) --}}
         <div x-show="themeKey === 'bing-daily'" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
-            <div class="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-                 :style="'background-image: url(' + bingWallpaperUrl + ')'"></div>
+            <img :src="bingWallpaperUrl" 
+                 alt="Bing Wallpaper" 
+                 class="w-full h-full object-cover transition-opacity duration-1000"
+                 @error="$el.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop'">
             {{-- Apple Dynamic Scrim: کنتراست هوشمند برای تضمین خوانایی ۱۰۰٪ متون روی هر عکسی --}}
             <div class="absolute inset-0 bg-slate-950/25 backdrop-contrast-[1.05]"></div>
         </div>
@@ -615,6 +632,21 @@
                 textSecondary: 'text-slate-800/80', 
                 textMuted: 'text-slate-600', 
                 footerBg: 'neu-card-light-modern', 
+                priceColor: 'text-slate-950', 
+                priceGlow: '',
+                orbs: false, 
+                orbColors: [] 
+            },
+            'bing-daily': { 
+                bg: 'bg-slate-950', 
+                headerBg: 'neu-card-bing-daily', 
+                card: 'neu-card-bing-daily', 
+                cardHover: '', 
+                accent: 'text-amber-700', 
+                textPrimary: 'text-slate-900', 
+                textSecondary: 'text-slate-800/85', 
+                textMuted: 'text-slate-600', 
+                footerBg: 'neu-card-bing-daily', 
                 priceColor: 'text-slate-950', 
                 priceGlow: '',
                 orbs: false, 
