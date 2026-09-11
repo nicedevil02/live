@@ -16,8 +16,8 @@
         })();
     </script>
 
-    <title>ثبت‌نام طلافروشی جدید و فعال‌سازی تست رایگان ۷ روزه | طلالایو</title>
-    <meta name="description" content="ثبت‌نام و راه‌اندازی فوری تابلوی اختصاصی هوشمند نرخ طلا و سکه برای گالری طلافروشی در سامانه طلالایو. ۷ روز استفاده آزمایشی کاملاً رایگان بدون نیاز به پرداخت.">
+    <title>ثبت‌نام طلافروشی جدید و فعال‌سازی تست رایگان ۱۴ روزه | طلالایو</title>
+    <meta name="description" content="ثبت‌نام و راه‌اندازی فوری تابلوی اختصاصی هوشمند نرخ طلا و سکه برای گالری طلافروشی در سامانه طلالایو. ۱۴ روز استفاده آزمایشی کاملاً رایگان بدون نیاز به پرداخت.">
     <meta name="robots" content="noindex, follow">
 
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
@@ -34,9 +34,9 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 flex flex-col justify-between min-h-screen py-6 sm:py-10 px-4 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 flex flex-col justify-between min-h-screen py-8 sm:py-12 px-4 transition-colors duration-300">
 
-    <div class="w-full max-w-md sm:max-w-lg mx-auto my-auto space-y-4 sm:space-y-5">
+    <div class="w-full max-w-lg mx-auto my-auto space-y-6">
 
         {{-- سربرگ بالا: لوگو، دکمه تغییر تم و بازگشت به صفحه اصلی --}}
         <div class="flex items-center justify-between gap-3 px-1">
@@ -66,15 +66,15 @@
         </div>
 
         {{-- کارت شیشه‌ای فرم ثبت نام --}}
-        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-5 sm:p-8 shadow-xl dark:shadow-2xl space-y-5 transition-all">
+        <div class="bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 transition-all">
             
-            {{-- بنر برجسته دوره تست ۷ روزه رایگان --}}
-            <div class="bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-amber-500/10 dark:from-amber-500/20 dark:via-slate-900 dark:to-amber-500/10 border border-amber-500/30 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 shadow-sm">
+            {{-- بنر برجسته دوره تست ۱۴ روزه رایگان --}}
+            <div class="bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-amber-500/10 dark:from-amber-500/20 dark:via-slate-900 dark:to-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-center gap-3.5 shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg shrink-0">
                     🎁
                 </div>
                 <div>
-                    <h1 class="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-300">۷ روز استفاده آزمایشی و کاملاً رایگان</h1>
+                    <h1 class="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-300">۱۴ روز استفاده آزمایشی و کاملاً رایگان</h1>
                     <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed mt-0.5">
                         بدون نیاز به پرداخت یا کارت بانکی، تابلوی گالری‌تان را بلافاصله روی تلویزیون فعال کرده و تست کنید.
                     </p>
@@ -161,11 +161,11 @@
                         </label>
                         <span class="text-[11px] text-slate-400 font-medium">حداقل ۴ رقم یا کاراکتر (مثلاً: 1234)</span>
                     </div>
-                    <div class="relative">
+                    <div class="relative w-full">
                         <input type="password" name="password" id="passwordInput" required minlength="4"
-                               class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 pl-12 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-left" dir="ltr"
+                               class="w-full h-14 bg-white dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl pr-12 pl-4 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all text-left font-mono shadow-xs" dir="ltr"
                                placeholder="رمز عبور دلخواه شما (حداقل ۴ رقم)">
-                        <button type="button" id="toggleRegPasswordBtn" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer">
+                        <button type="button" id="toggleRegPasswordBtn" aria-label="نمایش رمز" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 cursor-pointer z-10 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         </button>
                     </div>
@@ -173,8 +173,8 @@
 
                 {{-- دکمه نهایی ثبت نام --}}
                 <button type="submit" id="submitBtn"
-                        class="w-full h-13 sm:h-14 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm sm:text-base shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-3 flex items-center justify-center gap-1.5">
-                    <span>ایجاد تابلوی گالری و فعال‌سازی فوری تست ۷ روزه</span>
+                        class="w-full h-14 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-base shadow-xl shadow-amber-500/20 transition-all active:scale-[0.99] cursor-pointer mt-3 flex items-center justify-center gap-2">
+                    <span>ایجاد تابلوی گالری و فعال‌سازی فوری تست ۱۴ روزه</span>
                     <span>&larr;</span>
                 </button>
             </form>

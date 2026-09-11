@@ -33,9 +33,9 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 flex flex-col justify-between min-h-screen py-6 sm:py-10 px-4 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 flex flex-col justify-between min-h-screen py-8 sm:py-12 px-4 transition-colors duration-300">
 
-    <div class="w-full max-w-md mx-auto my-auto space-y-4 sm:space-y-5">
+    <div class="w-full max-w-lg mx-auto my-auto space-y-6">
 
         {{-- سربرگ بالا: لوگو، دکمه تغییر تم و بازگشت به صفحه اصلی --}}
         <div class="flex items-center justify-between gap-3 px-1">
@@ -63,30 +63,30 @@
         </div>
 
         {{-- کارت فرم ورود --}}
-        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-5 sm:p-7 shadow-xl dark:shadow-2xl space-y-4 transition-all">
+        <div class="bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 transition-all">
 
             {{-- نمایش پیام‌های موفقیت یا خطا سمت سرور --}}
             @if (session('success'))
-                <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-2xl p-3.5 text-xs flex items-center gap-2">
-                    <span class="text-emerald-500 font-bold">✓</span>
+                <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-2xl p-4 text-xs flex items-center gap-2.5">
+                    <span class="text-emerald-500 font-bold text-sm">✓</span>
                     <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 text-rose-700 dark:text-rose-300 rounded-2xl p-3.5 text-xs flex items-center gap-2">
-                    <span class="text-rose-500 font-bold">⚠️</span>
+                <div class="bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/80 text-rose-700 dark:text-rose-300 rounded-2xl p-4 text-xs flex items-center gap-2.5">
+                    <span class="text-rose-500 font-bold text-sm">⚠️</span>
                     <span>{{ $errors->first() }}</span>
                 </div>
             @endif
 
             {{-- کادرهای آلرت ایجکس پیامک --}}
-            <div id="otpSuccessAlert" class="hidden bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl p-3 text-xs items-center gap-2">
+            <div id="otpSuccessAlert" class="hidden bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-2xl p-3.5 text-xs items-center gap-2">
                 <span class="text-emerald-500 font-bold">✓</span>
                 <span id="otpSuccessText"></span>
             </div>
 
-            <div id="otpErrorAlert" class="hidden bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-300 rounded-xl p-3 text-xs items-center gap-2">
+            <div id="otpErrorAlert" class="hidden bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-300 rounded-2xl p-3.5 text-xs items-center gap-2">
                 <span class="text-rose-500 font-bold">✕</span>
                 <span id="otpErrorText"></span>
             </div>
@@ -96,61 +96,62 @@
             @endphp
 
             {{-- تب‌های انتخاب روش ورود (پیش‌فرض: ورود با رمز عبور / ثانویه: فراموشی رمز عبور پیامکی) --}}
-            <div class="flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                 <button type="button" id="tabPasswordBtn"
-                        class="flex-1 py-2.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 {{ $initialMode === 'password' ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 font-black shadow-sm' : 'text-slate-500 dark:text-slate-400 font-bold hover:text-slate-800 dark:hover:text-slate-200' }}">
+                        class="flex-1 py-3 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 {{ $initialMode === 'password' ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 font-black shadow-sm' : 'text-slate-500 dark:text-slate-400 font-bold hover:text-slate-800 dark:hover:text-slate-200' }}">
                     <svg class="w-4 h-4 {{ $initialMode === 'password' ? 'text-amber-500' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                     <span>ورود با رمز عبور</span>
                 </button>
                 <button type="button" id="tabOtpBtn"
-                        class="flex-1 py-2.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 {{ $initialMode === 'otp' ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 font-black shadow-sm' : 'text-slate-500 dark:text-slate-400 font-bold hover:text-slate-800 dark:hover:text-slate-200' }}">
+                        class="flex-1 py-3 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 {{ $initialMode === 'otp' ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 font-black shadow-sm' : 'text-slate-500 dark:text-slate-400 font-bold hover:text-slate-800 dark:hover:text-slate-200' }}">
                     <svg class="w-4 h-4 {{ $initialMode === 'otp' ? 'text-amber-500' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     <span>فراموشی رمز عبور (پیامکی)</span>
                 </button>
             </div>
 
             {{-- ۱. فرم ورود با رمز عبور (حالت پیش‌فرض سامانه) --}}
-            <div id="passwordSection" class="space-y-4 {{ $initialMode === 'password' ? '' : 'hidden' }}">
-                <form method="POST" action="{{ route('admin.login') }}" class="space-y-4" id="passwordLoginForm">
+            <div id="passwordSection" class="space-y-5 {{ $initialMode === 'password' ? '' : 'hidden' }}">
+                <form method="POST" action="{{ route('admin.login') }}" class="space-y-5" id="passwordLoginForm">
                     @csrf
-                    <div class="space-y-1.5">
-                        <label for="loginEmailInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                    <div class="space-y-2">
+                        <label for="loginEmailInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">
                             شماره موبایل یا نام کاربری گالری
                         </label>
                         <input type="text" name="email" id="loginEmailInput" required
-                               class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-left" dir="ltr"
+                               class="w-full h-14 bg-white dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all text-left shadow-xs" dir="ltr"
                                placeholder="09187009064 یا نام کاربری" value="{{ old('email') }}"
                                autocomplete="username">
                     </div>
 
-                    <div class="space-y-1.5">
+                    <div class="space-y-2">
                         <div class="flex items-center justify-between">
-                            <label for="loginPasswordInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                            <label for="loginPasswordInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">
                                 رمز عبور
                             </label>
                             <span class="text-[11px] text-slate-400 font-medium">حداقل ۴ رقم یا کاراکتر</span>
                         </div>
-                        <div class="relative">
+                        <div class="relative w-full">
                             <input type="password" name="password" id="loginPasswordInput" required minlength="4"
-                                   class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 pl-12 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all text-left" dir="ltr"
+                                   class="w-full h-14 bg-white dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl pr-12 pl-4 text-base sm:text-lg font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all text-left font-mono shadow-xs" dir="ltr"
                                    placeholder="رمز عبور شما">
                             <button type="button" id="togglePasswordBtn" aria-label="نمایش رمز"
-                                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer">
+                                    class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 cursor-pointer z-10 transition-colors">
                                 <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </div>
                     </div>
 
                     {{-- دکمه لینک فراموشی رمز عبور با پیامک --}}
-                    <div class="flex items-center justify-between pt-0.5">
+                    <div class="flex items-center justify-between pt-1">
                         <button type="button" id="forgotPasswordLink"
-                                class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:underline cursor-pointer flex items-center gap-1">
-                            <span>🔑 رمز عبور را فراموش کرده‌اید؟ (ورود سریع با پیامک)</span>
+                                class="text-xs sm:text-sm font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:underline cursor-pointer flex items-center gap-1.5 py-1">
+                            <span>🔑</span>
+                            <span>رمز عبور را فراموش کرده‌اید؟ (ورود سریع با پیامک)</span>
                         </button>
                     </div>
 
                     <button type="submit"
-                            class="w-full h-13 sm:h-14 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-lg shadow-amber-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 hover:scale-[1.01]">
+                            class="w-full h-14 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-base shadow-lg shadow-amber-500/20 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 mt-3">
                         <span>ورود به پنل کاربری تابلو</span>
                         <span>&larr;</span>
                     </button>
@@ -158,52 +159,52 @@
             </div>
 
             {{-- ۲. فرم ورود با کد پیامکی (مختص فراموشی رمز عبور و ورود بدون پسورد) --}}
-            <div id="otpSection" class="space-y-4 {{ $initialMode === 'otp' ? '' : 'hidden' }}">
-                <div class="bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 rounded-2xl p-3.5 text-xs text-slate-700 dark:text-slate-300 space-y-1">
-                    <div class="font-black text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+            <div id="otpSection" class="space-y-5 {{ $initialMode === 'otp' ? '' : 'hidden' }}">
+                <div class="bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 rounded-2xl p-4 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
+                    <div class="font-black text-amber-700 dark:text-amber-400 flex items-center gap-2 text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                         <span>فراموشی رمز عبور / ورود بدون رمز</span>
                     </div>
-                    <p class="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                    <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
                         شماره موبایل ثبت‌شده گالری خود را وارد نمایید تا کد تأیید ۵ رقمی بلافاصله برایتان پیامک شود.
                     </p>
                 </div>
 
-                <form method="POST" action="{{ route('admin.login.otp') }}" id="otpLoginForm" class="space-y-3.5">
+                <form method="POST" action="{{ route('admin.login.otp') }}" id="otpLoginForm" class="space-y-4">
                     @csrf
                     
                     {{-- کادر درشت شماره موبایل و دکمه ارسال پیامک --}}
-                    <div class="space-y-1.5">
-                        <label for="loginPhoneInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
-                            شماره موبایل طلافروش
+                    <div class="space-y-2">
+                        <label for="loginPhoneInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">
+                            شماره موبایل
                         </label>
                         <div class="flex flex-col sm:flex-row gap-2.5">
                             <input type="tel" name="phone" id="loginPhoneInput" required
-                                   class="flex-1 h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg text-slate-900 dark:text-white font-mono text-center sm:text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-bold tracking-wider"
+                                   class="flex-1 h-14 bg-white dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 text-base sm:text-lg text-slate-900 dark:text-white font-mono text-center sm:text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all font-bold tracking-wider shadow-xs"
                                    dir="ltr" placeholder="09187009064" maxlength="11" value="{{ old('phone') }}"
                                    autocomplete="tel" inputmode="numeric">
                             
                             <button type="button" id="sendLoginOtpBtn"
-                                    class="h-13 sm:h-14 px-5 rounded-2xl text-xs sm:text-sm font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
+                                    class="h-14 px-6 rounded-2xl text-xs sm:text-sm font-black transition-all shrink-0 cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-[0.99]">
                                 <span id="loginOtpBtnText">ارسال کد پیامکی</span>
                             </button>
                         </div>
                     </div>
 
                     {{-- کادر کد ۵ رقمی (پس از ارسال کد نمایش داده می‌شود) --}}
-                    <div id="otpInputContainer" class="space-y-2 {{ old('phone') ? '' : 'hidden' }} pt-2">
+                    <div id="otpInputContainer" class="space-y-2.5 {{ old('phone') ? '' : 'hidden' }} pt-2">
                         <div class="flex items-center justify-between">
                             <label for="loginOtpInput" class="block text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-400">
                                 کد ۵ رقمی پیامک‌شده:
                             </label>
-                            <span id="countdownTimer" class="text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400"></span>
+                            <span id="countdownTimer" class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400"></span>
                         </div>
                         <input type="text" name="otp" id="loginOtpInput" maxlength="5" inputmode="numeric"
-                               class="w-full h-14 bg-white dark:bg-slate-950 border-2 border-amber-500 rounded-2xl px-4 text-center text-3xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+                               class="w-full h-14 bg-white dark:bg-slate-950 border-2 border-amber-500 rounded-2xl px-4 text-center text-3xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono placeholder-slate-300 focus:outline-none focus:ring-4 focus:ring-amber-500/20 shadow-sm"
                                placeholder="-----" autocomplete="one-time-code">
                         
                         <button type="submit" id="loginOtpSubmitBtn"
-                                class="w-full h-13 sm:h-14 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-sm sm:text-base shadow-xl shadow-amber-500/20 transition-all hover:scale-[1.01] cursor-pointer mt-2 flex items-center justify-center gap-1.5">
+                                class="w-full h-14 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-base shadow-xl shadow-amber-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2 flex items-center justify-center gap-2">
                             <span>تأیید کد و ورود به پنل تابلو</span>
                             <span>&larr;</span>
                         </button>
@@ -212,7 +213,7 @@
                     {{-- دکمه بازگشت به ورود با رمز عبور --}}
                     <div class="pt-2 text-center">
                         <button type="button" id="backToPasswordBtn"
-                                class="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer inline-flex items-center gap-1">
+                                class="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer inline-flex items-center gap-1.5 py-1">
                             <span>&rarr;</span>
                             <span>بازگشت به ورود با رمز عبور</span>
                         </button>
@@ -221,10 +222,10 @@
             </div>
 
             {{-- لینک ثبت‌نام --}}
-            <div class="pt-3.5 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-600 dark:text-slate-400">
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 text-center text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                 <span>هنوز تابلوی گالری‌تان را فعال نکرده‌اید؟</span>
-                <a href="{{ route('admin.register') }}" class="font-bold text-amber-600 dark:text-amber-400 hover:underline mr-1">
-                    ثبت‌نام و ۷ روز تست رایگان
+                <a href="{{ route('admin.register') }}" class="font-black text-amber-600 dark:text-amber-400 hover:underline mr-1">
+                    ثبت‌نام و ۱۴ روز تست رایگان
                 </a>
             </div>
 

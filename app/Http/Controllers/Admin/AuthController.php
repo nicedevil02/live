@@ -483,7 +483,7 @@ class AuthController extends Controller
         // حذف کدهای مصرف‌شده
         DB::table('otp_verifications')->where('phone', $validated['phone'])->delete();
 
-        // ایجاد کاربر جدید با نقش ادمین، فعال فوری و دارای ۷ روز دوره تست رایگان
+        // ایجاد کاربر جدید با نقش ادمین، فعال فوری و دارای ۱۴ روز دوره تست رایگان
         $user = \App\Models\User::create([
             'name'              => $validated['name'],
             'username'          => $slug,
@@ -494,7 +494,7 @@ class AuthController extends Controller
             'is_admin'          => true,
             'is_super_admin'    => false,
             'is_approved'       => true, // فعال فوری جهت تست بدون اصطکاک!
-            'expires_at'        => now()->addDays(7), // دوره تست رایگان ۷ روزه
+            'expires_at'        => now()->addDays(14), // دوره تست رایگان ۱۴ روزه
             'display_token'     => 'dt_' . Str::random(16),
         ]);
 
@@ -569,6 +569,6 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard')->with('success', 'به سامانه طلالایو خوش آمدید! دوره آزمایشی ۷ روزه گالری شما با موفقیت فعال شد.');
+        return redirect()->route('admin.dashboard')->with('success', 'به سامانه طلالایو خوش آمدید! دوره آزمایشی ۱۴ روزه گالری شما با موفقیت فعال شد.');
     }
 }

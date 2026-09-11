@@ -116,10 +116,16 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::middleware(['super_admin'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::post('/users/{id}/approve', [UserController::class, 'approve'])->name('users.approve');
+        Route::post('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::post('/users/{id}/extend', [UserController::class, 'extend'])->name('users.extend');
+        Route::post('/users/{id}/subscription', [UserController::class, 'updateSubscription'])->name('users.subscription');
         Route::post('/users/{id}/change-password', [UserController::class, 'changePassword'])->name('users.password');
+        Route::post('/users/{id}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     });
+
+    // خروج از حساب کاربری طلافروش و بازگشت به سوپرادمین
+    Route::post('/leave-impersonate', [UserController::class, 'leaveImpersonate'])->name('impersonate.leave');
 
     // محصولات (ویترین)
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');

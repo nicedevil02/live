@@ -106,7 +106,7 @@ class SmsService
         $this->logSms('admin_alert_event', $adminMobile, [
             'shop'     => $shopName,
             'customer' => $mobile,
-            'note'     => 'طلافروشی جدید ثبت نام کرد و تست ۷ روزه فعال شد.',
+            'note'     => 'طلافروشی جدید ثبت نام کرد و تست ۱۴ روزه فعال شد.',
         ]);
 
         return true;

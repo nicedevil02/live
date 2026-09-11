@@ -15,7 +15,7 @@
         @endphp
 
         @if(!$isSubscribed)
-            {{-- ۱. دوره آزمایشی رایگان ۷ روزه --}}
+            {{-- ۱. دوره آزمایشی رایگان ۱۴ روزه --}}
             <div class="rounded-2xl p-5 border {{ $isUrgent ? 'bg-gradient-to-r from-rose-50 via-rose-50/70 to-rose-100/60 dark:from-rose-950/40 dark:via-slate-900 dark:to-slate-900 border-rose-200 dark:border-rose-500/30' : 'bg-gradient-to-r from-amber-50 via-amber-50/70 to-amber-100/70 dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-900 border-amber-200 dark:border-amber-500/30' }} flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
                 <div class="flex items-center gap-3.5">
                     <div class="w-12 h-12 rounded-2xl {{ $isUrgent ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30' : 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30' }} flex items-center justify-center font-black text-2xl shrink-0">

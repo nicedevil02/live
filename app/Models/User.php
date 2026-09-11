@@ -61,13 +61,13 @@ class User extends Authenticatable
             return false;
         }
 
-        // ۱. اگر فاصله تاریخ ثبت‌نام تا تاریخ انقضا بیش از ۸ روز باشد، قطعا اشتراک خریداری شده است
-        if ($this->created_at && $this->created_at->diffInDays($this->expires_at, false) > 8) {
+        // ۱. اگر فاصله تاریخ ثبت‌نام تا تاریخ انقضا بیش از ۱۵ روز باشد، قطعا اشتراک خریداری شده است
+        if ($this->created_at && $this->created_at->diffInDays($this->expires_at, false) > 15) {
             return true;
         }
 
-        // ۲. اگر روزهای باقی‌مانده بیش از ۷ روز باشد (مانند تمدید ۳ ماهه یا ۱ ساله)
-        if ($this->trialDaysRemaining() > 7) {
+        // ۲. اگر روزهای باقی‌مانده بیش از ۱۴ روز باشد (مانند تمدید ۱ ماهه، ۳ ماهه یا ۱ ساله)
+        if ($this->trialDaysRemaining() > 14) {
             return true;
         }
 
