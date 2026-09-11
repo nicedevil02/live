@@ -208,15 +208,12 @@
     <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
 
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلتر کنتراست داینامیک اپل) --}}
-        <template x-if="themeKey === 'bing-daily'">
-            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
-                <img :src="bingWallpaperUrl"
-                     alt="Bing Daily Wallpaper" 
-                     class="w-full h-full object-cover transition-opacity duration-1000">
-                {{-- Apple Dynamic Scrim: کنتراست هوشمند برای تضمین خوانایی ۱۰۰٪ --}}
-                <div class="absolute inset-0 bg-slate-950/20 backdrop-contrast-[1.05]"></div>
-            </div>
-        </template>
+        <div x-show="themeKey === 'bing-daily'" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+            <div class="absolute inset-0 bg-cover bg-center transition-all duration-1000"
+                 :style="'background-image: url(' + bingWallpaperUrl + ')'"></div>
+            {{-- Apple Dynamic Scrim: کنتراست هوشمند برای تضمین خوانایی ۱۰۰٪ متون روی هر عکسی --}}
+            <div class="absolute inset-0 bg-slate-950/25 backdrop-contrast-[1.05]"></div>
+        </div>
 
         {{-- Luxury Silk Wave Vector (اختصاصی تم روشن - کاملاً استاتیک و بدون هیچ‌گونه بار پردازنده) --}}
         <template x-if="themeKey === 'light-modern'">
