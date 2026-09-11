@@ -81,11 +81,12 @@ class UserController extends Controller
         $newExpire = null;
 
         switch ($actionType) {
+            case 'set_days':
             case 'add_days':
                 $days = (int) $request->input('days', 14);
-                $days = max(1, min(365, $days));
-                $newExpire = $baseDate->addDays($days);
-                $note = "تمدید به مدت {$days} روز";
+                $days = max(1, min(5000, $days));
+                $newExpire = now()->addDays($days);
+                $note = "تنظیم مدت زمان باقیمانده به {$days} روز";
                 break;
 
             case 'add_months':
@@ -145,11 +146,15 @@ class UserController extends Controller
     }
 
     /**
-     * متد قدیمی تمدید جهت سازگاری با درخواست‌های قبلی
+     * تمدید و تنظیم مدت زمان باقیمانده اشتراک
      */
     public function extend(Request $request, $id)
     {
-        $request->merge(['action_type' => 'add_months']);
+        if ($request->has('days')) {
+            $request->merge(['action_type' => 'set_days']);
+        } elseif ($request->has('months')) {
+            $request->merge(['action_type' => 'add_months']);
+        }
         return $this->updateSubscription($request, $id);
     }
 

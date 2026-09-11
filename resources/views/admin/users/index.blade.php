@@ -210,8 +210,8 @@
                                     @endif
 
                                     {{-- Extend Subscription Button --}}
-                                    <button @click="openExtendModal({{ $user->id }}, '{{ addslashes($user->name) }}')" 
-                                            title="تمدید اعتبار اشتراک" 
+                                    <button @click="openExtendModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->trialDaysRemaining() }})" 
+                                            title="تنظیم و تغییر مدت اعتبار" 
                                             class="w-8 h-8 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white border border-blue-200 dark:border-blue-800/50 shadow-sm transition-all">
                                         <i data-lucide="calendar" class="w-4 h-4"></i>
                                     </button>
@@ -285,44 +285,57 @@
 
                 {{-- Fast Buttons --}}
                 <div class="space-y-2">
-                    <label class="block text-xs font-bold text-slate-500">گزینه‌های سریع تمدید:</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" @click="customMonths = 1" 
-                                class="py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-all text-slate-700 dark:text-slate-300"
-                                :class="customMonths == 1 ? 'bg-blue-600! text-white!' : ''">
-                            تمدید ۱ ماهه
+                    <label class="block text-xs font-bold text-slate-500">گزینه‌های سریع:</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        <button type="button" @click="customDays = 1" 
+                                class="py-2 text-xs font-bold rounded-xl border transition-all text-slate-700 dark:text-slate-300"
+                                :class="customDays == 1 ? 'bg-blue-600! text-white! border-blue-600!' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white'">
+                            ۱ روز
                         </button>
-                        <button type="button" @click="customMonths = 3" 
-                                class="py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-all text-slate-700 dark:text-slate-300"
-                                :class="customMonths == 3 ? 'bg-blue-600! text-white!' : ''">
-                            تمدید ۳ ماهه
+                        <button type="button" @click="customDays = 7" 
+                                class="py-2 text-xs font-bold rounded-xl border transition-all text-slate-700 dark:text-slate-300"
+                                :class="customDays == 7 ? 'bg-blue-600! text-white!' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white'">
+                            ۷ روز
                         </button>
-                        <button type="button" @click="customMonths = 6" 
-                                class="py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-all text-slate-700 dark:text-slate-300"
-                                :class="customMonths == 6 ? 'bg-blue-600! text-white!' : ''">
-                            تمدید ۶ ماهه
+                        <button type="button" @click="customDays = 14" 
+                                class="py-2 text-xs font-bold rounded-xl border transition-all text-slate-700 dark:text-slate-300"
+                                :class="customDays == 14 ? 'bg-blue-600! text-white!' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white'">
+                            ۱۴ روز
                         </button>
-                        <button type="button" @click="customMonths = 12" 
-                                class="py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-all text-slate-700 dark:text-slate-300"
-                                :class="customMonths == 12 ? 'bg-blue-600! text-white!' : ''">
-                            تمدید ۱ ساله (۱۲ ماه)
+                        <button type="button" @click="customDays = 30" 
+                                class="py-2 text-xs font-bold rounded-xl border transition-all text-slate-700 dark:text-slate-300"
+                                :class="customDays == 30 ? 'bg-blue-600! text-white!' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white'">
+                            ۳۰ روز
+                        </button>
+                        <button type="button" @click="customDays = 90" 
+                                class="py-2 text-xs font-bold rounded-xl border transition-all text-slate-700 dark:text-slate-300"
+                                :class="customDays == 90 ? 'bg-blue-600! text-white!' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white'">
+                            ۹۰ روز
+                        </button>
+                        <button type="button" @click="customDays = 365" 
+                                class="py-2 text-xs font-bold rounded-xl border transition-all text-slate-700 dark:text-slate-300"
+                                :class="customDays == 365 ? 'bg-blue-600! text-white!' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 hover:bg-blue-600 hover:text-white'">
+                            ۱ سال
                         </button>
                     </div>
                 </div>
 
                 {{-- Custom Input --}}
                 <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">تعداد ماه دلخواه جهت تمدید:</label>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">مدت زمان باقیمانده از اشتراک (از ۱ روز تا هر تعداد روز دلخواه):</label>
                     <div class="flex items-center gap-2">
-                        <input type="number" name="months" min="1" max="120" required x-model="customMonths"
-                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 tabular-nums">
-                        <span class="text-xs text-slate-500 font-bold whitespace-nowrap">ماه اعتبار</span>
+                        <input type="number" name="days" min="1" max="5000" required x-model="customDays"
+                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-base font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/40 tabular-nums">
+                        <span class="text-xs text-slate-500 font-bold whitespace-nowrap">روز از امروز</span>
                     </div>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                        اعتبار کاربر دقیقاً به میزان <span class="font-bold text-blue-600 dark:text-blue-400" x-text="customDays"></span> روز از امروز تنظیم می‌شود.
+                    </p>
                 </div>
 
                 <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-sm">
-                        ثبت تمدید اعتبار
+                        ثبت و ذخیره اعتبار
                     </button>
                     <button type="button" @click="showExtendModal = false" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-sm border border-slate-200 dark:border-slate-700">
                         انصراف
@@ -402,12 +415,12 @@ function usersPage() {
         showPasswordModal: false,
         targetUserId: null,
         targetUserName: '',
-        customMonths: 12,
+        customDays: 14,
 
-        openExtendModal(userId, name) {
+        openExtendModal(userId, name, currentDays) {
             this.targetUserId = userId;
             this.targetUserName = name;
-            this.customMonths = 12; // default to 1 year
+            this.customDays = (currentDays && currentDays > 0) ? currentDays : 14;
             this.showExtendModal = true;
         },
 
