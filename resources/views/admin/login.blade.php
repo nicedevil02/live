@@ -273,8 +273,9 @@
                 <span dir="ltr" class="font-mono text-sm">0918 700 9064</span>
             </a>
             <span class="text-slate-300 dark:text-slate-700">&bull;</span>
-            <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400 hover:underline font-bold">
-                <span>کانال روبیکا</span>
+            <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:underline font-bold">
+                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-xs" alt="روبیکا">
+                <span>پشتیبانی روبیکا</span>
             </a>
         </div>
 

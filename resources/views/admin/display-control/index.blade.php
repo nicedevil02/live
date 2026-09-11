@@ -151,7 +151,7 @@
                     </div>
                     <div>
                         <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="tag" class="w-4 h-4"></i> عنوان کد QR (بالا)</label>
-                        <input type="text" x-model="settings.qr_label" placeholder="مثال: نوبت‌دهی آنلاین / کانال روبیکا"
+                        <input type="text" x-model="settings.qr_label" placeholder="مثال: نوبت‌دهی آنلاین / پشتیبانی روبیکا"
                                class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                     </div>
                     <div>
