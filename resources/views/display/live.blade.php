@@ -691,14 +691,6 @@
                 </div>
 
 
-                {{-- تگ عنوان عکس روز بینگ در تم bing-daily --}}
-                <template x-if="isBingTheme && (bingWallpaper?.title || bingWallpaper?.copyright)">
-                    <div class="hidden 2xl:flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 backdrop-blur-xl border border-white/10 text-white/90 text-[11px] font-bold shadow-sm" dir="ltr">
-                        <span>📷</span>
-                        <span class="truncate max-w-[240px]" x-text="bingWallpaper.title || bingWallpaper.copyright"></span>
-                    </div>
-                </template>
-
                 {{-- مرکز: هویت و فناوری پلتفرم کشوری --}}
                 <div class="hidden xl:flex items-center gap-2 justify-center z-10 text-xs font-black" :class="theme.textPrimary">
                     <span class="opacity-90">پلتفرم هوشمند نمایش نرخ و ویترین آنلاین طلا</span>
