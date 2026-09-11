@@ -154,6 +154,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
         // مدیریت مالی و تراکنش‌ها (سوپر ادمین)
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
         Route::post('/transactions/manual', [TransactionController::class, 'storeManual'])->name('transactions.manual');
+        Route::post('/transactions/{payment}/approve', [TransactionController::class, 'approvePayment'])->name('transactions.approve');
+        Route::post('/transactions/{payment}/reject', [TransactionController::class, 'rejectPayment'])->name('transactions.reject');
         Route::post('/transactions/coupons', [TransactionController::class, 'storeCoupon'])->name('transactions.coupons.store');
         Route::post('/transactions/coupons/{coupon}/toggle', [TransactionController::class, 'toggleCoupon'])->name('transactions.coupons.toggle');
     });
@@ -164,6 +166,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     // خرید و مدیریت اشتراک
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
     Route::post('/subscription/apply-coupon', [SubscriptionController::class, 'applyCoupon'])->name('subscription.apply-coupon');
+    Route::post('/subscription/submit-receipt', [SubscriptionController::class, 'submitReceipt'])->name('subscription.submit-receipt');
     Route::post('/subscription/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
     Route::get('/subscription/invoice/{payment}', [SubscriptionController::class, 'invoice'])->name('subscription.invoice');
 

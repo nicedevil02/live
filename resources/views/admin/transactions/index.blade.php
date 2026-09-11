@@ -159,9 +159,10 @@
                 <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">درگاه یا روش پرداخت:</label>
                 <select name="gateway" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs focus:outline-none focus:border-amber-500">
                     <option value="">همه روش‌ها</option>
+                    <option value="card_to_card" {{ request('gateway') === 'card_to_card' ? 'selected' : '' }}>کارت‌به‌کارت (فیش کاربران)</option>
+                    <option value="manual" {{ request('gateway') === 'manual' ? 'selected' : '' }}>ثبت دستی توسط مدیریت</option>
                     <option value="zarinpal" {{ request('gateway') === 'zarinpal' ? 'selected' : '' }}>زرین‌پال</option>
                     <option value="zibal" {{ request('gateway') === 'zibal' ? 'selected' : '' }}>زیبال</option>
-                    <option value="manual" {{ request('gateway') === 'manual' ? 'selected' : '' }}>کارت‌به‌کارت (دستی)</option>
                 </select>
             </div>
 
@@ -239,24 +240,63 @@
                                         {{ $payment->gateway_name }}
                                     </span>
                                 </td>
-                                <td class="py-3.5 px-3 font-mono text-slate-600 dark:text-slate-400" dir="ltr">
-                                    {{ $payment->reference_id ?? '---' }}
+                                <td class="py-3.5 px-3">
+                                    @if($payment->receipt_url)
+                                        <button type="button"
+                                                @click="viewReceipt('{{ $payment->receipt_url }}', '{{ $payment->invoice_no }}', '{{ $payment->user?->name }}', '{{ number_format($payment->amount) }}')"
+                                                class="inline-flex items-center gap-1 px-2 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold transition-all cursor-pointer">
+                                            <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                                            <span>مشاهده فیش</span>
+                                        </button>
+                                    @endif
+                                    <div class="font-mono text-[11px] text-slate-600 dark:text-slate-400 mt-1" dir="ltr">
+                                        {{ $payment->reference_id ?? '---' }}
+                                        @if($payment->card_pan)
+                                            <span class="text-[10px] text-slate-400">({{ $payment->card_pan }}****)</span>
+                                        @endif
+                                    </div>
                                 </td>
-                                <td class="py-3.5 px-3 text-slate-500">
-                                    {{ $payment->paid_at ? \App\Models\User::toJalali($payment->paid_at) : 'ثبت نشده' }}
+                                <td class="py-3.5 px-3 text-slate-500 font-mono text-[11px]">
+                                    {{ $payment->paid_at ? \App\Models\User::toJalali($payment->paid_at) : ($payment->created_at ? \App\Models\User::toJalali($payment->created_at) : 'ثبت نشده') }}
                                 </td>
                                 <td class="py-3.5 px-3 text-center">
                                     <span class="px-2.5 py-1 rounded-full text-[10px] font-black border {{ $payment->status_badge_class }}">
-                                        {{ $payment->status_name }}
+                                        {{ $payment->status_label }}
                                     </span>
                                 </td>
                                 <td class="py-3.5 px-3 text-center">
-                                    <a href="{{ route('admin.subscription.invoice', $payment->id) }}"
-                                       target="_blank"
-                                       class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all">
-                                        <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                                        <span>فاکتور</span>
-                                    </a>
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        @if($payment->status === 'pending')
+                                            {{-- دکمه تایید فیش و فعال‌سازی آنی اشتراک --}}
+                                            <form action="{{ route('admin.transactions.approve', $payment->id) }}" method="POST" onsubmit="return confirm('آیا از تایید این فیش و فعال‌سازی اشتراک {{ $payment->plan?->name ?? 'کاربر' }} برای {{ $payment->user?->name }} اطمینان دارید؟');">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-600 dark:text-emerald-400 font-black text-xs transition-all cursor-pointer"
+                                                        title="تایید فیش و فعال‌سازی اشتراک">
+                                                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                                    <span>تایید</span>
+                                                </button>
+                                            </form>
+
+                                            {{-- دکمه رد فیش --}}
+                                            <form action="{{ route('admin.transactions.reject', $payment->id) }}" method="POST" onsubmit="return confirm('آیا از رد این فیش واریزی اطمینان دارید؟');">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="inline-flex items-center gap-1 px-2 py-1 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 font-bold text-xs transition-all cursor-pointer"
+                                                        title="رد فیش">
+                                                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                                    <span>رد</span>
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        <a href="{{ route('admin.subscription.invoice', $payment->id) }}"
+                                           target="_blank"
+                                           class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all">
+                                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                                            <span>فاکتور</span>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -461,6 +501,44 @@
             </div>
         </div>
     </div>
+
+    {{-- مودال مشاهده فیش واریزی کاربر در سایز بزرگ --}}
+    <div x-show="showReceiptModal" 
+         class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4"
+         x-cloak>
+        <div @click.away="showReceiptModal = false" class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 max-w-xl w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="file-check" class="w-5 h-5 text-amber-500"></i>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900 dark:text-white">
+                            تصویر فیش واریزی: <span class="font-mono text-amber-500" x-text="receiptModalInvoice"></span>
+                        </h3>
+                        <div class="text-[11px] text-slate-400 mt-0.5">
+                            مشتری: <span class="font-bold text-slate-700 dark:text-slate-200" x-text="receiptModalUser"></span> | مبلغ: <span class="font-bold text-amber-500" x-text="receiptModalAmount"></span> تومان
+                        </div>
+                    </div>
+                </div>
+                <button type="button" @click="showReceiptModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center max-h-[70vh] border border-slate-800">
+                <img :src="receiptModalImage" class="max-w-full max-h-[65vh] object-contain rounded-xl" alt="تصویر فیش">
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+                <a :href="receiptModalImage" download target="_blank" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>دانلود تصویر فیش</span>
+                </a>
+                <button type="button" @click="showReceiptModal = false" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs">
+                    بستن پنجره
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -470,7 +548,25 @@ function transactionsPage() {
         openCouponModal: false,
         manualAmount: 3990000,
 
+        // لایت‌باکس فیش
+        showReceiptModal: false,
+        receiptModalImage: '',
+        receiptModalInvoice: '',
+        receiptModalUser: '',
+        receiptModalAmount: '',
+
         init() {
+            this.$nextTick(() => {
+                if (window.lucide) { window.lucide.createIcons(); }
+            });
+        },
+
+        viewReceipt(url, invoice, user, amount) {
+            this.receiptModalImage = url;
+            this.receiptModalInvoice = invoice;
+            this.receiptModalUser = user;
+            this.receiptModalAmount = amount;
+            this.showReceiptModal = true;
             this.$nextTick(() => {
                 if (window.lucide) { window.lucide.createIcons(); }
             });

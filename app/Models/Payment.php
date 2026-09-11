@@ -18,6 +18,7 @@ class Payment extends Model
         'transaction_id',
         'reference_id',
         'card_pan',
+        'receipt_path',
         'status',
         'paid_at',
         'ip_address',
@@ -64,13 +65,21 @@ class Payment extends Model
 
     public function getStatusLabelAttribute(): string
     {
+        if ($this->status === 'pending') {
+            return in_array($this->gateway, ['card_to_card', 'manual']) ? 'در انتظار تایید فیش' : 'در انتظار پرداخت';
+        }
+
         return match($this->status) {
-            'paid'     => 'پرداخت موفق',
-            'pending'  => 'در انتظار پرداخت',
-            'failed'   => 'ناموفق',
+            'paid'     => 'پرداخت و فعال‌سازی موفق',
+            'failed'   => 'رد شده / ناموفق',
             'canceled' => 'انصراف کاربر',
             default    => $this->status,
         };
+    }
+
+    public function getStatusNameAttribute(): string
+    {
+        return $this->status_label;
     }
 
     public function getStatusBadgeClassAttribute(): string
@@ -87,11 +96,25 @@ class Payment extends Model
     public function getGatewayNameAttribute(): string
     {
         return match($this->gateway) {
-            'zarinpal' => 'زرین‌پال',
-            'zibal'    => 'زیبال',
-            'manual'   => 'کارت‌به‌کارت / دستی',
-            default    => $this->gateway,
+            'card_to_card' => 'کارت به کارت (بانک ملی)',
+            'zarinpal'     => 'زرین‌پال',
+            'zibal'        => 'زیبال',
+            'manual'       => 'واریز به کارت / دستی',
+            default        => $this->gateway,
         };
+    }
+
+    public function getReceiptUrlAttribute(): ?string
+    {
+        if (!$this->receipt_path) {
+            return null;
+        }
+
+        if (str_starts_with($this->receipt_path, 'http://') || str_starts_with($this->receipt_path, 'https://')) {
+            return $this->receipt_path;
+        }
+
+        return asset($this->receipt_path);
     }
 
     public function getAuthorityAttribute(): ?string

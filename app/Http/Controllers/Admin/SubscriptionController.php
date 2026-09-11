@@ -141,6 +141,15 @@ class SubscriptionController extends Controller
                 Log::error('Auto-seed coupons failed: ' . $e->getMessage());
             }
         }
+        if (Schema::hasTable('payments') && !Schema::hasColumn('payments', 'receipt_path')) {
+            try {
+                \Illuminate\Support\Facades\Schema::table('payments', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->string('receipt_path', 255)->nullable()->after('card_pan');
+                });
+            } catch (\Throwable $e) {
+                Log::error('Auto-migration receipt_path failed in SubscriptionController: ' . $e->getMessage());
+            }
+        }
     }
 
     /**
@@ -152,13 +161,115 @@ class SubscriptionController extends Controller
 
         $user = Auth::user();
         $plans = SubscriptionPlan::active()->get();
-        $payments = $user->payments()->with(['plan', 'coupon'])->paginate(10);
+        $payments = $user->payments()->with(['plan', 'coupon'])->latest()->paginate(10);
         
         $daysRemaining = $user->trialDaysRemaining();
         $isSubscribed = $user->isSubscribed();
         $jalaliExpiry = User::toJalali($user->expires_at, false);
 
-        return view('admin.subscription.index', compact('user', 'plans', 'payments', 'daysRemaining', 'isSubscribed', 'jalaliExpiry'));
+        $onlineGatewaysEnabled = config('subscription.online_gateways_enabled', false);
+        $bankInfo = config('subscription.bank', [
+            'bank_name'             => 'بانک ملی ایران',
+            'card_number'           => '6037997205693782',
+            'card_number_formatted' => '6037 - 9972 - 0569 - 3782',
+            'account_owner'         => 'بهمن شاکری',
+        ]);
+
+        return view('admin.subscription.index', compact(
+            'user',
+            'plans',
+            'payments',
+            'daysRemaining',
+            'isSubscribed',
+            'jalaliExpiry',
+            'onlineGatewaysEnabled',
+            'bankInfo'
+        ));
+    }
+
+    /**
+     * ثبت فیش واریزی کارت به کارت و ایجاد فاکتور در انتظار تایید
+     */
+    public function submitReceipt(Request $request, CouponService $couponService, SmsService $smsService)
+    {
+        $this->ensureTablesExist();
+
+        $request->validate([
+            'plan_id'       => ['required', 'exists:subscription_plans,id'],
+            'receipt_image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
+            'card_pan'      => ['nullable', 'string', 'max:30'],
+            'reference_id'  => ['nullable', 'string', 'max:50'],
+            'coupon_code'   => ['nullable', 'string', 'max:50'],
+            'description'   => ['nullable', 'string', 'max:1000'],
+        ], [
+            'plan_id.required'       => 'لطفاً پلن مورد نظر خود را انتخاب فرمایید.',
+            'receipt_image.required' => 'لطفاً تصویر فیش یا رسید واریزی را پیوست نمایید.',
+            'receipt_image.mimes'    => 'فرمت فایل انتخابی باید یکی از فرمت‌های JPG، PNG، WEBP یا PDF باشد.',
+            'receipt_image.max'      => 'حداکثر حجم مجاز برای تصویر فیش ۵ مگابایت است.',
+        ]);
+
+        $user = Auth::user();
+        $plan = SubscriptionPlan::where('is_active', true)->findOrFail($request->plan_id);
+
+        $baseAmount = (int) $plan->price;
+        $discountAmount = 0;
+        $couponId = null;
+
+        // بررسی و اعمال کد تخفیف در صورت ارسال
+        if ($request->filled('coupon_code')) {
+            $couponResult = $couponService->applyCoupon($request->coupon_code, $baseAmount);
+            if ($couponResult['success']) {
+                $discountAmount = $couponResult['discount_amount'];
+                $couponId = $couponResult['coupon']->id;
+            }
+        }
+
+        $finalAmount = max(0, $baseAmount - $discountAmount);
+
+        // آپلود و ذخیره‌سازی تصویر فیش
+        $file = $request->file('receipt_image');
+        $ext = $file->getClientOriginalExtension() ?: 'jpg';
+        $filename = 'receipt_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+
+        $publicDir = public_path('uploads/receipts');
+        $publicHtmlDir = base_path('public_html/uploads/receipts');
+
+        if (!is_dir($publicDir)) {
+            @mkdir($publicDir, 0755, true);
+        }
+        if (!is_dir($publicHtmlDir)) {
+            @mkdir($publicHtmlDir, 0755, true);
+        }
+
+        $file->move($publicDir, $filename);
+        if (is_dir($publicHtmlDir) && realpath($publicDir) !== realpath($publicHtmlDir)) {
+            @copy($publicDir . DIRECTORY_SEPARATOR . $filename, $publicHtmlDir . DIRECTORY_SEPARATOR . $filename);
+        }
+
+        $receiptRelativePath = 'uploads/receipts/' . $filename;
+
+        // ایجاد رکورد پرداخت در وضعیت در انتظار تایید
+        $payment = Payment::create([
+            'invoice_no'      => Payment::generateInvoiceNo(),
+            'user_id'         => $user->id,
+            'plan_id'         => $plan->id,
+            'coupon_id'       => $couponId,
+            'amount'          => $finalAmount,
+            'discount_amount' => $discountAmount,
+            'gateway'         => 'card_to_card',
+            'status'          => 'pending',
+            'receipt_path'    => $receiptRelativePath,
+            'card_pan'        => $request->input('card_pan'),
+            'reference_id'    => $request->input('reference_id'),
+            'ip_address'      => $request->ip(),
+            'description'     => $request->input('description') ?: "واریز کارت به کارت برای {$plan->name} توسط {$user->name}",
+            'metadata'        => [
+                'submitted_at' => now()->toDateTimeString(),
+                'client_ua'    => $request->userAgent(),
+            ],
+        ]);
+
+        return back()->with('success', 'تصویر فیش واریزی با شماره فاکتور ' . $payment->invoice_no . ' با موفقیت ثبت شد و در صف تایید مدیریت قرار گرفت. پس از بررسی، اشتراک شما بلافاصله فعال خواهد شد.');
     }
 
     /**
