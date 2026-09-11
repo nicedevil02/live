@@ -161,28 +161,32 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'کد تأیید ۵ رقمی ورود با موفقیت به موبایل شما پیامک شد.',
+            'message' => 'کد تأیید ۵ رقمی بازیابی رمز عبور با موفقیت به موبایل شما پیامک شد.',
             'ttl'     => 120,
         ]);
     }
 
     /**
-     * ورود مستقیم به پنل با کد یکبار مصرف پیامکی
+     * بازیابی و تنظیم رمز عبور جدید از طریق کد پیامکی OTP و ورود به پنل
      */
     public function loginWithOtp(Request $request)
     {
         $inputPhone = $request->input('phone');
         $code = trim($request->input('otp', ''));
+        $newPassword = $request->input('password');
 
         $phone = SmsService::normalizeMobile((string) $inputPhone);
 
         $request->validate([
-            'phone' => ['required', 'string'],
-            'otp'   => ['required', 'string', 'size:5'],
+            'phone'    => ['required', 'string'],
+            'otp'      => ['required', 'string', 'size:5'],
+            'password' => ['required', 'string', 'min:4'],
         ], [
-            'phone.required' => 'شماره موبایل الزامی است.',
-            'otp.required'   => 'کد تأیید پیامک‌شده را وارد نمایید.',
-            'otp.size'       => 'کد تأیید باید ۵ رقم باشد.',
+            'phone.required'    => 'شماره موبایل الزامی است.',
+            'otp.required'      => 'کد تأیید پیامک‌شده را وارد نمایید.',
+            'otp.size'          => 'کد تأیید باید ۵ رقم باشد.',
+            'password.required' => 'وارد کردن رمز عبور جدید الزامی است.',
+            'password.min'      => 'رمز عبور جدید باید حداقل ۴ رقم یا کاراکتر باشد.',
         ]);
 
         $user = \App\Models\User::where('phone', $phone)->first();
@@ -214,13 +218,28 @@ class AuthController extends Controller
             return back()->withInput()->withErrors(['otp' => 'کد تأیید پیامک‌شده اشتباه است یا زمان آن منقضی شده است.']);
         }
 
+        // تغییر رمز عبور کاربر به رمز عبور جدید
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        // ثبت لاگ امنیتی
+        \App\Models\AuditLog::create([
+            'id'          => 'log-' . now()->timestamp . rand(100, 999),
+            'actor'       => $user->name ?? $user->phone ?? 'کاربر',
+            'action'      => 'reset_password_via_otp',
+            'entity_type' => 'user',
+            'entity_id'   => (string) $user->id,
+            'payload'     => json_encode(['ip' => $request->ip()]),
+            'created_at'  => now(),
+        ]);
+
         // حذف کدهای مصرف‌شده
         DB::table('otp_verifications')->where('phone', $phone)->delete();
 
         Auth::login($user, true);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        return redirect()->intended(route('admin.dashboard'))->with('success', 'رمز عبور جدید شما با موفقیت ثبت شد و وارد پنل شدید.');
     }
 
     /**
