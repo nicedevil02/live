@@ -18,16 +18,79 @@
         @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-5%, 5%); } }
         @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(5%, -5%); } }
         @keyframes float3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-3%, -3%); } }
-        /* درخشش ابریشمی کارت طلای ۱۸ عیار - شتاب سخت‌افزاری 3D بدون بار پردازنده */
-        @keyframes gold-sheen-silk {
-            0% { transform: translate3d(-160%, 0, 0) skewX(-20deg); }
-            28% { transform: translate3d(160%, 0, 0) skewX(-20deg); }
-            100% { transform: translate3d(160%, 0, 0) skewX(-20deg); }
+        /* انیمیشن پرمیوم پرتو نوری مایع آینه‌ای (Liquid Gold Specular Beam) - ۱۰۰٪ شتاب‌یافته 3D */
+        @keyframes gold-beam-sweep {
+            0% {
+                transform: translate3d(-160%, 0, 0) rotate(25deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            35% {
+                transform: translate3d(220%, 0, 0) rotate(25deg);
+                opacity: 1;
+            }
+            36%, 100% {
+                transform: translate3d(220%, 0, 0) rotate(25deg);
+                opacity: 0;
+            }
         }
-        .animate-gold-sheen-silk {
-            animation: gold-sheen-silk 6.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .animate-gold-beam {
+            animation: gold-beam-sweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
             will-change: transform;
             backface-visibility: hidden;
+        }
+
+        /* انیمیشن تنفس نوری کادر طلای ۱۸ عیار در تم روشن */
+        @keyframes gold-card-pulse-light {
+            0%, 100% {
+                border-color: rgba(217, 119, 6, 0.55);
+                box-shadow: 
+                    inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                    inset 0 -1.5px 2px 0 rgba(217, 119, 6, 0.18),
+                    -4px -4px 14px rgba(255, 255, 255, 0.95),
+                    0 8px 24px -2px rgba(245, 158, 11, 0.16),
+                    0 0 16px rgba(251, 191, 36, 0.15);
+            }
+            50% {
+                border-color: rgba(217, 119, 6, 0.95);
+                box-shadow: 
+                    inset 0 2.5px 2px 0 rgba(255, 255, 255, 1),
+                    inset 0 -1.5px 2px 0 rgba(217, 119, 6, 0.28),
+                    -4px -4px 14px rgba(255, 255, 255, 0.95),
+                    0 12px 30px -2px rgba(245, 158, 11, 0.32),
+                    0 0 28px rgba(251, 191, 36, 0.35);
+            }
+        }
+
+        /* انیمیشن تنفس نوری کادر طلای ۱۸ عیار در تم تیره */
+        @keyframes gold-card-pulse-dark {
+            0%, 100% {
+                border-color: rgba(251, 191, 36, 0.70);
+                box-shadow: 
+                    inset 0 2px 2px 0 rgba(255, 255, 255, 0.50),
+                    inset 0 -1.5px 2px 0 rgba(180, 83, 9, 0.40),
+                    0 10px 28px -4px rgba(217, 119, 6, 0.45),
+                    0 0 22px rgba(251, 191, 36, 0.25);
+            }
+            50% {
+                border-color: rgba(254, 240, 138, 0.98);
+                box-shadow: 
+                    inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.75),
+                    inset 0 -2px 3px 0 rgba(180, 83, 9, 0.55),
+                    0 16px 38px -4px rgba(217, 119, 6, 0.70),
+                    0 0 40px rgba(251, 191, 36, 0.50);
+            }
+        }
+
+        /* چشمک ملایم ستاره درخشان طلایی هدر */
+        @keyframes sparkle-twinkle {
+            0%, 100% { opacity: 0.35; transform: scale(0.85) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(45deg); filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.9)); }
+        }
+        .animate-sparkle {
+            animation: sparkle-twinkle 3s ease-in-out infinite;
         }
 
         .animate-fadeInUp { animation: fadeInUp 0.6s ease-out; }
@@ -178,28 +241,16 @@
         }
 
         .neu-hero-gold-imperial {
-            background: 
-                radial-gradient(ellipse 110% 80% at 50% -25%, rgba(251, 191, 36, 0.35) 0%, rgba(217, 119, 6, 0.12) 50%, transparent 80%),
-                linear-gradient(145deg, rgba(75, 29, 2, 0.92) 0%, rgba(35, 12, 1, 0.96) 55%, rgba(12, 4, 1, 0.99) 100%) !important;
-            backdrop-filter: blur(28px) saturate(220%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
-            border: 1.8px solid rgba(251, 191, 36, 0.95) !important;
-            box-shadow: 
-                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.70),
-                inset 0 -2px 3px 0 rgba(180, 83, 9, 0.55),
-                0 24px 60px -8px rgba(217, 119, 6, 0.70),
-                0 0 45px rgba(251, 191, 36, 0.45) !important;
-            transform: translateY(-4px) scale(1.025) translateZ(0) !important;
-            z-index: 20 !important;
-            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+            background: linear-gradient(145deg, rgba(69, 26, 3, 0.88) 0%, rgba(30, 11, 2, 0.94) 50%, rgba(15, 5, 1, 0.98) 100%) !important;
+            backdrop-filter: blur(28px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.75) !important;
+            transform: translate3d(0, 0, 0) !important;
+            animation: gold-card-pulse-dark 4s ease-in-out infinite;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-imperial:hover {
-            transform: translateY(-7px) scale(1.04) translateZ(0) !important;
-            box-shadow: 
-                inset 0 3px 2.5px 0 rgba(255, 255, 255, 0.85),
-                inset 0 -2px 3px 0 rgba(180, 83, 9, 0.70),
-                0 32px 75px -8px rgba(217, 119, 6, 0.85),
-                0 0 60px rgba(251, 191, 36, 0.65) !important;
+            transform: translateY(-3px) translateZ(0) !important;
             border-color: #fef08a !important;
         }
 
@@ -240,30 +291,16 @@
         }
 
         .neu-hero-gold-pearl {
-            background: 
-                radial-gradient(ellipse 110% 80% at 50% -25%, rgba(254, 240, 138, 0.75) 0%, rgba(251, 191, 36, 0.22) 50%, transparent 80%),
-                linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 249, 231, 0.95) 55%, rgba(254, 243, 199, 0.90) 100%) !important;
-            backdrop-filter: blur(28px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-            border: 1.8px solid rgba(217, 119, 6, 0.88) !important;
-            box-shadow: 
-                inset 0 2.5px 2px 0 rgba(255, 255, 255, 1),
-                inset 0 -2px 2px 0 rgba(217, 119, 6, 0.30),
-                -6px -6px 20px rgba(255, 255, 255, 0.98),
-                0 20px 50px -6px rgba(217, 119, 6, 0.38),
-                0 0 36px rgba(251, 191, 36, 0.38) !important;
-            transform: translateY(-4px) scale(1.025) translateZ(0) !important;
-            z-index: 20 !important;
-            transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+            background: linear-gradient(145deg, rgba(255, 253, 245, 0.97) 0%, rgba(254, 243, 199, 0.72) 50%, rgba(253, 230, 138, 0.50) 100%) !important;
+            backdrop-filter: blur(28px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+            border: 1.5px solid rgba(217, 119, 6, 0.65) !important;
+            transform: translate3d(0, 0, 0) !important;
+            animation: gold-card-pulse-light 4s ease-in-out infinite;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-pearl:hover {
-            transform: translateY(-7px) scale(1.04) translateZ(0) !important;
-            box-shadow: 
-                inset 0 3px 2.5px 0 rgba(255, 255, 255, 1),
-                inset 0 -2px 2px 0 rgba(217, 119, 6, 0.45),
-                -8px -8px 26px rgba(255, 255, 255, 1),
-                0 28px 65px -6px rgba(217, 119, 6, 0.48),
-                0 0 52px rgba(251, 191, 36, 0.55) !important;
+            transform: translateY(-3px) translateZ(0) !important;
             border-color: #b45309 !important;
         }
 
@@ -358,27 +395,16 @@
         }
 
         .neu-hero-gold-obsidian {
-            background: 
-                radial-gradient(ellipse 110% 80% at 50% -25%, rgba(251, 191, 36, 0.32) 0%, rgba(217, 119, 6, 0.10) 50%, transparent 80%),
-                linear-gradient(145deg, rgba(50, 18, 1, 0.90) 0%, rgba(18, 6, 0, 0.97) 100%) !important;
-            backdrop-filter: blur(28px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-            border: 1.8px solid rgba(251, 191, 36, 0.90) !important;
-            box-shadow: 
-                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.60),
-                inset 0 -1.5px 2px 0 rgba(251, 191, 36, 0.35),
-                0 22px 55px -6px rgba(217, 119, 6, 0.65),
-                0 0 38px rgba(251, 191, 36, 0.40) !important;
-            transform: translateY(-4px) scale(1.025) translateZ(0) !important;
-            z-index: 20 !important;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+            background: linear-gradient(145deg, rgba(50, 18, 1, 0.88) 0%, rgba(20, 8, 0, 0.95) 100%) !important;
+            backdrop-filter: blur(24px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.75) !important;
+            transform: translate3d(0, 0, 0) !important;
+            animation: gold-card-pulse-dark 4s ease-in-out infinite;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-obsidian:hover {
-            transform: translateY(-7px) scale(1.04) translateZ(0) !important;
-            box-shadow: 
-                inset 0 3px 2.5px 0 rgba(255, 255, 255, 0.75),
-                0 30px 70px -6px rgba(217, 119, 6, 0.80),
-                0 0 50px rgba(251, 191, 36, 0.55) !important;
+            transform: translateY(-3px) translateZ(0) !important;
             border-color: #fef08a !important;
         }
 
@@ -403,22 +429,17 @@
         }
 
         .neu-hero-gold-studio {
-            background: linear-gradient(145deg, rgba(69, 26, 3, 0.78) 0%, rgba(20, 8, 0, 0.92) 100%) !important;
+            background: linear-gradient(145deg, rgba(69, 26, 3, 0.80) 0%, rgba(20, 8, 0, 0.94) 100%) !important;
             backdrop-filter: blur(22px) !important;
             -webkit-backdrop-filter: blur(22px) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.80) !important;
-            box-shadow: 
-                inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.40),
-                inset 0 -1px 2px 0 rgba(251, 191, 36, 0.25),
-                0 16px 38px -4px rgba(217, 119, 6, 0.55),
-                0 0 28px rgba(251, 191, 36, 0.30) !important;
-            transform: scale(1) translateZ(0);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.75) !important;
+            transform: translate3d(0, 0, 0) !important;
+            animation: gold-card-pulse-dark 4s ease-in-out infinite;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-studio:hover {
-            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            transform: translateY(-3px) translateZ(0) !important;
             border-color: rgba(251, 191, 36, 1) !important;
-            box-shadow: inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.55), 0 24px 50px -4px rgba(217, 119, 6, 0.70), 0 0 40px rgba(251, 191, 36, 0.45) !important;
         }
 
         /* 3. Apple Ceramic Porcelain (پیشنهاد سوم - سرامیک پرسلین سفید با وقار و کنتراست شفاف) */
@@ -447,26 +468,16 @@
         }
 
         .neu-hero-gold-ceramic {
-            background: linear-gradient(145deg, rgba(255, 251, 235, 0.95) 0%, rgba(254, 243, 199, 0.90) 100%) !important;
+            background: linear-gradient(145deg, rgba(255, 253, 245, 0.97) 0%, rgba(254, 243, 199, 0.72) 50%, rgba(253, 230, 138, 0.50) 100%) !important;
             backdrop-filter: blur(24px) !important;
             -webkit-backdrop-filter: blur(24px) !important;
-            border: 1.5px solid rgba(217, 119, 6, 0.80) !important;
-            box-shadow: 
-                inset 0 2.5px 2px 0 rgba(255, 255, 255, 1),
-                inset 0 -1.5px 2px 0 rgba(217, 119, 6, 0.25),
-                -5px -5px 16px rgba(255, 255, 255, 0.95),
-                0 16px 38px -4px rgba(217, 119, 6, 0.32),
-                0 0 28px rgba(251, 191, 36, 0.25) !important;
-            transform: scale(1) translateZ(0);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+            border: 1.5px solid rgba(217, 119, 6, 0.65) !important;
+            transform: translate3d(0, 0, 0) !important;
+            animation: gold-card-pulse-light 4s ease-in-out infinite;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-ceramic:hover {
-            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
-            box-shadow: 
-                inset 0 3px 2px 0 rgba(255, 255, 255, 1),
-                -8px -8px 24px rgba(255, 255, 255, 1),
-                0 26px 52px -6px rgba(217, 119, 6, 0.45),
-                0 0 42px rgba(251, 191, 36, 0.40) !important;
+            transform: translateY(-3px) translateZ(0) !important;
             border-color: rgba(217, 119, 6, 1) !important;
         }
 
@@ -942,21 +953,22 @@
                                  class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-all duration-300 h-full">
 
                                 <template x-if="item.symbol === 'gold18'">
-                                    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem]">
-                                        {{-- Apple Overhead Conical Spotlight --}}
-                                        <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-32 rounded-full blur-2xl opacity-60"
-                                             :class="isLightTheme ? 'bg-amber-300/50' : 'bg-amber-400/35'"></div>
-                                        {{-- Ambient Depth Vignette --}}
-                                        <div class="absolute inset-0" :class="isLightTheme ? 'bg-[radial-gradient(ellipse_at_50%_0%,rgba(251,191,36,0.18),transparent_70%)]' : 'bg-[radial-gradient(ellipse_at_50%_0%,rgba(251,191,36,0.28),transparent_70%)]'"></div>
-                                        {{-- Silky hardware-accelerated 3D light sheen --}}
-                                        <div class="absolute inset-0 animate-gold-sheen-silk bg-gradient-to-r from-transparent via-amber-200/25 to-transparent w-2/3 h-full"></div>
+                                    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem] z-0">
+                                        {{-- Silky Liquid Gold Light Beam (پرتو متحرک آینه‌ای لوکس) --}}
+                                        <div class="absolute -inset-y-12 -left-1/2 w-[55%] animate-gold-beam pointer-events-none"
+                                             style="background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.0) 35%, rgba(254,240,138,0.50) 48%, rgba(255,255,255,0.80) 52%, rgba(254,240,138,0.50) 56%, rgba(255,255,255,0.0) 70%, transparent 85%); filter: blur(2px);"></div>
                                     </div>
                                 </template>
 
-                                {{-- هدر کارت: عنوان نماد و فلش روند اپلی (بدون تگ شاخص بازار) --}}
-                                <div class="relative flex justify-between items-center gap-3">
-                                    <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
-                                       class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
+                                {{-- هدر کارت: عنوان نماد و فلش روند اپلی همراه با ستاره ظریف طلایی --}}
+                                <div class="relative flex justify-between items-center gap-3 z-10">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <template x-if="item.symbol === 'gold18'">
+                                            <span class="text-amber-500 animate-sparkle text-sm xl:text-base select-none leading-none">✦</span>
+                                        </template>
+                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
+                                           class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
+                                    </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
                                             <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
