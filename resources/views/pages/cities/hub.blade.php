@@ -1,8 +1,8 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
 @section('title', $info['title'] . ' | طلالایو')
-@section('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی ویژه گالری‌های طلا و جواهر در شهر ' . $info['name'] . ' و ' . $info['bazaar'] . '. نمایش لحظه‌ای نرخ طلا، سکه و ویترین روی تلویزیون بدون مینی‌کیس.')
-@section('meta_keywords', 'تابلو طلافروشی ' . $info['name'] . ', تابلو دیجیتال طلا ' . $info['name'] . ', تابلو قیمت طلا ' . $info['bazaar'] . ', طلالایو')
+@section('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و تابلو طلا فروشی ویژه گالری‌های طلا و جواهر در شهر ' . $info['name'] . ' و ' . $info['bazaar'] . '. نمایش لحظه‌ای نرخ طلا، سکه و ویترین روی تلویزیون بدون مینی‌کیس.')
+@section('meta_keywords', 'تابلو طلا فروشی ' . $info['name'] . ', تابلو طلافروشی ' . $info['name'] . ', تابلوی طلا فروشی ' . $info['name'] . ', تابلو دیجیتال طلا ' . $info['name'] . ', تابلو قیمت طلا ' . $info['bazaar'] . ', طلالایو')
 
 @section('canonical', 'https://talalive.ir/cities/' . $city)
 
@@ -23,7 +23,7 @@
         {
           "@@type": "ListItem",
           "position": 2,
-          "name": "تابلو طلافروشی در {{ $info['name'] }}",
+          "name": "تابلو طلافروشی و طلا فروشی در {{ $info['name'] }}",
           "item": "https://talalive.ir/cities/{{ $city }}"
         }
       ]
@@ -41,7 +41,7 @@
             <span>سامانه اختصاصی صنف طلا و جواهر {{ $info['name'] }}</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
-            تابلوی هوشمند طلافروشی در <br>
+            تابلوی هوشمند طلافروشی و طلا فروشی در <br>
             <span class="text-amber-500">{{ $info['name'] }} ({{ $info['bazaar'] }})</span>
         </h1>
         <p class="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">

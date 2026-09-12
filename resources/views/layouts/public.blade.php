@@ -23,17 +23,17 @@
         }
     </script>
 
-    <title>@yield('title', 'طلالایو | سامانه ابری تابلوی هوشمند طلافروشی و نرخ زنده طلا')</title>
-    <meta name="description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی، نمایش زنده نرخ طلا و سکه روی تلویزیون مغازه بدون نیاز به کیس و کابل. فرمول‌ساز سود و ویترین لوکس در طلالایو.')">
-    <meta name="keywords" content="@yield('meta_keywords', 'تابلوی هوشمند طلافروشی, نرم افزار تابلوی طلا, تابلو قیمت طلا برای تلویزیون, تابلو دیجیتال طلافروشی, محاسبه قیمت طلا, طلالایو')">
+    <title>@yield('title', 'طلالایو | تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی')</title>
+    <meta name="description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر آنلاین نرخ طلا و سکه برای مغازه طلا فروشی. اتصال تلویزیون بدون نیاز به کیس، فرمول‌ساز سود و ویترین لوکس در طلالایو.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'تابلوی هوشمند طلافروشی, تابلوی طلا فروشی, تابلو طلا فروشی, نرم افزار تابلوی طلا, تابلو قیمت طلا برای تلویزیون, تابلو دیجیتال طلافروشی, نرم افزار طلا فروشی, محاسبه قیمت طلا, طلالایو')">
     <meta name="robots" content="index, follow">
     <meta name="author" content="طلالایو - TalaLive">
     <link rel="canonical" href="@yield('canonical', url()->current())">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی | طلالایو')">
-    <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه‌ای طلا، سکه و ارز ویژه تلویزیون طلافروشی‌ها.')">
+    <meta property="og:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو')">
+    <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه‌ای طلا، سکه و ارز ویژه تلویزیون مغازه‌های طلافروشی و طلا فروشی‌ها.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="طلالایو">
     <meta property="og:image" content="{{ asset('images/logo.png') }}">
@@ -41,8 +41,8 @@
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی | طلالایو')">
-    <meta name="twitter:description" content="@yield('meta_description', 'نمایش آنلاین و لحظه‌ای نرخ طلا و مسکوکات روی تلویزیون طلافروشی بدون مینی‌کیس.')">
+    <meta name="twitter:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو')">
+    <meta name="twitter:description" content="@yield('meta_description', 'نمایش آنلاین و لحظه‌ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی بدون مینی‌کیس.')">
     <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
     <!-- Schema.org Global Graph (Organization + WebSite) -->
@@ -54,11 +54,17 @@
           "@@type": "Organization",
           "@@id": "https://talalive.ir/#organization",
           "name": "طلالایو (TalaLive)",
-          "alternateName": "سامانه ابری تابلوی هوشمند طلافروشی",
+          "alternateName": [
+            "سامانه ابری تابلوی هوشمند طلافروشی",
+            "تابلوی طلا فروشی",
+            "تابلو طلا فروشی",
+            "نرم افزار تابلوی طلا فروشی",
+            "نمایشگر نرخ طلا فروشی"
+          ],
           "url": "https://talalive.ir",
           "logo": "https://talalive.ir/images/logo.png",
           "foundingDate": "2024",
-          "description": "نخستین و پیشرفته‌ترین سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه و ارز و ویترین دیجیتال گالری‌های طلا و جواهر بدون نیاز به مینی‌کیس.",
+          "description": "نخستین و پیشرفته‌ترین سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه و ارز و ویترین دیجیتال گالری‌های طلا و جواهر و مغازه طلا فروشی بدون نیاز به مینی‌کیس.",
           "contactPoint": [
             {
               "@@type": "ContactPoint",
@@ -80,7 +86,7 @@
           "@@type": "WebSite",
           "@@id": "https://talalive.ir/#website",
           "url": "https://talalive.ir",
-          "name": "طلالایو | سامانه هوشمند تابلوی طلافروشی",
+          "name": "طلالایو | سامانه هوشمند تابلوی طلافروشی و طلا فروشی",
           "publisher": {
             "@@id": "https://talalive.ir/#organization"
           },
@@ -403,7 +409,7 @@
                     </div>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
-                    طلالایو پیشرفته‌ترین سامانه تابلوی طلافروشی مبتنی بر فناوری ابری در ایران است. بدون نیاز به کامپیوتر یا دانگل مجزا، هر نوع تلویزیون هوشمند را به تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه، حباب بازار و ویترین جواهرات بدل کنید.
+                    طلالایو پیشرفته‌ترین سامانه تابلوی طلافروشی مبتنی بر فناوری ابری در ایران است. بدون نیاز به کامپیوتر یا دانگل مجزا، هر نوع تلویزیون در مغازه طلا فروشی را به تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه، حباب بازار و ویترین جواهرات بدل کنید.
                 </p>
                 <div class="flex items-center gap-3 text-xs text-slate-500 pt-1">
                     <span class="flex items-center gap-1">
@@ -422,9 +428,9 @@
                 <div class="font-bold text-white text-sm">سامانه و تابلوی هوشمند</div>
                 <ul class="space-y-2 text-xs">
                     <li><a href="/" class="hover:text-amber-400 transition-colors">صفحه اصلی و اتصال تلویزیون</a></li>
-                    <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی</a></li>
+                    <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی و طلا فروشی</a></li>
                     <li><a href="{{ route('public.led-vs-smart-board') }}" class="hover:text-amber-400 transition-colors font-bold text-amber-300">مقایسه تابلوی هوشمند با تابلو LED</a></li>
-                    <li><a href="{{ route('public.pricing') }}" class="hover:text-amber-400 transition-colors">تعرفه‌ها و بسته‌های اشتراک</a></li>
+                    <li><a href="{{ route('public.pricing') }}" class="hover:text-amber-400 transition-colors">تعرفه‌ها و قیمت تابلو طلا فروشی</a></li>
                     <li><a href="{{ route('public.tv-setup-guide') }}" class="hover:text-amber-400 transition-colors">راهنمای اتصال تلویزیون مغازه</a></li>
                     <li><a href="{{ route('admin.login') }}" class="hover:text-amber-400 transition-colors">ورود به پنل مدیریت گالری</a></li>
                     <li><a href="{{ route('admin.register') }}" class="hover:text-amber-400 transition-colors">ثبت‌نام گالری جدید</a></li>
@@ -438,7 +444,7 @@
                     <li><a href="{{ route('public.tools.gold-price') }}" class="hover:text-amber-400 transition-colors">محاسبه قیمت طلا با سود و اجرت</a></li>
                     <li><a href="{{ route('public.tools.coin-bubble') }}" class="hover:text-amber-400 transition-colors">محاسبه‌گر آنلاین حباب انواع سکه</a></li>
                     <li><a href="{{ route('public.tools.mesghal') }}" class="hover:text-amber-400 transition-colors">فرمول تبدیل مظنه مثقال به گرم</a></li>
-                    <li><a href="{{ route('public.tools.melted-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه طلای آبشده و عیار خطی</a></li>
+                    <li><a href="{{ route('public.tools.melted-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه طلای آب شده و عیار خطی</a></li>
                     <li><a href="{{ route('public.tools.karat-converter') }}" class="hover:text-amber-400 transition-colors">تبدیل عیار طلا (۷۵۰ به سایر عیارها)</a></li>
                     <li><a href="{{ route('public.guides') }}" class="hover:text-blue-400 transition-colors">دانشنامه تخصصی و مقالات صنف طلا</a></li>
                 </ul>
@@ -479,7 +485,11 @@
                 <span class="text-slate-400 font-bold">دسترسی سریع کلمات کلیدی:</span>
                 <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">تابلوی هوشمند طلافروشی</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.led-vs-smart-board') }}" class="text-slate-400 hover:text-amber-400">تابلو ال ای دی طلافروشی</a>
+                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">تابلو طلا فروشی</a>
+                <span>&bull;</span>
+                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">تابلوی طلا فروشی</a>
+                <span>&bull;</span>
+                <a href="{{ route('public.led-vs-smart-board') }}" class="text-slate-400 hover:text-amber-400">تابلو ال ای دی طلا فروشی</a>
                 <span>&bull;</span>
                 <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">نرم‌افزار تابلوی زنده طلا</a>
                 <span>&bull;</span>
@@ -487,13 +497,13 @@
                 <span>&bull;</span>
                 <a href="{{ route('public.tools.gold-price') }}" class="text-slate-400 hover:text-amber-400">محاسبه آنلاین قیمت طلا با اجرت</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.tools.coin-bubble') }}" class="text-slate-400 hover:text-amber-400">محاسبه حباب سکه امامی و بهار آزادی</a>
+                <a href="{{ route('public.tools.coin-bubble') }}" class="text-slate-400 hover:text-amber-400">حباب‌سنج سکه امامی و نیم‌سکه</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.tools.mesghal') }}" class="text-slate-400 hover:text-amber-400">فرمول تبدیل مظنه مثقال به گرم</a>
+                <a href="{{ route('public.tools.mesghal') }}" class="text-slate-400 hover:text-amber-400">فرمول مظنه مثقال طلا به گرم</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.tools.melted-gold') }}" class="text-slate-400 hover:text-amber-400">محاسبه آنلاین طلای آبشده</a>
+                <a href="{{ route('public.tools.melted-gold') }}" class="text-slate-400 hover:text-amber-400">محاسبه آنلاین طلای آب شده</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.pricing') }}" class="text-slate-400 hover:text-amber-400">قیمت تابلو هوشمند طلا</a>
+                <a href="{{ route('public.pricing') }}" class="text-slate-400 hover:text-amber-400">قیمت تابلو طلا فروشی</a>
             </div>
             
             <div class="text-center text-[11px] text-slate-500">

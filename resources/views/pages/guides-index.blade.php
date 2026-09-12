@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', 'دانشنامه و مقالات تخصصی صنف طلا و جواهر | طلالایو')
-@section('meta_description', 'مجموعه مقالات و راهنماهای آموزشی تخصصی درباره تابلوی هوشمند طلافروشی، راهنمای اتصال تلویزیون، فرمول‌های محاسبه مظنه و قوانین مالیات طلا در سال ۱۴۰۴.')
-@section('meta_keywords', 'مقالات طلافروشی, تابلوی هوشمند طلافروشی, آموزش اتصال تلویزیون به تابلوی طلا, فرمول مظنه طلا, مالیات طلا ۱۴۰۴')
+@section('title', 'دانشنامه و مقالات تخصصی صنف طلا، تابلو طلا فروشی و تابلوی طلافروشی | طلالایو')
+@section('meta_description', 'مجموعه مقالات و راهنماهای تخصصی درباره تابلو طلا فروشی، تابلوی هوشمند طلافروشی، راهنمای اتصال تلویزیون مغازه، فرمول‌های محاسبه طلای آب شده، مظنه و مالیات طلا.')
+@section('meta_keywords', 'مقالات طلافروشی, مقالات طلا فروشی, تابلو طلا فروشی, تابلوی طلا فروشی, تابلوی هوشمند طلافروشی, طلای آب شده, فرمول مظنه طلا, مالیات طلا ۱۴۰۴')
 
 @section('schema')
 <script type="application/ld+json">
@@ -46,10 +46,10 @@
             <span>پایگاه دانش تخصصی طلالایو</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
-            راهنماها و مقالات تخصصی صنف طلا و جواهر
+            راهنماها و مقالات تخصصی صنف طلا و طلا فروشی
         </h1>
         <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
-            آموزش‌های کاربردی درباره تجهیزات نمایشگر، تکنولوژی‌های تابلوی ابری، فرمول‌های دقیق حسابداری طلا و تنظیمات تلویزیون طلافروشی.
+            آموزش‌های کاربردی درباره تجهیزات تابلو طلا فروشی، تکنولوژی‌های تابلوی ابری، فرمول‌های دقیق حسابداری طلای آب شده و تنظیمات تلویزیون طلافروشی.
         </p>
     </div>
 
@@ -62,11 +62,11 @@
                 <span class="px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold">فرمول‌های طلا</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                     <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}">
-                        فرمول دقیق محاسبه قیمت طلا ۱۸ عیار با اجرت و سود اتحادیه
+                        فرمول دقیق محاسبه قیمت طلا ۱۸ عیار با اجرت و سود اتحادیه در طلا فروشی
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    آموزش گام‌به‌گام نحوه محاسبه فاکتور طلا، درصد اجرت، سود ۷ درصد قانونی و قانون جدید مالیات ارزش افزوده.
+                    آموزش گام‌به‌گام نحوه محاسبه فاکتور طلا، درصد اجرت، سود ۷ درصد قانونی مغازه طلا فروشی و قانون جدید مالیات ارزش افزوده.
                 </p>
             </div>
             <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
@@ -81,11 +81,11 @@
                 <span class="px-3 py-1 rounded-lg bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-[11px] font-bold">سخت‌افزار و تلویزیون</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                     <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}">
-                        راهنمای انتخاب بهترین تلویزیون برای تابلوی مغازه طلافروشی
+                        راهنمای انتخاب بهترین تلویزیون برای تابلو طلا فروشی و مغازه طلافروشی
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    مقایسه پنل‌های سامسونگ، ال‌جی، سونی و اسنوا از نظر روشنایی، زاویه دید و عدم داغ شدن در ساعات کاری.
+                    مقایسه پنل‌های سامسونگ، ال‌جی، سونی و اسنوا برای تابلو طلا فروشی از نظر روشنایی، زاویه دید و دوام مداوم.
                 </p>
             </div>
             <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
@@ -100,11 +100,11 @@
                 <span class="px-3 py-1 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">قوانین و مالیات</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                     <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}">
-                        قانون جدید مالیات طلا و اجرت در سامانه مودیان صنف طلا
+                        قانون جدید مالیات طلا و اجرت در سامانه مودیان صنف طلا و مغازه طلا فروشی
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    بررسی تکالیف مالیاتی طلافروشان، معافیت اصل طلا و نحوه صدور صورتحساب الکترونیکی در پایانه فروشگاهی.
+                    بررسی تکالیف مالیاتی طلافروشان و مغازه طلا فروشی، معافیت اصل طلا و نحوه صدور صورتحساب الکترونیکی در پایانه فروشگاهی.
                 </p>
             </div>
             <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
@@ -119,11 +119,11 @@
                 <span class="px-3 py-1 rounded-lg bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-[11px] font-bold">مسکوکات</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                     <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}">
-                        فرمول محاسبه حباب سکه امامی و بهار آزادی با انس و دلار
+                        فرمول محاسبه حباب سکه امامی، بهار آزادی، نیم‌سکه و ربع‌سکه
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    نحوه محاسبه ارزش ذاتی سکه بر اساس وزن، عیار ۹۰۰، حق ضرب بانک مرکزی و تشخیص حباب مثبت و منفی.
+                    نحوه محاسبه ارزش ذاتی انواع سکه، نیم سکه، نیم‌سکه، ربع سکه و ربع‌سکه بر اساس وزن، عیار ۹۰۰، حق ضرب بانک مرکزی و تشخیص حباب.
                 </p>
             </div>
             <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
@@ -138,7 +138,7 @@
                 <span class="px-3 py-1 rounded-lg bg-rose-500/10 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 text-[11px] font-bold">مقایسه تجهیزات</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                     <a href="{{ route('public.led-vs-smart-board') }}">
-                        مقایسه تابلو LED طلافروشی با تلویزیون هوشمند
+                        مقایسه تابلو LED با تلویزیون تابلو طلا فروشی
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -207,10 +207,10 @@
     {{-- بنر مشاوره و راه‌اندازی --}}
     <div class="rounded-3xl p-8 sm:p-12 bg-gradient-to-r from-amber-500/10 via-white to-blue-500/10 dark:from-slate-900/80 dark:via-slate-900/80 dark:to-slate-900/80 border border-slate-200 dark:border-slate-800 text-center space-y-6 shadow-sm">
         <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            هنوز برای انتخاب تابلوی طلافروشی خود سوال دارید؟
+            هنوز برای انتخاب تابلو طلا فروشی یا تابلوی طلافروشی خود سوال دارید؟
         </h2>
         <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-            کارشناسان طلالایو آماده ارائه مشاوره رایگان تلفنی جهت انتخاب بهترین سایز تلویزیون، تنظیمات مغازه و نصب سامانه هستند.
+            کارشناسان طلالایو آماده ارائه مشاوره رایگان تلفنی جهت انتخاب بهترین سایز تلویزیون، تنظیمات مغازه طلا فروشی و نصب سامانه هستند.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="tel:09187009064" class="px-8 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/20 cursor-pointer">

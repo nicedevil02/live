@@ -1,8 +1,8 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
-@section('title', 'محاسبه‌گر آنلاین طلای آبشده، انگ و عیار شرطی ۷۵۰ | طلالایو')
-@section('meta_description', 'ابزار تخصصی بنکداران و خریداران طلای آبشده برای تبدیل وزن و عیار انگ ری‌گیری به وزن شرطی ۷۵۰ و محاسبه ارزش ریالی دقیق با نرخ لحظه‌ای طلالایو.')
-@section('meta_keywords', 'محاسبه طلای آبشده, عیار انگ طلا, طلای شرطی ۷۵۰, ری گیری طلا, فرمول طلای آبشده, طلالایو')
+@section('title', 'محاسبه طلای آب شده و طلای آبشده | محاسبه وزن عیار شرطی ۷۵۰ و انگ | طلالایو')
+@section('meta_description', 'ابزار آنلاین و تخصصی محاسبه طلای آب شده و طلای آبشده برای تبدیل وزن و عیار انگ ری‌گیری به وزن شرطی ۷۵۰ و ارزش ریالی با نرخ زنده طلالایو.')
+@section('meta_keywords', 'طلای آب شده, محاسبه طلای آب شده, طلای آبشده, محاسبه طلای آبشده, طلا آب شده, عیار انگ طلا, طلای شرطی ۷۵۰, ری گیری طلا, طلالایو')
 
 @section('canonical', 'https://talalive.ir/tools/melted-gold')
 
@@ -13,11 +13,17 @@
   "@@graph": [
     {
       "@@type": "WebApplication",
-      "name": "محاسبه‌گر تخصصی طلای آبشده و عیار انگ",
+      "name": "محاسبه‌گر تخصصی طلای آب شده و طلای آبشده",
+      "alternateName": [
+        "طلای آب شده",
+        "محاسبه طلای آب شده",
+        "فرمول طلای آبشده",
+        "محاسبه طلا آب شده"
+      ],
       "url": "https://talalive.ir/tools/melted-gold",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
-      "description": "ابزار محاسبه وزن شرطی و ارزش قطعات طلای آبشده بر اساس عیار ری‌گیری و نرخ روز طلای ۱۸ عیار."
+      "description": "ابزار محاسبه وزن شرطی و ارزش قطعات طلای آب شده بر اساس عیار ری‌گیری و نرخ روز طلای ۱۸ عیار."
     },
     {
       "@@type": "BreadcrumbList",
@@ -37,7 +43,7 @@
         {
           "@@type": "ListItem",
           "position": 3,
-          "name": "محاسبه‌گر طلای آبشده",
+          "name": "محاسبه‌گر طلای آب شده",
           "item": "https://talalive.ir/tools/melted-gold"
         }
       ]
@@ -55,7 +61,7 @@
             <span>ابزار استاندارد معاملات بنکداری و کیفی‌های طلا</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight">
-            محاسبه‌گر آنلاین طلای آبشده <br>
+            محاسبه‌گر آنلاین طلای آب شده و آبشده <br>
             <span class="text-amber-500">تبدیل عیار انگ به وزن شرطی ۱۸ عیار (۷۵۰)</span>
         </h1>
         <p class="text-slate-600 dark:text-slate-400 text-sm">

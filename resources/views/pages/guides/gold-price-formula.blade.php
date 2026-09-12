@@ -1,4 +1,4 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
 @section('title', $guide['title'] . ' | پایگاه دانش طلالایو')
 @section('meta_description', $guide['description'])
@@ -67,15 +67,15 @@
     </div>
 
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-6 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white">فرمول استاندارد و قانونی اتحادیه طلا و جواهر</h2>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">فرمول استاندارد محاسبه قیمت طلا در مغازه طلا فروشی</h2>
         <p>
-            یکی از مهم‌ترین چالش‌های مشتریان و طلافروشان، نحوه دقیق محاسبه فاکتور نهایی طلا بر اساس آخرین مقررات مالیاتی است. طبق قانون مصوب، اصل طلا از پرداخت هرگونه مالیات معاف است و مالیات ارزش افزوده (۹ درصد) منحصراً به <strong>مجموع اجرت ساخت و سود فروشنده</strong> تعلق می‌گیرد.
+            یکی از مهم‌ترین چالش‌های خریداران و فروشندگان در مغازه طلا فروشی، نحوه دقیق محاسبه فاکتور نهایی طلا بر اساس آخرین مقررات مالیاتی است. طبق قانون مصوب اتحادیه، اصل طلا از پرداخت هرگونه مالیات معاف است و مالیات ارزش افزوده (۹ درصد) منحصراً به <strong>مجموع اجرت ساخت و سود طلا فروشی</strong> تعلق می‌گیرد.
         </p>
         <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm font-mono dir-ltr text-center font-bold text-amber-700 dark:text-amber-300">
             قیمت نهایی = وزن × [ نرخ خام ۱۸ عیار + اجرت ] + سود ۷٪ + ۹٪ مالیات (روی اجرت و سود)
         </div>
         <p>
-            برای سادگی محاسبات، می‌توانید از <a href="{{ route('public.tools.gold-price') }}" class="text-amber-500 font-bold underline">ماشین‌حساب آنلاین قیمت طلای طلالایو</a> استفاده فرمایید. همچنین اگر مایلید این قیمت‌ها با سود قانونی شما مستقیماً روی تلویزیون گالری پخش شوند، سامانه طلالایو این فرایند را تمام‌خودکار انجام می‌دهد.
+            برای سادگی محاسبات، می‌توانید از <a href="{{ route('public.tools.gold-price') }}" class="text-amber-500 font-bold underline">ماشین حساب طلا و محاسبه‌گر قیمت طلای طلالایو</a> استفاده فرمایید. همچنین اگر مایلید این قیمت‌ها با فرمول و سود قانونی شما مستقیماً روی <strong>تابلو طلا فروشی</strong> و تلویزیون گالری پخش شوند، سامانه ابری طلالایو این فرایند را تمام‌خودکار انجام می‌دهد.
         </p>
     </div>
 

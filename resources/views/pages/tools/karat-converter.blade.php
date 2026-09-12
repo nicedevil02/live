@@ -1,8 +1,8 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
-@section('title', 'تبدیل عیار طلا آنلاین (۷۵۰ به ۷۰۵، ۹۹۹ و...) | فرمول تبدیل عیار | طلالایو')
-@section('meta_description', 'ابزار آنلاین و رایگان تبدیل انواع عیارهای طلا (۱۸ عیار ۷۵۰، عیار یزدی ۷۰۵، طلای ۲۴ عیار شمش ۹۹۹ و ۲۱ عیار) به همراه جدول مقایسه و فرمول ریاضی.')
-@section('meta_keywords', 'تبدیل عیار طلا, عیار ۷۵۰ به ۷۰۵, طلای ۱۸ عیار به ۲۴ عیار, جدول عیارهای طلا, طلالایو')
+@section('title', 'ماشین حساب تبدیل عیار طلا آنلاین (۷۵۰ به ۷۰۵، ۹۹۹) | طلای آب شده و شمش | طلالایو')
+@section('meta_description', 'ابزار آنلاین و ماشین حساب رایگان تبدیل انواع عیارهای طلا و طلای آب شده (۱۸ عیار ۷۵۰، عیار یزدی ۷۰۵، طلای ۲۴ عیار شمش ۹۹۹ و ۲۱ عیار) با فرمول اتحادیه.')
+@section('meta_keywords', 'تبدیل عیار طلا, ماشین حساب طلا, ماشین‌حساب طلا, طلای آب شده, طلای آبشده, عیار ۷۵۰ به ۷۰۵, طلای ۱۸ عیار به ۲۴ عیار, جدول عیارهای طلا')
 
 @section('canonical', 'https://talalive.ir/tools/karat-converter')
 
@@ -13,7 +13,8 @@
   "@@graph": [
     {
       "@@type": "WebApplication",
-      "name": "ابزار تبدیل عیار طلا",
+      "name": "ابزار و ماشین حساب تبدیل عیار طلا",
+      "alternateName": ["ماشین حساب طلا", "تبدیل عیار طلای آب شده", "تبدیل عیار ۷۵۰ به ۷۰۵"],
       "url": "https://talalive.ir/tools/karat-converter",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
@@ -55,7 +56,7 @@
             <span>استاندارد بین‌المللی خلوص طلا در هزار</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight">
-            ماشین‌حساب آنلاین تبدیل عیار طلا <br>
+            ماشین حساب آنلاین تبدیل عیار طلا و طلای آب شده <br>
             <span class="text-amber-500">تبدیل عیار مبدأ به عیار مقصد</span>
         </h1>
         <p class="text-slate-600 dark:text-slate-400 text-sm">
