@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('title', 'دانشنامه و مقالات تخصصی صنف طلا و جواهر | طلالایو')
-@section('meta_description', 'مجموعه مقالات و راهنماهای آموزشی تخصصی درباره تابلوی هوشمند طلافروشی، راهنمای اتصال تلویزیون، فرمول‌های محاسبه مظنه و قوانین مالیات طلا.')
-@section('meta_keywords', 'مقالات طلافروشی, تابلوی هوشمند طلافروشی, آموزش اتصال تلویزیون به تابلوی طلا, فرمول مظنه طلا, مالیات طلا ۱۴۰۰')
+@section('meta_description', 'مجموعه مقالات و راهنماهای آموزشی تخصصی درباره تابلوی هوشمند طلافروشی، راهنمای اتصال تلویزیون، فرمول‌های محاسبه مظنه و قوانین مالیات طلا در سال ۱۴۰۴.')
+@section('meta_keywords', 'مقالات طلافروشی, تابلوی هوشمند طلافروشی, آموزش اتصال تلویزیون به تابلوی طلا, فرمول مظنه طلا, مالیات طلا ۱۴۰۴')
 
 @section('schema')
 <script type="application/ld+json">
@@ -56,77 +56,118 @@
     {{-- شبکه مقالات --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
-        {{-- کارت ۱ --}}
+        {{-- کارت ۱: فرمول محاسبه قیمت طلا ۱۸ عیار --}}
         <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
-                <span class="px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold">تابلوی طلافروشی</span>
+                <span class="px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold">فرمول‌های طلا</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-                    <a href="{{ route('public.smart-gold-board') }}">
-                        چرا تابلوهای سنتی LED منسوخ شدند؟ مزایای تابلوی ابری
+                    <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}">
+                        فرمول دقیق محاسبه قیمت طلا ۱۸ عیار با اجرت و سود اتحادیه
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    بررسی جامع هزینه‌ها، استهلاک، فونت‌های پیکسلی زشت تابلوهای قدیمی و چرایی مهاجرت صنف طلا به تلویزیون‌های هوشمند با کیفیت 4K.
+                    آموزش گام‌به‌گام نحوه محاسبه فاکتور طلا، درصد اجرت، سود ۷ درصد قانونی و قانون جدید مالیات ارزش افزوده.
                 </p>
             </div>
-            <a href="{{ route('public.smart-gold-board') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
-                <span>مطالعه کامل راهنما</span>
+            <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
                 <span>&larr;</span>
             </a>
         </article>
 
-        {{-- کارت ۲ --}}
+        {{-- کارت ۲: بهترین تلویزیون مغازه --}}
         <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
                 <span class="px-3 py-1 rounded-lg bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-[11px] font-bold">سخت‌افزار و تلویزیون</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-                    <a href="{{ route('public.tv-setup-guide') }}">
-                        راهنمای اتصال تلویزیون سامسونگ، ال‌جی و اندروید به تابلوی طلا
+                    <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}">
+                        راهنمای انتخاب بهترین تلویزیون برای تابلوی مغازه طلافروشی
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    آموزش مرحله‌به‌مرحله فعال‌سازی مرورگر وب، تنظیم صفحه خانه، جلوگیری از به خواب رفتن تلویزیون و اسکن بدون کابل در چند ثانیه.
+                    مقایسه پنل‌های سامسونگ، ال‌جی، سونی و اسنوا از نظر روشنایی، زاویه دید و عدم داغ شدن در ساعات کاری.
                 </p>
             </div>
-            <a href="{{ route('public.tv-setup-guide') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
-                <span>مطالعه کامل راهنما</span>
+            <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
                 <span>&larr;</span>
             </a>
         </article>
 
-        {{-- کارت ۳ --}}
+        {{-- کارت ۳: مالیات طلا و سامانه مودیان --}}
         <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
-                <span class="px-3 py-1 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">ابزار و محاسبات</span>
+                <span class="px-3 py-1 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">قوانین و مالیات</span>
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-                    <a href="{{ route('public.gold-calculator') }}">
-                        فرمول دقیق محاسبه قیمت طلا با اجرت، سود و قانون جدید مالیات
+                    <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}">
+                        قانون جدید مالیات طلا و اجرت در سامانه مودیان صنف طلا
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    قانون معافیت مالیاتی اصل طلا مصوب ۱۴۰۰ چگونه کار می‌کند؟ محاسبه آنلاین قیمت فاکتور و تحلیل درصد حباب انواع مسکوکات بانکی.
+                    بررسی تکالیف مالیاتی طلافروشان، معافیت اصل طلا و نحوه صدور صورتحساب الکترونیکی در پایانه فروشگاهی.
                 </p>
             </div>
-            <a href="{{ route('public.gold-calculator') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
-                <span>استفاده از ماشین‌حساب</span>
+            <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
                 <span>&larr;</span>
             </a>
         </article>
 
-        {{-- کارت ۴ --}}
-        <article class="glass-panel p-7 rounded-3xl space-y-4 flex flex-col justify-between border border-slate-200 dark:border-slate-800">
+        {{-- کارت ۴: فرمول حباب سکه --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
-                <span class="px-3 py-1 rounded-lg bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-[11px] font-bold">فرمول‌های صنفی</span>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">
-                    فرمول تبدیل مظنه (مثقال طلا) به گرم طلای ۱۸ عیار
+                <span class="px-3 py-1 rounded-lg bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-[11px] font-bold">مسکوکات</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}">
+                        فرمول محاسبه حباب سکه امامی و بهار آزادی با انس و دلار
+                    </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    مظنه طلا بر اساس یک مثقال طلای ۱۷ عیار (عیار ۷۰۵) در بازار تهران قیمت‌گذاری می‌شود. با تقسیم عدد مظنه بر ۴.۳۳۱۸ (یا ضرب در ۷۵۰ تقسیم بر ۴.۶۰۸ ضرب در ۷۰۵)، نرخ هر گرم طلای ۱۸ عیار به دست می‌آید.
+                    نحوه محاسبه ارزش ذاتی سکه بر اساس وزن، عیار ۹۰۰، حق ضرب بانک مرکزی و تشخیص حباب مثبت و منفی.
                 </p>
             </div>
-            <div class="text-[11px] text-slate-500 pt-2 font-mono">
-                فرمول: قیمت هر گرم ۱۸ عیار = مظنه / ۴.۳۳۱۸
+            <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت ۵: مقایسه با تابلو LED --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-rose-500/10 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 text-[11px] font-bold">مقایسه تجهیزات</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.led-vs-smart-board') }}">
+                        مقایسه تابلو LED طلافروشی با تلویزیون هوشمند
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    چرا دوران تابلوهای پرمصرف و گران‌قیمت LED به سر آمده و چگونه می‌توان ۴۰ میلیون تومان در راه‌اندازی مغازه صرفه‌جویی کرد؟
+                </p>
             </div>
+            <a href="{{ route('public.led-vs-smart-board') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مشاهده مقایسه</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت ۶: تبدیل مظنه به گرم --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 text-[11px] font-bold">ابزارهای صنفی</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.tools.mesghal') }}">
+                        تبدیل آنلاین مظنه مثقال به گرم ۱۸ عیار با ضریب ۴.۳۳۱۸
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    استفاده از ابزار تعاملی تبدیل مظنه به گرم و آموزش فرمول اصیل بنکداران بازار بزرگ تهران.
+                </p>
+            </div>
+            <a href="{{ route('public.tools.mesghal') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>ورود به ابزار</span>
+                <span>&larr;</span>
+            </a>
         </article>
 
         {{-- کارت ۵ --}}

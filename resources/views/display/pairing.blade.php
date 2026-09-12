@@ -1745,24 +1745,33 @@
 
         </div>
 
-        {{-- ابر کلمات کلیدی سئو و کپی‌رایت --}}
+        {{-- دسترسی سریع به کلاسترها و ابزارهای تخصصی طلالایو --}}
         <div class="max-w-7xl mx-auto border-t border-slate-800 mt-10 pt-6 space-y-4">
-            <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400">
-                <span>کلمات کلیدی:</span>
+            <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-slate-400">
                 <a href="{{ route('public.smart-gold-board') }}" class="text-slate-300 hover:text-amber-400">تابلوی هوشمند طلافروشی</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-300 hover:text-amber-400">نرم‌افزار تابلوی زنده طلا</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.tv-setup-guide') }}" class="text-slate-300 hover:text-amber-400">تابلو قیمت طلا برای تلویزیون</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.gold-calculator') }}" class="text-slate-300 hover:text-amber-400">محاسبه آنلاین قیمت طلا با اجرت</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.gold-calculator') }}" class="text-slate-300 hover:text-amber-400">محاسبه حباب سکه امامی</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.guides') }}" class="text-slate-300 hover:text-amber-400">فرمول مظنه و طلای ۱۸ عیار</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.led-vs-smart-board') }}" class="text-slate-300 hover:text-amber-400">مقایسه با تابلو LED</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.pricing') }}" class="text-slate-300 hover:text-amber-400">تعرفه‌ها و اشتراک</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.tv-setup-guide') }}" class="text-slate-300 hover:text-amber-400">راهنمای اتصال تلویزیون</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.tools.gold-price') }}" class="text-slate-300 hover:text-amber-400">محاسبه قیمت طلا با اجرت</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.tools.coin-bubble') }}" class="text-slate-300 hover:text-amber-400">محاسبه حباب سکه</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.tools.mesghal') }}" class="text-slate-300 hover:text-amber-400">تبدیل مظنه به گرم</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.tools.melted-gold') }}" class="text-slate-300 hover:text-amber-400">طلای آبشده و انگ</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.guides') }}" class="text-slate-300 hover:text-amber-400">پایگاه دانش و مقالات</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.about') }}" class="text-slate-300 hover:text-amber-400">درباره ما</a>
+                <span class="text-slate-700">&bull;</span>
+                <a href="{{ route('public.contact') }}" class="text-slate-300 hover:text-amber-400">تماس با ما</a>
             </div>
             
-            <div class="text-center text-[11px] text-slate-400">
+            <div class="text-center text-[11px] text-slate-500">
                 تمامی حقوق مادی و معنوی متعلق به سامانه طلالایو (TalaLive.ir) می‌باشد &copy; {{ date('Y') }}.
             </div>
         </div>

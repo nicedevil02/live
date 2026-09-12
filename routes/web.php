@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DisplaySettingController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\PublicDisplayController;
 use App\Http\Controllers\PublicPageController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SourceController;
 use App\Http\Controllers\Admin\FormulaController;
@@ -29,31 +30,8 @@ Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->name('
 // بازگشت از درگاه پرداخت شاپرک (عمومی)
 Route::match(['get', 'post'], '/payment/callback/{gateway}', [SubscriptionController::class, 'callback'])->name('admin.subscription.callback');
 
-// اجرای مستقیم مایگریشن دیتابیس با کلید امنیتی (بدون نیاز به لاگین)
-Route::get('/deploy/migrate', function () {
-    $secretKey = 'tala_deploy_7f8c9b1e2a3d4f5';
-    if (request('key') !== $secretKey) {
-        abort(403, 'کلید امنیتی نامعتبر است.');
-    }
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $output = \Illuminate\Support\Facades\Artisan::output();
-        return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; padding: 30px; background: #0f172a; color: #38bdf8; border-radius: 20px; margin: 40px auto; max-width: 700px;'>
-            <h3 style='color: #34d399; margin-top: 0;'>✅ مایگریشن‌های پایگاه داده با موفقیت اجرا شدند:</h3>
-            <pre style='background: #1e293b; color: #f8fafc; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 14px; text-align: left;' dir='ltr'>" . ($output ?: 'Nothing to migrate. (جداول از قبل موجود هستند)') . "</pre>
-            <br>
-            <a href='" . route('admin.subscription.index') . "' style='color: #fbbf24; text-decoration: none; font-weight: bold;'>← رفتن به صفحه خرید و تمدید اشتراک</a>
-        </div>");
-    } catch (\Throwable $e) {
-        return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; padding: 30px; background: #0f172a; color: #f87171; border-radius: 20px; margin: 40px auto; max-width: 700px;'>
-            <h3 style='margin-top: 0;'>❌ خطا در اجرای مایگریشن:</h3>
-            <pre style='background: #1e293b; color: #f8fafc; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 14px; text-align: left;' dir='ltr'>" . $e->getMessage() . "</pre>
-        </div>", 500);
-    }
-})->name('public.deploy-migrate');
-
-// احراز هویت
-Route::prefix('admin')->name('admin.')->group(function () {
+// احراز هویت و پنل مدیریت (با هدر امنیتی noindex)
+Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/login/send-otp', [AuthController::class, 'sendLoginOtp'])->name('login.send-otp')->middleware('throttle:5,1');
@@ -200,11 +178,42 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 // نام مستعار خروج از ورود کمکی جهت سازگاری کامل
 Route::post('/admin/leave-impersonate', [UserController::class, 'leaveImpersonate'])->name('impersonate.leave');
 
-// صفحات فرود و سئوی هدفمند طلالایو (Pillar Pages & B2B SEO)
+// نقشه‌های سایت پویا و داینامیک (Dynamic XML Sitemaps)
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap-pages.xml', [SitemapController::class, 'pages'])->name('sitemap.pages');
+Route::get('/sitemap-tools.xml', [SitemapController::class, 'tools'])->name('sitemap.tools');
+Route::get('/sitemap-guides.xml', [SitemapController::class, 'guides'])->name('sitemap.guides');
+Route::get('/sitemap-cities.xml', [SitemapController::class, 'cities'])->name('sitemap.cities');
+Route::get('/sitemap-shops.xml', [SitemapController::class, 'shops'])->name('sitemap.shops');
+
+// صفحات فرود اصلی و ستون‌های تجاری سئو (Pillar Pages & B2B Hub)
 Route::get('/smart-gold-board', [PublicPageController::class, 'smartGoldBoard'])->name('public.smart-gold-board');
+Route::get('/led-vs-smart-board', [PublicPageController::class, 'ledVsSmartBoard'])->name('public.led-vs-smart-board');
+Route::get('/pricing', [PublicPageController::class, 'pricing'])->name('public.pricing');
 Route::get('/tv-setup-guide', [PublicPageController::class, 'tvSetupGuide'])->name('public.tv-setup-guide');
+
+// صفحات اعتماد و حقوقی برند (E-E-A-T Signals)
+Route::get('/about', [PublicPageController::class, 'about'])->name('public.about');
+Route::get('/contact', [PublicPageController::class, 'contact'])->name('public.contact');
+Route::get('/terms', [PublicPageController::class, 'terms'])->name('public.terms');
+Route::get('/privacy', [PublicPageController::class, 'privacy'])->name('public.privacy');
+
+// ابزارهای محاسباتی تخصصی صنف طلا (Single-Purpose Calculator Tools)
 Route::get('/gold-calculator', [PublicPageController::class, 'goldCalculator'])->name('public.gold-calculator');
+Route::prefix('tools')->name('public.tools.')->group(function () {
+    Route::get('/gold-price-calculator', [PublicPageController::class, 'toolGoldPrice'])->name('gold-price');
+    Route::get('/coin-bubble', [PublicPageController::class, 'toolCoinBubble'])->name('coin-bubble');
+    Route::get('/mesghal', [PublicPageController::class, 'toolMesghal'])->name('mesghal');
+    Route::get('/melted-gold', [PublicPageController::class, 'toolMeltedGold'])->name('melted-gold');
+    Route::get('/karat-converter', [PublicPageController::class, 'toolKaratConverter'])->name('karat-converter');
+});
+
+// مقالات و پایگاه دانش صنف طلا و جواهر
 Route::get('/guides', [PublicPageController::class, 'guidesIndex'])->name('public.guides');
+Route::get('/guides/{slug}', [PublicPageController::class, 'guideShow'])->name('public.guides.show');
+
+// هاب شهرهای قطب بازار طلا (Local SEO)
+Route::get('/cities/{city}', [PublicPageController::class, 'cityHub'])->name('public.cities.hub');
 
 // صفحه نمایشگر اختصاصی مغازه (باید آخرین مسیر باشد تا با سایر آدرس‌ها تداخل نداشته باشد)
 Route::get('/{username}', [PublicDisplayController::class, 'show'])->name('display.live');

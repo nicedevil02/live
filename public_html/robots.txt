@@ -1,4 +1,10 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /deploy/
+Disallow: /pair/
+Disallow: /payment/
+Disallow: /api/
+Disallow: /*.php$
 
+# XML Sitemap Index
 Sitemap: https://talalive.ir/sitemap.xml

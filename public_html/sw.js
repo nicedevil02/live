@@ -1,4 +1,5 @@
-const CACHE_NAME = 'gold-app-v2';
+// bump cache name to force clients to update when deployed
+const CACHE_NAME = 'gold-app-v4';
 const APP_SHELL = [
   '/',
   '/manifest.json',
@@ -33,18 +34,49 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (url.pathname.startsWith('/api/')) {
+  // هرگز روت‌های ادمین، احراز هویت، جفت‌سازی و API را کش نکن
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/admin') ||
+    url.pathname.includes('/login') ||
+    url.pathname.includes('/register') ||
+    url.pathname.includes('/logout') ||
+    url.pathname.includes('/pair') ||
+    url.pathname.includes('/security')
+  ) {
     event.respondWith(fetch(event.request));
     return;
   }
 
+  // برای صفحات HTML و پیمایش وب (Navigation Requests)، همواره استراتژی Network-First اجرا می‌شود تا خزنده‌های گوگل و کاربران نسخه زنده را بگیرند
+  if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          if (response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // برای فایل‌های استاتیک و فونت‌ها: Cache-First با فال‌بک به شبکه
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        return response;
-      })
-      .catch(() => caches.match(event.request))
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).then(networkResponse => {
+        if (networkResponse.status === 200) {
+          const copy = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        }
+        return networkResponse;
+      });
+    })
   );
 });

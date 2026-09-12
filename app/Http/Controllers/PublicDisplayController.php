@@ -26,12 +26,16 @@ class PublicDisplayController extends Controller
 
         // بررسی تایید بودن اکانت
         if (!$user->is_approved && !$user->is_super_admin) {
-            return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 100px 20px; background: #fffbeb; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 500px; background: #fff; border: 1px solid #fef3c7; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);'><div style='font-size: 56px; margin-bottom: 24px;'>⏳</div><h2 style='color: #b45309; margin-bottom: 12px; font-weight: 800;'>حساب در انتظار تأیید</h2><p style='color: #78350f; font-size: 15px; line-height: 1.7; margin: 0;'>حساب کاربری این گالری هنوز توسط مدیریت سامانه تأیید نشده است. لطفاً منتظر بمانید یا با مدیریت تماس بگیرید.</p></div></div>", 403);
+            return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 100px 20px; background: #fffbeb; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 500px; background: #fff; border: 1px solid #fef3c7; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);'><div style='font-size: 56px; margin-bottom: 24px;'>⏳</div><h2 style='color: #b45309; margin-bottom: 12px; font-weight: 800;'>حساب در انتظار تأیید</h2><p style='color: #78350f; font-size: 15px; line-height: 1.7; margin: 0;'>حساب کاربری این گالری هنوز توسط مدیریت سامانه تأیید نشده است. لطفاً منتظر بمانید یا با مدیریت تماس بگیرید.</p></div></div>", 403, [
+                'X-Robots-Tag' => 'noindex, follow',
+            ]);
         }
 
         // بررسی انقضای زمانی حساب
         if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
-            return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 100px 20px; background: #fef2f2; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 500px; background: #fff; border: 1px solid #fecaca; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);'><div style='font-size: 56px; margin-bottom: 24px;'>⚠️</div><h2 style='color: #991b1b; margin-bottom: 12px; font-weight: 800;'>پایان اعتبار نمایشگر</h2><p style='color: #7f1d1d; font-size: 15px; line-height: 1.7; margin: 0;'>اعتبار زمانی استفاده از تابلوی این گالری به پایان رسیده است. لطفاً جهت تمدید اعتبار و فعال‌سازی مجدد با مدیریت سامانه تماس حاصل فرمایید.</p></div></div>", 402);
+            return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 100px 20px; background: #fef2f2; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 500px; background: #fff; border: 1px solid #fecaca; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);'><div style='font-size: 56px; margin-bottom: 24px;'>⚠️</div><h2 style='color: #991b1b; margin-bottom: 12px; font-weight: 800;'>پایان اعتبار نمایشگر</h2><p style='color: #7f1d1d; font-size: 15px; line-height: 1.7; margin: 0;'>اعتبار زمانی استفاده از تابلوی این گالری به پایان رسیده است. لطفاً جهت تمدید اعتبار و فعال‌سازی مجدد با مدیریت سامانه تماس حاصل فرمایید.</p></div></div>", 402, [
+                'X-Robots-Tag' => 'noindex, follow',
+            ]);
         }
 
         $snapshot = $this->buildSnapshot($user);
