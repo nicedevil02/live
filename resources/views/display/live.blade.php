@@ -178,25 +178,28 @@
         }
 
         .neu-hero-gold-imperial {
-            background: linear-gradient(135deg, rgba(146, 64, 14, 0.85) 0%, rgba(69, 26, 3, 0.92) 50%, rgba(20, 8, 1, 0.98) 100%) !important;
-            backdrop-filter: blur(24px) saturate(220%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(220%) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.92) !important;
+            background: 
+                radial-gradient(ellipse 110% 80% at 50% -25%, rgba(251, 191, 36, 0.35) 0%, rgba(217, 119, 6, 0.12) 50%, transparent 80%),
+                linear-gradient(145deg, rgba(75, 29, 2, 0.92) 0%, rgba(35, 12, 1, 0.96) 55%, rgba(12, 4, 1, 0.99) 100%) !important;
+            backdrop-filter: blur(28px) saturate(220%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
+            border: 1.8px solid rgba(251, 191, 36, 0.95) !important;
             box-shadow: 
-                inset 0 2px 2px 0 rgba(255, 255, 255, 0.60),
-                inset 0 -2px 3px 0 rgba(180, 83, 9, 0.50),
-                0 18px 48px -6px rgba(217, 119, 6, 0.65),
-                0 0 38px rgba(251, 191, 36, 0.40) !important;
-            transform: scale(1) translateZ(0);
+                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.70),
+                inset 0 -2px 3px 0 rgba(180, 83, 9, 0.55),
+                0 24px 60px -8px rgba(217, 119, 6, 0.70),
+                0 0 45px rgba(251, 191, 36, 0.45) !important;
+            transform: translateY(-4px) scale(1.025) translateZ(0) !important;
+            z-index: 20 !important;
             transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-imperial:hover {
-            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            transform: translateY(-7px) scale(1.04) translateZ(0) !important;
             box-shadow: 
-                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.75),
-                inset 0 -2px 3px 0 rgba(180, 83, 9, 0.65),
-                0 28px 62px -6px rgba(217, 119, 6, 0.85),
-                0 0 55px rgba(251, 191, 36, 0.65) !important;
+                inset 0 3px 2.5px 0 rgba(255, 255, 255, 0.85),
+                inset 0 -2px 3px 0 rgba(180, 83, 9, 0.70),
+                0 32px 75px -8px rgba(217, 119, 6, 0.85),
+                0 0 60px rgba(251, 191, 36, 0.65) !important;
             border-color: #fef08a !important;
         }
 
@@ -237,27 +240,30 @@
         }
 
         .neu-hero-gold-pearl {
-            background: linear-gradient(135deg, rgba(255, 251, 235, 0.96) 0%, rgba(254, 243, 199, 0.92) 50%, rgba(253, 230, 138, 0.80) 100%) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(217, 119, 6, 0.80) !important;
+            background: 
+                radial-gradient(ellipse 110% 80% at 50% -25%, rgba(254, 240, 138, 0.75) 0%, rgba(251, 191, 36, 0.22) 50%, transparent 80%),
+                linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 249, 231, 0.95) 55%, rgba(254, 243, 199, 0.90) 100%) !important;
+            backdrop-filter: blur(28px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+            border: 1.8px solid rgba(217, 119, 6, 0.88) !important;
             box-shadow: 
                 inset 0 2.5px 2px 0 rgba(255, 255, 255, 1),
                 inset 0 -2px 2px 0 rgba(217, 119, 6, 0.30),
-                -6px -6px 18px rgba(255, 255, 255, 0.95),
-                10px 20px 40px rgba(217, 119, 6, 0.28),
-                0 0 32px rgba(251, 191, 36, 0.35) !important;
-            transform: scale(1) translateZ(0);
+                -6px -6px 20px rgba(255, 255, 255, 0.98),
+                0 20px 50px -6px rgba(217, 119, 6, 0.38),
+                0 0 36px rgba(251, 191, 36, 0.38) !important;
+            transform: translateY(-4px) scale(1.025) translateZ(0) !important;
+            z-index: 20 !important;
             transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-pearl:hover {
-            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            transform: translateY(-7px) scale(1.04) translateZ(0) !important;
             box-shadow: 
                 inset 0 3px 2.5px 0 rgba(255, 255, 255, 1),
                 inset 0 -2px 2px 0 rgba(217, 119, 6, 0.45),
-                -8px -8px 24px rgba(255, 255, 255, 1),
-                14px 28px 50px rgba(217, 119, 6, 0.38),
-                0 0 48px rgba(251, 191, 36, 0.50) !important;
+                -8px -8px 26px rgba(255, 255, 255, 1),
+                0 28px 65px -6px rgba(217, 119, 6, 0.48),
+                0 0 52px rgba(251, 191, 36, 0.55) !important;
             border-color: #b45309 !important;
         }
 
@@ -352,25 +358,28 @@
         }
 
         .neu-hero-gold-obsidian {
-            background: linear-gradient(145deg, rgba(69, 26, 3, 0.82) 0%, rgba(20, 8, 0, 0.95) 100%) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.85) !important;
+            background: 
+                radial-gradient(ellipse 110% 80% at 50% -25%, rgba(251, 191, 36, 0.32) 0%, rgba(217, 119, 6, 0.10) 50%, transparent 80%),
+                linear-gradient(145deg, rgba(50, 18, 1, 0.90) 0%, rgba(18, 6, 0, 0.97) 100%) !important;
+            backdrop-filter: blur(28px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+            border: 1.8px solid rgba(251, 191, 36, 0.90) !important;
             box-shadow: 
-                inset 0 2px 2px 0 rgba(255, 255, 255, 0.45),
-                inset 0 -1.5px 2px 0 rgba(251, 191, 36, 0.30),
-                0 18px 45px -4px rgba(217, 119, 6, 0.60),
-                0 0 30px rgba(251, 191, 36, 0.35) !important;
-            transform: scale(1) translateZ(0);
+                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.60),
+                inset 0 -1.5px 2px 0 rgba(251, 191, 36, 0.35),
+                0 22px 55px -6px rgba(217, 119, 6, 0.65),
+                0 0 38px rgba(251, 191, 36, 0.40) !important;
+            transform: translateY(-4px) scale(1.025) translateZ(0) !important;
+            z-index: 20 !important;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-hero-gold-obsidian:hover {
-            transform: scale(1.028) translateY(-4px) translateZ(0) !important;
+            transform: translateY(-7px) scale(1.04) translateZ(0) !important;
             box-shadow: 
-                inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.60),
-                0 28px 60px -6px rgba(217, 119, 6, 0.75),
-                0 0 45px rgba(251, 191, 36, 0.50) !important;
-            border-color: rgba(251, 191, 36, 1) !important;
+                inset 0 3px 2.5px 0 rgba(255, 255, 255, 0.75),
+                0 30px 70px -6px rgba(217, 119, 6, 0.80),
+                0 0 50px rgba(251, 191, 36, 0.55) !important;
+            border-color: #fef08a !important;
         }
 
         /* 2. Apple Studio Unified Canvas (پیشنهاد دوم - استیج شیشه‌ای مات و یکدست) */
@@ -924,13 +933,9 @@
                                        ? 'neu-hero-gold-studio'
                                        : (themeKey === 'bing-ceramic'
                                           ? 'neu-hero-gold-ceramic'
-                                          : (themeKey === 'imperial-onyx'
-                                             ? 'neu-hero-gold-imperial'
-                                             : (themeKey === 'imperial-pearl'
-                                                ? 'neu-hero-gold-pearl'
-                                                : (isLightTheme
-                                                   ? 'ring-2 ring-amber-400/90 bg-gradient-to-br from-amber-100/75 via-white/80 to-amber-50/70 shadow-[-5px_-5px_16px_rgba(255,255,255,1),8px_14px_28px_rgba(245,158,11,0.3)] border border-amber-300 backdrop-blur-2xl'
-                                                   : 'ring-2 ring-amber-500/80 bg-gradient-to-br from-amber-600/35 via-slate-900/70 to-slate-950/95 shadow-[-4px_-4px_16px_rgba(245,158,11,0.2),9px_14px_36px_rgba(0,0,0,0.9)] border border-amber-400/40 backdrop-blur-2xl'))))))
+                                          : (themeKey === 'imperial-pearl' || isLightTheme
+                                             ? 'neu-hero-gold-pearl'
+                                             : 'neu-hero-gold-imperial'))))
                                  : theme.card + ' ' + theme.cardHover,
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
@@ -938,23 +943,20 @@
 
                                 <template x-if="item.symbol === 'gold18'">
                                     <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem]">
-                                        <div class="absolute inset-0" :class="isLightTheme ? 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.20),transparent_75%)]' : 'bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.30),transparent_75%)]'"></div>
-                                        <div class="absolute inset-0 animate-gold-sheen-silk bg-gradient-to-r from-transparent via-amber-300/30 to-transparent w-2/3 h-full"></div>
+                                        {{-- Apple Overhead Conical Spotlight --}}
+                                        <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-32 rounded-full blur-2xl opacity-60"
+                                             :class="isLightTheme ? 'bg-amber-300/50' : 'bg-amber-400/35'"></div>
+                                        {{-- Ambient Depth Vignette --}}
+                                        <div class="absolute inset-0" :class="isLightTheme ? 'bg-[radial-gradient(ellipse_at_50%_0%,rgba(251,191,36,0.18),transparent_70%)]' : 'bg-[radial-gradient(ellipse_at_50%_0%,rgba(251,191,36,0.28),transparent_70%)]'"></div>
+                                        {{-- Silky hardware-accelerated 3D light sheen --}}
+                                        <div class="absolute inset-0 animate-gold-sheen-silk bg-gradient-to-r from-transparent via-amber-200/25 to-transparent w-2/3 h-full"></div>
                                     </div>
                                 </template>
 
-                                {{-- هدر کارت: عنوان نماد و نشانگر VIP طلای ۱۸ عیار + فلش روند اپلی --}}
+                                {{-- هدر کارت: عنوان نماد و فلش روند اپلی (بدون تگ شاخص بازار) --}}
                                 <div class="relative flex justify-between items-center gap-3">
-                                    <div class="flex items-center gap-2 min-w-0">
-                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
-                                           class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
-                                        <template x-if="item.symbol === 'gold18'">
-                                            <span class="inline-flex items-center gap-1 text-[10px] xl:text-[11px] font-black px-2.5 py-0.5 rounded-full border shadow-sm select-none"
-                                                  :class="isLightTheme ? 'bg-amber-500/15 text-amber-950 border-amber-400/40' : 'bg-amber-400/20 text-amber-200 border-amber-400/40'">
-                                                👑 شاخص بازار
-                                            </span>
-                                        </template>
-                                    </div>
+                                    <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
+                                       class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
                                             <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
