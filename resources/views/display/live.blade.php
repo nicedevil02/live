@@ -30,34 +30,42 @@
         .animate-float2 { animation: float2 25s ease-in-out infinite; }
         .animate-float3 { animation: float3 18s ease-in-out infinite; }
         @keyframes float-slow-1 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(60px, -45px) scale(1.08); }
-            66% { transform: translate(-45px, 50px) scale(0.94); }
+            0% { transform: translate3d(0px, 0px, 0) scale(1); }
+            25% { transform: translate3d(180px, -90px, 0) scale(1.20); }
+            50% { transform: translate3d(90px, 170px, 0) scale(0.86); }
+            75% { transform: translate3d(-150px, 80px, 0) scale(1.15); }
+            100% { transform: translate3d(0px, 0px, 0) scale(1); }
         }
         @keyframes float-slow-2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(-55px, 50px) scale(1.06); }
-            66% { transform: translate(50px, -40px) scale(0.92); }
+            0% { transform: translate3d(0px, 0px, 0) scale(1); }
+            25% { transform: translate3d(-170px, 110px, 0) scale(1.18); }
+            50% { transform: translate3d(-90px, -150px, 0) scale(0.85); }
+            75% { transform: translate3d(150px, -70px, 0) scale(1.14); }
+            100% { transform: translate3d(0px, 0px, 0) scale(1); }
         }
         @keyframes float-slow-3 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(45px, 55px) scale(1.10); }
+            0% { transform: translate3d(0px, 0px, 0) scale(1); }
+            30% { transform: translate3d(-200px, 140px, 0) scale(1.24); }
+            65% { transform: translate3d(160px, -120px, 0) scale(0.82); }
+            100% { transform: translate3d(0px, 0px, 0) scale(1); }
         }
         @keyframes float-slow-4 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            40% { transform: translate(-40px, -50px) scale(1.07); }
-            80% { transform: translate(35px, 30px) scale(0.95); }
+            0% { transform: translate3d(0px, 0px, 0) scale(1); }
+            30% { transform: translate3d(170px, -160px, 0) scale(1.18); }
+            70% { transform: translate3d(-130px, -90px, 0) scale(0.88); }
+            100% { transform: translate3d(0px, 0px, 0) scale(1); }
         }
-        .animate-float-slow-1 { animation: float-slow-1 14s ease-in-out infinite; will-change: transform; }
-        .animate-float-slow-2 { animation: float-slow-2 18s ease-in-out infinite; will-change: transform; }
-        .animate-float-slow-3 { animation: float-slow-3 12s ease-in-out infinite; will-change: transform; }
-        .animate-float-slow-4 { animation: float-slow-4 16s ease-in-out infinite; will-change: transform; }
         @keyframes float-slow-5 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            35% { transform: translate(-70px, 60px) scale(1.12); }
-            70% { transform: translate(60px, -45px) scale(0.92); }
+            0% { transform: translate3d(0px, 0px, 0) scale(1); }
+            35% { transform: translate3d(-180px, 160px, 0) scale(1.22); }
+            70% { transform: translate3d(140px, -110px, 0) scale(0.86); }
+            100% { transform: translate3d(0px, 0px, 0) scale(1); }
         }
-        .animate-float-slow-5 { animation: float-slow-5 15s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-1 { animation: float-slow-1 8s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-2 { animation: float-slow-2 10s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-3 { animation: float-slow-3 7s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-4 { animation: float-slow-4 9s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-5 { animation: float-slow-5 8.5s ease-in-out infinite; will-change: transform; }
         @keyframes ticker-rtl {
             0% { transform: translateX(-100vw); }
             100% { transform: translateX(100%); }
@@ -573,7 +581,7 @@
             filter: blur(48px) !important;
             -webkit-filter: blur(48px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-1 14s ease-in-out infinite;
+            animation: float-slow-1 8s ease-in-out infinite;
         }
 
         /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Sunset Orchid) - پایین راست */
@@ -590,7 +598,7 @@
             filter: blur(48px) !important;
             -webkit-filter: blur(48px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-2 18s ease-in-out infinite;
+            animation: float-slow-2 10s ease-in-out infinite;
         }
 
         /* ۳. گوی طلای درخشان ۲۴ عیار و خورشیدی اپل (Apple 24K Liquid Gold & Amber) - مرکز */
@@ -607,7 +615,7 @@
             filter: blur(42px) !important;
             -webkit-filter: blur(42px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-3 12s ease-in-out infinite;
+            animation: float-slow-3 7s ease-in-out infinite;
         }
 
         /* ۴. گوی شفق زمردین و فیروزه‌ای نعنایی اپل (Apple Aurora Emerald & Mint) - پایین چپ */
@@ -624,7 +632,7 @@
             filter: blur(46px) !important;
             -webkit-filter: blur(46px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-4 16s ease-in-out infinite;
+            animation: float-slow-4 9s ease-in-out infinite;
         }
 
         /* ۵. گوی بنفش کیهانی و نیلگون اپل (Apple Cosmic Violet & Royal Indigo) - بالا راست */
@@ -641,7 +649,7 @@
             filter: blur(50px) !important;
             -webkit-filter: blur(50px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-5 15s ease-in-out infinite;
+            animation: float-slow-5 8.5s ease-in-out infinite;
         }
 
         /* پالت تم روشن شاهنشاهی و روشن مدرن (Light Mode Apple Palette) */

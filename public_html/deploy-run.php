@@ -43,17 +43,59 @@ if (!is_dir($sourceDir)) {
     exit;
 }
 
-// 2. Try git pull if shell_exec is allowed
+// 2. Check for update_deploy.zip first (if user uploaded zip)
+$zipExtracted = false;
+$zipCandidates = [
+    "$targetDir/update_deploy.zip",
+    "$targetDir/public_html/update_deploy.zip",
+    dirname(__DIR__) . "/update_deploy.zip",
+    __DIR__ . "/update_deploy.zip",
+];
+
+foreach ($zipCandidates as $zipPath) {
+    if (file_exists($zipPath) && filesize($zipPath) > 100000) {
+        if (class_exists('ZipArchive')) {
+            $zip = new ZipArchive();
+            if ($zip->open($zipPath) === true) {
+                $zip->extractTo($targetDir);
+                $zip->close();
+                $zipExtracted = true;
+                $log[] = "Extracted update_deploy.zip from: $zipPath";
+                break;
+            }
+        }
+    }
+}
+
+// 3. Try git pull if shell_exec is allowed
 $gitOutput = '';
+$shellAllowed = false;
 if (function_exists('shell_exec')) {
     $disabled = explode(',', (string)ini_get('disable_functions'));
     $disabled = array_map('trim', $disabled);
     if (!in_array('shell_exec', $disabled)) {
+        $shellAllowed = true;
         $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin master 2>&1 && git reset --hard origin/master 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
             $log[] = 'Git pull output: ' . trim($gitOutput);
         }
+    } else {
+        $log[] = 'Notice: shell_exec is in disable_functions.';
+    }
+} else {
+    $log[] = 'Notice: shell_exec function does not exist.';
+}
+
+// Fallback: If git pull did not run and no zip was extracted, download latest live.blade.php directly from GitHub
+if (!$shellAllowed && !$zipExtracted) {
+    $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php';
+    $ctx = stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: Mozilla/5.0
+"]]);
+    $newBlade = @file_get_contents($rawUrl, false, $ctx);
+    if ($newBlade && strlen($newBlade) > 10000) {
+        @file_put_contents("$targetDir/resources/views/display/live.blade.php", $newBlade);
+        $log[] = 'Directly downloaded latest live.blade.php from GitHub repository!';
     }
 }
 
