@@ -48,16 +48,16 @@
             40% { transform: translate(-40px, -50px) scale(1.07); }
             80% { transform: translate(35px, 30px) scale(0.95); }
         }
-        .animate-float-slow-1 { animation: float-slow-1 28s ease-in-out infinite; will-change: transform; }
-        .animate-float-slow-2 { animation: float-slow-2 36s ease-in-out infinite; will-change: transform; }
-        .animate-float-slow-3 { animation: float-slow-3 24s ease-in-out infinite; will-change: transform; }
-        .animate-float-slow-4 { animation: float-slow-4 32s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-1 { animation: float-slow-1 14s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-2 { animation: float-slow-2 18s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-3 { animation: float-slow-3 12s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-4 { animation: float-slow-4 16s ease-in-out infinite; will-change: transform; }
         @keyframes float-slow-5 {
             0%, 100% { transform: translate(0, 0) scale(1); }
             35% { transform: translate(-70px, 60px) scale(1.12); }
             70% { transform: translate(60px, -45px) scale(0.92); }
         }
-        .animate-float-slow-5 { animation: float-slow-5 30s ease-in-out infinite; will-change: transform; }
+        .animate-float-slow-5 { animation: float-slow-5 15s ease-in-out infinite; will-change: transform; }
         @keyframes ticker-rtl {
             0% { transform: translateX(-100vw); }
             100% { transform: translateX(100%); }
@@ -573,7 +573,7 @@
             filter: blur(48px) !important;
             -webkit-filter: blur(48px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-1 28s ease-in-out infinite;
+            animation: float-slow-1 14s ease-in-out infinite;
         }
 
         /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Sunset Orchid) - پایین راست */
@@ -590,7 +590,7 @@
             filter: blur(48px) !important;
             -webkit-filter: blur(48px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-2 36s ease-in-out infinite;
+            animation: float-slow-2 18s ease-in-out infinite;
         }
 
         /* ۳. گوی طلای درخشان ۲۴ عیار و خورشیدی اپل (Apple 24K Liquid Gold & Amber) - مرکز */
@@ -607,7 +607,7 @@
             filter: blur(42px) !important;
             -webkit-filter: blur(42px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-3 24s ease-in-out infinite;
+            animation: float-slow-3 12s ease-in-out infinite;
         }
 
         /* ۴. گوی شفق زمردین و فیروزه‌ای نعنایی اپل (Apple Aurora Emerald & Mint) - پایین چپ */
@@ -624,7 +624,7 @@
             filter: blur(46px) !important;
             -webkit-filter: blur(46px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-4 32s ease-in-out infinite;
+            animation: float-slow-4 16s ease-in-out infinite;
         }
 
         /* ۵. گوی بنفش کیهانی و نیلگون اپل (Apple Cosmic Violet & Royal Indigo) - بالا راست */
@@ -641,7 +641,7 @@
             filter: blur(50px) !important;
             -webkit-filter: blur(50px) !important;
             mix-blend-mode: screen;
-            animation: float-slow-5 30s ease-in-out infinite;
+            animation: float-slow-5 15s ease-in-out infinite;
         }
 
         /* پالت تم روشن شاهنشاهی و روشن مدرن (Light Mode Apple Palette) */
