@@ -469,7 +469,7 @@ class MarketService
 
         try {
             $start = microtime(true);
-            $response = Http::retry(3, 2000)->withOptions(['verify' => false])->timeout($this->timeout)->get($url);
+            $response = Http::retry(2, 1000)->withOptions(['verify' => false])->timeout(4)->get($url);
             $latency = (int) round((microtime(true) - $start) * 1000);
 
             if ($response->successful() && !empty($payload = $response->json())) {
@@ -492,6 +492,28 @@ class MarketService
                 }
             }
 
+            // فال‌بک نوبیتکس در صورت بروز خطا در منبع اصلی
+            try {
+                $nobiRes = Http::withOptions(['verify' => false])->timeout(4)->get('https://api.nobitex.ir/v2/orderbook/USDTIRT');
+                if ($nobiRes->successful() && !empty($nobiData = $nobiRes->json())) {
+                    $nobiPrice = (float)($nobiData['lastTradePrice'] ?? 0);
+                    if ($nobiPrice > 0) {
+                        $valToman = round($nobiPrice / 10);
+                        $this->savePriceItem('usdt', $valToman, 'تومان', now()->format('Y-m-d'));
+                        if ($usdtConfig) {
+                            $usdtConfig->update([
+                                'last_status' => 'ok',
+                                'last_latency_ms' => $latency,
+                                'last_checked_at' => now(),
+                                'last_error' => null
+                            ]);
+                            $this->logFetchResult($usdtConfig, 'ok', "دریافت موفق تتر از نوبیتکس ({$valToman} تومان)");
+                        }
+                        return true;
+                    }
+                }
+            } catch (\Throwable $nobiEx) {}
+
             if ($usdtConfig) {
                 $errStr = 'Status: ' . $response->status();
                 $usdtConfig->update([
@@ -503,6 +525,28 @@ class MarketService
             }
             return false;
         } catch (\Exception $e) {
+            // در صورت بروز Exception نیز فال‌بک نوبیتکس را فراخوانی می‌کنیم
+            try {
+                $nobiRes = Http::withOptions(['verify' => false])->timeout(4)->get('https://api.nobitex.ir/v2/orderbook/USDTIRT');
+                if ($nobiRes->successful() && !empty($nobiData = $nobiRes->json())) {
+                    $nobiPrice = (float)($nobiData['lastTradePrice'] ?? 0);
+                    if ($nobiPrice > 0) {
+                        $valToman = round($nobiPrice / 10);
+                        $this->savePriceItem('usdt', $valToman, 'تومان', now()->format('Y-m-d'));
+                        if ($usdtConfig) {
+                            $usdtConfig->update([
+                                'last_status' => 'ok',
+                                'last_latency_ms' => 150,
+                                'last_checked_at' => now(),
+                                'last_error' => null
+                            ]);
+                            $this->logFetchResult($usdtConfig, 'ok', "دریافت تتر از نوبیتکس: {$valToman} تومان");
+                        }
+                        return true;
+                    }
+                }
+            } catch (\Throwable $nobiEx) {}
+
             \Log::warning('USDT fetch failed: ' . $e->getMessage());
             if ($usdtConfig) {
                 $usdtConfig->update([

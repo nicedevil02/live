@@ -51,6 +51,28 @@ class PublicDisplayController extends Controller
             abort(402, 'اعتبار زمانی حساب به پایان رسیده است.');
         }
 
+        // بروزرسانی خودکار و تضمینی نرخ تتر هر ۱۰ ثانیه (Self-Healing 10s Auto Refresh)
+        try {
+            $usdtCache = \App\Models\MarketCache::where('symbol', 'usdt')->first();
+            $needsUsdtFetch = false;
+            if (!$usdtCache || !$usdtCache->fetched_at) {
+                $needsUsdtFetch = true;
+            } else {
+                $diff = now()->diffInSeconds($usdtCache->fetched_at);
+                if ($diff >= 10) {
+                    $needsUsdtFetch = true;
+                }
+            }
+
+            if ($needsUsdtFetch) {
+                \Illuminate\Support\Facades\Cache::lock('usdt_snapshot_fetch_lock', 6)->get(function () {
+                    $this->marketService->fetchFastMovingPrices();
+                });
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Auto USDT refresh in snapshot error: ' . $e->getMessage());
+        }
+
         return response()->json($this->buildSnapshot($user));
     }
 
