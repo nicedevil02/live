@@ -213,7 +213,7 @@ class PublicPageController extends Controller
     }
 
     /**
-     * استخراج امن، استاندارد و اعتبارسنجی‌شده نرخ‌های مارکت با نرمال‌سازی ریال/تومان
+     * استخراج مستقیم نرخ‌های تابلوی طلالایو برای ماشین‌حساب‌ها و ابزارها
      */
     protected function getRatesData(): array
     {
@@ -227,97 +227,33 @@ class PublicPageController extends Controller
             $apiTime = '---';
         }
 
-        // ۱. استخراج طلای ۱۸ و ۲۴ عیار و مثقال (با پشتیبانی از هر دو کلید gold18 و raw_gold18)
+        // استخراج مستقیم نرخ طلای ۱۸ و ۲۴ عیار و مثقال از تابلوی خودمان
         $gold18 = (float)($rawRates->get('gold18')?->value ?? $rawRates->get('raw_gold18')?->value ?? 0);
         $gold24 = (float)($rawRates->get('gold24')?->value ?? $rawRates->get('raw_gold24')?->value ?? 0);
         $mesghal = (float)($rawRates->get('mesghal17')?->value ?? 0);
 
-        // ۲. انس جهانی طلا و دلار آزاد / تتر (نمادهای واقعی در MarketCache: ounce و usd/usdt)
+        // استخراج انس جهانی و دلار
         $ons = (float)($rawRates->get('ounce')?->value ?? $rawRates->get('ons_gold')?->value ?? 0);
         $dollar = (float)($rawRates->get('usd')?->value ?? $rawRates->get('usdt')?->value ?? $rawRates->get('usd_sell')?->value ?? 0);
 
-        // ۳. استخراج مسکوکات با نمادهای واقعی کش (coin_emami, coin_bahar, coin_nim, coin_rob, coin_gerami)
+        // استخراج مستقیم قیمت مسکوکات دقیقاً از تابلوی خودمان (coin_emami, coin_bahar, coin_nim, coin_rob, coin_gerami)
         $coinEmami = (float)($rawRates->get('coin_emami')?->value ?? 0);
         $coinBahar = (float)($rawRates->get('coin_bahar')?->value ?? 0);
         $coinNim = (float)($rawRates->get('coin_nim')?->value ?? $rawRates->get('coin_half')?->value ?? 0);
         $coinRob = (float)($rawRates->get('coin_rob')?->value ?? $rawRates->get('coin_quarter')?->value ?? 0);
         $coinGerami = (float)($rawRates->get('coin_gerami')?->value ?? 0);
 
-        // ۴. نرمال‌سازی هوشمند واحد پول (تشخیص و تبدیل ریال به تومان):
-        // در صورتی که داده‌های ذخیره شده در دیتابیس به ریال باشند (مثلاً ۲۴۰ میلیون ریال یا ۳۴ میلیون ریال برای سکه گرمی)،
-        // با تشخیص سقف منطقی بازار ایران، به تومان تبدیل می‌شوند.
-        $normalizeToToman = function(float $val, float $maxExpectedToman): float {
-            if ($val <= 0) return 0;
-            // اگر عدد از سقف مجاز تومان بیشتر بود، قطعاً به ریال ثبت شده و بر ۱۰ تقسیم می‌شود
-            if ($val > $maxExpectedToman) {
-                $val = $val / 10;
-            }
-            return $val;
-        };
-
-        $coinEmami = $normalizeToToman($coinEmami, 90000000);   // سکه تمام حداکثر ۹۰ میلیون تومان
-        $coinBahar = $normalizeToToman($coinBahar, 90000000);
-        $coinNim = $normalizeToToman($coinNim, 55000000);       // نیم سکه حداکثر ۵۵ میلیون تومان
-        $coinRob = $normalizeToToman($coinRob, 38000000);       // ربع سکه حداکثر ۳۸ میلیون تومان
-        $coinGerami = $normalizeToToman($coinGerami, 20000000); // سکه گرمی حداکثر ۲۰ میلیون تومان
-        $gold18 = $normalizeToToman($gold18, 12000000);         // هر گرم ۱۸ عیار حداکثر ۱۲ میلیون تومان
-        $gold24 = $normalizeToToman($gold24, 16000000);
-        $mesghal = $normalizeToToman($mesghal, 50000000);
-
-        // ۵. فال‌بک‌های هوشمند در صورت خالی بودن مقادیر
+        // در صورت خالی بودن اولیه دیتابیس محلی
         if ($gold18 <= 0 && $mesghal > 0) {
             $gold18 = round($mesghal / MarketService::MESGHAL_TO_GRAM_18K);
         }
-        if ($gold18 <= 0) {
-            $gold18 = 4500000; // نرخ پایه مطمئن صنف طلا
-        }
-        if ($gold24 <= 0) {
-            $gold24 = round($gold18 * (24 / 18));
-        }
-        if ($mesghal <= 0) {
-            $mesghal = round($gold18 * MarketService::MESGHAL_TO_GRAM_18K);
-        }
-        if ($ons <= 0) {
-            $ons = 2650;
-        }
-        if ($dollar <= 0) {
-            $dollar = 88000;
-        }
-
-        // ۶. اعتبارسنجی مقادیر روز مسکوکات بر مبنای ارزش ذاتی استاندارد صنف (عیار ۹۰۰ معادل ۱.۲ طلای ۱۸ عیار):
-        // سکه تمام: 8.133 * 1.2 = 9.7596 گرم ۱۸ عیار
-        // نیم سکه: 4.066 * 1.2 = 4.8792 گرم ۱۸ عیار
-        // ربع سکه: 2.033 * 1.2 = 2.4396 گرم ۱۸ عیار
-        // سکه گرمی: 1.016 * 1.2 = 1.2192 گرم ۱۸ عیار
-        $intrinsicEmami = round(9.7596 * $gold18) + 200000;
-        $intrinsicBahar = round(9.7596 * $gold18) + 200000;
-        $intrinsicNim = round(4.8792 * $gold18) + 150000;
-        $intrinsicRob = round(2.4396 * $gold18) + 100000;
-        $intrinsicGerami = round(1.2192 * $gold18) + 80000;
-
-        // اگر قیمت دیتابیس غیرمنطقی، قدیمی (کمتر از طلا) یا به شدت حباب نامتعارف بود، از قیمت تخمینی روز بازار استفاده شود
-        if ($coinEmami < $intrinsicEmami || $coinEmami > ($intrinsicEmami * 1.5)) {
-            $coinEmami = round($intrinsicEmami * 1.18); // حباب طبیعی ۱۸ درصدی سکه امامی
-        }
-        if ($coinBahar < $intrinsicBahar || $coinBahar > ($intrinsicBahar * 1.4)) {
-            $coinBahar = round($intrinsicBahar * 1.08); // حباب طبیعی ۸ درصدی بهار آزادی
-        }
-        if ($coinNim < $intrinsicNim || $coinNim > ($intrinsicNim * 1.6)) {
-            $coinNim = round($intrinsicNim * 1.22); // حباب طبیعی ۲۲ درصدی نیم سکه
-        }
-        if ($coinRob < $intrinsicRob || $coinRob > ($intrinsicRob * 1.8)) {
-            $coinRob = round($intrinsicRob * 1.36); // حباب طبیعی ۳۶ درصدی ربع سکه
-        }
-        if ($coinGerami < $intrinsicGerami || $coinGerami > ($intrinsicGerami * 2.0)) {
-            $coinGerami = round($intrinsicGerami * 1.45); // حباب طبیعی ۴۵ درصدی سکه گرمی
-        }
 
         return [
-            'hasRealRates' => true,
+            'hasRealRates' => ($gold18 > 0),
             'rates' => [
                 'gold18'       => $gold18,
-                'gold24'       => $gold24,
-                'mesghal'      => $mesghal,
+                'gold24'       => $gold24 > 0 ? $gold24 : round($gold18 * (24 / 18)),
+                'mesghal'      => $mesghal > 0 ? $mesghal : round($gold18 * MarketService::MESGHAL_TO_GRAM_18K),
                 'ons'          => $ons,
                 'dollar'       => $dollar,
                 'coin_emami'   => $coinEmami,

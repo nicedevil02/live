@@ -62,9 +62,7 @@
             </span>
         </h1>
         <p class="text-slate-600 dark:text-slate-400 text-sm">
-            مبنای طلای ۱۸ عیار: <strong class="text-amber-500 font-mono">{{ number_format($rates['gold18']) }}</strong> تومان &bull;
-            انس جهانی: <strong class="text-amber-500 font-mono">${{ number_format($rates['ons'], 1) }}</strong> &bull;
-            دلار آزاد: <strong class="text-amber-500 font-mono">{{ number_format($rates['dollar']) }}</strong> تومان
+            محاسبه مستقیم بر مبنای نرخ لحظه‌ای طلا و سکه در تابلوی طلالایو &bull; نرخ طلای ۱۸ عیار تابلو: <strong class="text-amber-500 font-mono">{{ number_format($rates['gold18']) }}</strong> تومان
         </p>
     </div>
 
