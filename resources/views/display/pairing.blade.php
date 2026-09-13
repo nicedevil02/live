@@ -220,9 +220,9 @@
                         </div>
                     </div>
 
-                    {{-- پین اتصال ۶ رقمی عددی درشت --}}
+                    {{-- پین اتصال ۶ رقمی حروفی-عددی درشت --}}
                     <div class="space-y-1.5 w-full">
-                        <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">پین عددی اتصال تلویزیون مغازه:</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">کد اختصاصی اتصال تلویزیون مغازه:</p>
                         <div id="activationCode" class="text-3xl sm:text-4xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono bg-slate-50 dark:bg-slate-950/80 border-2 border-amber-500/30 py-3 rounded-2xl shadow-inner select-all">
                             --- ---
                         </div>
@@ -319,50 +319,37 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            // ۱. تولید شناسه سشن موقت
+        document.addEventListener('DOMContentLoaded', () => {
+            // ۱. تولید شناسه سشن موقت تصادفی
             const sessionCode = 'sess-' + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
             window.currentSessionCode = sessionCode;
 
+            // ۲. تولید فوری کد ۶ کاراکتری حروفی-عددی از روی سشن (حروف بزرگ انگلیسی و اعداد)
+            const activationCode = sessionCode.substring(5, 11).toUpperCase();
+            window.currentActivationCode = activationCode;
+
             const activationCodeEl = document.getElementById('activationCode');
+            if (activationCodeEl) {
+                activationCodeEl.innerText = activationCode.substring(0, 3) + ' ' + activationCode.substring(3, 6);
+            }
+
+            // ۳. ساخت لینک مستقیم و قطعی اسکن QR Code (مسیر /admin/pair/...)
+            const pairingUrl = window.location.origin + '/admin/pair/' + sessionCode;
             const qrImage = document.getElementById('qrImage');
             const qrLoader = document.getElementById('qrLoader');
-
-            // ۲. ثبت سشن در سرور و دریافت پین ۶ رقمی کاملاً عددی
-            let activationCode = '';
-            try {
-                const regRes = await fetch('/api/tv/register-session', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ session_code: sessionCode })
-                });
-                const regData = await regRes.json();
-                if (regData && regData.activation_code) {
-                    activationCode = regData.activation_code;
-                    window.currentActivationCode = activationCode;
-
-                    // نمایش کد ۶ رقمی عددی با فاصله خوانا
-                    if (activationCodeEl) {
-                        activationCodeEl.innerText = activationCode.substring(0, 3) + ' ' + activationCode.substring(3, 6);
-                    }
-
-                    // ۳. ساخت لینک آدرس نهایی QR Code بر مبنای مسیر کوتاه جادویی /p/{code}
-                    const magicPairUrl = window.location.origin + '/p/' + activationCode;
-                    if (qrImage) {
-                        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=020617&data=' + encodeURIComponent(magicPairUrl);
-                        qrImage.onload = () => {
-                            if (qrLoader) qrLoader.style.display = 'none';
-                        };
-                    }
-                }
-            } catch (err) {
-                console.error('Failed to register TV session:', err);
-                const fallbackUrl = window.location.origin + '/admin/pair/' + sessionCode;
-                if (qrImage) {
-                    qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=020617&data=' + encodeURIComponent(fallbackUrl);
-                    qrImage.onload = () => { if (qrLoader) qrLoader.style.display = 'none'; };
-                }
+            if (qrImage) {
+                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=020617&data=' + encodeURIComponent(pairingUrl);
+                qrImage.onload = () => {
+                    if (qrLoader) qrLoader.style.display = 'none';
+                };
             }
+
+            // ۴. ثبت سشن در سرور جهت پایداری در دیتابیس tv_sessions و کش
+            fetch('/api/tv/register-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_code: sessionCode, activation_code: activationCode })
+            }).catch(err => console.error('Failed to register TV session:', err));
 
             // ۴. پولینگ وضعیت اتصال تلویزیون هر ۳ ثانیه
             let checkInterval = setInterval(async () => {

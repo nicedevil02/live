@@ -353,17 +353,13 @@ class PublicDisplayController extends Controller
             DB::table('tv_sessions')->where('expires_at', '<', now()->subDay())->delete();
         } catch (\Throwable $e) {}
 
-        // اگر کدی ارسال نشده یا ۶ رقمی معتبر نیست، یک پین ۶ رقمی تصادفی و غیرتکراری تولید می‌کنیم
-        if (empty($activationCode) || !preg_match('/^[0-9]{6}$/', $activationCode)) {
-            $attempts = 0;
-            do {
-                $activationCode = (string) random_int(100000, 999999);
-                $attempts++;
-                $exists = DB::table('tv_sessions')
-                    ->where('activation_code', $activationCode)
-                    ->where('expires_at', '>', now())
-                    ->exists();
-            } while ($exists && $attempts < 10);
+        // اگر کدی ارسال نشده یا کمتر از ۶ کاراکتر است، از روی سشن استخراج می‌کنیم
+        if (empty($activationCode) || strlen($activationCode) < 6) {
+            if (strlen($sessionCode) >= 11) {
+                $activationCode = strtoupper(substr($sessionCode, 5, 6));
+            } else {
+                $activationCode = strtoupper(Str::random(6));
+            }
         }
 
         $expiresAt = now()->addHours(2);
@@ -399,7 +395,7 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * جفت‌سازی دستی تلویزیون با پین ۶ رقمی در پنل مدیریت طلافروش
+     * جفت‌سازی دستی تلویزیون با پین ۶ رقمی یا حروفی-عددی در پنل مدیریت طلافروش
      */
     public function pairWithCode(Request $request)
     {
@@ -408,13 +404,13 @@ class PublicDisplayController extends Controller
         $rawCode = (string) $request->input('activation_code', '');
         $activationCode = self::normalizeDigits($rawCode);
         
-        if (empty($activationCode)) {
-            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی ۶ رقمی را وارد کنید.'], 400);
+        if (empty($activationCode) || strlen($activationCode) < 6) {
+            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی ۶ کاراکتری را وارد کنید.'], 400);
         }
 
         $sessionCode = null;
 
-        // ۱. اولویت اول: جستجو در جدول پایدار دیتابیس tv_sessions
+        // ۱. اولویت اول: جستجو در جدول پایدار دیتابیس tv_sessions بر مبنای activation_code
         try {
             $dbSession = DB::table('tv_sessions')
                 ->where('activation_code', $activationCode)
@@ -434,7 +430,21 @@ class PublicDisplayController extends Controller
             $sessionCode = Cache::get('tv_session_' . $activationCode);
         }
 
-        // ۳. اگر سشن پیدا نشد، بررسی انقضا برای پیام خطای شفاف
+        // ۳. اولویت سوم: تطبیق با پیشوند session_code در صورتی که بخشی از سشن وارد شده باشد
+        if (!$sessionCode) {
+            try {
+                $dbSessionByCode = DB::table('tv_sessions')
+                    ->where('session_code', 'like', '%' . $activationCode . '%')
+                    ->where('expires_at', '>', now())
+                    ->latest('id')
+                    ->first();
+                if ($dbSessionByCode) {
+                    $sessionCode = $dbSessionByCode->session_code;
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        // ۴. اگر سشن پیدا نشد، بررسی انقضا برای پیام خطای شفاف
         if (!$sessionCode) {
             try {
                 $expiredCheck = DB::table('tv_sessions')
@@ -445,14 +455,14 @@ class PublicDisplayController extends Controller
                 if ($expiredCheck) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'اعتبار این کد ۶ رقمی به پایان رسیده است. لطفاً صفحه تلویزیون را رفرش فرمایید تا کد جدید تولید شود.'
+                        'message' => 'اعتبار این کد به پایان رسیده است. لطفاً صفحه تلویزیون را رفرش فرمایید تا کد جدید تولید شود.'
                     ], 404);
                 }
             } catch (\Throwable $e) {}
 
             return response()->json([
                 'success' => false,
-                'message' => 'کد فعال‌سازی وارد شده یافت نشد. لطفاً کد ۶ رقمی نمایش داده شده روی تلویزیون را با دقت وارد کنید.'
+                'message' => 'کد فعال‌سازی وارد شده یافت نشد. لطفاً کد ۶ کاراکتری نمایش داده شده روی تلویزیون را با دقت وارد کنید.'
             ], 404);
         }
 
