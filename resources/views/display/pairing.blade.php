@@ -467,104 +467,200 @@
         <div class="absolute -top-40 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-40 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14 z-10">
-            
-            {{-- ستون سمت راست: معرفی و راهنمای تلویزیون --}}
-            <div class="flex-1 text-right space-y-6">
-                
-                {{-- بج نسخه جدید --}}
-                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-                    <span>نسخه نسل جدید سامانه ابری طلالایو ویژه تلویزیون هوشمند طلافروشی و مغازه طلا فروشی</span>
-                </div>
+        {{-- پنجره تمام‌صفحه جشن و تبریک اتصال موفقیت‌آمیز تلویزیون --}}
+        <div id="celebrationOverlay" style="display: none;" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-2xl flex items-center justify-center p-4 text-center">
+            <div class="max-w-md w-full bg-slate-900 border-2 border-amber-500/60 rounded-3xl p-8 shadow-2xl space-y-5">
+                <div class="text-6xl animate-bounce">🎉</div>
+                <h2 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500">
+                    اتصال با موفقیت انجام شد!
+                </h2>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    تلویزیون مغازه به تابلوی هوشمند گالری شما متصل گردید.<br>
+                    در حال بارگذاری نرخ‌های زنده طلا و سکه...
+                </p>
+                <div class="w-12 h-12 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mx-auto"></div>
+            </div>
+        </div>
 
-                {{-- تیتر اصلی سئو و معرفی --}}
-                <div class="space-y-4">
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-                        تابلوی هوشمند طلافروشی و مغازه طلا فروشی <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
-                            روی تلویزیون بدون نیاز به کیس و کابل
-                        </span>
-                    </h1>
-                    <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-                        تنها با باز کردن مرورگر تلویزیون هوشمند در مغازه طلا فروشی و اسکن بارکد، تابلوی اختصاصی طلا، سکه، ارز و ویترین جواهرات خود را با فرمول سود دلخواه به صورت زنده فعال کنید.
-                    </p>
-                </div>
+        <div class="w-full max-w-6xl mx-auto flex flex-col z-10">
 
-                {{-- راهنمای ۳ گام اسکن و جفت‌سازی --}}
-                <div class="bg-white/90 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 backdrop-blur-md max-w-xl shadow-lg shadow-slate-200/50 dark:shadow-none">
-                    <div class="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>مراحل راه‌اندازی و اتصال تابلوی این تلویزیون:</span>
+            {{-- همیار راه‌اندازی در تلفن همراه (Mobile Companion) ویژه جلوگیری از سردرگمی --}}
+            <div x-data="{ isMobile: (window.innerWidth < 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)), mobilePin: '', isSubmitting: false, mobileErr: '' }"
+                 x-show="isMobile"
+                 class="w-full mb-10 bg-gradient-to-br from-amber-500/15 via-slate-900/90 to-blue-500/15 border-2 border-amber-500/50 rounded-3xl p-5 sm:p-7 backdrop-blur-xl shadow-2xl text-right">
+                <div class="flex flex-col sm:flex-row items-start gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 font-black text-2xl flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/30">
+                        📱
                     </div>
-                    <ol class="space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                        <li class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۱</span>
-                            <span>با گوشی خود وارد <a href="{{ route('admin.login') }}" class="text-amber-600 dark:text-amber-400 underline decoration-amber-500/50 hover:text-amber-700 dark:hover:text-amber-300 font-bold">پنل مدیریت طلالایو</a> شوید (یا ثبت نام کنید).</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۲</span>
-                            <span>بارکد QR روبرو را با دوربین گوشی اسکن کرده و لینک تایید را باز کنید.</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۳</span>
-                            <span>تلویزیون بلافاصله جفت شده و تابلوی زنده شما با نرخ‌های دقیق نمایش داده می‌شود.</span>
-                        </li>
-                    </ol>
-                </div>
+                    <div class="space-y-3 flex-1 w-full">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">شما با تلفن همراه وارد شده‌اید</h3>
+                            <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">راهنمای راه‌اندازی آسان</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            برای نمایش نرخ‌ها، مرورگر تلویزیون مغازه را باز کرده و آدرس <span class="font-bold font-mono text-amber-600 dark:text-amber-400" dir="ltr">talalive.ir/tv</span> را در آن باز کنید. سپس کد ۶ رقمی روی تلویزیون را در کادر زیر بزنید یا مستقیماً وارد پنل مدیریت شوید:
+                        </p>
+                        
+                        <div class="pt-1 flex flex-col sm:flex-row items-center gap-2.5 w-full">
+                            <div class="relative flex-1 w-full">
+                                <input type="text" maxlength="6" x-model="mobilePin" placeholder="کد ۶ رقمی روی تلویزیون (مثلا ۴۸۲۱۹۵)"
+                                       @input="mobilePin = mobilePin.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '')"
+                                       class="w-full bg-white dark:bg-slate-950 border-2 border-amber-500/50 rounded-2xl px-4 py-3 text-center font-mono font-black text-xl tracking-widest text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                            </div>
+                            <button type="button" @click="if (mobilePin.length === 6) { window.location.href = '/p/' + mobilePin; } else { mobileErr = 'لطفاً کد ۶ رقمی را کامل وارد نمایید.'; }"
+                                    class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
+                                <span>🚀 اتصال و روشن کردن تلویزیون</span>
+                            </button>
+                        </div>
+                        <p x-show="mobileErr" x-text="mobileErr" class="text-xs text-rose-500 font-bold"></p>
 
-                {{-- دکمه اسکرول به سایر امکانات --}}
-                <div class="pt-2 flex items-center gap-4">
-                    <a href="#features" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors py-1">
-                        <span>مشاهده امکانات، پیش‌نمایش و راهنمای کامل</span>
-                        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                    </a>
+                        <div class="pt-1 flex items-center gap-3 flex-wrap text-xs font-bold">
+                            <a href="{{ route('admin.login') }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5">
+                                <span>ورود به پنل مدیریت طلالایو</span>
+                                <span>←</span>
+                            </a>
+                            <a href="{{ route('public.tv-setup-guide') }}" class="px-3 py-2 rounded-xl text-amber-600 dark:text-amber-400 hover:underline">
+                                آموزش تصویری اتصال انواع تلویزیون
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {{-- ستون سمت چپ: کارت QR Code و اتصال هوشمند تلویزیون --}}
-            <div class="flex flex-col gap-5 w-full max-w-[360px] shrink-0">
-                <div class="w-full bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 shadow-2xl shadow-slate-300/60 dark:shadow-2xl backdrop-blur-xl flex flex-col items-center justify-center text-center gap-6 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
-
-                    {{-- وضعیت اتصال زنده --}}
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-3.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>آماده اتصال به تلویزیون هوشمند</span>
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
+                
+                {{-- ستون سمت راست: معرفی و راهنمای تلویزیون --}}
+                <div class="flex-1 text-right space-y-6">
+                    
+                    {{-- بج نسخه جدید --}}
+                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                        <span>نسخه نسل جدید سامانه ابری طلالایو ویژه تلویزیون هوشمند طلافروشی و مغازه طلا فروشی</span>
                     </div>
 
-                    {{-- کادر تصویر QR Code --}}
-                    <div class="relative bg-white p-3 rounded-2xl overflow-hidden shadow-xl border-2 border-amber-400/30">
-                        <img id="qrImage" src="" alt="Pairing QR Code" class="w-56 h-56 object-contain">
-                        <div id="qrLoader" class="absolute inset-0 bg-white flex items-center justify-center">
-                            <div class="w-10 h-10 border-4 border-slate-200 border-t-amber-500 rounded-full animate-spin"></div>
-                        </div>
+                    {{-- تیتر اصلی سئو و معرفی --}}
+                    <div class="space-y-4">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                            تابلوی هوشمند طلافروشی و مغازه طلا فروشی <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
+                                روی تلویزیون بدون نیاز به کیس و کابل
+                            </span>
+                        </h1>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
+                            تنها با باز کردن مرورگر تلویزیون هوشمند در مغازه طلا فروشی و اسکن بارکد یا وارد کردن کد ۶ رقمی، تابلوی اختصاصی طلا، سکه، ارز و ویترین جواهرات خود را با فرمول سود دلخواه به صورت زنده فعال کنید.
+                        </p>
                     </div>
 
-                    {{-- کد فعال‌سازی دستی ۶ رقمی --}}
-                    <div class="space-y-1.5 w-full">
-                        <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">کد اتصال دستی ۶ رقمی:</p>
-                        <div id="activationCode" class="text-2xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 py-2 rounded-xl shadow-inner">
-                            ------
+                    {{-- راهنمای ۳ گام اسکن و جفت‌سازی --}}
+                    <div class="bg-white/90 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 backdrop-blur-md max-w-xl shadow-lg shadow-slate-200/50 dark:shadow-none">
+                        <div class="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>سریع‌ترین روش‌های اتصال تابلوی این تلویزیون:</span>
                         </div>
-                        <p class="text-[10px] text-slate-500">قابل وارد کردن در منوی جفت‌سازی پنل مدیریت طلالایو</p>
+                        <ol class="space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                            <li class="flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۱</span>
+                                <span><b>اسکن بارکد QR:</b> بارکد روبرو را با دوربین گوشی اسکن کرده و لینک را تایید کنید.</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۲</span>
+                                <span><b>وارد کردن کد ۶ رقمی:</b> کد عددی درشت زیر را در <a href="{{ route('admin.login') }}" class="text-amber-600 dark:text-amber-400 underline font-bold">پنل مدیریت طلالایو</a> ثبت کنید.</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۳</span>
+                                <span><b>ارسال پیامک جادویی:</b> شماره موبایل خود را در کادر زیر وارد کنید تا کد به گوشی شما پیامک شود.</span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    {{-- دکمه اسکرول به سایر امکانات --}}
+                    <div class="pt-2 flex items-center gap-4">
+                        <a href="#features" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors py-1">
+                            <span>مشاهده امکانات، پیش‌نمایش و راهنمای کامل</span>
+                            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </a>
                     </div>
                 </div>
 
-                {{-- کادر ارتباط مستقیم با پشتیبانی --}}
-                <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-center text-xs space-y-2 backdrop-blur-xl shadow-md">
-                    <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">پشتیبانی فنی و راه‌اندازی فوری تابلوی طلافروشی:</p>
-                    <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
-                        <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
-                        &nbsp;&middot;&nbsp;
-                        <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
-                    </p>
-                    <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
-                        <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
-                        <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
-                            <span>پشتیبانی روبیکا</span>
-                        </a>
+                {{-- ستون سمت چپ: کارت QR Code، کد ۶ رقمی عددی و ارسال پیامک جادویی --}}
+                <div class="flex flex-col gap-5 w-full max-w-[380px] shrink-0">
+                    <div class="w-full bg-white dark:bg-slate-900/90 border-2 border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl backdrop-blur-xl flex flex-col items-center justify-center text-center gap-5 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
+
+                        {{-- وضعیت اتصال زنده --}}
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/90 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>آماده اتصال به تلویزیون هوشمند</span>
+                        </div>
+
+                        {{-- کادر تصویر QR Code با لینک هوشمند --}}
+                        <div class="relative bg-white p-3 rounded-2xl overflow-hidden shadow-xl border-2 border-amber-400/40">
+                            <img id="qrImage" src="" alt="بارکد هوشمند اتصال تلویزیون" class="w-52 h-52 sm:w-56 sm:h-56 object-contain">
+                            <div id="qrLoader" class="absolute inset-0 bg-white flex items-center justify-center">
+                                <div class="w-10 h-10 border-4 border-slate-200 border-t-amber-500 rounded-full animate-spin"></div>
+                            </div>
+                        </div>
+
+                        {{-- پین اتصال ۶ رقمی کاملاً عددی (Pure 6-Digit PIN) --}}
+                        <div class="space-y-1.5 w-full">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">پین عددی اتصال تلویزیون مغازه:</p>
+                            <div id="activationCode" class="text-3xl sm:text-4xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono bg-slate-50 dark:bg-slate-950/80 border-2 border-amber-500/30 py-3 rounded-2xl shadow-inner select-all">
+                                --- ---
+                            </div>
+                            <p class="text-[11px] text-slate-500">کد را در پنل مدیریت وارد کنید یا با گوشی اسکن نمایید</p>
+                        </div>
+
+                        {{-- ارسال پیامک جادویی به موبایل طلافروش (Magic SMS Box) --}}
+                        <div class="w-full pt-4 border-t border-slate-200 dark:border-slate-800/80 space-y-2 text-right"
+                             x-data="{ phone: '', sending: false, smsMsg: '', isError: false }">
+                            <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                                📱 ارسال کد فعال‌سازی با پیامک به موبایل شما:
+                            </label>
+                            <div class="flex items-center gap-1.5" dir="ltr">
+                                <input type="tel" x-model="phone" maxlength="11" placeholder="09xxxxxxxxx"
+                                       @input="phone = phone.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '')"
+                                       class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-center font-mono focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                                <button type="button" :disabled="sending || phone.length < 11"
+                                        @click="
+                                            sending = true; smsMsg = ''; isError = false;
+                                            fetch('/api/tv/magic-sms', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ phone: phone, activation_code: window.currentActivationCode || '' })
+                                            }).then(r => r.json()).then(data => {
+                                                sending = false;
+                                                if (data.success) {
+                                                    smsMsg = data.message;
+                                                    isError = false;
+                                                } else {
+                                                    smsMsg = data.message || 'خطا در ارسال پیامک';
+                                                    isError = true;
+                                                }
+                                            }).catch(err => { sending = false; smsMsg = 'خطا در شبکه'; isError = true; });
+                                        "
+                                        class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs disabled:opacity-50 transition-colors whitespace-nowrap cursor-pointer">
+                                    <span x-text="sending ? '...' : 'ارسال پیامک'"></span>
+                                </button>
+                            </div>
+                            <p x-show="smsMsg" x-text="smsMsg" :class="isError ? 'text-rose-500' : 'text-emerald-500'" class="text-[10px] font-bold text-center leading-normal"></p>
+                        </div>
+                    </div>
+
+                    {{-- کادر ارتباط مستقیم با پشتیبانی --}}
+                    <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-center text-xs space-y-2 backdrop-blur-xl shadow-md">
+                        <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">پشتیبانی فنی و راه‌اندازی فوری تابلوی طلافروشی:</p>
+                        <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
+                            <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
+                            &nbsp;&middot;&nbsp;
+                            <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
+                        </p>
+                        <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
+                            <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
+                            <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
+                                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
+                                <span>پشتیبانی روبیکا</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1827,40 +1923,79 @@
         }
     </script>
 
-    {{-- اسکریپت جفت‌سازی تلویزیون هوشمند (۱۰۰٪ حفظ شده و بدون تغییر منطقی) --}}
+    {{-- اسکریپت جفت‌سازی هوشمند تلویزیون با پین عددی، پیامک جادویی و چایم صوتی --}}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // ۱. تولید شناسه سشن موقت تصادفی
+        // پخش ملودی دلنشین موفقیت (Success Chime) با استفاده از Web Audio API
+        function playSuccessChime() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // نوت‌های هارمونیک C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.38);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.12);
+                    osc.stop(ctx.currentTime + idx * 0.12 + 0.4);
+                });
+            } catch (e) {
+                console.log('Audio chime not allowed without user interaction:', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // ۱. تولید شناسه سشن موقت
             const sessionCode = 'sess-' + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-            
-            // نمایش کد فعال‌سازی خلاصه روی تلویزیون
-            const activationCode = sessionCode.substring(5, 11).toUpperCase();
+            window.currentSessionCode = sessionCode;
+
             const activationCodeEl = document.getElementById('activationCode');
-            if (activationCodeEl) {
-                activationCodeEl.innerText = activationCode;
-            }
-
-            // ثبت سشن در سرور جهت امکان فعال‌سازی دستی با کد ۶ رقمی
-            fetch('/api/tv/register-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ session_code: sessionCode, activation_code: activationCode })
-            }).catch(err => console.error('Failed to register session:', err));
-
-            // ۲. ساخت لینک آدرس نهایی اسکن
-            const pairingUrl = window.location.origin + '/admin/pair/' + sessionCode;
-
-            // ۳. لود کردن عکس بارکد
             const qrImage = document.getElementById('qrImage');
-            if (qrImage) {
-                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&color=020617&data=' + encodeURIComponent(pairingUrl);
-                qrImage.onload = () => {
-                    const loader = document.getElementById('qrLoader');
-                    if (loader) loader.style.display = 'none';
-                };
+            const qrLoader = document.getElementById('qrLoader');
+
+            // ۲. ثبت سشن در سرور و دریافت پین ۶ رقمی کاملاً عددی
+            let activationCode = '';
+            try {
+                const regRes = await fetch('/api/tv/register-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_code: sessionCode })
+                });
+                const regData = await regRes.json();
+                if (regData && regData.activation_code) {
+                    activationCode = regData.activation_code;
+                    window.currentActivationCode = activationCode;
+
+                    // نمایش کد ۶ رقمی عددی با فاصله خوانا
+                    if (activationCodeEl) {
+                        activationCodeEl.innerText = activationCode.substring(0, 3) + ' ' + activationCode.substring(3, 6);
+                    }
+
+                    // ۳. ساخت لینک آدرس نهایی QR Code بر مبنای مسیر کوتاه جادویی /p/{code}
+                    const magicPairUrl = window.location.origin + '/p/' + activationCode;
+                    if (qrImage) {
+                        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=020617&data=' + encodeURIComponent(magicPairUrl);
+                        qrImage.onload = () => {
+                            if (qrLoader) qrLoader.style.display = 'none';
+                        };
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to register TV session:', err);
+                // فال‌بک در صورت بروز خطای مقطعی شبکه
+                const fallbackUrl = window.location.origin + '/admin/pair/' + sessionCode;
+                if (qrImage) {
+                    qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=020617&data=' + encodeURIComponent(fallbackUrl);
+                    qrImage.onload = () => { if (qrLoader) qrLoader.style.display = 'none'; };
+                }
             }
 
-            // ۴. شروع پولینگ دوره‌ای چک کردن وضعیت جفت‌سازی از سرور
+            // ۴. پولینگ وضعیت اتصال تلویزیون هر ۳ ثانیه
             let checkInterval = setInterval(async () => {
                 try {
                     const res = await fetch('/api/tv/check/' + sessionCode);
@@ -1868,20 +2003,27 @@
                     const data = await res.json();
                     
                     if (data.paired && data.username && data.display_token) {
-                        // متوقف کردن پولینگ
                         clearInterval(checkInterval);
                         
-                        // ذخیره در LocalStorage تلویزیون
+                        // پخش چایم صوتی و نمایش پنجره جشن اتصال
+                        playSuccessChime();
+                        const overlay = document.getElementById('celebrationOverlay');
+                        if (overlay) overlay.style.display = 'flex';
+                        
+                        // ذخیره پایدار در LocalStorage و Cookie تلویزیون
                         localStorage.setItem('display_username', data.username);
                         localStorage.setItem('display_token', data.display_token);
+                        document.cookie = `display_token=${encodeURIComponent(data.display_token)}; path=/; max-age=31536000`;
                         
-                        // انتقال تلویزیون به تابلوی طلا
-                        window.location.href = '/' + data.username + '?key=' + data.display_token;
+                        // انتقال نرم و مطمئن به تابلوی طلای زنده بعد از ۱.۶ ثانیه
+                        setTimeout(() => {
+                            window.location.href = '/' + data.username + '?key=' + data.display_token;
+                        }, 1600);
                     }
                 } catch (e) {
                     console.error('Pairing check error:', e);
                 }
-            }, 3000); // هر ۳ ثانیه
+            }, 3000);
         });
     </script>
 </body>

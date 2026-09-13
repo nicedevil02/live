@@ -690,6 +690,20 @@
 <body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
     <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
 
+        {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
+        <div x-show="connectionState !== 'online'"
+             x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="-translate-y-full opacity-0"
+             x-transition:enter-end="translate-y-0 opacity-100"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="translate-y-0 opacity-100"
+             x-transition:leave-end="-translate-y-full opacity-0"
+             class="fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-500/90 text-slate-950 font-black text-xs text-center backdrop-blur-md shadow-lg flex items-center justify-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-950 animate-ping"></span>
+            <span x-text="errorMessage || 'در حال تلاش مجدد برای اتصال به اینترنت مغازه... (آخرین قیمت‌های معتبر در حال نمایش است)'"></span>
+        </div>
+
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
         <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
             <img :src="bingWallpaperUrl" 
@@ -1539,6 +1553,19 @@
                 },
 
                 init() {
+                    // ذخیره پایدار توکن و نام کاربری در حافظه محلی و کوکی تلویزیون جهت اتصال همیشگی
+                    try {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const currentKey = urlParams.get('key');
+                        if (currentKey) {
+                            localStorage.setItem('display_username', '{{ $username }}');
+                            localStorage.setItem('display_token', currentKey);
+                            document.cookie = `display_token=${encodeURIComponent(currentKey)}; path=/; max-age=31536000`;
+                        }
+                    } catch (e) {
+                        console.warn('LocalStorage persistence error:', e);
+                    }
+
                     // جلوگیری از به خواب رفتن تلویزیون (Wake Lock API)
                     let wakeLock = null;
                     const requestWakeLock = async () => {

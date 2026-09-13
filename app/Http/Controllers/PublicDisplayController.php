@@ -108,7 +108,7 @@ class PublicDisplayController extends Controller
             return;
         }
 
-        $key = request()->query('key');
+        $key = request()->query('key') ?? request()->cookie('display_token') ?? request()->header('X-Display-Token');
         if (!$key || $key !== $user->display_token) {
             abort(403, 'شما دسترسی به این تابلوی نمایشی را ندارید.');
         }
@@ -243,21 +243,46 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * ثبت سشن موقت تلویزیون در سرور
+     * نرمال‌سازی ارقام فارسی و عربی به انگلیسی
+     */
+    public static function normalizeDigits(string $input): string
+    {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($persian, $english, trim($input));
+    }
+
+    /**
+     * ثبت سشن موقت تلویزیون در سرور و تخصیص پین ۶ رقمی کاملاً عددی
      */
     public function registerSession(Request $request)
     {
         $sessionCode = $request->input('session_code');
-        $activationCode = strtoupper(trim($request->input('activation_code')));
+        $rawCode = (string) $request->input('activation_code', '');
+        $activationCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', $rawCode))));
 
-        if (!$sessionCode || !$activationCode) {
-            return response()->json(['success' => false, 'message' => 'اطلاعات ناقص است.'], 400);
+        if (!$sessionCode) {
+            return response()->json(['success' => false, 'message' => 'شناسه سشن الزامی است.'], 400);
+        }
+
+        // اگر کدی ارسال نشده یا معتبر نیست، یک کد ۶ رقمی تصادفی و یکتا تولید می‌کنیم
+        if (empty($activationCode) || !preg_match('/^[0-9]{6}$/', $activationCode)) {
+            $attempts = 0;
+            do {
+                $activationCode = (string) random_int(100000, 999999);
+                $attempts++;
+            } while (Cache::has('tv_session_' . $activationCode) && $attempts < 10);
         }
 
         // ذخیره جفت‌سازی موقت در کش برای ۱۰ دقیقه
         Cache::put('tv_session_' . $activationCode, $sessionCode, 600);
+        Cache::put('tv_code_for_' . $sessionCode, $activationCode, 600);
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'activation_code' => $activationCode,
+            'session_code' => $sessionCode
+        ]);
     }
 
     /**
@@ -265,9 +290,11 @@ class PublicDisplayController extends Controller
      */
     public function pairWithCode(Request $request)
     {
-        $activationCode = strtoupper(trim($request->input('activation_code')));
+        $rawCode = (string) $request->input('activation_code', '');
+        $activationCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', $rawCode))));
+        
         if (empty($activationCode)) {
-            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی را وارد کنید.'], 400);
+            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی ۶ رقمی را وارد کنید.'], 400);
         }
 
         $sessionCode = Cache::get('tv_session_' . $activationCode);
@@ -291,5 +318,65 @@ class PublicDisplayController extends Controller
             'success' => true,
             'message' => 'تلویزیون با موفقیت متصل شد.'
         ]);
+    }
+
+    /**
+     * ارسال کد فعال‌سازی یا لینک جفت‌سازی از طریق پیامک به موبایل طلافروش
+     */
+    public function sendMagicSms(Request $request, \App\Services\SmsService $smsService)
+    {
+        $phone = \App\Services\SmsService::normalizeMobile((string) $request->input('phone', ''));
+        if (!preg_match('/^09[0-9]{9}$/', $phone)) {
+            return response()->json(['success' => false, 'message' => 'شماره موبایل نامعتبر است. فرمت صحیح: ۰۹xxxxxxxxx'], 422);
+        }
+
+        $rawCode = (string) $request->input('activation_code', '');
+        $activationCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', $rawCode))));
+
+        if (empty($activationCode) || !Cache::has('tv_session_' . $activationCode)) {
+            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی تلویزیون نامعتبر یا منقضی شده است. لطفا صفحه تلویزیون را رفرش کنید.'], 404);
+        }
+
+        $result = $smsService->sendOtp($phone, $activationCode);
+        if ($result['success']) {
+            return response()->json([
+                'success' => true,
+                'message' => 'کد فعال‌سازی ۶ رقمی به شماره ' . $phone . ' پیامک شد.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $result['message'] ?? 'خطا در ارسال پیامک'
+        ], 500);
+    }
+
+    /**
+     * مسیر اتصال سریع و جادویی از طریق لینک کوتاه پیامک شده /p/{code}
+     */
+    public function pairMagicShortLink(Request $request, $code)
+    {
+        $cleanCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', (string) $code))));
+        $sessionCode = Cache::get('tv_session_' . $cleanCode);
+
+        if (!$sessionCode) {
+            return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 80px 20px; background: #fff1f2; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 440px; background: #fff; border: 1px solid #fecdd3; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(225,29,72,0.1);'><div style='font-size: 56px; margin-bottom: 20px;'>⏱️</div><h2 style='color: #9f1239; margin-bottom: 12px; font-weight: 800; font-size: 20px;'>کد اتصال منقضی شده است</h2><p style='color: #881337; font-size: 14px; line-height: 1.8; margin-bottom: 24px;'>کد اتصال این تلویزیون به پایان رسیده است. لطفاً صفحه مرورگر تلویزیون مغازه را یکبار بازخوانی (رفرش) کنید تا کد جدید ۶ رقمی ایجاد شود.</p><a href='/tv' style='display: inline-block; background: #be123c; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: bold; font-size: 14px;'>مشاهده صفحه تلویزیون</a></div></div>", 404);
+        }
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            Cache::put('pairing_' . $sessionCode, [
+                'user_id' => $user->id,
+                'username' => $user->username,
+                'token' => $user->display_token
+            ], 300);
+            Cache::forget('tv_session_' . $cleanCode);
+
+            return redirect()->route('admin.dashboard')->with('success_pair', 'تلویزیون مغازه با موفقیت به تابلوی گالری شما متصل شد! 🎉');
+        }
+
+        // اگر کاربر هنوز لاگین نکرده باشد، کد را در سشن نگه می‌داریم و به صفحه لاگین می‌فرستیم
+        session(['pending_pair_code' => $cleanCode]);
+        return redirect()->route('admin.login')->with('info', 'جهت اتصال این تلویزیون به تابلوی اختصاصی، لطفاً ابتدا وارد حساب کاربری خود شوید.');
     }
 }

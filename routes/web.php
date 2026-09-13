@@ -27,6 +27,9 @@ Route::get('/', function () {
 // مسیر جفت‌سازی تلویزیون
 Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->name('display.tv');
 
+// مسیر لینک کوتاه جادویی اتصال تلویزیون با کد ۶ رقمی
+Route::get('/p/{code}', [PublicDisplayController::class, 'pairMagicShortLink'])->name('pair.magic');
+
 // بازگشت از درگاه پرداخت شاپرک (عمومی)
 Route::match(['get', 'post'], '/payment/callback/{gateway}', [SubscriptionController::class, 'callback'])->name('admin.subscription.callback');
 

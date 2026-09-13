@@ -66,6 +66,11 @@ class AuthController extends Controller
 
             Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
+
+            if ($this->handlePendingPairing($user)) {
+                return redirect()->route('admin.dashboard')->with('success_pair', 'ورود با موفقیت انجام شد و تلویزیون مغازه شما با موفقیت متصل گردید! 🎉');
+            }
+
             return redirect()->intended(route('admin.dashboard'));
         }
 
@@ -238,6 +243,10 @@ class AuthController extends Controller
 
         Auth::login($user, true);
         $request->session()->regenerate();
+
+        if ($this->handlePendingPairing($user)) {
+            return redirect()->route('admin.dashboard')->with('success_pair', 'ورود با موفقیت انجام شد و تلویزیون مغازه شما با موفقیت متصل گردید! 🎉');
+        }
 
         return redirect()->intended(route('admin.dashboard'))->with('success', 'رمز عبور جدید شما با موفقیت ثبت شد و وارد پنل شدید.');
     }
@@ -588,6 +597,37 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
+        if ($this->handlePendingPairing($user)) {
+            return redirect()->route('admin.dashboard')->with('success_pair', 'ثبت‌نام با موفقیت انجام شد و تلویزیون مغازه شما متصل گردید! 🎉');
+        }
+
         return redirect()->route('admin.dashboard')->with('success', 'به سامانه طلالایو خوش آمدید! دوره آزمایشی ۱۴ روزه گالری شما با موفقیت فعال شد.');
+    }
+
+    /**
+     * اتصال خودکار تلویزیون در صورت وجود سشن معلق (از طریق لینک کوتاه /p/{code})
+     */
+    protected function handlePendingPairing($user): bool
+    {
+        try {
+            $pendingCode = session()->pull('pending_pair_code');
+            if ($pendingCode) {
+                $cleanCode = \App\Http\Controllers\PublicDisplayController::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', (string) $pendingCode))));
+                $sessionCode = \Illuminate\Support\Facades\Cache::get('tv_session_' . $cleanCode);
+                if ($sessionCode) {
+                    \Illuminate\Support\Facades\Cache::put('pairing_' . $sessionCode, [
+                        'user_id'  => $user->id,
+                        'username' => $user->username,
+                        'token'    => $user->display_token
+                    ], 300);
+                    \Illuminate\Support\Facades\Cache::forget('tv_session_' . $cleanCode);
+                    return true;
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('handlePendingPairing error: ' . $e->getMessage());
+        }
+
+        return false;
     }
 }
