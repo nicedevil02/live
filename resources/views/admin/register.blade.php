@@ -119,7 +119,7 @@
                         <div class="relative flex-1">
                             <input type="tel" name="phone" id="phoneInput" required
                                    class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base sm:text-lg text-slate-900 dark:text-white font-mono text-center sm:text-left placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all font-bold tracking-wider"
-                                   dir="ltr" placeholder="09187009064" maxlength="11" value="{{ old('phone') }}"
+                                   dir="ltr" placeholder="09187009064" maxlength="11" value="{{ old('phone', request('phone', request('mobile', ''))) }}"
                                    autocomplete="tel" inputmode="numeric">
                         </div>
                         
