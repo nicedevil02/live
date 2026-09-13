@@ -612,14 +612,49 @@ class AuthController extends Controller
         try {
             $pendingCode = session()->pull('pending_pair_code');
             if ($pendingCode) {
-                $cleanCode = \App\Http\Controllers\PublicDisplayController::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', (string) $pendingCode))));
-                $sessionCode = \Illuminate\Support\Facades\Cache::get('tv_session_' . $cleanCode);
+                $cleanCode = \App\Http\Controllers\PublicDisplayController::normalizeDigits((string) $pendingCode);
+                $sessionCode = null;
+
+                \App\Http\Controllers\PublicDisplayController::ensureTvSessionsTable();
+
+                $dbSession = \Illuminate\Support\Facades\DB::table('tv_sessions')
+                    ->where('activation_code', $cleanCode)
+                    ->where('expires_at', '>', now())
+                    ->latest('id')
+                    ->first();
+
+                if ($dbSession) {
+                    $sessionCode = $dbSession->session_code;
+                }
+
+                if (!$sessionCode) {
+                    $sessionCode = \Illuminate\Support\Facades\Cache::get('tv_session_' . $cleanCode);
+                }
+
                 if ($sessionCode) {
+                    if (empty($user->display_token)) {
+                        $user->display_token = \Illuminate\Support\Str::random(32);
+                        $user->save();
+                    }
+
+                    try {
+                        \Illuminate\Support\Facades\DB::table('tv_sessions')
+                            ->where('session_code', $sessionCode)
+                            ->update([
+                                'is_paired'       => true,
+                                'paired_user_id'  => $user->id,
+                                'paired_username' => $user->username,
+                                'paired_token'    => $user->display_token,
+                                'updated_at'      => now(),
+                            ]);
+                    } catch (\Throwable $e) {}
+
                     \Illuminate\Support\Facades\Cache::put('pairing_' . $sessionCode, [
                         'user_id'  => $user->id,
                         'username' => $user->username,
                         'token'    => $user->display_token
-                    ], 300);
+                    ], 7200);
+
                     \Illuminate\Support\Facades\Cache::forget('tv_session_' . $cleanCode);
                     return true;
                 }

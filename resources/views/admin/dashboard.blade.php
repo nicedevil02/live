@@ -197,10 +197,17 @@
 
             {{-- ورودی کد دستی ۶ رقمی با تبدیل خودکار اعداد فارسی --}}
             <div class="flex items-center gap-1.5 w-full sm:w-auto">
-                <input type="text" maxlength="6" x-model="pairCode" placeholder="کد ۶ رقمی" dir="ltr"
-                       @input="pairCode = pairCode.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '')"
+                <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی" dir="ltr"
+                       @keydown.enter.prevent="pairWithCodeManual()"
+                       @input="
+                           let val = pairCode.toString();
+                           const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+                           const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
+                           for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
+                           pairCode = val.replace(/[^0-9]/g, '').substring(0, 6);
+                       "
                        class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-850 dark:text-slate-100 w-full sm:w-36 text-center font-mono font-bold placeholder:font-sans placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-amber-500/40">
-                <button @click="pairWithCodeManual()" :disabled="isPairing"
+                <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
                         class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0">
                     <span x-text="isPairing ? 'در حال اتصال...' : 'ثبت کد'"></span>
                 </button>
@@ -456,8 +463,15 @@
                         <span>وارد کردن کد ۶ رقمی نمایش داده شده روی تلویزیون</span>
                     </div>
                     <div class="pr-8 space-y-3">
-                        <input type="text" maxlength="6" x-model="pairCode" placeholder="کد ۶ رقمی عددی" dir="ltr"
-                               @input="pairCode = pairCode.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '')"
+                        <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی عددی" dir="ltr"
+                               @keydown.enter.prevent="pairWithCodeManual()"
+                               @input="
+                                   let val = pairCode.toString();
+                                   const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+                                   const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
+                                   for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
+                                   pairCode = val.replace(/[^0-9]/g, '').substring(0, 6);
+                               "
                                class="w-full bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-2xl py-3 px-4 text-center font-mono font-black text-2xl tracking-widest text-slate-900 dark:text-white placeholder:font-sans placeholder:text-sm placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
                         <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
                                 class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
@@ -547,9 +561,14 @@ function dashboardPage() {
         },
 
         async pairWithCodeManual() {
-            const code = this.pairCode.toString().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '').trim();
+            let code = this.pairCode.toString();
+            const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+            const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
+            for(let i=0; i<p.length; i++) code = code.replaceAll(p[i], e[i]);
+            code = code.replace(/[^0-9]/g, '').trim();
+
             if (!code || code.length < 6) {
-                alert('لطفا کد ۶ رقمی معتبر را وارد کنید.');
+                alert('لطفا پین ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.');
                 return;
             }
             this.isPairing = true;
@@ -570,7 +589,7 @@ function dashboardPage() {
                     this.pairCode = '';
                     await this.loadData();
                 } else {
-                    alert((data && data.message) ? data.message : 'خطا در اتصال');
+                    alert((data && data.message) ? data.message : 'کد فعال‌سازی نامعتبر است یا منقضی شده است. لطفا تلویزیون را رفرش فرمایید.');
                 }
             } catch (err) {
                 alert('خطا در برقراری ارتباط با سرور');

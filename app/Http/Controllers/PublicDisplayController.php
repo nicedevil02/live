@@ -8,7 +8,10 @@ use App\Models\ProductSlide;
 use App\Services\MarketService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PublicDisplayController extends Controller
 {
@@ -159,17 +162,68 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * چک کردن وضعیت جفت‌سازی توسط تلویزیون
+     * اطمینان از وجود جدول tv_sessions در پایگاه داده (Self-Healing Schema)
+     */
+    public static function ensureTvSessionsTable(): void
+    {
+        try {
+            if (!Schema::hasTable('tv_sessions')) {
+                Schema::create('tv_sessions', function ($table) {
+                    $table->id();
+                    $table->string('session_code', 100)->unique()->index();
+                    $table->string('activation_code', 10)->index();
+                    $table->unsignedBigInteger('paired_user_id')->nullable()->index();
+                    $table->string('paired_username', 100)->nullable();
+                    $table->string('paired_token', 255)->nullable();
+                    $table->boolean('is_paired')->default(false)->index();
+                    $table->timestamp('expires_at')->nullable()->index();
+                    $table->timestamps();
+                });
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('ensureTvSessionsTable error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * چک کردن وضعیت جفت‌سازی توسط تلویزیون (Fast Cache + DB Persistence Fallback)
      */
     public function checkPairingStatus($session_code)
     {
+        // ۱. بررسی کش موقت
         $data = Cache::get('pairing_' . $session_code);
-        if ($data) {
+        if ($data && !empty($data['username']) && !empty($data['token'])) {
             return response()->json([
                 'paired' => true,
                 'username' => $data['username'],
                 'display_token' => $data['token']
             ]);
+        }
+
+        // ۲. بررسی دیتابیس در صورت نبود یا انقضای کش
+        self::ensureTvSessionsTable();
+        try {
+            $dbSession = DB::table('tv_sessions')
+                ->where('session_code', $session_code)
+                ->where('is_paired', true)
+                ->first();
+
+            if ($dbSession && $dbSession->paired_username && $dbSession->paired_token) {
+                // کش مجدد جهت تسریع درخواست‌های بعدی
+                Cache::put('pairing_' . $session_code, [
+                    'user_id'  => $dbSession->paired_user_id,
+                    'username' => $dbSession->paired_username,
+                    'token'    => $dbSession->paired_token,
+                ], 7200);
+
+                return response()->json([
+                    'paired' => true,
+                    'username' => $dbSession->paired_username,
+                    'display_token' => $dbSession->paired_token
+                ]);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('checkPairingStatus DB error: ' . $e->getMessage());
         }
 
         return response()->json(['paired' => false]);
@@ -185,6 +239,12 @@ class PublicDisplayController extends Controller
         // اعتبارسنجی کد سشن
         if (!preg_match('/^[a-zA-Z0-9_\-]+$/', $session_code)) {
             abort(400, 'شناسه سشن نامعتبر است.');
+        }
+
+        // اطمینان از وجود display_token
+        if (empty($user->display_token)) {
+            $user->display_token = Str::random(32);
+            $user->save();
         }
 
         // اگر درخواست GET بود، صفحه تأیید صریح نمایش داده می‌شود تا از حملات CSRF جلوگیری شود
@@ -225,12 +285,30 @@ class PublicDisplayController extends Controller
             ");
         }
 
-        // انجام اتصال با متد POST و تایید توکن CSRF
+        self::ensureTvSessionsTable();
+
+        // ۱. بروزرسانی قطعی در دیتابیس
+        try {
+            DB::table('tv_sessions')->updateOrInsert(
+                ['session_code' => $session_code],
+                [
+                    'is_paired'       => true,
+                    'paired_user_id'  => $user->id,
+                    'paired_username' => $user->username,
+                    'paired_token'    => $user->display_token,
+                    'updated_at'      => now(),
+                ]
+            );
+        } catch (\Throwable $e) {
+            \Log::warning('pairDevice DB update error: ' . $e->getMessage());
+        }
+
+        // ۲. انجام اتصال در کش برای ۲ ساعت
         Cache::put('pairing_' . $session_code, [
             'user_id' => $user->id,
             'username' => $user->username,
             'token' => $user->display_token
-        ], 300); // انقضا بعد از ۵ دقیقه
+        ], 7200);
 
         if ($request->wantsJson() || $request->ajax() || $request->isJson()) {
             return response()->json([
@@ -243,40 +321,75 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * نرمال‌سازی ارقام فارسی و عربی به انگلیسی
+     * نرمال‌سازی کامل و دقیق ارقام فارسی و عربی به انگلیسی و پاکسازی کاراکترهای اضافه
      */
     public static function normalizeDigits(string $input): string
     {
         $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        return str_replace($persian, $english, trim($input));
+        $cleaned = str_replace($persian, $english, $input);
+        // حذف هرگونه فاصله، خط تیره، نیم‌فاصله و کاراکترهای کنترلی
+        $cleaned = preg_replace('/[\s\-\x{200C}\x{200D}_]+/u', '', $cleaned);
+        return strtoupper(trim($cleaned));
     }
 
     /**
-     * ثبت سشن موقت تلویزیون در سرور و تخصیص پین ۶ رقمی کاملاً عددی
+     * ثبت سشن موقت تلویزیون در سرور با ذخیره دوگانه در دیتابیس و کش (اعتبار ۲ ساعت)
      */
     public function registerSession(Request $request)
     {
+        self::ensureTvSessionsTable();
+
         $sessionCode = $request->input('session_code');
         $rawCode = (string) $request->input('activation_code', '');
-        $activationCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', $rawCode))));
+        $activationCode = self::normalizeDigits($rawCode);
 
         if (!$sessionCode) {
-            return response()->json(['success' => false, 'message' => 'شناسه سشن الزامی است.'], 400);
+            $sessionCode = 'sess-' . Str::random(16);
         }
 
-        // اگر کدی ارسال نشده یا معتبر نیست، یک کد ۶ رقمی تصادفی و یکتا تولید می‌کنیم
+        // پاکسازی خودکار سشن‌های قدیمی‌تر از ۲۴ ساعت جهت جلوگیری از انباشت رکوردها
+        try {
+            DB::table('tv_sessions')->where('expires_at', '<', now()->subDay())->delete();
+        } catch (\Throwable $e) {}
+
+        // اگر کدی ارسال نشده یا ۶ رقمی معتبر نیست، یک پین ۶ رقمی تصادفی و غیرتکراری تولید می‌کنیم
         if (empty($activationCode) || !preg_match('/^[0-9]{6}$/', $activationCode)) {
             $attempts = 0;
             do {
                 $activationCode = (string) random_int(100000, 999999);
                 $attempts++;
-            } while (Cache::has('tv_session_' . $activationCode) && $attempts < 10);
+                $exists = DB::table('tv_sessions')
+                    ->where('activation_code', $activationCode)
+                    ->where('expires_at', '>', now())
+                    ->exists();
+            } while ($exists && $attempts < 10);
         }
 
-        // ذخیره جفت‌سازی موقت در کش برای ۱۰ دقیقه
-        Cache::put('tv_session_' . $activationCode, $sessionCode, 600);
-        Cache::put('tv_code_for_' . $sessionCode, $activationCode, 600);
+        $expiresAt = now()->addHours(2);
+
+        // ۱. ذخیره دائمی و تضمین‌شده در جدول دیتابیس tv_sessions
+        try {
+            DB::table('tv_sessions')->updateOrInsert(
+                ['session_code' => $sessionCode],
+                [
+                    'activation_code' => $activationCode,
+                    'is_paired'       => false,
+                    'paired_user_id'  => null,
+                    'paired_username' => null,
+                    'paired_token'    => null,
+                    'expires_at'      => $expiresAt,
+                    'updated_at'      => now(),
+                    'created_at'      => now(),
+                ]
+            );
+        } catch (\Throwable $e) {
+            \Log::warning('registerSession DB save error: ' . $e->getMessage());
+        }
+
+        // ۲. ذخیره پشتیبان در لایه کش به مدت ۲ ساعت (۷۲۰۰ ثانیه)
+        Cache::put('tv_session_' . $activationCode, $sessionCode, 7200);
+        Cache::put('tv_code_for_' . $sessionCode, $activationCode, 7200);
 
         return response()->json([
             'success' => true,
@@ -286,37 +399,99 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * جفت‌سازی دستی تلویزیون با وارد کردن کد فعال‌سازی در پنل مدیریت
+     * جفت‌سازی دستی تلویزیون با پین ۶ رقمی در پنل مدیریت طلافروش
      */
     public function pairWithCode(Request $request)
     {
+        self::ensureTvSessionsTable();
+
         $rawCode = (string) $request->input('activation_code', '');
-        $activationCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', $rawCode))));
+        $activationCode = self::normalizeDigits($rawCode);
         
         if (empty($activationCode)) {
             return response()->json(['success' => false, 'message' => 'کد فعال‌سازی ۶ رقمی را وارد کنید.'], 400);
         }
 
-        $sessionCode = Cache::get('tv_session_' . $activationCode);
+        $sessionCode = null;
+
+        // ۱. اولویت اول: جستجو در جدول پایدار دیتابیس tv_sessions
+        try {
+            $dbSession = DB::table('tv_sessions')
+                ->where('activation_code', $activationCode)
+                ->where('expires_at', '>', now())
+                ->latest('id')
+                ->first();
+
+            if ($dbSession) {
+                $sessionCode = $dbSession->session_code;
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('pairWithCode DB query error: ' . $e->getMessage());
+        }
+
+        // ۲. اولویت دوم: جستجو در Cache لاراول
         if (!$sessionCode) {
-            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی نامعتبر یا منقضی شده است. لطفا تلویزیون را رفرش کنید تا کد جدید تولید شود.'], 404);
+            $sessionCode = Cache::get('tv_session_' . $activationCode);
+        }
+
+        // ۳. اگر سشن پیدا نشد، بررسی انقضا برای پیام خطای شفاف
+        if (!$sessionCode) {
+            try {
+                $expiredCheck = DB::table('tv_sessions')
+                    ->where('activation_code', $activationCode)
+                    ->where('expires_at', '<=', now())
+                    ->first();
+
+                if ($expiredCheck) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'اعتبار این کد ۶ رقمی به پایان رسیده است. لطفاً صفحه تلویزیون را رفرش فرمایید تا کد جدید تولید شود.'
+                    ], 404);
+                }
+            } catch (\Throwable $e) {}
+
+            return response()->json([
+                'success' => false,
+                'message' => 'کد فعال‌سازی وارد شده یافت نشد. لطفاً کد ۶ رقمی نمایش داده شده روی تلویزیون را با دقت وارد کنید.'
+            ], 404);
         }
 
         $user = auth()->user();
 
-        // انجام فرآیند جفت‌سازی با استفاده از کش عمومی
-        Cache::put('pairing_' . $sessionCode, [
-            'user_id' => $user->id,
-            'username' => $user->username,
-            'token' => $user->display_token
-        ], 300); // ۵ دقیقه انقضا
+        // اطمینان از وجود display_token
+        if (empty($user->display_token)) {
+            $user->display_token = Str::random(32);
+            $user->save();
+        }
 
-        // بعد از جفت‌سازی موفق، کد فعال‌سازی را پاک می‌کنیم
+        // بروزرسانی قطعی در دیتابیس
+        try {
+            DB::table('tv_sessions')
+                ->where('session_code', $sessionCode)
+                ->update([
+                    'is_paired'       => true,
+                    'paired_user_id'  => $user->id,
+                    'paired_username' => $user->username,
+                    'paired_token'    => $user->display_token,
+                    'updated_at'      => now(),
+                ]);
+        } catch (\Throwable $e) {
+            \Log::warning('pairWithCode DB update error: ' . $e->getMessage());
+        }
+
+        // بروزرسانی در کش برای واکنش سریع صفحه تلویزیون
+        Cache::put('pairing_' . $sessionCode, [
+            'user_id'  => $user->id,
+            'username' => $user->username,
+            'token'    => $user->display_token
+        ], 7200);
+
+        // پاکسازی کش اولیه کد
         Cache::forget('tv_session_' . $activationCode);
 
         return response()->json([
             'success' => true,
-            'message' => 'تلویزیون با موفقیت متصل شد.'
+            'message' => 'تلویزیون با موفقیت متصل شد و هم‌اکنون تابلوی اختصاصی شما را نمایش می‌دهد.'
         ]);
     }
 
@@ -325,15 +500,25 @@ class PublicDisplayController extends Controller
      */
     public function sendMagicSms(Request $request, \App\Services\SmsService $smsService)
     {
+        self::ensureTvSessionsTable();
+
         $phone = \App\Services\SmsService::normalizeMobile((string) $request->input('phone', ''));
         if (!preg_match('/^09[0-9]{9}$/', $phone)) {
             return response()->json(['success' => false, 'message' => 'شماره موبایل نامعتبر است. فرمت صحیح: ۰۹xxxxxxxxx'], 422);
         }
 
         $rawCode = (string) $request->input('activation_code', '');
-        $activationCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', $rawCode))));
+        $activationCode = self::normalizeDigits($rawCode);
 
-        if (empty($activationCode) || !Cache::has('tv_session_' . $activationCode)) {
+        $exists = false;
+        try {
+            $exists = DB::table('tv_sessions')
+                ->where('activation_code', $activationCode)
+                ->where('expires_at', '>', now())
+                ->exists();
+        } catch (\Throwable $e) {}
+
+        if (!$exists && !Cache::has('tv_session_' . $activationCode)) {
             return response()->json(['success' => false, 'message' => 'کد فعال‌سازی تلویزیون نامعتبر یا منقضی شده است. لطفا صفحه تلویزیون را رفرش کنید.'], 404);
         }
 
@@ -356,8 +541,26 @@ class PublicDisplayController extends Controller
      */
     public function pairMagicShortLink(Request $request, $code)
     {
-        $cleanCode = self::normalizeDigits(strtoupper(trim(str_replace([' ', '-'], '', (string) $code))));
-        $sessionCode = Cache::get('tv_session_' . $cleanCode);
+        self::ensureTvSessionsTable();
+
+        $cleanCode = self::normalizeDigits((string) $code);
+        $sessionCode = null;
+
+        try {
+            $dbSession = DB::table('tv_sessions')
+                ->where('activation_code', $cleanCode)
+                ->where('expires_at', '>', now())
+                ->latest('id')
+                ->first();
+
+            if ($dbSession) {
+                $sessionCode = $dbSession->session_code;
+            }
+        } catch (\Throwable $e) {}
+
+        if (!$sessionCode) {
+            $sessionCode = Cache::get('tv_session_' . $cleanCode);
+        }
 
         if (!$sessionCode) {
             return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 80px 20px; background: #fff1f2; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 440px; background: #fff; border: 1px solid #fecdd3; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(225,29,72,0.1);'><div style='font-size: 56px; margin-bottom: 20px;'>⏱️</div><h2 style='color: #9f1239; margin-bottom: 12px; font-weight: 800; font-size: 20px;'>کد اتصال منقضی شده است</h2><p style='color: #881337; font-size: 14px; line-height: 1.8; margin-bottom: 24px;'>کد اتصال این تلویزیون به پایان رسیده است. لطفاً صفحه مرورگر تلویزیون مغازه را یکبار بازخوانی (رفرش) کنید تا کد جدید ۶ رقمی ایجاد شود.</p><a href='/tv' style='display: inline-block; background: #be123c; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: bold; font-size: 14px;'>مشاهده صفحه تلویزیون</a></div></div>", 404);
@@ -365,11 +568,30 @@ class PublicDisplayController extends Controller
 
         if (auth()->check()) {
             $user = auth()->user();
+
+            if (empty($user->display_token)) {
+                $user->display_token = Str::random(32);
+                $user->save();
+            }
+
+            try {
+                DB::table('tv_sessions')
+                    ->where('session_code', $sessionCode)
+                    ->update([
+                        'is_paired'       => true,
+                        'paired_user_id'  => $user->id,
+                        'paired_username' => $user->username,
+                        'paired_token'    => $user->display_token,
+                        'updated_at'      => now(),
+                    ]);
+            } catch (\Throwable $e) {}
+
             Cache::put('pairing_' . $sessionCode, [
                 'user_id' => $user->id,
                 'username' => $user->username,
                 'token' => $user->display_token
-            ], 300);
+            ], 7200);
+
             Cache::forget('tv_session_' . $cleanCode);
 
             return redirect()->route('admin.dashboard')->with('success_pair', 'تلویزیون مغازه با موفقیت به تابلوی گالری شما متصل شد! 🎉');

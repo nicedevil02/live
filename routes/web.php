@@ -51,7 +51,7 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     // داشبورد
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/pair-code', [PublicDisplayController::class, 'pairWithCode'])->middleware('throttle:5,1')->name('pair-code');
+    Route::post('/pair-code', [PublicDisplayController::class, 'pairWithCode'])->middleware('throttle:20,1')->name('pair-code');
 
     // اجرای امن مایگریشن‌ها از طریق مرورگر (مخصوص سوپرادمین)
     Route::get('/run-migrations', function () {
