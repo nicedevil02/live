@@ -18,15 +18,6 @@ class PublicPageController extends Controller
     }
 
     /**
-     * صفحه اصلی و لندینگ‌پیج تجاری طلالایو ویژه معرفی و جذب طلافروشان
-     */
-    public function home()
-    {
-        $data = $this->getRatesData();
-        return view('pages.home', $data);
-    }
-
-    /**
      * صفحه فرود اختصاصی تابلوی هوشمند طلافروشی (ستون تجاری B2B)
      */
     public function smartGoldBoard()
