@@ -23,9 +23,9 @@
         }
     </script>
 
-    <title>تابلوی هوشمند طلافروشی و تابلو طلا فروشی | نرخ زنده طلالایو</title>
-    <meta name="description" content="سامانه ابری تابلوی هوشمند نرخ لحظه‌ای طلا، سکه و ارز ویژه نمایشگر مغازه طلافروشی و طلا فروشی. اتصال سریع تلویزیون بدون نیاز به کیس، فرمول‌ساز سود و ویترین دیجیتال در طلالایو.">
-    <meta name="keywords" content="تابلوی هوشمند طلافروشی, تابلوی طلا فروشی, تابلو طلا فروشی, نرم افزار تابلو طلا فروشی, تابلو قیمت طلا برای تلویزیون, سیستم تابلوی طلا, تابلو دیجیتال طلافروشی, نرخ لحظه ای طلا, طلالایو, talalive">
+    <title>تابلوی هوشمند طلافروشی و تابلو طلا فروشی | نرخ لحظه ای طلا و سکه | طلالایو</title>
+    <meta name="description" content="سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، قیمت سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه ویژه تلویزیون مغازه طلا فروشی و طلافروشی‌ها بدون نیاز به کیس.">
+    <meta name="keywords" content="تابلوی هوشمند طلافروشی, تابلوی طلا فروشی, تابلو طلا فروشی, نرم افزار تابلو طلا فروشی, قیمت انلاین طلا, نرخ لحظه ای طلا, سکه بهار آزادی, بهار ازادی, بهارآزادی, بهارازادی, نیم سکه, ربع سکه, طلای آب شده, طلای اب شده, طلای دست دوم, دستدوم, کم اجرت, کماجرت, طلالایو, talalive">
     <meta name="robots" content="index, follow">
     <meta name="author" content="طلالایو - TalaLive">
     <link rel="canonical" href="https://talalive.ir/">
@@ -33,7 +33,7 @@
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی | طلالایو">
-    <meta property="og:description" content="نمایش آنلاین و لحظه‌ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی با طلالایو. اتصال آسان بدون کابل یا سخت‌افزار اضافه.">
+    <meta property="og:description" content="نمایش آنلاین و لحظه ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی با طلالایو. اتصال آسان بدون کابل یا سخت‌افزار اضافه.">
     <meta property="og:url" content="https://talalive.ir/">
     <meta property="og:site_name" content="طلالایو">
     <meta property="og:image" content="{{ asset('images/logo.png') }}">
@@ -42,7 +42,7 @@
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی | طلالایو">
-    <meta name="twitter:description" content="نمایش آنلاین و لحظه‌ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی با طلالایو. بدون نیاز به مینی‌کیس و کامپیوتر.">
+    <meta name="twitter:description" content="نمایش آنلاین و لحظه ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی با طلالایو. بدون نیاز به مینی‌کیس و کامپیوتر.">
     <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
     <!-- Schema.org JSON-LD Structured Data (4-in-1 Suite) -->
@@ -58,11 +58,13 @@
             "TalaLive",
             "تابلوی طلا فروشی",
             "تابلو طلا فروشی",
-            "نرم‌افزار تابلوی طلا فروشی",
-            "سیستم نمایش نرخ مغازه طلا فروشی"
+            "نرم افزار تابلوی طلا فروشی",
+            "تابلو انلاین طلا فروشی",
+            "سیستم نمایش نرخ مغازه طلا فروشی",
+            "اعلام نرخ لحظه ای طلا و سکه"
           ],
           "url" => "https://talalive.ir",
-          "description" => "سامانه ابری هوشمند تابلوی نرخ لحظه‌ای طلا، سکه و ارز ویژه تلویزیون‌ها و نمایشگرهای طلافروشی، مغازه طلا فروشی و گالری‌های طلا و جواهر سراسر کشور.",
+          "description" => "سامانه ابری هوشمند تابلوی نرخ لحظه ای طلا، سکه و ارز ویژه تلویزیون‌ها و نمایشگرهای طلافروشی، مغازه طلا فروشی و گالری‌های طلا و جواهر سراسر کشور.",
           "applicationCategory" => "BusinessApplication",
           "operatingSystem" => "Smart TV (Samsung Tizen, LG webOS, Android TV), Web Browser, Android, Windows",
           "screenshot" => "https://talalive.ir/images/logo.png",
@@ -180,6 +182,14 @@
               "acceptedAnswer" => [
                 "@type" => "Answer",
                 "text" => "خیر، اطلاعات اتصال تلویزیون شما در حافظه پایدار مرورگر تلویزیون به صورت خودکار ذخیره می‌شود و با روشن شدن تلویزیون، صفحه بدون نیاز به اسکن مجدد فوراً باز شده و به تابلوی زنده شما متصل می‌گردد."
+              ]
+            ],
+            [
+              "@type" => "Question",
+              "name" => "آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه را پوشش می‌دهد؟",
+              "acceptedAnswer" => [
+                "@type" => "Answer",
+                "text" => "بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی (بهار ازادی)، نیم سکه، ربع سکه، سکه گرمی، طلای آب شده (طلای اب شده) و مظنه مثقال به صورت لحظه ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند."
               ]
             ]
           ]
@@ -1656,6 +1666,19 @@
                     </summary>
                     <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
                         خیر، اطلاعات اتصال تلویزیون شما در حافظه پایدار مرورگر تلویزیون به صورت خودکار ذخیره می‌شود و با روشن شدن تلویزیون، صفحه بدون نیاز به اسکن مجدد فوراً باز شده و به تابلوی زنده شما متصل می‌گردد.
+                    </p>
+                </details>
+
+                {{-- سوال ۷: پوشش مسکوکات بهار آزادی و طلای آب شده --}}
+                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
+                        <span>آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه را پوشش می‌دهد؟</span>
+                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </summary>
+                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
+                        بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی (بهار ازادی)، نیم سکه، ربع سکه، سکه گرمی، طلای آب شده (طلای اب شده) و مظنه مثقال به صورت لحظه ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند.
                     </p>
                 </details>
 
