@@ -550,86 +550,119 @@
                         {{-- فریم و قاب تیتانیومی تلویزیون هوشمند ۶۵ اینچ دیواری --}}
                         <div class="relative rounded-[28px] p-2 sm:p-2.5 bg-gradient-to-b from-slate-600 via-slate-800 to-slate-950 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.7),0_0_40px_rgba(245,158,11,0.2)] border border-slate-500/40 transform transition-transform hover:scale-[1.01] duration-500">
                             
-                            {{-- صفحه نمایشگر زنده تلویزیون با تم مشکی سلطنتی Imperial Onyx 24K --}}
-                            <div class="relative rounded-2xl bg-[#020617] overflow-hidden border border-amber-500/30 text-white aspect-[16/10] flex flex-col justify-between p-3 sm:p-4 shadow-2xl select-none">
-                                
-                                {{-- هدر تابلوی تلویزیون با پرستیژ زرین --}}
-                                <div class="flex items-center justify-between border-b border-amber-500/20 pb-2">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-slate-950 font-black text-xs flex items-center justify-center shadow-md shadow-amber-500/30">
-                                            زر
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="font-black text-xs text-amber-300 tracking-tight">گالری طلا و جواهر زرین</div>
-                                            <div class="text-[9px] text-slate-400">تابلوی رسمی نرخ لحظه‌ای و مسکوکات</div>
-                                        </div>
-                                    </div>
+                            @php
+                                $previewImage = null;
+                                $potentialPreviewPaths = [
+                                    'images/tv-preview.png',
+                                    'images/tv-preview.jpg',
+                                    'images/tv-preview.webp',
+                                    'images/preview.png',
+                                    'images/preview.jpg',
+                                    'images/tv.png',
+                                    'images/tv.jpg',
+                                    'images/board.png',
+                                    'images/board.jpg',
+                                ];
+                                foreach ($potentialPreviewPaths as $path) {
+                                    if (file_exists(public_path($path)) || file_exists(base_path('public_html/' . $path))) {
+                                        $previewImage = $path;
+                                        break;
+                                    }
+                                }
+                            @endphp
 
-                                    <div class="flex items-center gap-2">
-                                        <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/40 px-2 py-0.5 rounded-full text-emerald-400 text-[10px] font-black shadow-sm">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                                            <span>نرخ زنده</span>
-                                        </div>
-                                        <div class="text-left font-mono text-xs text-amber-400/90 font-black" dir="ltr">
-                                            {{ date('H:i') }}
-                                        </div>
-                                    </div>
+                            @if($previewImage)
+                                {{-- نمایش اسکرین‌شات واقعی و فوق‌العاده باکیفیت تابلوی نرخ طلا روی تلویزیون --}}
+                                <div class="relative rounded-2xl bg-[#020617] overflow-hidden border border-amber-500/30 aspect-[16/10] shadow-2xl group flex items-center justify-center select-none">
+                                    <img src="{{ asset($previewImage) }}" 
+                                         alt="اسکرین‌شات تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو روی تلویزیون مغازه" 
+                                         class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.02]">
+                                    
+                                    {{-- بازتاب فوتوریالیستیک شیشه و نور ملایم نمایشگر OLED --}}
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent pointer-events-none"></div>
                                 </div>
+                            @else
+                                {{-- صفحه نمایشگر زنده تلویزیون با تم مشکی سلطنتی Imperial Onyx 24K --}}
+                                <div class="relative rounded-2xl bg-[#020617] overflow-hidden border border-amber-500/30 text-white aspect-[16/10] flex flex-col justify-between p-3 sm:p-4 shadow-2xl select-none">
+                                    
+                                    {{-- هدر تابلوی تلویزیون با پرستیژ زرین --}}
+                                    <div class="flex items-center justify-between border-b border-amber-500/20 pb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-slate-950 font-black text-xs flex items-center justify-center shadow-md shadow-amber-500/30">
+                                                زر
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="font-black text-xs text-amber-300 tracking-tight">گالری طلا و جواهر زرین</div>
+                                                <div class="text-[9px] text-slate-400">تابلوی رسمی نرخ لحظه‌ای و مسکوکات</div>
+                                            </div>
+                                        </div>
 
-                                {{-- ۴ کارت نرخ‌های واقعی لوکس نئومورفیک شیشه‌ای --}}
-                                <div class="grid grid-cols-2 gap-2 my-auto">
-                                    {{-- طلای ۱۸ عیار (کارت هیرو و پادشاه تابلو) --}}
-                                    <div class="relative bg-gradient-to-b from-amber-500/15 via-slate-900/90 to-slate-950 border border-amber-400/50 rounded-xl p-2 text-right space-y-0.5 shadow-lg shadow-amber-500/10">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-[10px] text-amber-300 font-black">طلای ۱۸ عیار (گرم)</span>
-                                            <span class="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">شاخص</span>
-                                        </div>
-                                        <div class="text-sm sm:text-base font-black text-amber-400 font-mono tracking-wider drop-shadow-[0_2px_8px_rgba(251,191,36,0.3)]" dir="ltr">
-                                            {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '۴,۶۵۰,۰۰۰' }}
-                                        </div>
-                                        <div class="text-[9px] text-emerald-400 font-bold flex items-center justify-between">
-                                            <span>تومان</span>
-                                            <span class="font-mono text-[8px] text-slate-400">۱۸K</span>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/40 px-2 py-0.5 rounded-full text-emerald-400 text-[10px] font-black shadow-sm">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                                <span>نرخ زنده</span>
+                                            </div>
+                                            <div class="text-left font-mono text-xs text-amber-400/90 font-black" dir="ltr">
+                                                {{ date('H:i') }}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {{-- سکه تمام بهار آزادی / امامی --}}
-                                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                        <div class="text-[10px] text-slate-300 font-bold">سکه بهار آزادی (امامی)</div>
-                                        <div class="text-sm sm:text-base font-black text-amber-300 font-mono tracking-wider" dir="ltr">
-                                            {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '۵۲,۸۰۰,۰۰۰' }}
+                                    {{-- ۴ کارت نرخ‌های واقعی لوکس نئومورفیک شیشه‌ای --}}
+                                    <div class="grid grid-cols-2 gap-2 my-auto">
+                                        {{-- طلای ۱۸ عیار (کارت هیرو و پادشاه تابلو) --}}
+                                        <div class="relative bg-gradient-to-b from-amber-500/15 via-slate-900/90 to-slate-950 border border-amber-400/50 rounded-xl p-2 text-right space-y-0.5 shadow-lg shadow-amber-500/10">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-[10px] text-amber-300 font-black">طلای ۱۸ عیار (گرم)</span>
+                                                <span class="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">شاخص</span>
+                                            </div>
+                                            <div class="text-sm sm:text-base font-black text-amber-400 font-mono tracking-wider drop-shadow-[0_2px_8px_rgba(251,191,36,0.3)]" dir="ltr">
+                                                {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '۴,۶۵۰,۰۰۰' }}
+                                            </div>
+                                            <div class="text-[9px] text-emerald-400 font-bold flex items-center justify-between">
+                                                <span>تومان</span>
+                                                <span class="font-mono text-[8px] text-slate-400">۱۸K</span>
+                                            </div>
                                         </div>
-                                        <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+
+                                        {{-- سکه تمام بهار آزادی / امامی --}}
+                                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                            <div class="text-[10px] text-slate-300 font-bold">سکه بهار آزادی (امامی)</div>
+                                            <div class="text-sm sm:text-base font-black text-amber-300 font-mono tracking-wider" dir="ltr">
+                                                {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '۵۲,۸۰۰,۰۰۰' }}
+                                            </div>
+                                            <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                        </div>
+
+                                        {{-- نیم سکه بهار آزادی --}}
+                                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                            <div class="text-[10px] text-slate-300 font-bold">نیم سکه بهار آزادی</div>
+                                            <div class="text-xs sm:text-sm font-black text-slate-100 font-mono tracking-wider" dir="ltr">
+                                                {{ !empty($rates['coin_nim']) && $rates['coin_nim'] > 0 ? number_format($rates['coin_nim']) : '۲۸,۴۰۰,۰۰۰' }}
+                                            </div>
+                                            <div class="text-[9px] text-slate-400">تومان</div>
+                                        </div>
+
+                                        {{-- انس جهانی طلا --}}
+                                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                            <div class="text-[10px] text-slate-300 font-bold">انس جهانی طلا</div>
+                                            <div class="text-xs sm:text-sm font-black text-slate-100 font-mono tracking-wider" dir="ltr">
+                                                {{ !empty($rates['ons']) && $rates['ons'] > 0 ? '$ ' . number_format($rates['ons'], 1) : '$ ۲,۷۳۵.۵' }}
+                                            </div>
+                                            <div class="text-[9px] text-slate-400">دلار</div>
+                                        </div>
                                     </div>
 
-                                    {{-- نیم سکه بهار آزادی --}}
-                                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                        <div class="text-[10px] text-slate-300 font-bold">نیم سکه بهار آزادی</div>
-                                        <div class="text-xs sm:text-sm font-black text-slate-100 font-mono tracking-wider" dir="ltr">
-                                            {{ !empty($rates['coin_nim']) && $rates['coin_nim'] > 0 ? number_format($rates['coin_nim']) : '۲۸,۴۰۰,۰۰۰' }}
-                                        </div>
-                                        <div class="text-[9px] text-slate-400">تومان</div>
+                                    {{-- نوار متحرک ویترین در زیر صفحه --}}
+                                    <div class="border-t border-amber-500/20 pt-1.5 flex items-center justify-between text-[9px] text-slate-400">
+                                        <span class="truncate text-amber-200/80">✨ جدیدترین کالکشن النگو و سرویس‌های لوکس بدون اجرت</span>
+                                        <span class="font-mono text-amber-400 shrink-0 font-bold">TalaLive.ir</span>
                                     </div>
 
-                                    {{-- انس جهانی طلا --}}
-                                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                        <div class="text-[10px] text-slate-300 font-bold">انس جهانی طلا</div>
-                                        <div class="text-xs sm:text-sm font-black text-slate-100 font-mono tracking-wider" dir="ltr">
-                                            {{ !empty($rates['ons']) && $rates['ons'] > 0 ? '$ ' . number_format($rates['ons'], 1) : '$ ۲,۷۳۵.۵' }}
-                                        </div>
-                                        <div class="text-[9px] text-slate-400">دلار</div>
-                                    </div>
+                                    {{-- انعکاس شیشه فوتوریالیستیک اپل --}}
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent pointer-events-none"></div>
                                 </div>
-
-                                {{-- نوار متحرک ویترین در زیر صفحه --}}
-                                <div class="border-t border-amber-500/20 pt-1.5 flex items-center justify-between text-[9px] text-slate-400">
-                                    <span class="truncate text-amber-200/80">✨ جدیدترین کالکشن النگو و سرویس‌های لوکس بدون اجرت</span>
-                                    <span class="font-mono text-amber-400 shrink-0 font-bold">TalaLive.ir</span>
-                                </div>
-
-                                {{-- انعکاس شیشه فوتوریالیستیک اپل --}}
-                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent pointer-events-none"></div>
-                            </div>
+                            @endif
 
                             {{-- دکمه پاور و چراغ استندبای تلویزیون --}}
                             <div class="flex items-center justify-center gap-1.5 mt-2">
