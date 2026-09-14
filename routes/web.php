@@ -16,12 +16,12 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\TransactionController;
 
-// ریشه سایت → نمایش لندینگ‌پیج جامع و صفحه اتصال تلویزیون طلالایو (یا ریدایرکت به داشبورد در صورت لاگین)
+// ریشه سایت → صفحه اصلی و لندینگ‌پیج تجاری طلالایو (یا ریدایرکت به داشبورد در صورت لاگین)
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('admin.dashboard');
     }
-    return resolve(App\Http\Controllers\PublicDisplayController::class)->showPairingScreen();
+    return resolve(App\Http\Controllers\PublicPageController::class)->home();
 })->name('home');
 
 // مسیر اختصاصی جفت‌سازی و اتصال تلویزیون هوشمند داخل مغازه

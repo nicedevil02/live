@@ -210,7 +210,6 @@
         .dark body {
             background: #020617;
         }
-        /* کنترل آیکون‌های تم به صورت خالص با CSS بدون باگ و بدون تاخیر */
         html.dark .theme-sun-icon { display: inline-block !important; }
         html.dark .theme-moon-icon { display: none !important; }
         html:not(.dark) .theme-sun-icon { display: none !important; }
@@ -223,13 +222,6 @@
         .pulse-logo {
             animation: pulse-glow 3s ease-in-out infinite;
         }
-        @keyframes subtle-shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        .animate-shimmer {
-            animation: subtle-shimmer 3.5s infinite;
-        }
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -239,22 +231,6 @@
         .dark .glass-panel {
             background: rgba(15, 23, 42, 0.75);
             border: 1px solid rgba(51, 65, 85, 0.6);
-        }
-        .glass-card-gold {
-            background: #ffffff;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04);
-        }
-        .dark .glass-card-gold {
-            background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.7) 60%);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            box-shadow: none;
-        }
-        .glass-card-gold:hover {
-            border-color: rgba(245, 158, 11, 0.5);
-            box-shadow: 0 14px 35px -10px rgba(245, 158, 11, 0.15);
         }
         details > summary::-webkit-details-marker {
             display: none;
@@ -266,7 +242,7 @@
 </head>
 <body x-data="publicLandingHandler()" class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased overflow-x-hidden min-h-screen transition-colors duration-300">
 
-    {{-- بررسی اولیه در کلاینت برای ریدایرکت سریع در صورت جفت شدن قبلی تلویزیون یا پاکسازی اتصال با پارامتر reset --}}
+    {{-- بررسی اولیه در کلاینت برای ریدایرکت سریع در صورت جفت شدن قبلی تلویزیون --}}
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('reset') === '1' || urlParams.get('disconnect') === '1') {
@@ -277,11 +253,17 @@
             const savedToken = localStorage.getItem('display_token');
             if (savedUsername && savedToken) {
                 window.location.href = '/' + savedUsername + '?key=' + savedToken;
+            } else {
+                // اگر دستگاه یک تلویزیون هوشمند باشد، برای راه‌اندازی راحت‌تر به /tv هدایت شود
+                const isTv = /SmartTV|Tizen|Web0S|NetCast|HbbTV|CrKey|Android TV/i.test(navigator.userAgent);
+                if (isTv && window.location.pathname === '/') {
+                    window.location.href = '/tv';
+                }
             }
         }
     </script>
 
-    {{-- نوار ناوبری شیشه‌ای بالایی مدرن با پشتیبانی از تم تاریک و روشن (Sticky Modern Header) --}}
+    {{-- نوار ناوبری شیشه‌ای بالایی مدرن با تم تاریک و روشن --}}
     <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/85 dark:bg-slate-950/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 shadow-sm dark:shadow-none">
         <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-1.5 sm:gap-4">
             
@@ -362,7 +344,7 @@
 
                 <a href="#pricing" class="px-3.5 py-2 rounded-xl text-amber-600 dark:text-amber-400 font-black hover:bg-white dark:hover:bg-slate-800/70 transition-all flex items-center gap-1">
                     <span>تعرفه‌ها و اشتراک</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">آنلاین</span>
+                    <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">تست رایگان</span>
                 </a>
                 <a href="#faq" class="px-3.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all">
                     سوالات متداول
@@ -380,25 +362,28 @@
                         id="themeToggleBtn"
                         class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-900/80 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all shadow-sm cursor-pointer shrink-0"
                         title="تغییر تم تاریک / روشن">
-                    {{-- آیکون خورشید برای حالت شب --}}
                     <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 theme-sun-icon transition-transform duration-300 rotate-0 hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    {{-- آیکون ماه برای حالت روز --}}
                     <svg class="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-slate-200 theme-moon-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
 
-                {{-- دکمه ورود --}}
-                <a href="{{ route('admin.login') }}" class="inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-white/90 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap">
-                    <svg class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-                    <span>ورود<span class="hidden sm:inline"> طلافروشان</span></span>
+                {{-- دکمه متمایز اتصال تلویزیون مغازه --}}
+                <a href="{{ route('display.tv') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2.5 rounded-xl border-2 border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all shadow-sm cursor-pointer whitespace-nowrap">
+                    <span class="text-sm">📺</span>
+                    <span>اتصال تلویزیون<span class="hidden md:inline"> مغازه</span></span>
                 </a>
 
-                {{-- دکمه ثبت‌نام --}}
-                <a href="{{ route('admin.register') }}" class="inline-flex items-center gap-1 px-2.5 sm:px-4 md:px-5 py-1.5 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition-all shadow-md shadow-amber-500/20 hover:scale-[1.02] cursor-pointer whitespace-nowrap">
-                    <span>ثبت‌نام<span class="hidden sm:inline"> گالری</span></span>
+                {{-- دکمه ورود --}}
+                <a href="{{ route('admin.login') }}" class="inline-flex items-center gap-1 px-2 sm:px-3.5 py-1.5 sm:py-2.5 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-white/90 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap">
+                    <span>ورود<span class="hidden sm:inline"> همکاران</span></span>
+                </a>
+
+                {{-- دکمه ثبت‌نام تست رایگان --}}
+                <a href="{{ route('admin.register') }}" class="inline-flex items-center gap-1 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition-all shadow-md shadow-amber-500/20 hover:scale-[1.02] cursor-pointer whitespace-nowrap">
+                    <span>ثبت‌نام<span class="hidden sm:inline"> رایگان</span></span>
                 </a>
 
                 {{-- دکمه همبرگری موبایل --}}
@@ -422,6 +407,9 @@
              x-transition:leave-end="opacity-0 -translate-y-4"
              class="lg:hidden border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl px-6 py-6 space-y-4 shadow-2xl">
             <nav class="flex flex-col space-y-1.5 text-sm font-bold text-slate-700 dark:text-slate-200">
+                <a href="{{ route('display.tv') }}" class="p-2.5 rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center gap-2 border border-amber-500/20">
+                    <span>📺 اتصال تلویزیون مغازه (talalive.ir/tv)</span>
+                </a>
                 <a href="{{ route('public.smart-gold-board') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
                     <span>تابلوی هوشمند طلافروشی</span>
                 </a>
@@ -438,8 +426,8 @@
                     <span>مقایسه با تابلوهای سنتی</span>
                 </a>
                 <a href="#pricing" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between text-amber-600 dark:text-amber-400">
-                    <span>تعرفه‌ها و خرید اشتراک</span>
-                    <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/20 font-bold">ویژه</span>
+                    <span>تعرفه‌ها و تست رایگان</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/20 font-bold">۱۴ روز هدیه</span>
                 </a>
                 <a href="#faq" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
                     <span>سوالات متداول طلافروشان</span>
@@ -454,119 +442,214 @@
                     ورود طلافروشان
                 </a>
                 <a href="{{ route('admin.register') }}" class="w-full text-center py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs font-black shadow-md">
-                    ثبت‌نام گالری جدید
+                    ثبت‌نام و شروع تست ۱۴ روزه
                 </a>
             </div>
         </div>
     </header>
 
-    {{-- بخش ۱: هیرو سکشن و جفت‌سازی تلویزیون هوشمند (Hero & Pairing Hub) --}}
-    <section id="hero-pairing" class="relative min-h-[calc(100vh-80px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-10 lg:py-16 overflow-hidden">
+    {{-- بخش ۱: هیرو سکشن لندینگ تجاری طلالایو (B2B High-Converting Hero) --}}
+    <section class="relative min-h-[calc(100vh-80px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-10 lg:py-16 overflow-hidden">
         
         {{-- افکت‌های گرادینت پس‌زمینه --}}
         <div class="absolute -top-40 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-40 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center z-10">
-            
-            {{-- ستون سمت راست: معرفی و راهنمای تلویزیون (۷ ستون) --}}
-            <div class="lg:col-span-7 text-right space-y-6 w-full min-w-0">
+        <div class="w-full max-w-6xl mx-auto flex flex-col z-10">
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
                 
-                {{-- بج نسخه جدید --}}
-                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-                    <span>نسخه نسل جدید سامانه ابری طلالایو ویژه تلویزیون هوشمند طلافروشی و مغازه طلا فروشی</span>
-                </div>
-
-                {{-- تیتر اصلی سئو و معرفی --}}
-                <div class="space-y-4">
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-                        تابلوی هوشمند طلافروشی و مغازه طلا فروشی <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
-                            روی تلویزیون بدون نیاز به کیس و کابل
-                        </span>
-                    </h1>
-                    <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-                        تنها با باز کردن مرورگر تلویزیون هوشمند در مغازه طلا فروشی و اسکن بارکد، تابلوی اختصاصی طلا، سکه، ارز و ویترین جواهرات خود را با فرمول سود دلخواه به صورت زنده فعال کنید.
-                    </p>
-                </div>
-
-                {{-- راهنمای ۳ گام اسکن و جفت‌سازی --}}
-                <div class="bg-white/90 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 backdrop-blur-md max-w-xl shadow-lg shadow-slate-200/50 dark:shadow-none">
-                    <div class="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>مراحل راه‌اندازی و اتصال تابلوی این تلویزیون:</span>
-                    </div>
-                    <ol class="space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                        <li class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۱</span>
-                            <span>با گوشی خود وارد <a href="{{ route('admin.login') }}" class="text-amber-600 dark:text-amber-400 underline decoration-amber-500/50 hover:text-amber-700 dark:hover:text-amber-300 font-bold">پنل مدیریت طلالایو</a> شوید (یا ثبت نام کنید).</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۲</span>
-                            <span>بارکد QR روبرو را با دوربین گوشی اسکن کرده و لینک تایید را باز کنید.</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-xs shrink-0">۳</span>
-                            <span>تلویزیون بلافاصله جفت شده و تابلوی زنده شما با نرخ‌های دقیق نمایش داده می‌شود.</span>
-                        </li>
-                    </ol>
-                </div>
-
-                {{-- دکمه اسکرول به سایر امکانات --}}
-                <div class="pt-2 flex items-center gap-4">
-                    <a href="#features" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors py-1">
-                        <span>مشاهده امکانات، پیش‌نمایش و راهنمای کامل</span>
-                        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                    </a>
-                </div>
-            </div>
-
-            {{-- ستون سمت چپ: کارت QR Code و اتصال هوشمند تلویزیون (۵ ستون) --}}
-            <div class="lg:col-span-5 flex flex-col gap-5 w-full mx-auto" style="max-width: 380px; width: 100%;">
-                <div class="w-full bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 shadow-2xl shadow-slate-300/60 dark:shadow-2xl backdrop-blur-xl flex flex-col items-center justify-center text-center gap-6 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
-
-                    {{-- وضعیت اتصال زنده --}}
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-3.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>آماده اتصال به تلویزیون هوشمند</span>
+                {{-- ستون سمت راست: ارزش محصول، تیتر سئو و کادر ثبت‌نام سریع با شماره موبایل (۷ ستون) --}}
+                <div class="lg:col-span-7 text-right space-y-6 w-full">
+                    
+                    {{-- بج نسخه نسل جدید --}}
+                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                        <span>سامانه نسل جدید تابلوی طلافروشی و مغازه طلا فروشی بدون نیاز به کامپیوتر یا کابل</span>
                     </div>
 
-                    {{-- کادر تصویر QR Code --}}
-                    <div class="relative bg-white p-3 rounded-2xl overflow-hidden shadow-xl border-2 border-amber-400/30">
-                        <img id="qrImage" src="" alt="Pairing QR Code" class="w-56 h-56 object-contain">
-                        <div id="qrLoader" class="absolute inset-0 bg-white flex items-center justify-center">
-                            <div class="w-10 h-10 border-4 border-slate-200 border-t-amber-500 rounded-full animate-spin"></div>
+                    {{-- تیتر اصلی سئو و معرفی --}}
+                    <div class="space-y-4">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                            تابلوی هوشمند طلافروشی و مغازه طلا فروشی <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
+                                روی تلویزیون بدون نیاز به کیس و کابل
+                            </span>
+                        </h1>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
+                            تنها با باز کردن مرورگر انواع تلویزیون هوشمند در مغازه طلا فروشی، تابلوی اختصاصی طلا، سکه، ارز و ویترین جواهرات خود را با فرمول سود دلخواه به صورت زنده فعال کنید.
+                        </p>
+                    </div>
+
+                    {{-- کادر ویژه ثبت‌نام آنی و تست رایگان ۱۴ روزه طلالایو (حل قطعی سردرگمی کاربر جدید) --}}
+                    <div class="bg-white dark:bg-slate-900/90 border-2 border-amber-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🎁</span>
+                                <span class="text-xs sm:text-sm font-black text-slate-900 dark:text-amber-300">
+                                    شروع تست رایگان ۱۴ روزه طلالایو (ویژه طلافروشان)
+                                </span>
+                            </div>
+                            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                                بدون نیاز به کارت بانکی
+                            </span>
+                        </div>
+
+                        {{-- فرم ورود شماره همراه برای شروع آنی تست --}}
+                        <form action="{{ route('admin.register') }}" method="GET" class="flex flex-col sm:flex-row items-center gap-2.5 w-full">
+                            <div class="relative flex-1 w-full" dir="ltr">
+                                <input type="tel" name="phone" maxlength="11" placeholder="شماره موبایل: 09xxxxxxxxx" required
+                                       class="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-center font-mono font-black tracking-wider text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                            </div>
+                            <button type="submit" 
+                                    class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
+                                <span>دریافت کد و شروع رایگان</span>
+                                <span>🚀</span>
+                            </button>
+                        </form>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 flex-wrap gap-2">
+                            <span class="flex items-center gap-1">
+                                <span class="text-amber-500 font-bold">✓</span>
+                                <span>راه‌اندازی فوری در کمتر از ۶۰ ثانیه</span>
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <span class="text-amber-500 font-bold">✓</span>
+                                <span>تنظیم فرمول سود و اجرت اختصاصی</span>
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <span class="text-amber-500 font-bold">✓</span>
+                                <span>پشتیبانی تلفنی و آموزشی رایگان</span>
+                            </span>
                         </div>
                     </div>
 
-                    {{-- کد فعال‌سازی دستی ۶ رقمی --}}
-                    <div class="space-y-1.5 w-full">
-                        <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">کد اتصال دستی ۶ رقمی:</p>
-                        <div id="activationCode" class="text-2xl font-black tracking-widest text-amber-600 dark:text-amber-400 font-mono bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 py-2 rounded-xl shadow-inner">
-                            ------
+                    {{-- کارت هدایت شفاف به صفحه اتصال تلویزیون مغازه (/tv) --}}
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 backdrop-blur-md">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl sm:text-3xl">📺</span>
+                            <div>
+                                <div class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100">
+                                    می‌خواهید تلویزیون داخل مغازه را به تابلو وصل کنید؟
+                                </div>
+                                <div class="text-[11px] text-slate-500 dark:text-slate-400">
+                                    کافیست در مرورگر تلویزیون به آدرس <b class="font-mono text-amber-600 dark:text-amber-400 font-black" dir="ltr">talalive.ir/tv</b> بروید.
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-[10px] text-slate-500">قابل وارد کردن در منوی جفت‌سازی پنل مدیریت طلالایو</p>
-                    </div>
-                </div>
-
-                {{-- کادر ارتباط مستقیم با پشتیبانی --}}
-                <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-center text-xs space-y-2 backdrop-blur-xl shadow-md">
-                    <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">پشتیبانی فنی و راه‌اندازی فوری تابلوی طلافروشی:</p>
-                    <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
-                        <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
-                        &nbsp;&middot;&nbsp;
-                        <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
-                    </p>
-                    <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
-                        <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
-                        <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
-                            <span>پشتیبانی روبیکا</span>
+                        <a href="{{ route('display.tv') }}" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shrink-0 transition-colors flex items-center gap-1.5 shadow-sm">
+                            <span>صفحه اتصال تلویزیون</span>
+                            <span>←</span>
                         </a>
                     </div>
                 </div>
+
+                {{-- ستون سمت چپ: ماک‌آپ فوق‌العاده شیک و واقعی تلویزیون هوشمند دیواری با نرخ‌های زنده (۵ ستون) --}}
+                <div class="lg:col-span-5 flex flex-col gap-4 w-full max-w-[440px] mx-auto lg:mr-auto lg:ml-0" style="max-width: 440px; width: 100%;">
+                    
+                    {{-- فریم و قاب دیواری فوق‌العاده مدرن تلویزیون هوشمند --}}
+                    <div class="relative rounded-3xl p-3 sm:p-4 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 shadow-[0_25px_60px_-15px_rgba(245,158,11,0.25)] border-2 border-slate-600">
+                        
+                        {{-- صفحه نمایشگر زنده تلویزیون --}}
+                        <div class="relative rounded-2xl bg-[#030712] overflow-hidden border border-slate-800 p-3 sm:p-4 text-white aspect-[16/10] flex flex-col justify-between shadow-2xl">
+                            
+                            {{-- هدر تابلوی تلویزیون --}}
+                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-black text-amber-400 text-xs">
+                                        زر
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-black text-xs text-amber-300">گالری طلا و جواهر زرین</div>
+                                        <div class="text-[9px] text-slate-400">تابلوی آنلاین نرخ طلا و مسکوکات</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md text-emerald-400 text-[10px] font-bold">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                        <span>لحظه‌ای</span>
+                                    </div>
+                                    <div class="text-left font-mono text-[11px] text-slate-300 font-bold" dir="ltr">
+                                        {{ date('H:i') }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- ۴ کارت نرخ‌های واقعی زنده طلا و مسکوکات در تلویزیون --}}
+                            <div class="grid grid-cols-2 gap-2 my-auto">
+                                {{-- طلای ۱۸ عیار --}}
+                                <div class="bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-400 font-bold">طلای ۱۸ عیار (گرم)</div>
+                                    <div class="text-sm sm:text-base font-black text-amber-400 font-mono" dir="ltr">
+                                        {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '---' }}
+                                    </div>
+                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                </div>
+
+                                {{-- سکه تمام بهار آزادی / امامی --}}
+                                <div class="bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-400 font-bold">سکه بهار آزادی (امامی)</div>
+                                    <div class="text-sm sm:text-base font-black text-amber-400 font-mono" dir="ltr">
+                                        {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '---' }}
+                                    </div>
+                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                </div>
+
+                                {{-- طلای آبشده --}}
+                                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-400 font-bold">طلای آب شده (مظنه ۱۷)</div>
+                                    <div class="text-xs sm:text-sm font-bold text-slate-100 font-mono" dir="ltr">
+                                        {{ !empty($rates['mesghal']) && $rates['mesghal'] > 0 ? number_format($rates['mesghal']) : '---' }}
+                                    </div>
+                                    <div class="text-[9px] text-slate-400">تومان</div>
+                                </div>
+
+                                {{-- انس جهانی طلا --}}
+                                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-400 font-bold">انس جهانی طلا</div>
+                                    <div class="text-xs sm:text-sm font-bold text-slate-100 font-mono" dir="ltr">
+                                        {{ !empty($rates['ons']) && $rates['ons'] > 0 ? '$ ' . number_format($rates['ons'], 1) : '---' }}
+                                    </div>
+                                    <div class="text-[9px] text-slate-400">دلار</div>
+                                </div>
+                            </div>
+
+                            {{-- نوار زیرین: ویترین و زیرنویس روان --}}
+                            <div class="border-t border-slate-800/80 pt-1.5 flex items-center justify-between text-[9px] text-slate-400">
+                                <span class="truncate">خرید و فروش انواع طلا و سکه با بهترین نرخ بازار</span>
+                                <span class="font-mono text-amber-400 shrink-0">TalaLive.ir</span>
+                            </div>
+
+                            {{-- انعکاس شیشه و نور ملایم تلویزیون --}}
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none"></div>
+                        </div>
+
+                        {{-- دکمه پاور و چراغ استندبای تلویزیون در زیر فریم --}}
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mx-auto mt-2 shadow-sm shadow-emerald-500"></div>
+                    </div>
+
+                    {{-- زیرنویس اعتمادساز زیر ماک‌آپ --}}
+                    <div class="text-center space-y-1">
+                        <p class="text-xs font-bold text-slate-700 dark:text-slate-300">
+                            ✨ قابل اجرا روی تمامی تلویزیون‌های هوشمند و معمولی
+                        </p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                            سامسونگ، ال‌جی، سونی، اسنوا، دوو و شیائومی بدون نیاز به خرید مینی‌کیس
+                        </p>
+                    </div>
+
+                    {{-- کادر ارتباط فوری با پشتیبانی فنی --}}
+                    <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-3.5 text-center text-xs space-y-1.5 backdrop-blur-xl shadow-md">
+                        <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">مشاوره رایگان و راه‌اندازی فوری تابلوی طلافروشی:</p>
+                        <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
+                            <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
+                            &nbsp;&middot;&nbsp;
+                            <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
+                        </p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -608,7 +691,7 @@
                     مرورگر تلویزیون مغازه من کجاست؟
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                    برای باز کردن تابلوی طلالایو، کافیست با کنترل تلویزیون خود وارد برنامه مرورگر اینترنت شوید. روی برند تلویزیون مغازه‌تان کلیک کنید:
+                    برای باز کردن تابلوی طلالایو، کافیست با کنترل تلویزیون خود وارد برنامه مرورگر اینترنت شوید و آدرس <b class="font-mono text-amber-500">talalive.ir/tv</b> را وارد نمایید. روی برند تلویزیون مغازه‌تان کلیک کنید:
                 </p>
             </div>
 
@@ -687,266 +770,110 @@
         </div>
     </section>
 
-    {{-- بخش ۳: شبیه‌ساز و موکاپ زنده تابلوی تلویزیون (Live TV Preview Mockup) --}}
-    <section id="tv-mockup" class="py-20 px-4 sm:px-6 lg:px-8 relative">
-        <div class="max-w-6xl mx-auto">
-            
-            <div class="text-center space-y-3 mb-12">
-                <div class="inline-block px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
-                    پیش‌نمایش زنده نمای تلویزیون هوشمند
+    {{-- بخش ۴: امکانات و ویژگی‌های اختصاصی طلالایو --}}
+    <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center space-y-4 mb-14">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
+                <span>مزایای رقابتی تابلوی طلالایو</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+                چرا طلالایو انتخاب اول مدرن‌ترین طلافروشی‌های کشور است؟
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
+                ترکیب فناوری پیشرفته ابری، بالاترین استانداردهای بصری و حذف هزینه‌های سنگین کابل‌کشی و تعمیرات سخت‌افزاری.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 space-y-4 shadow-xl hover:border-amber-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-black">
+                    ⚡
                 </div>
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">
-                    تابلوی تلویزیون طلافروشی و مغازه طلا فروشی با طلالایو چگونه دیده می‌شود؟
-                </h2>
-                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-                    طراحی فوق‌العاده مدرن شیشه‌ای، خوانایی بی‌نظیر از فواصل دور، رنگ‌بندی لوکس دارک/گلد و سازگار با ویترین و دکوراسیون طلافروشی‌های مدرن و گالری‌های طلا فروشی.
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">اتصال فوری بدون سیم و مینی‌کیس</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    دیگر نیازی به خرید کامپیوتر چند ده میلیونی، فن‌های پر سر و صدا یا سیم‌کشی‌های زشت در دکور مغازه نیست. تلویزیون مغازه به تنهایی کافیست.
                 </p>
             </div>
 
-            {{-- فریم و ماکت فوق‌العاده تلویزیون (Smart TV Frame) --}}
-            <div class="relative mx-auto max-w-5xl rounded-3xl p-3 md:p-4 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 shadow-[0_25px_60px_-15px_rgba(245,158,11,0.2)] border border-slate-700">
-                
-                @php
-                    $previewImage = null;
-                    if (file_exists(public_path('images/tv-preview.png')) || file_exists(base_path('public_html/images/tv-preview.png'))) {
-                        $previewImage = 'images/tv-preview.png';
-                    } elseif (file_exists(public_path('images/tv-preview.jpg')) || file_exists(base_path('public_html/images/tv-preview.jpg'))) {
-                        $previewImage = 'images/tv-preview.jpg';
-                    } elseif (file_exists(public_path('images/tv-preview.webp')) || file_exists(base_path('public_html/images/tv-preview.webp'))) {
-                        $previewImage = 'images/tv-preview.webp';
-                    }
-                @endphp
+            <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 space-y-4 shadow-xl hover:border-amber-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-black">
+                    🛡️
+                </div>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">فناوری ضد قطعی اینترنت (آفلاین)</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    در صورت قطعی مقطعی اینترنت یا فیلترینگ، صفحه تلویزیون سیاه نمی‌شود! آخرین نرخ‌های معتبر همراه با اسلایدشوی ویترین به نمایش پایدار ادامه می‌دهند.
+                </p>
+            </div>
 
-                @if($previewImage)
-                    {{-- نمایش تصویر واقعی اسکرین‌شات تابلوی زنده --}}
-                    <div class="relative rounded-2xl bg-black overflow-hidden border border-slate-800 aspect-[16/9] shadow-2xl group flex items-center justify-center">
-                        <img src="{{ asset($previewImage) }}" 
-                             alt="پیش‌نمایش تابلوی زنده طلا و سکه طلالایو روی تلویزیون هوشمند" 
-                             class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.01]">
-                        
-                        {{-- افکت انعکاس شیشه و نور ملایم تلویزیون --}}
-                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent pointer-events-none"></div>
-                    </div>
-                @else
-                    {{-- شبیه ساز نمایشگر تلویزیون --}}
-                    <div class="relative rounded-2xl bg-black overflow-hidden border border-slate-800 p-4 md:p-6 text-white aspect-[16/9] flex flex-col justify-between">
-                        
-                        {{-- هدر تابلوی تلویزیون --}}
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-black text-amber-400 text-sm">
-                                    زر
-                                </div>
-                                <div class="text-right">
-                                    <div class="font-black text-sm md:text-base text-amber-300">گالری طلا و جواهر زرین</div>
-                                    <div class="text-[10px] text-slate-400">تلفن گالری: ۰۲۱-۸۸۸۸۴۴۴۴ &bull; بازار بزرگ طلا</div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-3">
-                                <div class="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-lg text-emerald-400 text-xs font-bold">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    <span>متصل به اتحادیه طلا</span>
-                                </div>
-                                <div class="text-left font-mono">
-                                    <div class="text-sm md:text-base font-bold text-slate-200">۱۲:۴۵:۳۰</div>
-                                    <div class="text-[10px] text-slate-400">۱۶ شهریور ۱۴۰۵</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- شبکه نرخ‌های زنده طلا و سکه --}}
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 md:gap-3.5 my-auto py-2">
-                            
-                            {{-- آیتم ۱: طلای ۱۸ عیار --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">طلای ۱۸ عیار (گرم)</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-amber-400 font-mono tracking-tight mt-0.5">۳,۸۵۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۴۵٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۲: طلای ۲۴ عیار --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">طلای ۲۴ عیار (گرم)</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-amber-400 font-mono tracking-tight mt-0.5">۵,۱۳۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۴۲٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۳: مظنه / آبشده --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">مظنه / مثقال طلا</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-amber-400 font-mono tracking-tight mt-0.5">۱۶,۶۸۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۳۸٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۴: انس جهانی --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">انس طلا (دلار)</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-blue-400 font-mono tracking-tight mt-0.5">۲,۵۱۴.۵۰ $</div>
-                                <div class="text-[10px] text-rose-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>-۰.۱۵٪</span>
-                                    <span>▼</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۵: سکه امامی --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">سکه طرح جدید (امامی)</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-yellow-300 font-mono tracking-tight mt-0.5">۴۴,۳۰۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۶۰٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۶: سکه بهار آزادی --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">سکه بهار آزادی</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-yellow-300 font-mono tracking-tight mt-0.5">۳۹,۹۰۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۳۵٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۷: نیم سکه --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">نیم سکه بهار آزادی</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-yellow-300 font-mono tracking-tight mt-0.5">۲۴,۱۵۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۲۰٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-
-                            {{-- آیتم ۸: ربع سکه --}}
-                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">ربع سکه بهار آزادی</div>
-                                <div class="text-base sm:text-lg md:text-xl font-black text-yellow-300 font-mono tracking-tight mt-0.5">۱۶,۱۵۰,۰۰۰</div>
-                                <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
-                                    <span>+۰.۱۰٪</span>
-                                    <span>▲</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- نوار پیام زیرین و ویترین کوتاه --}}
-                        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-2 flex items-center justify-between text-[10px] sm:text-xs text-slate-300">
-                            <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                                <span class="bg-amber-500 text-slate-950 font-black px-1.5 py-0.5 rounded text-[9px]">اطلاعیه</span>
-                                <span>خرید و تعویض طلای کم‌اجرت با بهترین نرخ روز &bull; ساخت انواع پلاک و النگو سفارشی در گالری زرین</span>
-                            </div>
-                            <div class="hidden sm:block text-slate-500 font-mono text-[10px]">
-                                TalaLive Smart Engine
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                {{-- پایه شبیه‌ساز تلویزیون --}}
-                <div class="w-32 h-3 bg-gradient-to-r from-slate-700 via-slate-500 to-slate-700 mx-auto rounded-b-md shadow-lg mt-1"></div>
+            <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 space-y-4 shadow-xl hover:border-amber-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl font-black">
+                    🎛️
+                </div>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">فرمول‌ساز سود و اجرت شخصی</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    در پنل مدیریت موبایل، درصد سود فروش، حاشیه خرید، مالیات و تخفیف‌ها را به ازای هر گرم طلا یا نوع سکه مطابق سیاست گالری خود تنظیم فرمایید.
+                </p>
             </div>
         </div>
     </section>
 
-    {{-- بخش ۴: شش ستون امکانات محوری طلالایو (Core Features Grid) --}}
-    <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800/80 bg-slate-100/70 dark:bg-slate-950/40">
-        <div class="max-w-7xl mx-auto">
-            
-            <div class="text-center space-y-3 mb-16">
-                <div class="inline-block px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
-                    ویژگی‌ها و قابلیت‌های فنی
+    {{-- بخش ۵: مقایسه جامع تابلوی تلویزیون هوشمند با تابلوهای سنتی LED --}}
+    <section id="comparison" class="py-16 px-4 sm:px-6 lg:px-8 bg-slate-100/60 dark:bg-slate-900/30 border-y border-slate-200/80 dark:border-slate-800/80">
+        <div class="max-w-5xl mx-auto space-y-10">
+            <div class="text-center space-y-3">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
+                    <span>تحول فناوری در طلافروشی</span>
                 </div>
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">
-                    چرا طلالایو انتخاب اول طلافروشی‌ها و گالری‌های برتر کشور است؟
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                    مقایسه تابلوی هوشمند طلالایو با تابلوهای سنتی LED روان
                 </h2>
-                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-                    نرم‌افزاری کامل که تمام نیازهای بصری، محاسباتی و امنیتی تابلوی قیمت طلا فروشی و تابلوی طلافروشی شما را برطرف می‌سازد.
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+                    چرا دوره تابلوهای LED تک‌رنگ و هزینه‌بر به پایان رسیده است؟
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                {{-- کارت ۱: بدون کامپیوتر یا کابل --}}
-                <div class="glass-card-gold rounded-3xl p-7 space-y-4 transition-all duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">حذف ۱۰۰٪ مینی‌کیس و دانگل</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        بدون نیاز به خرید کیس ۱۰ الی ۲۰ میلیونی یا کابل‌کشی پردردسر. سامانه با مرورگر خود تلویزیون مغازه اجرا می‌شود.
-                    </p>
-                </div>
-
-                {{-- کارت ۲: نرخ لحظه‌ای و هوشمند --}}
-                <div class="glass-card-gold rounded-3xl p-7 space-y-4 transition-all duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">بروزرسانی زنده بدون تاخیر</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        استعلام نرخ خودکار طلا ۱۸ و ۲۴ عیار، مظنه مثقال، سکه امامی و بهار آزادی با سوکت‌های اختصاصی Real-Time.
-                    </p>
-                </div>
-
-                {{-- کارت ۳: فرمول‌ساز سود و اجرت --}}
-                <div class="glass-card-gold rounded-3xl p-7 space-y-4 transition-all duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">فرمول‌ساز مالی اختصاصی</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        تعیین درصد سود فروش، حاشیه خرید، مالیات ارزش افزوده و تخفیف‌ها به صورت کاملاً سفارشی در تابلوی مغازه.
-                    </p>
-                </div>
-
-                {{-- کارت ۴: کش آفلاین و تاب‌آوری --}}
-                <div class="glass-card-gold rounded-3xl p-7 space-y-4 transition-all duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">کارکرد پایدار در قطعی اینترنت</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        سامانه در نوسانات اینترنت با کش هوشمند محلی صفحه را باز نگه داشته و با اتصال مجدد بلافاصله بروز می‌شود.
-                    </p>
-                </div>
-
-                {{-- کارت ۵: اسلایدشوی ویترین جواهرات --}}
-                <div class="glass-card-gold rounded-3xl p-7 space-y-4 transition-all duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">ویترین دیجیتال و معرفی کارها</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        پخش اسلایدشوی عکس‌های جواهرات لوکس، مدل‌های جدید و QR کد پیج اینستاگرام در کنار جدول نرخ‌ها.
-                    </p>
-                </div>
-
-                {{-- کارت ۶: سازگار با تمامی تلویزیون‌ها --}}
-                <div class="glass-card-gold rounded-3xl p-7 space-y-4 transition-all duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">پشتیبانی از انواع نمایشگر</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        سازگار با تمام سیستم‌عامل‌های هوشمند: Samsung Tizen، LG webOS، Android TV، سونی، اسنوا و حتی مانیتورهای ساده.
-                    </p>
-                </div>
-
+            <div class="overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-slate-900">
+                <table class="w-full text-right text-xs sm:text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-black">
+                        <tr>
+                            <th class="p-4 sm:p-5">ویژگی و امکانات</th>
+                            <th class="p-4 sm:p-5 text-amber-600 dark:text-amber-400">سامانه ابری طلالایو (تلویزیون هوشمند)</th>
+                            <th class="p-4 sm:p-5 text-slate-500">تابلوهای سنتی روان LED</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-600 dark:text-slate-300">
+                        <tr>
+                            <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">کیفیت و جذابیت بصری</td>
+                            <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">فوق‌العاده لوکس و مدرن با کیفیت 4K / Full HD</td>
+                            <td class="p-4 sm:p-5 text-rose-500">پیکسل‌های درشت، نامناسب برای گالری‌های لوکس</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">پخش اسلایدشو و ویترین جواهرات</td>
+                            <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">پخش تصاویر باکیفیت و QR اینستاگرام گالری</td>
+                            <td class="p-4 sm:p-5 text-rose-500">غیرممکن (فقط متن ساده تک‌رنگ)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">بروزرسانی خودکار نرخ‌ها</td>
+                            <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">خودکار و بلادرنگ بدون دخالت دست</td>
+                            <td class="p-4 sm:p-5 text-rose-500">نیاز به وارد کردن دستی قیمت با کیبورد یا فلش</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">هزینه اولیه سخت‌افزار</td>
+                            <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">۰ تومان (استفاده از تلویزیون موجود مغازه)</td>
+                            <td class="p-4 sm:p-5 text-rose-500">هزینه سنگین خرید ماژول LED و قاب اختصاصی</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">هزینه تعمیر و نگهداری</td>
+                            <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">صفر &middot; بروزرسانی ابری خودکار</td>
+                            <td class="p-4 sm:p-5 text-rose-500">سوختن مداوم پاور، ماژول و لامپ‌های LED</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
 
-    {{-- بخش ۵: تعرفه‌ها و پلن‌های اشتراک طلالایو (Transparent B2B Pricing Plans) --}}
+    {{-- بخش ۶: تعرفه‌ها و بسته‌های اشتراک (Pricing Table) --}}
     <section id="pricing" x-data="{ mobilePlan: '12m' }" class="py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 dark:border-slate-800/80">
         <div class="max-w-6xl mx-auto space-y-12">
             
@@ -1447,265 +1374,137 @@
         </div>
     </section>
 
-
-    {{-- بخش ۵: راهنمای گام‌به‌گام راه‌اندازی در ۳ دقیقه (How It Works) --}}
-    <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 relative">
-        <div class="max-w-6xl mx-auto">
-            
-            <div class="text-center space-y-3 mb-16">
-                <div class="inline-block px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
-                    راهنمای سریع راه‌اندازی
-                </div>
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">
-                    نحوه شروع کار با طلالایو در ۳ مرحله ساده
-                </h2>
-                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-                    از لحظه تصمیم تا نمایش تابلوی زنده روی تلویزیون مغازه کمتر از ۳ دقیقه زمان می‌برد.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                {{-- گام ۱ --}}
-                <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-4 relative group hover:border-amber-500/40 transition-all shadow-lg shadow-slate-200/50 dark:shadow-none">
-                    <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 font-black text-xl flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20">
-                        ۱
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">ثبت‌نام سریع گالری</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        در صفحه <a href="{{ route('admin.register') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">ثبت‌نام طلالایو</a> تنها با شماره موبایل و نام مغازه خود در کمتر از یک دقیقه حساب کاربری بسازید.
-                    </p>
-                </div>
-
-                {{-- گام ۲ --}}
-                <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-4 relative group hover:border-amber-500/40 transition-all shadow-lg shadow-slate-200/50 dark:shadow-none">
-                    <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 font-black text-xl flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20">
-                        ۲
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">باز کردن سایت و اسکن بارکد</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        مرورگر تلویزیون مغازه را باز کرده و وارد آدرس <span class="text-amber-600 dark:text-amber-400 font-mono font-bold">talalive.ir</span> شوید. بارکد ظاهرشده را با دوربین گوشی اسکن کنید.
-                    </p>
-                </div>
-
-                {{-- گام ۳ --}}
-                <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-4 relative group hover:border-amber-500/40 transition-all shadow-lg shadow-slate-200/50 dark:shadow-none">
-                    <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 font-black text-xl flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20">
-                        ۳
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white">شروع به کار خودکار تابلو</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-                        تلویزیون شما به طور آنی متصل شده و تابلوی شکیل قیمت طلا و سکه با تنظیمات گالری شما بدون نیاز به مداخله دست نمایش داده می‌شود.
-                    </p>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    {{-- بخش ۶: ماتریس مقایسه طلالایو با روش‌های سنتی (Comparison Matrix) --}}
-    <section id="comparison" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/60">
-        <div class="max-w-6xl mx-auto">
-            
-            <div class="text-center space-y-3 mb-16">
-                <div class="inline-block px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
-                    مقایسه هوشمندانه
-                </div>
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">
-                    طلالایو در مقایسه با تابلوهای سنتی و روش‌های قدیمی
-                </h2>
-                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-                    چرا سرمایه‌گذاری روی نرم‌افزار ابری طلالایو نسبت به تابلوهای ال‌ای‌دی یا اتصال کیس کامپیوتر بسیار اقتصادی‌تر و زیباتر است؟
-                </p>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-right border-collapse min-w-[650px]">
-                    <thead>
-                        <tr class="border-b border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-                            <th class="py-4 px-4 font-bold">ویژگی و امکانات</th>
-                            <th class="py-4 px-4 font-black text-amber-700 dark:text-amber-400 text-sm bg-amber-500/10 rounded-t-2xl border-x border-t border-amber-500/20">سامانه هوشمند طلالایو</th>
-                            <th class="py-4 px-4 font-bold">تابلوهای LED و روان سنتی</th>
-                            <th class="py-4 px-4 font-bold">اتصال کامپیوتر یا لپ‌تاپ با کابل</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm">
-                        <tr>
-                            <td class="py-4 px-4 font-bold text-slate-800 dark:text-slate-200">هزینه سخت‌افزار اولیه</td>
-                            <td class="py-4 px-4 font-black text-emerald-600 dark:text-emerald-400 bg-amber-500/5 border-x border-amber-500/20">صفر (فقط تلویزیون موجود)</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">بیش از ۲۰ تا ۶۰ میلیون تومان</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">۱۰ تا ۳۰ میلیون خرید مینی‌کیس</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-4 font-bold text-slate-800 dark:text-slate-200">کیفیت بصری و پرستیژ مغازه</td>
-                            <td class="py-4 px-4 font-bold text-amber-600 dark:text-amber-300 bg-amber-500/5 border-x border-amber-500/20">گرافیک لوکس 4K و Glassmorphism</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">پیکسلی و قدیمی و تک‌رنگ</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">نیازمند ویندوز و ظاهر نامنظم</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-4 font-bold text-slate-800 dark:text-slate-200">بروزرسانی خودکار نرخ‌ها</td>
-                            <td class="py-4 px-4 font-black text-emerald-600 dark:text-emerald-400 bg-amber-500/5 border-x border-amber-500/20">کاملاً اتوماتیک و ثانیه‌ای</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">دستی یا با کنترلر سخت‌افزاری</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">نیازمند اپراتور و رفرش دستی</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-4 font-bold text-slate-800 dark:text-slate-200">ویترین دیجیتال و کاتالوگ طلا</td>
-                            <td class="py-4 px-4 font-black text-emerald-600 dark:text-emerald-400 bg-amber-500/5 border-x border-amber-500/20">دارد (اسلایدشو با عکس و QR)</td>
-                            <td class="py-4 px-4 text-rose-500">غیرقابل انجام</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">پیچیده و نیازمند نرم‌افزار جانبی</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-4 font-bold text-slate-800 dark:text-slate-200">فرمول‌ساز اختصاصی سود و مظنه</td>
-                            <td class="py-4 px-4 font-black text-emerald-600 dark:text-emerald-400 bg-amber-500/5 border-x border-amber-500/20">دارد (تنظیم حاشیه خرید/فروش)</td>
-                            <td class="py-4 px-4 text-rose-500">ندارد</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">نیازمند فرمول‌نویسی دستی</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-4 font-bold text-slate-800 dark:text-slate-200">کنترل از راه دور با موبایل</td>
-                            <td class="py-4 px-4 font-black text-emerald-600 dark:text-emerald-400 bg-amber-500/5 border-x border-b border-amber-500/20 rounded-b-2xl">دارد (پنل تحت وب از هر نقطه)</td>
-                            <td class="py-4 px-4 text-rose-500">ندارد</td>
-                            <td class="py-4 px-4 text-slate-500 dark:text-slate-400">نیازمند نرم‌افزارهای ریموت پیچیده</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </section>
-
-{{-- بخش ۷: آکاردئون سوالات متداول طلافروشان (FAQ Section) --}}
-    <section id="faq" class="py-20 px-4 sm:px-6 lg:px-8 relative">
-        <div class="max-w-4xl mx-auto space-y-12">
-            
+    {{-- بخش ۷: سوالات متداول طلافروشان (FAQ Accordion) --}}
+    <section id="faq" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-100/60 dark:bg-slate-900/40 border-t border-slate-200/80 dark:border-slate-800/80">
+        <div class="max-w-4xl mx-auto space-y-8">
             <div class="text-center space-y-3">
-                <div class="inline-block px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
-                    پاسخ به ابهامات
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold">
+                    <span>پاسخ به ابهامات متداول</span>
                 </div>
-                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">
-                    سوالات متداول همکاران و طلافروشان گرامی
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                    سوالات متداول طلافروشان و همکاران محترم
                 </h2>
-                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
-                    پاسخ به سوالاتی که پیش از راه‌اندازی تابلوی طلالایو ممکن است برای شما مطرح باشد.
-                </p>
             </div>
 
-            <div class="space-y-4">
-                
-                {{-- سوال ۱ --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
+            <div class="space-y-3">
+                <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
                         <span>آیا برای راه‌اندازی تابلوی طلالایو نیاز به خرید کامپیوتر یا دستگاه جداگانه در مغازه هست؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
+                        <span class="faq-icon transition-transform duration-200 text-amber-500">▼</span>
                     </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
-                        خیر، به هیچ وجه نیازی به مینی‌کیس، کامپیوتر، یا دانگل اضافه نیست. شما می‌توانید تنها با مرورگر اینترنت هر نوع تلویزیون هوشمند (سامسونگ، ال‌جی، سونی، اسنوا، دوو یا اندروید تی‌وی) و اسکن یکبار QR کد، تابلوی اختصاصی طلافروشی خود را بدون سیم‌کشی راه‌اندازی نمایید.
+                    <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                        خیر، هیچ نیازی به خرید مینی‌کیس، کامپیوتر یا دانگل اضافه نیست. شما می‌توانید تنها با استفاده از مرورگر وب داخلی هر نوع تلویزیون هوشمند (سامسونگ، ال‌جی، سونی، اسنوا، دوو یا اندروید تی‌وی) و اسکن یکبار QR کد، تابلوی اختصاصی طلافروشی خود را بدون سیم‌کشی راه‌اندازی کنید.
                     </p>
                 </details>
 
-                {{-- سوال ۲ --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
+                <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
                         <span>نرخ‌های طلا، سکه و ارز از چه مراجعی بروزرسانی می‌شوند؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
+                        <span class="faq-icon transition-transform duration-200 text-amber-500">▼</span>
                     </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
+                    <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
                         نرخ‌ها به صورت خودکار و لحظه‌ای از معتبرترین مراجع رسمی بازار طلا و جواهر کشور، اتحادیه‌های طلا و سکه و مراجع رسمی انس جهانی دریافت می‌شوند و به صورت بلادرنگ روی تابلوی شما آپدیت می‌گردند.
                     </p>
                 </details>
 
-                {{-- سوال ۳ --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
+                <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
                         <span>در صورت قطعی موقت اینترنت در طلافروشی چه اتفاقی می‌افتد؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
+                        <span class="faq-icon transition-transform duration-200 text-amber-500">▼</span>
                     </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
+                    <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
                         طلالایو مجهز به فناوری کش هوشمند آفلاین است. در صورت قطعی اینترنت، تابلوی شما هرگز سیاه یا متوقف نمی‌شود؛ بلکه آخرین نرخ‌های دریافتی معتبر را با برچسب ساعت آخرین بروزرسانی همراه با ویترین محصولات به نمایش مداوم ادامه می‌دهد.
                     </p>
                 </details>
 
-                {{-- سوال ۴ --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
+                <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
                         <span>چگونه می‌توان فرمول سود، اجرت یا مظنه را برای طلافروشی شخصی‌سازی کرد؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
+                        <span class="faq-icon transition-transform duration-200 text-amber-500">▼</span>
                     </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
+                    <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
                         از طریق پنل مدیریت موبایل یا کامپیوتر، بخش فرمول‌ساز هوشمند در اختیارتان قرار دارد که می‌توانید درصد سود فروش، حاشیه خرید، مالیات و تخفیف‌ها را به ازای هر گرم یا نوع سکه اختصاصی‌سازی کنید تا نرخ‌ها مطابق با سیاست مالی گالری شما محاسبه و نمایش یابند.
                     </p>
                 </details>
 
-                {{-- سوال ۵ --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
-                        <span>آیا امکان نمایش تصاویر محصولات و ویترین جواهرات در کنار نرخ‌ها وجود دارد؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
-                    </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
-                        بله، در پنل مدیریت می‌توانید عکس‌های باکیفیت النگو، نیم‌ست، سرویس و مدل‌های روز طلا را به همراه مشخصات و QR کد اختصاصی اینستاگرام مغازه بارگذاری کنید تا در قالب اسلایدشوی لوکس در کنار نرخ‌های زنده طلا برای مشتریان پخش شوند.
-                    </p>
-                </details>
-
-                {{-- سوال ۶ --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
+                <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
                         <span>آیا اتصال تلویزیون پس از هر بار خاموش و روشن شدن مغازه قطع می‌شود؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
+                        <span class="faq-icon transition-transform duration-200 text-amber-500">▼</span>
                     </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
+                    <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
                         خیر، اطلاعات اتصال تلویزیون شما در حافظه پایدار مرورگر تلویزیون به صورت خودکار ذخیره می‌شود و با روشن شدن تلویزیون، صفحه بدون نیاز به اسکن مجدد فوراً باز شده و به تابلوی زنده شما متصل می‌گردد.
                     </p>
                 </details>
-
-                {{-- سوال ۷: پوشش مسکوکات بهار آزادی و طلای آب شده --}}
-                <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
-                    <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
-                        <span>آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه را پوشش می‌دهد؟</span>
-                        <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
-                    </summary>
-                    <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
-                        بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی (بهار ازادی)، نیم سکه، ربع سکه، سکه گرمی، طلای آب شده (طلای اب شده) و مظنه مثقال به صورت لحظه ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند.
-                    </p>
-                </details>
-
             </div>
         </div>
     </section>
 
-    {{-- بخش ۸: دعوت به اقدام نهایی (High-Conversion Call To Action) --}}
-    <section class="py-16 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-5xl mx-auto rounded-3xl p-8 sm:p-12 bg-gradient-to-r from-amber-500/15 via-white dark:via-slate-900/90 to-blue-500/15 border border-amber-500/30 text-center space-y-6 shadow-xl dark:shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-20 -right-20 w-60 h-60 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
-            
-            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white leading-tight">
-                همین حالا تابلوی تلویزیون طلافروشی و مغازه طلا فروشی خود را راه‌اندازی کنید
-            </h2>
-            <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-                بدون نیاز به کارت اعتباری یا تجهیزات جانبی. ثبت‌نام کنید و در کمتر از یک دقیقه تابلوی زنده و درخشان مغازه طلا فروشی‌تان را فعال نمایید.
-            </p>
-
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-                <a href="{{ route('admin.register') }}" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-[1.03]">
-                    شروع رایگان و ثبت‌نام گالری
-                </a>
-                <a href="tel:09187009064" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-sm transition-all shadow-sm">
-                    مشاوره تلفنی با کارشناس
-                </a>
+    {{-- بخش ۸: پایگاه دانش و راهنماهای تخصصی طلا و سکه --}}
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex items-center justify-between flex-wrap gap-4 mb-10">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                    دانشنامه، ابزارها و راهنماهای صنف طلا و جواهر
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    مقالات تخصصی نحوه محاسبه اجرت، عیار، سود مغازه و حباب انواع سکه
+                </p>
             </div>
+            <a href="{{ route('public.guides') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1">
+                <span>مشاهده تمام مقالات و آموزش‌ها</span>
+                <span>←</span>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/50 transition-all shadow-sm group">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-sm">
+                    📐
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 leading-snug">
+                    فرمول دقیق محاسبه قیمت طلا ۱۸ عیار با اجرت و سود مغازه طلا فروشی
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    آموزش نحوه محاسبه فاکتور طلا، طلای دست دوم، کم اجرت و سود قانونی اتحادیه طلا.
+                </p>
+            </a>
+
+            <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/50 transition-all shadow-sm group">
+                <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black text-sm">
+                    🫧
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 leading-snug">
+                    فرمول محاسبه حباب سکه امامی، بهار آزادی، نیم سکه و ربع سکه
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    نحوه محاسبه ارزش ذاتی و حباب سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه با انس طلا.
+                </p>
+            </a>
+
+            <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/50 transition-all shadow-sm group">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-sm">
+                    📺
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 leading-snug">
+                    راهنمای انتخاب بهترین تلویزیون برای تابلو طلا فروشی و مغازه طلافروشی
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    مقایسه تلویزیون‌های سامسونگ، ال‌جی و اسنوا از نظر طول عمر پنل و وضوح در نور ویترین.
+                </p>
+            </a>
+
+            <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/50 transition-all shadow-sm group">
+                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-black text-sm">
+                    📑
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 leading-snug">
+                    قانون جدید مالیات طلا و اجرت در سامانه مودیان صنف طلا
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    بررسی تکالیف مالیاتی طلافروشان، معافیت اصل طلا و محاسبه مالیات روی اجرت و سود.
+                </p>
+            </a>
         </div>
     </section>
 
@@ -1731,6 +1530,7 @@
             <div class="space-y-3">
                 <div class="font-bold text-white text-sm">دسترسی سریع و صفحات سامانه</div>
                 <ul class="space-y-2 text-xs">
+                    <li><a href="{{ route('display.tv') }}" class="text-amber-400 font-bold hover:underline">📺 صفحه اتصال تلویزیون مغازه</a></li>
                     <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی و طلا فروشی</a></li>
                     <li><a href="{{ route('public.tv-setup-guide') }}" class="hover:text-amber-400 transition-colors">راهنمای اتصال تلویزیون مغازه</a></li>
                     <li><a href="{{ route('public.gold-calculator') }}" class="hover:text-amber-400 transition-colors">ماشین‌حساب آنلاین طلا و حباب سکه</a></li>
@@ -1812,7 +1612,6 @@
                 darkMode: document.documentElement.classList.contains('dark'),
                 mobileMenuOpen: false,
                 toolsDropdownOpen: false,
-                mobilePlan: '12m',
 
                 init() {
                     window.addEventListener('talalive-theme-changed', (e) => {
@@ -1827,64 +1626,5 @@
             }
         }
     </script>
-
-    {{-- اسکریپت جفت‌سازی تلویزیون هوشمند (۱۰۰٪ حفظ شده و بدون تغییر منطقی) --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // ۱. تولید شناسه سشن موقت تصادفی
-            const sessionCode = 'sess-' + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-            
-            // نمایش کد فعال‌سازی خلاصه روی تلویزیون
-            const activationCode = sessionCode.substring(5, 11).toUpperCase();
-            const activationCodeEl = document.getElementById('activationCode');
-            if (activationCodeEl) {
-                activationCodeEl.innerText = activationCode;
-            }
-
-            // ثبت سشن در سرور جهت امکان فعال‌سازی دستی با کد ۶ رقمی
-            fetch('/api/tv/register-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ session_code: sessionCode, activation_code: activationCode })
-            }).catch(err => console.error('Failed to register session:', err));
-
-            // ۲. ساخت لینک آدرس نهایی اسکن
-            const pairingUrl = window.location.origin + '/admin/pair/' + sessionCode;
-
-            // ۳. لود کردن عکس بارکد
-            const qrImage = document.getElementById('qrImage');
-            if (qrImage) {
-                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&color=020617&data=' + encodeURIComponent(pairingUrl);
-                qrImage.onload = () => {
-                    const loader = document.getElementById('qrLoader');
-                    if (loader) loader.style.display = 'none';
-                };
-            }
-
-            // ۴. شروع پولینگ دوره‌ای چک کردن وضعیت جفت‌سازی از سرور
-            let checkInterval = setInterval(async () => {
-                try {
-                    const res = await fetch('/api/tv/check/' + sessionCode);
-                    if (!res.ok) return;
-                    const data = await res.json();
-                    
-                    if (data.paired && data.username && data.display_token) {
-                        // متوقف کردن پولینگ
-                        clearInterval(checkInterval);
-                        
-                        // ذخیره در LocalStorage تلویزیون
-                        localStorage.setItem('display_username', data.username);
-                        localStorage.setItem('display_token', data.display_token);
-                        
-                        // انتقال تلویزیون به تابلوی طلا
-                        window.location.href = '/' + data.username + '?key=' + data.display_token;
-                    }
-                } catch (e) {
-                    console.error('Pairing check error:', e);
-                }
-            }, 3000); // هر ۳ ثانیه
-        });
-    </script>
 </body>
 </html>
-
