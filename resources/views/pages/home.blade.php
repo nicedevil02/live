@@ -448,205 +448,222 @@
         </div>
     </header>
 
-    {{-- بخش ۱: هیرو سکشن لندینگ تجاری طلالایو (B2B High-Converting Hero) --}}
+        {{-- بخش ۱: هیرو سکشن لندینگ تجاری طلالایو (Apple Luxury Studio Hero) --}}
     <section class="relative min-h-[calc(100vh-80px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-10 lg:py-16 overflow-hidden">
         
-        {{-- افکت‌های گرادینت پس‌زمینه --}}
-        <div class="absolute -top-40 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-40 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        {{-- افکت‌های گرادینت پس‌زمینه و نور امبیانت کلی --}}
+        <div class="absolute -top-40 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-amber-500/15 via-yellow-500/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-40 left-1/4 w-[500px] h-[500px] bg-gradient-to-tr from-blue-600/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="w-full max-w-6xl mx-auto flex flex-col z-10">
+        <div class="w-full max-w-7xl mx-auto flex flex-col z-10">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center w-full">
                 
-                {{-- ستون سمت راست: ارزش محصول، تیتر سئو و کادر ثبت‌نام سریع با شماره موبایل (۷ ستون) --}}
+                {{-- ستون سمت راست: ارزش محصول، تیتر سئو و پنل تبدیل یکپارچه (۷ ستون) --}}
                 <div class="lg:col-span-7 text-right space-y-6 w-full">
                     
                     {{-- بج نسخه نسل جدید --}}
-                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold shadow-sm">
-                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-                        <span>سامانه نسل جدید تابلوی طلافروشی و مغازه طلا فروشی بدون نیاز به کامپیوتر یا کابل</span>
+                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-yellow-500/15 border border-amber-500/30 text-amber-900 dark:text-amber-300 text-xs font-black shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                        <span>✨ نسل نوین سامانه‌های نمایش نرخ لحظه‌ای و ویترین طلا</span>
                     </div>
 
-                    {{-- تیتر اصلی سئو و معرفی --}}
+                    {{-- تیتر اصلی سئو و معرفی باشکوه --}}
                     <div class="space-y-4">
                         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-                            تابلوی هوشمند طلافروشی و مغازه طلا فروشی <br>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
-                                روی تلویزیون بدون نیاز به کیس و کابل
+                            جلوه‌ای لوکس و باشکوه از جنس طلا <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-400">
+                                روی تلویزیون گالری شما
                             </span>
                         </h1>
                         <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-                            تنها با باز کردن مرورگر انواع تلویزیون هوشمند در مغازه طلا فروشی، تابلوی اختصاصی طلا، سکه، ارز و ویترین جواهرات خود را با فرمول سود دلخواه به صورت زنده فعال کنید.
+                            خداحافظی همیشگی با تابلوهای سنتی، زشت و گران‌قیمت LED. بدون نیاز به مینی‌کیس، کامپیوتر یا کابل‌کشی؛ تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه و ویترین دیجیتال جواهرات خود را تنها در ۶۰ ثانیه با ریموت تلویزیون مغازه روشن کنید.
                         </p>
                     </div>
 
-                    {{-- کادر ویژه ثبت‌نام آنی و تست رایگان ۱۴ روزه طلالایو (حل قطعی سردرگمی کاربر جدید) --}}
-                    <div class="bg-white dark:bg-slate-900/90 border-2 border-amber-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
-                        <div class="flex items-center justify-between flex-wrap gap-2">
+                    {{-- پنل یکپارچه تبدیل (Unified Conversion Card) --}}
+                    <div class="bg-white/95 dark:bg-slate-900/85 border border-slate-200/90 dark:border-amber-500/30 rounded-3xl p-5 sm:p-7 shadow-2xl shadow-slate-200/60 dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] backdrop-blur-2xl space-y-5 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-yellow-500/5 pointer-events-none"></div>
+
+                        <div class="flex items-center justify-between flex-wrap gap-2 relative z-10">
                             <div class="flex items-center gap-2">
-                                <span class="text-lg">🎁</span>
+                                <span class="text-xl">🎁</span>
                                 <span class="text-xs sm:text-sm font-black text-slate-900 dark:text-amber-300">
                                     شروع تست رایگان ۱۴ روزه طلالایو (ویژه طلافروشان)
                                 </span>
                             </div>
-                            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-                                بدون نیاز به کارت بانکی
+                            <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 shadow-sm">
+                                بدون نیاز به کارت بانکی یا پیش‌پرداخت
                             </span>
                         </div>
 
-                        {{-- فرم ورود شماره همراه برای شروع آنی تست --}}
-                        <form action="{{ route('admin.register') }}" method="GET" class="flex flex-col sm:flex-row items-center gap-2.5 w-full">
+                        {{-- فرم ورود شماره همراه برای ورود سریع به ثبت‌نام --}}
+                        <form action="{{ route('admin.register') }}" method="GET" class="flex flex-col sm:flex-row items-center gap-3 w-full relative z-10">
                             <div class="relative flex-1 w-full" dir="ltr">
                                 <input type="tel" name="phone" maxlength="11" placeholder="شماره موبایل: 09xxxxxxxxx" required
-                                       class="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-center font-mono font-black tracking-wider text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                                       class="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-base text-center font-mono font-black tracking-wider text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal focus:outline-none focus:border-amber-500 dark:focus:border-amber-400 shadow-inner transition-colors">
                             </div>
                             <button type="submit" 
-                                    class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
-                                <span>دریافت کد و شروع رایگان</span>
+                                    class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/30 hover:shadow-amber-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
+                                <span>دریافت کد و شروع فوری</span>
                                 <span>🚀</span>
                             </button>
                         </form>
 
-                        <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 flex-wrap gap-2">
-                            <span class="flex items-center gap-1">
-                                <span class="text-amber-500 font-bold">✓</span>
-                                <span>راه‌اندازی فوری در کمتر از ۶۰ ثانیه</span>
-                            </span>
-                            <span class="flex items-center gap-1">
-                                <span class="text-amber-500 font-bold">✓</span>
-                                <span>تنظیم فرمول سود و اجرت اختصاصی</span>
-                            </span>
-                            <span class="flex items-center gap-1">
-                                <span class="text-amber-500 font-bold">✓</span>
-                                <span>پشتیبانی تلفنی و آموزشی رایگان</span>
-                            </span>
+                        {{-- نوار هدایت شفاف به صفحه اختصاصی تلویزیون مغازه --}}
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs relative z-10">
+                            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                                <span class="text-base">📺</span>
+                                <span>این صفحه را روی مرورگر تلویزیون مغازه باز کرده‌اید؟</span>
+                            </div>
+                            <a href="{{ route('display.tv') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-amber-300 font-black text-xs transition-colors shadow-sm shrink-0">
+                                <span>صفحه جفت‌سازی تلویزیون (/tv)</span>
+                                <span>←</span>
+                            </a>
                         </div>
                     </div>
 
-                    {{-- کارت هدایت شفاف به صفحه اتصال تلویزیون مغازه (/tv) --}}
-                    <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 backdrop-blur-md">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl sm:text-3xl">📺</span>
-                            <div>
-                                <div class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100">
-                                    می‌خواهید تلویزیون داخل مغازه را به تابلو وصل کنید؟
-                                </div>
-                                <div class="text-[11px] text-slate-500 dark:text-slate-400">
-                                    کافیست در مرورگر تلویزیون به آدرس <b class="font-mono text-amber-600 dark:text-amber-400 font-black" dir="ltr">talalive.ir/tv</b> بروید.
-                                </div>
-                            </div>
+                    {{-- نوار شاخص‌های اعتماد ویژه طلافروشان --}}
+                    <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-1 text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-bold">
+                        <div class="flex items-center gap-2 bg-slate-100/70 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 px-3 py-2 rounded-xl">
+                            <span class="text-amber-500 text-sm">⚡</span>
+                            <span class="truncate">راه‌اندازی در ۶۰ ثانیه</span>
                         </div>
-                        <a href="{{ route('display.tv') }}" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shrink-0 transition-colors flex items-center gap-1.5 shadow-sm">
-                            <span>صفحه اتصال تلویزیون</span>
-                            <span>←</span>
-                        </a>
+                        <div class="flex items-center gap-2 bg-slate-100/70 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 px-3 py-2 rounded-xl">
+                            <span class="text-emerald-500 text-sm">🛡️</span>
+                            <span class="truncate">پایداری کامل آفلاین</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-100/70 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 px-3 py-2 rounded-xl">
+                            <span class="text-blue-500 text-sm">🎛️</span>
+                            <span class="truncate">فرمول سود دلخواه</span>
+                        </div>
                     </div>
                 </div>
 
-                {{-- ستون سمت چپ: ماک‌آپ فوق‌العاده شیک و واقعی تلویزیون هوشمند دیواری با نرخ‌های زنده (۵ ستون) --}}
-                <div class="lg:col-span-5 flex flex-col gap-4 w-full max-w-[440px] mx-auto lg:mr-auto lg:ml-0" style="max-width: 440px; width: 100%;">
+                {{-- ستون سمت چپ: تلویزیون ۶۵ اینچ شناور با نور مخفی طلایی (۵ ستون) --}}
+                <div class="lg:col-span-5 flex flex-col gap-4 w-full max-w-[460px] mx-auto lg:mr-auto lg:ml-0" style="max-width: 460px; width: 100%;">
                     
-                    {{-- فریم و قاب دیواری فوق‌العاده مدرن تلویزیون هوشمند --}}
-                    <div class="relative rounded-3xl p-3 sm:p-4 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 shadow-[0_25px_60px_-15px_rgba(245,158,11,0.25)] border-2 border-slate-600">
-                        
-                        {{-- صفحه نمایشگر زنده تلویزیون --}}
-                        <div class="relative rounded-2xl bg-[#030712] overflow-hidden border border-slate-800 p-3 sm:p-4 text-white aspect-[16/10] flex flex-col justify-between shadow-2xl">
+                    <div class="relative w-full">
+                        {{-- هاله نور مخفی پشت تلویزیون روی دیوار گالری (Bias Ambient Lighting) --}}
+                        <div class="absolute -inset-4 bg-gradient-to-r from-amber-500/25 via-yellow-500/30 to-amber-600/20 blur-3xl rounded-[40px] opacity-75 dark:opacity-90 pointer-events-none"></div>
+
+                        {{-- فریم و قاب تیتانیومی تلویزیون هوشمند ۶۵ اینچ دیواری --}}
+                        <div class="relative rounded-[28px] p-2 sm:p-2.5 bg-gradient-to-b from-slate-600 via-slate-800 to-slate-950 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.7),0_0_40px_rgba(245,158,11,0.2)] border border-slate-500/40 transform transition-transform hover:scale-[1.01] duration-500">
                             
-                            {{-- هدر تابلوی تلویزیون --}}
-                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-black text-amber-400 text-xs">
-                                        زر
+                            {{-- صفحه نمایشگر زنده تلویزیون با تم مشکی سلطنتی Imperial Onyx 24K --}}
+                            <div class="relative rounded-2xl bg-[#020617] overflow-hidden border border-amber-500/30 text-white aspect-[16/10] flex flex-col justify-between p-3 sm:p-4 shadow-2xl select-none">
+                                
+                                {{-- هدر تابلوی تلویزیون با پرستیژ زرین --}}
+                                <div class="flex items-center justify-between border-b border-amber-500/20 pb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-slate-950 font-black text-xs flex items-center justify-center shadow-md shadow-amber-500/30">
+                                            زر
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-black text-xs text-amber-300 tracking-tight">گالری طلا و جواهر زرین</div>
+                                            <div class="text-[9px] text-slate-400">تابلوی رسمی نرخ لحظه‌ای و مسکوکات</div>
+                                        </div>
                                     </div>
-                                    <div class="text-right">
-                                        <div class="font-black text-xs text-amber-300">گالری طلا و جواهر زرین</div>
-                                        <div class="text-[9px] text-slate-400">تابلوی آنلاین نرخ طلا و مسکوکات</div>
+
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/40 px-2 py-0.5 rounded-full text-emerald-400 text-[10px] font-black shadow-sm">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                            <span>نرخ زنده</span>
+                                        </div>
+                                        <div class="text-left font-mono text-xs text-amber-400/90 font-black" dir="ltr">
+                                            {{ date('H:i') }}
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center gap-2">
-                                    <div class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md text-emerald-400 text-[10px] font-bold">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                        <span>لحظه‌ای</span>
+                                {{-- ۴ کارت نرخ‌های واقعی لوکس نئومورفیک شیشه‌ای --}}
+                                <div class="grid grid-cols-2 gap-2 my-auto">
+                                    {{-- طلای ۱۸ عیار (کارت هیرو و پادشاه تابلو) --}}
+                                    <div class="relative bg-gradient-to-b from-amber-500/15 via-slate-900/90 to-slate-950 border border-amber-400/50 rounded-xl p-2 text-right space-y-0.5 shadow-lg shadow-amber-500/10">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[10px] text-amber-300 font-black">طلای ۱۸ عیار (گرم)</span>
+                                            <span class="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">شاخص</span>
+                                        </div>
+                                        <div class="text-sm sm:text-base font-black text-amber-400 font-mono tracking-wider drop-shadow-[0_2px_8px_rgba(251,191,36,0.3)]" dir="ltr">
+                                            {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '۴,۶۵۰,۰۰۰' }}
+                                        </div>
+                                        <div class="text-[9px] text-emerald-400 font-bold flex items-center justify-between">
+                                            <span>تومان</span>
+                                            <span class="font-mono text-[8px] text-slate-400">۱۸K</span>
+                                        </div>
                                     </div>
-                                    <div class="text-left font-mono text-[11px] text-slate-300 font-bold" dir="ltr">
-                                        {{ date('H:i') }}
+
+                                    {{-- سکه تمام بهار آزادی / امامی --}}
+                                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                        <div class="text-[10px] text-slate-300 font-bold">سکه بهار آزادی (امامی)</div>
+                                        <div class="text-sm sm:text-base font-black text-amber-300 font-mono tracking-wider" dir="ltr">
+                                            {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '۵۲,۸۰۰,۰۰۰' }}
+                                        </div>
+                                        <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                    </div>
+
+                                    {{-- نیم سکه بهار آزادی --}}
+                                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                        <div class="text-[10px] text-slate-300 font-bold">نیم سکه بهار آزادی</div>
+                                        <div class="text-xs sm:text-sm font-black text-slate-100 font-mono tracking-wider" dir="ltr">
+                                            {{ !empty($rates['coin_nim']) && $rates['coin_nim'] > 0 ? number_format($rates['coin_nim']) : '۲۸,۴۰۰,۰۰۰' }}
+                                        </div>
+                                        <div class="text-[9px] text-slate-400">تومان</div>
+                                    </div>
+
+                                    {{-- انس جهانی طلا --}}
+                                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                        <div class="text-[10px] text-slate-300 font-bold">انس جهانی طلا</div>
+                                        <div class="text-xs sm:text-sm font-black text-slate-100 font-mono tracking-wider" dir="ltr">
+                                            {{ !empty($rates['ons']) && $rates['ons'] > 0 ? '$ ' . number_format($rates['ons'], 1) : '$ ۲,۷۳۵.۵' }}
+                                        </div>
+                                        <div class="text-[9px] text-slate-400">دلار</div>
                                     </div>
                                 </div>
+
+                                {{-- نوار متحرک ویترین در زیر صفحه --}}
+                                <div class="border-t border-amber-500/20 pt-1.5 flex items-center justify-between text-[9px] text-slate-400">
+                                    <span class="truncate text-amber-200/80">✨ جدیدترین کالکشن النگو و سرویس‌های لوکس بدون اجرت</span>
+                                    <span class="font-mono text-amber-400 shrink-0 font-bold">TalaLive.ir</span>
+                                </div>
+
+                                {{-- انعکاس شیشه فوتوریالیستیک اپل --}}
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent pointer-events-none"></div>
                             </div>
 
-                            {{-- ۴ کارت نرخ‌های واقعی زنده طلا و مسکوکات در تلویزیون --}}
-                            <div class="grid grid-cols-2 gap-2 my-auto">
-                                {{-- طلای ۱۸ عیار --}}
-                                <div class="bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-400 font-bold">طلای ۱۸ عیار (گرم)</div>
-                                    <div class="text-sm sm:text-base font-black text-amber-400 font-mono" dir="ltr">
-                                        {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '---' }}
-                                    </div>
-                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
-                                </div>
-
-                                {{-- سکه تمام بهار آزادی / امامی --}}
-                                <div class="bg-slate-900/90 border border-amber-500/30 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-400 font-bold">سکه بهار آزادی (امامی)</div>
-                                    <div class="text-sm sm:text-base font-black text-amber-400 font-mono" dir="ltr">
-                                        {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '---' }}
-                                    </div>
-                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
-                                </div>
-
-                                {{-- طلای آبشده --}}
-                                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-400 font-bold">طلای آب شده (مظنه ۱۷)</div>
-                                    <div class="text-xs sm:text-sm font-bold text-slate-100 font-mono" dir="ltr">
-                                        {{ !empty($rates['mesghal']) && $rates['mesghal'] > 0 ? number_format($rates['mesghal']) : '---' }}
-                                    </div>
-                                    <div class="text-[9px] text-slate-400">تومان</div>
-                                </div>
-
-                                {{-- انس جهانی طلا --}}
-                                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-400 font-bold">انس جهانی طلا</div>
-                                    <div class="text-xs sm:text-sm font-bold text-slate-100 font-mono" dir="ltr">
-                                        {{ !empty($rates['ons']) && $rates['ons'] > 0 ? '$ ' . number_format($rates['ons'], 1) : '---' }}
-                                    </div>
-                                    <div class="text-[9px] text-slate-400">دلار</div>
-                                </div>
+                            {{-- دکمه پاور و چراغ استندبای تلویزیون --}}
+                            <div class="flex items-center justify-center gap-1.5 mt-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></div>
+                                <span class="text-[9px] font-mono text-slate-400 tracking-widest uppercase">OLED 4K HDR</span>
                             </div>
-
-                            {{-- نوار زیرین: ویترین و زیرنویس روان --}}
-                            <div class="border-t border-slate-800/80 pt-1.5 flex items-center justify-between text-[9px] text-slate-400">
-                                <span class="truncate">خرید و فروش انواع طلا و سکه با بهترین نرخ بازار</span>
-                                <span class="font-mono text-amber-400 shrink-0">TalaLive.ir</span>
-                            </div>
-
-                            {{-- انعکاس شیشه و نور ملایم تلویزیون --}}
-                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none"></div>
                         </div>
-
-                        {{-- دکمه پاور و چراغ استندبای تلویزیون در زیر فریم --}}
-                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mx-auto mt-2 shadow-sm shadow-emerald-500"></div>
                     </div>
 
-                    {{-- زیرنویس اعتمادساز زیر ماک‌آپ --}}
+                    {{-- کپسول سازگاری تلویزیون --}}
                     <div class="text-center space-y-1">
                         <p class="text-xs font-bold text-slate-700 dark:text-slate-300">
-                            ✨ قابل اجرا روی تمامی تلویزیون‌های هوشمند و معمولی
+                            📺 سازگار با انواع تلویزیون هوشمند
                         </p>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400">
-                            سامسونگ، ال‌جی، سونی، اسنوا، دوو و شیائومی بدون نیاز به خرید مینی‌کیس
+                            سامسونگ، ال‌جی، سونی، اسنوا، دوو، شیائومی و انواع اندروید باکس
                         </p>
                     </div>
 
                     {{-- کادر ارتباط فوری با پشتیبانی فنی --}}
-                    <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-3.5 text-center text-xs space-y-1.5 backdrop-blur-xl shadow-md">
-                        <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">مشاوره رایگان و راه‌اندازی فوری تابلوی طلافروشی:</p>
+                    <div class="w-full bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-3 text-center text-xs space-y-1.5 backdrop-blur-xl shadow-md">
+                        <p class="text-slate-500 dark:text-slate-400 font-bold text-[11px]">پشتیبانی و راه‌اندازی فوری تابلوی طلافروشی:</p>
                         <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
                             <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
                             &nbsp;&middot;&nbsp;
                             <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
                         </p>
+                        <div class="pt-0.5 flex items-center justify-center gap-2 flex-wrap">
+                            <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی در پیام‌رسان:</span>
+                            <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
+                                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
+                                <span>پشتیبانی روبیکا</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -654,7 +671,7 @@
         </div>
     </section>
 
-    {{-- بخش ۲: نوار شاخص‌های ارزش و اعتماد (Trust & Stats Highlight) --}}
+{{-- بخش ۲: نوار شاخص‌های ارزش و اعتماد (Trust & Stats Highlight) --}}
     <section class="border-y border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/50 py-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div class="space-y-1">
