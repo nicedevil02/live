@@ -471,6 +471,9 @@
                     {{-- تیتر اصلی سئو و معرفی باشکوه --}}
                     <div class="space-y-4">
                         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                            <span class="block text-base sm:text-xl lg:text-2xl text-amber-600 dark:text-amber-400 font-extrabold tracking-normal mb-2 leading-snug">
+                                تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی
+                            </span>
                             جلوه‌ای لوکس و باشکوه از جنس طلا <br>
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-400">
                                 روی تلویزیون گالری شما
