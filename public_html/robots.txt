@@ -4,6 +4,11 @@ Disallow: /deploy/
 Disallow: /pair/
 Disallow: /payment/
 Disallow: /api/
+Disallow: /tv$
+Disallow: /p/
+Disallow: /*?key=
+Disallow: /*?reset=
+Disallow: /*?disconnect=
 Disallow: /*.php$
 
 # XML Sitemap Index

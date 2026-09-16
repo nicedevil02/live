@@ -25,8 +25,7 @@
 
     <title>@yield('title', 'طلالایو | تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی')</title>
     <meta name="description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر آنلاین نرخ لحظه ای طلا و سکه برای مغازه طلا فروشی. اتصال تلویزیون بدون نیاز به کیس، فرمول‌ساز سود و ویترین لوکس در طلالایو.')">
-    <meta name="keywords" content="@yield('meta_keywords', 'تابلوی هوشمند طلافروشی, تابلوی طلا فروشی, تابلو طلا فروشی, نرم افزار تابلوی طلا, تابلو قیمت طلا برای تلویزیون, تابلو دیجیتال طلافروشی, قیمت انلاین طلا, نرخ لحظه ای طلا, سکه بهار آزادی, بهار ازادی, نیم سکه, ربع سکه, طلای آب شده, طلای اب شده, طلای دست دوم, دستدوم, کم اجرت, کماجرت, طلالایو')">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
     <meta name="author" content="طلالایو - TalaLive">
     <link rel="canonical" href="@yield('canonical', url()->current())">
 
@@ -36,14 +35,14 @@
     <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، سکه و ارز ویژه تلویزیون مغازه‌های طلافروشی و طلا فروشی‌ها.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="طلالایو">
-    <meta property="og:image" content="{{ asset('images/logo.png') }}">
+    <meta property="og:image" content="@yield('og_image', asset('images/logo.png'))">
     <meta property="og:locale" content="fa_IR">
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو')">
     <meta name="twitter:description" content="@yield('meta_description', 'نمایش آنلاین و لحظه ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی بدون مینی‌کیس.')">
-    <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
+    <meta name="twitter:image" content="@yield('og_image', asset('images/logo.png'))">
 
     <!-- Schema.org Global Graph (Organization + WebSite) -->
     <script type="application/ld+json">
@@ -65,8 +64,18 @@
           ],
           "url": "https://talalive.ir",
           "logo": "https://talalive.ir/images/logo.png",
+          "sameAs": [
+            "https://rubika.ir/talalive"
+          ],
+          "address": {
+            "@@type": "PostalAddress",
+            "addressLocality": "همدان",
+            "addressRegion": "همدان",
+            "streetAddress": "راسته مظفریه",
+            "addressCountry": "IR"
+          },
           "foundingDate": "2024",
-          "description": "نخستین و پیشرفته‌ترین سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه و ارز و ویترین دیجیتال گالری‌های طلا و جواهر و مغازه طلا فروشی بدون نیاز به مینی‌کیس.",
+          "description": "سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه و ارز و ویترین دیجیتال گالری‌های طلا و جواهر و مغازه طلا فروشی بدون نیاز به مینی‌کیس.",
           "contactPoint": [
             {
               "@@type": "ContactPoint",
@@ -281,6 +290,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
+
+                {{-- دکمه متمایز اتصال تلویزیون مغازه --}}
+                <a href="{{ route('display.tv') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2.5 rounded-xl border-2 border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all shadow-sm cursor-pointer whitespace-nowrap">
+                    <span class="text-sm">📺</span>
+                    <span>اتصال تلویزیون<span class="hidden md:inline"> مغازه</span></span>
+                </a>
 
                 {{-- دکمه ورود --}}
                 <a href="{{ route('admin.login') }}" class="inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-white/90 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap">

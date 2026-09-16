@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // اجبار به استفاده از HTTPS (فقط در حالتی که صریحاً از فایل env درخواست شود، برای رفع مشکل آپلود روی هاست‌های بدون SSL)
-        if (env('FORCE_HTTPS', false)) {
+        // اجبار به استفاده از HTTPS در پروداکشن یا با کانفیگ FORCE_HTTPS
+        if ($this->app->environment('production') || env('FORCE_HTTPS', false)) {
             URL::forceScheme('https');
         }
     }

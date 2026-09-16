@@ -23,10 +23,9 @@
         }
     </script>
 
-    <title>تابلوی هوشمند طلافروشی و تابلو طلا فروشی | نرخ لحظه ای طلا و سکه | طلالایو</title>
-    <meta name="description" content="سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، قیمت سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه ویژه تلویزیون مغازه طلا فروشی و طلافروشی‌ها بدون نیاز به کیس.">
-    <meta name="keywords" content="تابلوی هوشمند طلافروشی, تابلوی طلا فروشی, تابلو طلا فروشی, نرم افزار تابلو طلا فروشی, قیمت انلاین طلا, نرخ لحظه ای طلا, سکه بهار آزادی, بهار ازادی, بهارآزادی, بهارازادی, نیم سکه, ربع سکه, طلای آب شده, طلای اب شده, طلای دست دوم, دستدوم, کم اجرت, کماجرت, طلالایو, talalive">
-    <meta name="robots" content="index, follow">
+    <title>طلالایو — تابلو طلا فروشی روی تلویزیون، بدون کیس | نرخ لحظه ای طلا و سکه</title>
+    <meta name="description" content="سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، قیمت سکه بهار آزادی، نیم سکه و ربع سکه ویژه تلویزیون مغازه طلا فروشی بدون نیاز به کیس با ۱۴ روز تست رایگان.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
     <meta name="author" content="طلالایو - TalaLive">
     <link rel="canonical" href="https://talalive.ir/">
 
@@ -69,13 +68,6 @@
           "operatingSystem" => "Smart TV (Samsung Tizen, LG webOS, Android TV), Web Browser, Android, Windows",
           "screenshot" => "https://talalive.ir/images/logo.png",
           "softwareVersion" => "2.5",
-          "aggregateRating" => [
-            "@type" => "AggregateRating",
-            "ratingValue" => "4.9",
-            "ratingCount" => "135",
-            "bestRating" => "5",
-            "worstRating" => "1"
-          ],
           "offers" => [
             "@type" => "Offer",
             "price" => "0",
@@ -97,6 +89,16 @@
           "name" => "طلالایو (TalaLive)",
           "url" => "https://talalive.ir",
           "logo" => "https://talalive.ir/images/logo.png",
+          "sameAs" => [
+            "https://rubika.ir/talalive"
+          ],
+          "address" => [
+            "@type" => "PostalAddress",
+            "addressLocality" => "همدان",
+            "addressRegion" => "همدان",
+            "streetAddress" => "راسته مظفریه",
+            "addressCountry" => "IR"
+          ],
           "contactPoint" => [
             [
               "@type" => "ContactPoint",
@@ -330,7 +332,7 @@
                             </div>
                         </a>
 
-                        <a href="#comparison" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                        <a href="{{ route('public.led-vs-smart-board') }}" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
                             </div>
@@ -342,7 +344,7 @@
                     </div>
                 </div>
 
-                <a href="#pricing" class="px-3.5 py-2 rounded-xl text-amber-600 dark:text-amber-400 font-black hover:bg-white dark:hover:bg-slate-800/70 transition-all flex items-center gap-1">
+                <a href="{{ route('public.pricing') }}" class="px-3.5 py-2 rounded-xl text-amber-600 dark:text-amber-400 font-black hover:bg-white dark:hover:bg-slate-800/70 transition-all flex items-center gap-1">
                     <span>تعرفه‌ها و اشتراک</span>
                     <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">تست رایگان</span>
                 </a>
@@ -422,10 +424,10 @@
                 <a href="{{ route('public.guides') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
                     <span>دانشنامه و مقالات تخصصی</span>
                 </a>
-                <a href="#comparison" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <a href="{{ route('public.led-vs-smart-board') }}" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
                     <span>مقایسه با تابلوهای سنتی</span>
                 </a>
-                <a href="#pricing" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between text-amber-600 dark:text-amber-400">
+                <a href="{{ route('public.pricing') }}" @click="mobileMenuOpen = false" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between text-amber-600 dark:text-amber-400">
                     <span>تعرفه‌ها و تست رایگان</span>
                     <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/20 font-bold">۱۴ روز هدیه</span>
                 </a>
@@ -922,6 +924,13 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="{{ route('public.led-vs-smart-board') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold text-xs sm:text-sm transition-all shadow-sm">
+                    <span>مشاهده بررسی کامل و مقایسه جامع طلالایو با تابلوهای LED روان</span>
+                    <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
             </div>
         </div>
     </section>

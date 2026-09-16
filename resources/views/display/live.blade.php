@@ -7,6 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="TalaLive">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <title>Live Gold Display</title>
     @vite('resources/css/app.css')

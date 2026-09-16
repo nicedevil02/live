@@ -24,14 +24,14 @@ Route::get('/', function () {
     return resolve(App\Http\Controllers\PublicPageController::class)->home();
 })->name('home');
 
-// مسیر اختصاصی جفت‌سازی و اتصال تلویزیون هوشمند داخل مغازه
-Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->name('display.tv');
+// مسیر اختصاصی جفت‌سازی و اتصال تلویزیون هوشمند داخل مغازه (noindex جهت تمرکز کرال بودجه)
+Route::get('/tv', [PublicDisplayController::class, 'showPairingScreen'])->middleware('noindex')->name('display.tv');
 
 // مسیر لینک کوتاه جادویی اتصال تلویزیون با کد ۶ رقمی
-Route::get('/p/{code}', [PublicDisplayController::class, 'pairMagicShortLink'])->name('pair.magic');
+Route::get('/p/{code}', [PublicDisplayController::class, 'pairMagicShortLink'])->middleware('noindex')->name('pair.magic');
 
-// بازگشت از درگاه پرداخت شاپرک (عمومی)
-Route::match(['get', 'post'], '/payment/callback/{gateway}', [SubscriptionController::class, 'callback'])->name('admin.subscription.callback');
+// بازگشت از درگاه پرداخت شاپرک (عمومی با noindex)
+Route::match(['get', 'post'], '/payment/callback/{gateway}', [SubscriptionController::class, 'callback'])->middleware('noindex')->name('admin.subscription.callback');
 
 // احراز هویت و پنل مدیریت (با هدر امنیتی noindex)
 Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function () {
