@@ -2,7 +2,6 @@
 
 @section('title', $info['title'] . ' | طلالایو')
 @section('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و تابلو طلا فروشی ویژه گالری‌های طلا و جواهر در شهر ' . $info['name'] . ' و ' . $info['bazaar'] . '. نمایش لحظه‌ای نرخ طلا، سکه و ویترین روی تلویزیون بدون مینی‌کیس.')
-@section('meta_keywords', 'تابلو طلا فروشی ' . $info['name'] . ', تابلو طلافروشی ' . $info['name'] . ', تابلوی طلا فروشی ' . $info['name'] . ', تابلو دیجیتال طلا ' . $info['name'] . ', تابلو قیمت طلا ' . $info['bazaar'] . ', طلالایو')
 
 @section('canonical', 'https://talalive.ir/cities/' . $city)
 

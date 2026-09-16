@@ -426,12 +426,12 @@
                     </div>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
-                    طلالایو پیشرفته‌ترین سامانه تابلوی طلافروشی مبتنی بر فناوری ابری در ایران است. بدون نیاز به کامپیوتر یا دانگل مجزا، هر نوع تلویزیون در مغازه طلا فروشی را به تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه، حباب بازار و ویترین جواهرات بدل کنید.
+                    طلالایو سامانه تخصصی و ابری تابلوی هوشمند طلافروشی در ایران است. بدون نیاز به کامپیوتر یا دانگل مجزا، هر نوع تلویزیون در مغازه طلا فروشی را به تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه، حباب بازار و ویترین جواهرات بدل کنید.
                 </p>
                 <div class="flex items-center gap-3 text-xs text-slate-500 pt-1">
                     <span class="flex items-center gap-1">
                         <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        <span>آپ‌تایم ۹۹.۹٪</span>
+                        <span>پایداری و در دسترس‌پذیری ابری</span>
                     </span>
                     <span class="flex items-center gap-1">
                         <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -520,7 +520,7 @@
                 <span>&bull;</span>
                 <a href="{{ route('public.tools.mesghal') }}" class="text-slate-400 hover:text-amber-400">فرمول مظنه مثقال طلا به گرم</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.tools.melted-gold') }}" class="text-slate-400 hover:text-amber-400">محاسبه طلای آب شده و طلای اب شده</a>
+                <a href="{{ route('public.tools.melted-gold') }}" class="text-slate-400 hover:text-amber-400">محاسبه وزن شرطی طلای آب‌شده</a>
                 <span>&bull;</span>
                 <a href="{{ route('public.pricing') }}" class="text-slate-400 hover:text-amber-400">قیمت تابلو طلا فروشی</a>
             </div>

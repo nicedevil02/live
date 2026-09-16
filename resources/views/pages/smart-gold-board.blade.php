@@ -1,8 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'تابلوی هوشمند طلافروشی و تابلو طلا فروشی | جایگزین مدرن تابلوهای سنتی | طلالایو')
-@section('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی. نمایش لحظه ای قیمت طلا، سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه روی تلویزیون بدون مینی‌کیس.')
-@section('meta_keywords', 'تابلوی هوشمند طلافروشی, تابلوی طلا فروشی, تابلو طلا فروشی, نرم افزار تابلو طلا فروشی, تابلو انلاین طلا فروشی, تابلو ال ای دی طلا فروشی, نرخ لحظه ای طلا, سکه بهار آزادی, بهار ازادی, نیم سکه, ربع سکه, طلای آب شده, طلای اب شده, طلالایو')
+@section('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی. نمایش لحظه ای قیمت طلا، سکه بهار آزادی، نیم سکه و ربع سکه روی تلویزیون بدون مینی‌کیس.')
 
 @section('schema')
 <script type="application/ld+json">
@@ -157,7 +156,7 @@
     <div class="space-y-6">
         <div class="text-center space-y-2">
             <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">مقایسه تخصصی: طلالایو در برابر تابلوی سنتی LED مغازه طلا فروشی</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">چرا ۹۸٪ گالری‌های طلا در حال مهاجرت به تابلوی ابری هستند؟</p>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">چرا صدها گالری معتبر طلا در حال مهاجرت به تابلوی ابری هستند؟</p>
         </div>
 
         <div class="overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 shadow-xl dark:shadow-2xl">
@@ -182,7 +181,7 @@
                     </tr>
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
                         <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">نحوه بروزرسانی قیمت‌ها</td>
-                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">کاملاً خودکار و آنی از معتبرترین مراجع رسمی طلا</td>
+                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">کاملاً خودکار و آنی از مراجع معتبر و منتخب بازار طلا</td>
                         <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">دستی با ریموت یا نرم‌افزارهای پیچیده کامپیوتر</td>
                     </tr>
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">

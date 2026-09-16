@@ -148,7 +148,7 @@
               "name" => "نرخ‌های طلا، سکه و ارز از چه مراجعی بروزرسانی می‌شوند؟",
               "acceptedAnswer" => [
                 "@type" => "Answer",
-                "text" => "نرخ‌ها به صورت خودکار و لحظه‌ای از معتبرترین مراجع رسمی بازار طلا و جواهر کشور، اتحادیه‌های طلا و سکه و مراجع رسمی انس جهانی دریافت می‌شوند و به صورت بلادرنگ روی تابلوی شما آپدیت می‌گردند."
+                "text" => "نرخ‌ها به صورت خودکار و لحظه‌ای از مراجع معتبر و منتخب بازار طلا و جواهر کشور، اتحادیه‌های طلا و سکه و مراجع رسمی انس جهانی دریافت می‌شوند و به صورت بلادرنگ روی تابلوی شما آپدیت می‌گردند."
               ]
             ],
             [
@@ -185,10 +185,10 @@
             ],
             [
               "@type" => "Question",
-              "name" => "آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه را پوشش می‌دهد؟",
+              "name" => "آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، نیم سکه و ربع سکه را پوشش می‌دهد؟",
               "acceptedAnswer" => [
                 "@type" => "Answer",
-                "text" => "بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی (بهار ازادی)، نیم سکه، ربع سکه، سکه گرمی، طلای آب شده (طلای اب شده) و مظنه مثقال به صورت لحظه ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند."
+                "text" => "بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی، نیم سکه، ربع سکه، سکه گرمی، طلای آب‌شده و مظنه مثقال به صورت لحظه‌ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند."
               ]
             ]
           ]
@@ -591,7 +591,7 @@
             <div class="space-y-1">
                 <div class="text-2xl lg:text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">لحظه‌ای</div>
                 <div class="text-xs font-bold text-slate-700 dark:text-slate-300">بروزرسانی خودکار نرخ‌ها</div>
-                <div class="text-[11px] text-slate-500">اتصال به معتبرترین مراجع رسمی طلا</div>
+                <div class="text-[11px] text-slate-500">اتصال به مراجع معتبر و منتخب بازار طلا</div>
             </div>
         </div>
     </section>
@@ -1612,7 +1612,7 @@
                         </span>
                     </summary>
                     <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
-                        نرخ‌ها به صورت خودکار و لحظه‌ای از معتبرترین مراجع رسمی بازار طلا و جواهر کشور، اتحادیه‌های طلا و سکه و مراجع رسمی انس جهانی دریافت می‌شوند و به صورت بلادرنگ روی تابلوی شما آپدیت می‌گردند.
+                        نرخ‌ها به صورت خودکار و لحظه‌ای از مراجع معتبر و منتخب بازار طلا و جواهر کشور، اتحادیه‌های طلا و سکه و مراجع رسمی انس جهانی دریافت می‌شوند و به صورت بلادرنگ روی تابلوی شما آپدیت می‌گردند.
                     </p>
                 </details>
 
@@ -1671,13 +1671,13 @@
                 {{-- سوال ۷: پوشش مسکوکات بهار آزادی و طلای آب شده --}}
                 <details class="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-300 open:border-amber-400/40 open:bg-amber-50/30 dark:open:bg-slate-900/90 shadow-sm">
                     <summary class="flex items-center justify-between cursor-pointer font-black text-sm sm:text-base text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-300">
-                        <span>آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، بهار ازادی، نیم سکه و ربع سکه را پوشش می‌دهد؟</span>
+                        <span>آیا تابلوی طلالایو نرخ انواع مسکوکات نظیر سکه بهار آزادی، نیم سکه و ربع سکه را پوشش می‌دهد؟</span>
                         <span class="faq-icon text-amber-500 transition-transform duration-300 shrink-0 mr-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </span>
                     </summary>
                     <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-4">
-                        بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی (بهار ازادی)، نیم سکه، ربع سکه، سکه گرمی، طلای آب شده (طلای اب شده) و مظنه مثقال به صورت لحظه ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند.
+                        بله، نرخ تمامی مسکوکات شامل سکه امامی، تمام بهار آزادی، نیم سکه، ربع سکه، سکه گرمی، طلای آب‌شده و مظنه مثقال به صورت لحظه‌ای و خودکار روی تابلو طلا فروشی آپدیت و نمایش داده می‌شوند.
                     </p>
                 </details>
 
