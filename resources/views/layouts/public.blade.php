@@ -185,28 +185,127 @@
                 </div>
             </a>
 
-            {{-- نوار ناوبری کپسولی مدرن (Desktop Navigation) --}}
-            <nav class="hidden lg:flex items-center gap-1 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-600 dark:text-slate-300">
-                <a href="/" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+            {{-- نوار ناوبری کپسولی مدرن و جامع (Desktop Navigation) --}}
+            <nav class="hidden lg:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-600 dark:text-slate-300">
+                <a href="/" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                     صفحه اصلی
                 </a>
-                <a href="{{ route('public.smart-gold-board') }}" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.smart-gold-board') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
-                    تابلوی هوشمند
-                </a>
-                <a href="{{ route('public.led-vs-smart-board') }}" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.led-vs-smart-board') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
-                    مقایسه با تابلو LED
-                </a>
-                <a href="{{ route('public.pricing') }}" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
-                    تعرفه‌ها
-                </a>
-                <a href="{{ route('public.tv-setup-guide') }}" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.tv-setup-guide') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
-                    راهنمای تلویزیون
-                </a>
 
-                {{-- منوی دراپ‌داون ابزارها و آموزش --}}
+                {{-- دراپ‌داون محصولات و تابلوها --}}
+                <div class="relative" @mouseenter="productsDropdownOpen = true" @mouseleave="productsDropdownOpen = false">
+                    <button type="button" @click="productsDropdownOpen = !productsDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.smart-gold-board') || request()->routeIs('public.digital-rate-board') || request()->routeIs('public.gold-board-without-device') || request()->routeIs('public.online-gold-price-board') || request()->routeIs('public.currency-exchange-board') || request()->routeIs('public.silver-bullion-board') || request()->routeIs('public.demo') || request()->routeIs('public.app')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                        <span>سامانه‌ها</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="productsDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+
+                    <div x-show="productsDropdownOpen" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute right-0 mt-2 w-72 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-2 z-50 space-y-1">
+                        
+                        <a href="{{ route('public.smart-gold-board') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">💎</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلوی هوشمند طلافروشی</div>
+                                <div class="text-[10px] text-slate-400">نمایش آنلاین نرخ روی تلویزیون مغازه</div>
+                            </div>
+                        </a>
+
+                        <a href="{{ route('public.digital-rate-board') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">🖥️</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو دیجیتال طلا و ارز</div>
+                                <div class="text-[10px] text-slate-400">مانیتور نرخ لحظه‌ای طلا و صرافی</div>
+                            </div>
+                        </a>
+
+                        <a href="{{ route('public.gold-board-without-device') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">☁️</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو بدون نیاز به دستگاه</div>
+                                <div class="text-[10px] text-slate-400">حذف کامل هزینه‌های سخت‌افزاری</div>
+                            </div>
+                        </a>
+
+                        <a href="{{ route('public.online-gold-price-board') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">⚡</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو آنلاین قیمت طلا</div>
+                                <div class="text-[10px] text-slate-400">به‌روزرسانی خودکار نرخ‌های صنفی</div>
+                            </div>
+                        </a>
+
+                        <a href="{{ route('public.currency-exchange-board') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">💱</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو نرخ ارز صرافی</div>
+                                <div class="text-[10px] text-slate-400">ویژه صرافی‌ها و مراکز ارزی</div>
+                            </div>
+                        </a>
+
+                        <a href="{{ route('public.silver-bullion-board') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">🥈</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو نقره و شمش</div>
+                                <div class="text-[10px] text-slate-400">پوشش کامل شمش و گرم نقره</div>
+                            </div>
+                        </a>
+
+                        <div class="pt-1 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-2">
+                            <a href="{{ route('public.demo') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline">پیش‌نمایش زنده</a>
+                            <a href="{{ route('public.app') }}" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">دانلود اپلیکیشن</a>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- دراپ‌داون مقایسه --}}
+                <div class="relative" @mouseenter="compareDropdownOpen = true" @mouseleave="compareDropdownOpen = false">
+                    <button type="button" @click="compareDropdownOpen = !compareDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.led-vs-smart-board') || request()->routeIs('public.compare.*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                        <span>مقایسه‌ها</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="compareDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+
+                    <div x-show="compareDropdownOpen" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute right-0 mt-2 w-64 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-2 z-50 space-y-1">
+                        
+                        <a href="{{ route('public.led-vs-smart-board') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">مقایسه با تابلوهای LED روان</div>
+                            <div class="text-[10px] text-slate-400">بررسی اقتصادی و هزینه‌ها</div>
+                        </a>
+
+                        <a href="{{ route('public.compare.tabangohar') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">مقایسه با تابان گوهر</div>
+                            <div class="text-[10px] text-slate-400">تفاوت سامانه ابری با مینی‌کیس</div>
+                        </a>
+
+                        <a href="{{ route('public.compare.tgju-tv') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">مقایسه با TGJU TV</div>
+                            <div class="text-[10px] text-slate-400">تخصصی بودن و پشتیبانی صنف طلا</div>
+                        </a>
+
+                        <a href="{{ route('public.compare.tablotala') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">مقایسه با تابلوطلا</div>
+                            <div class="text-[10px] text-slate-400">تحت وب در برابر نرم‌افزار نصبی</div>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- دراپ‌داون ابزارها --}}
                 <div class="relative" @mouseenter="toolsDropdownOpen = true" @mouseleave="toolsDropdownOpen = false">
-                    <button type="button" @click="toolsDropdownOpen = !toolsDropdownOpen" class="flex items-center gap-1 px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->is('tools/*') || request()->routeIs('public.gold-calculator') || request()->routeIs('public.guides*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
-                        <span>ابزارها و آموزش</span>
+                    <button type="button" @click="toolsDropdownOpen = !toolsDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->is('tools/*') || request()->routeIs('public.gold-calculator')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                        <span>ابزارها</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="toolsDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
@@ -220,54 +319,122 @@
                          x-transition:leave-end="opacity-0 translate-y-2 scale-95"
                          class="absolute right-0 mt-2 w-72 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-2 z-50 space-y-1">
                         
-                        <a href="{{ route('public.tools.gold-price') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                        <a href="{{ route('public.gold-calculator') }}" class="flex items-center gap-2.5 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 group transition-all font-bold text-amber-700 dark:text-amber-300">
                             <span class="text-sm">🧮</span>
-                            <div>
-                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه قیمت طلا با اجرت و سود</div>
-                            </div>
+                            <div class="text-xs font-bold">هاب جامع ماشین‌حساب‌های طلا</div>
+                        </a>
+
+                        <a href="{{ route('public.tools.gold-price') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">💰</span>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه قیمت طلا با اجرت و سود</div>
+                        </a>
+
+                        <a href="{{ route('public.tools.wage-calculator') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">🔨</span>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">ماشین‌حساب اجرت ساخت طلا</div>
+                        </a>
+
+                        <a href="{{ route('public.tools.second-hand-gold') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <span class="text-sm">♻️</span>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه طلای دست دوم و متفرقه</div>
                         </a>
 
                         <a href="{{ route('public.tools.coin-bubble') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">🪙</span>
-                            <div>
-                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه‌گر حباب انواع سکه</div>
-                            </div>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه‌گر حباب انواع سکه</div>
                         </a>
 
                         <a href="{{ route('public.tools.mesghal') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">⚖️</span>
-                            <div>
-                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل مظنه مثقال به گرم ۱۸ عیار</div>
-                            </div>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل مظنه مثقال به گرم ۱۸ عیار</div>
                         </a>
 
                         <a href="{{ route('public.tools.melted-gold') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">🔥</span>
-                            <div>
-                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه طلای آبشده و عیار انگ</div>
-                            </div>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه طلای آبشده و عیار انگ</div>
                         </a>
 
                         <a href="{{ route('public.tools.karat-converter') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">🔄</span>
-                            <div>
-                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل عیارهای طلا (۷۵۰ به ۷۰۵...)</div>
-                            </div>
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل عیارهای طلا (۷۵۰، ۷۰۵...)</div>
                         </a>
-
-                        <div class="pt-1 border-t border-slate-100 dark:border-slate-800">
-                            <a href="{{ route('public.guides') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-slate-800/60 group transition-all">
-                                <span class="text-sm">📚</span>
-                                <div>
-                                    <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">دانشنامه و مقالات تخصصی طلا</div>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                 </div>
 
-                <a href="{{ route('public.contact') }}" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.contact') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
-                    پشتیبانی و تماس
+                {{-- دراپ‌داون آموزش و شهرها --}}
+                <div class="relative" @mouseenter="guidesDropdownOpen = true" @mouseleave="guidesDropdownOpen = false">
+                    <button type="button" @click="guidesDropdownOpen = !guidesDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.guides*') || request()->routeIs('public.tv-setup-guide') || request()->routeIs('public.android-tv-gold-board') || request()->routeIs('public.cities*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                        <span>آموزش و شهرها</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="guidesDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+
+                    <div x-show="guidesDropdownOpen" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute right-0 mt-2 w-64 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-2 z-50 space-y-1">
+                        
+                        <a href="{{ route('public.guides') }}" class="block p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">دانشنامه و مقالات تخصصی</div>
+                            <div class="text-[10px] text-slate-400">قوانین مالیات، فاکتور و سود طلا</div>
+                        </a>
+
+                        <a href="{{ route('public.tv-setup-guide') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">راهنمای اتصال تلویزیون</div>
+                            <div class="text-[10px] text-slate-400">سامسونگ، ال‌جی، سونی و اسنوا</div>
+                        </a>
+
+                        <a href="{{ route('public.android-tv-gold-board') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">راهنمای اندروید تی‌وی و باکس</div>
+                            <div class="text-[10px] text-slate-400">نصب روی انواع باکس و تلویزیون</div>
+                        </a>
+
+                        <a href="{{ route('public.cities.index') }}" class="block p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 group transition-all">
+                            <div class="text-xs font-bold text-amber-700 dark:text-amber-300">شهرهای فعال بازار طلا</div>
+                            <div class="text-[10px] text-slate-400">تهران، مشهد، اصفهان، همدان و...</div>
+                        </a>
+                    </div>
+                </div>
+
+                <a href="{{ route('public.pricing') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    تعرفه‌ها
+                </a>
+
+                {{-- دراپ‌داون وب‌سرویس و ویجت --}}
+                <div class="relative" @mouseenter="devDropdownOpen = true" @mouseleave="devDropdownOpen = false">
+                    <button type="button" @click="devDropdownOpen = !devDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.widget*') || request()->routeIs('public.api-docs')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                        <span>API و ویجت</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="devDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+
+                    <div x-show="devDropdownOpen" 
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute right-0 mt-2 w-64 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-2 z-50 space-y-1">
+                        
+                        <a href="{{ route('public.widget') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">ویجت نرخ طلا برای سایت‌ها</div>
+                            <div class="text-[10px] text-slate-400">تولید کد اختصاصی iframe</div>
+                        </a>
+
+                        <a href="{{ route('public.api-docs') }}" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">وب‌سرویس و API نرخ لحظه‌ای</div>
+                            <div class="text-[10px] text-slate-400">مستندات REST API و نمونه کدها</div>
+                        </a>
+                    </div>
+                </div>
+
+                <a href="{{ route('public.contact') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.contact') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    تماس
                 </a>
             </nav>
 
@@ -325,62 +492,140 @@
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-4"
-             class="lg:hidden border-b border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-950/98 backdrop-blur-2xl px-5 py-6 space-y-5 shadow-2xl max-h-[85vh] overflow-y-auto">
+             class="lg:hidden border-b border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-950/98 backdrop-blur-2xl px-5 py-6 space-y-6 shadow-2xl max-h-[85vh] overflow-y-auto">
             
-            {{-- خدمات اصلی --}}
+            {{-- سامانه‌ها و تابلوهای تخصصی --}}
             <div>
-                <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">سامانه و خدمات</div>
-                <nav class="flex flex-col space-y-1 text-sm font-bold text-slate-700 dark:text-slate-200">
-                    <a href="/" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60' : '' }}">
-                        <span class="text-base">📺</span>
-                        <span>صفحه اصلی و اتصال تلویزیون</span>
-                    </a>
-                    <a href="{{ route('public.smart-gold-board') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.smart-gold-board') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60' : '' }}">
-                        <span class="text-base">💎</span>
+                <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">سامانه‌ها و تابلوها</div>
+                <nav class="flex flex-col space-y-1 text-xs font-bold text-slate-700 dark:text-slate-200">
+                    <a href="{{ route('public.smart-gold-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>💎</span>
                         <span>تابلوی هوشمند طلافروشی</span>
                     </a>
-                    <a href="{{ route('public.led-vs-smart-board') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.led-vs-smart-board') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60' : '' }}">
-                        <span class="text-base">⚡</span>
-                        <span>مقایسه با تابلو LED</span>
+                    <a href="{{ route('public.digital-rate-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🖥️</span>
+                        <span>تابلو دیجیتال طلا و صرافی</span>
                     </a>
-                    <a href="{{ route('public.pricing') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60' : '' }}">
-                        <span class="text-base">🏷️</span>
-                        <span>تعرفه‌ها و اشتراک</span>
+                    <a href="{{ route('public.gold-board-without-device') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>☁️</span>
+                        <span>تابلو بدون نیاز به دستگاه</span>
                     </a>
-                    <a href="{{ route('public.tv-setup-guide') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.tv-setup-guide') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60' : '' }}">
-                        <span class="text-base">📖</span>
-                        <span>راهنمای اتصال تلویزیون</span>
+                    <a href="{{ route('public.online-gold-price-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>⚡</span>
+                        <span>تابلو آنلاین قیمت طلا</span>
+                    </a>
+                    <a href="{{ route('public.currency-exchange-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>💱</span>
+                        <span>تابلو نرخ ارز صرافی</span>
+                    </a>
+                    <a href="{{ route('public.silver-bullion-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🥈</span>
+                        <span>تابلو نقره و شمش</span>
+                    </a>
+                    <a href="{{ route('public.demo') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                        <span>▶️</span>
+                        <span>پیش‌نمایش زنده تابلو</span>
+                    </a>
+                    <a href="{{ route('public.app') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                        <span>📱</span>
+                        <span>دانلود اپلیکیشن و PWA</span>
                     </a>
                 </nav>
             </div>
 
-            {{-- ابزارهای تخصصی طلا --}}
-            <div>
-                <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">ابزارهای آنلاین و محاسبه‌گرها</div>
+            {{-- مقایسه‌ها و تعرفه --}}
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">مقایسه راهکارها و قیمت</div>
+                <nav class="flex flex-col space-y-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <a href="{{ route('public.pricing') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2 font-bold text-amber-600 dark:text-amber-400">
+                        <span>🏷️</span>
+                        <span>تعرفه‌ها و اشتراک (۱۴ روز رایگان)</span>
+                    </a>
+                    <a href="{{ route('public.led-vs-smart-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>⚡</span>
+                        <span>مقایسه با تابلوهای LED روان</span>
+                    </a>
+                    <a href="{{ route('public.compare.tabangohar') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>⚖️</span>
+                        <span>مقایسه با تابان گوهر</span>
+                    </a>
+                    <a href="{{ route('public.compare.tgju-tv') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>📊</span>
+                        <span>مقایسه با TGJU TV</span>
+                    </a>
+                    <a href="{{ route('public.compare.tablotala') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🌐</span>
+                        <span>مقایسه با تابلوطلا دات‌کام</span>
+                    </a>
+                </nav>
+            </div>
+
+            {{-- ابزارهای آنلاین طلا --}}
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">ماشین‌حساب‌های تخصصی طلا</div>
                 <nav class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
-                    <a href="{{ route('public.tools.gold-price') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.tools.gold-price') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60 font-bold' : '' }}">
+                    <a href="{{ route('public.gold-calculator') }}" class="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 flex items-center gap-2 font-bold text-amber-700 dark:text-amber-300">
                         <span>🧮</span>
+                        <span>هاب جامع ماشین‌حساب‌های طلا</span>
+                    </a>
+                    <a href="{{ route('public.tools.gold-price') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>💰</span>
                         <span>محاسبه قیمت طلا با اجرت و سود</span>
                     </a>
-                    <a href="{{ route('public.tools.coin-bubble') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.tools.coin-bubble') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60 font-bold' : '' }}">
+                    <a href="{{ route('public.tools.wage-calculator') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🔨</span>
+                        <span>ماشین‌حساب اجرت ساخت طلا</span>
+                    </a>
+                    <a href="{{ route('public.tools.second-hand-gold') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>♻️</span>
+                        <span>محاسبه طلای دست دوم و متفرقه</span>
+                    </a>
+                    <a href="{{ route('public.tools.coin-bubble') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>🪙</span>
                         <span>محاسبه‌گر حباب انواع سکه</span>
                     </a>
-                    <a href="{{ route('public.tools.mesghal') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.tools.mesghal') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60 font-bold' : '' }}">
+                    <a href="{{ route('public.tools.mesghal') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>⚖️</span>
                         <span>تبدیل مظنه مثقال به گرم ۱۸ عیار</span>
                     </a>
-                    <a href="{{ route('public.tools.melted-gold') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.tools.melted-gold') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60 font-bold' : '' }}">
+                    <a href="{{ route('public.tools.melted-gold') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>🔥</span>
-                        <span>محاسبه طلای آبشده و عیار خطی</span>
+                        <span>محاسبه طلای آبشده و عیار انگ</span>
                     </a>
-                    <a href="{{ route('public.tools.karat-converter') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.tools.karat-converter') ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-slate-800/60 font-bold' : '' }}">
+                    <a href="{{ route('public.tools.karat-converter') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>🔄</span>
-                        <span>تبدیل عیار طلا (۷۵۰ به سایر عیارها)</span>
+                        <span>تبدیل عیارهای طلا و نقره</span>
                     </a>
-                    <a href="{{ route('public.guides') }}" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2.5 {{ request()->routeIs('public.guides*') ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-slate-800/60 font-bold' : '' }}">
+                </nav>
+            </div>
+
+            {{-- دانشنامه، شهرها و توسعه‌دهندگان --}}
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">آموزش، شهرها و API</div>
+                <nav class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                    <a href="{{ route('public.guides') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>📚</span>
                         <span>دانشنامه و مقالات تخصصی طلا</span>
+                    </a>
+                    <a href="{{ route('public.cities.index') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🏙️</span>
+                        <span>شهرهای فعال بازار طلا (۱۰ شهر)</span>
+                    </a>
+                    <a href="{{ route('public.tv-setup-guide') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>📺</span>
+                        <span>راهنمای اتصال تلویزیون</span>
+                    </a>
+                    <a href="{{ route('public.android-tv-gold-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🤖</span>
+                        <span>راهنمای اندروید تی‌وی و باکس</span>
+                    </a>
+                    <a href="{{ route('public.widget') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🧩</span>
+                        <span>ویجت قیمت طلا برای سایت‌ها</span>
+                    </a>
+                    <a href="{{ route('public.api-docs') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
+                        <span>🔌</span>
+                        <span>وب‌سرویس و API عمومی نرخ</span>
                     </a>
                 </nav>
             </div>
@@ -391,7 +636,9 @@
                 <span>&bull;</span>
                 <a href="{{ route('public.contact') }}" class="hover:text-amber-500">تماس با ما</a>
                 <span>&bull;</span>
-                <a href="{{ route('public.terms') }}" class="hover:text-amber-500">قوانین و حریم خصوصی</a>
+                <a href="{{ route('public.terms') }}" class="hover:text-amber-500">قوانین و مقررات</a>
+                <span>&bull;</span>
+                <a href="{{ route('public.privacy') }}" class="hover:text-amber-500">حریم خصوصی</a>
             </div>
 
             <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2.5">
@@ -410,12 +657,12 @@
         @yield('content')
     </main>
 
-    {{-- فوتر معنایی و استاندارد سئو (حداکثر ۱۴ پیوند طبیعی و باکیفیت) --}}
+    {{-- فوتر جامع سئو و شبکه ناوبری داخلی طلالایو --}}
     <footer class="border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-8">
             
             {{-- ستون ۱: معرفی برند و راه‌های ارتباطی --}}
-            <div class="space-y-4">
+            <div class="space-y-4 sm:col-span-2 md:col-span-1 lg:col-span-1">
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو">
                     <div>
@@ -424,8 +671,18 @@
                     </div>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
-                    سامانه تخصصی نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی تلویزیون‌های هوشمند بدون نیاز به کامپیوتر یا تجهیزات سخت‌افزاری اضافه.
+                    سامانه تخصصی نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی انواع تلویزیون‌های هوشمند بدون نیاز به خرید کیس، مینی‌کامپیوتر یا دستگاه سخت‌افزاری واسط.
                 </p>
+                <div class="space-y-2 text-[11px] text-slate-400 border-t border-slate-900 pt-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-400">📍</span>
+                        <span>همدان، بازار مظفریه، راسته زرگرها</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-400">📞</span>
+                        <a href="tel:09187009064" class="hover:text-amber-300 font-mono" dir="ltr">0918 700 9064</a>
+                    </div>
+                </div>
                 <div class="pt-1">
                     <a href="https://rubika.ir/talalive" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
                         <span>ارتباط در روبیکا: talalive@</span>
@@ -433,44 +690,109 @@
                 </div>
             </div>
 
-            {{-- ستون ۲: خدمات سامانه --}}
+            {{-- ستون ۲: سامانه‌ها و نمایشگرها --}}
             <div class="space-y-3">
-                <div class="font-bold text-white text-sm">خدمات</div>
-                <ul class="space-y-2.5 text-xs">
+                <div class="font-bold text-white text-sm flex items-center gap-2">
+                    <span class="text-amber-400">📺</span>
+                    <span>سامانه‌ها و تابلوها</span>
+                </div>
+                <ul class="space-y-2 text-xs">
                     <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی</a></li>
-                    <li><a href="{{ route('public.pricing') }}" class="hover:text-amber-400 transition-colors">تعرفه‌ها و اشتراک</a></li>
-                    <li><a href="{{ route('public.led-vs-smart-board') }}" class="hover:text-amber-400 transition-colors">مقایسه با تابلوهای LED</a></li>
-                    <li><a href="{{ route('public.tv-setup-guide') }}" class="hover:text-amber-400 transition-colors">راهنمای اتصال تلویزیون</a></li>
+                    <li><a href="{{ route('public.digital-rate-board') }}" class="hover:text-amber-400 transition-colors">تابلوی دیجیتال نرخ طلا و ارز</a></li>
+                    <li><a href="{{ route('public.gold-board-without-device') }}" class="hover:text-amber-400 transition-colors">تابلو طلا بدون خرید دستگاه</a></li>
+                    <li><a href="{{ route('public.online-gold-price-board') }}" class="hover:text-amber-400 transition-colors">تابلو آنلاین قیمت لحظه‌ای طلا</a></li>
+                    <li><a href="{{ route('public.currency-exchange-board') }}" class="hover:text-amber-400 transition-colors">تابلو نرخ صرافی و ارزها</a></li>
+                    <li><a href="{{ route('public.silver-bullion-board') }}" class="hover:text-amber-400 transition-colors">تابلوی شمش و آبشده نقره</a></li>
+                    <li><a href="{{ route('public.demo') }}" class="hover:text-amber-400 transition-colors">دموی آنلاین تابلوی طلا</a></li>
+                    <li><a href="{{ route('public.app') }}" class="hover:text-amber-400 transition-colors">اپلیکیشن اندروید تی‌وی و موبایل</a></li>
                 </ul>
             </div>
 
             {{-- ستون ۳: ابزارهای محاسباتی طلا --}}
             <div class="space-y-3">
-                <div class="font-bold text-white text-sm">ابزارها</div>
-                <ul class="space-y-2.5 text-xs">
+                <div class="font-bold text-white text-sm flex items-center gap-2">
+                    <span class="text-amber-400">🧮</span>
+                    <span>ابزارهای طلا و سکه</span>
+                </div>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="{{ route('public.gold-calculator') }}" class="hover:text-amber-400 transition-colors font-medium text-slate-300">ماشین حساب جامع طلا</a></li>
                     <li><a href="{{ route('public.tools.gold-price') }}" class="hover:text-amber-400 transition-colors">محاسبه قیمت طلا با اجرت</a></li>
-                    <li><a href="{{ route('public.tools.coin-bubble') }}" class="hover:text-amber-400 transition-colors">محاسبه حباب انواع سکه</a></li>
-                    <li><a href="{{ route('public.tools.mesghal') }}" class="hover:text-amber-400 transition-colors">تبدیل مظنه مثقال به گرم</a></li>
-                    <li><a href="{{ route('public.tools.melted-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه طلای آب‌شده</a></li>
-                    <li><a href="{{ route('public.tools.karat-converter') }}" class="hover:text-amber-400 transition-colors">تبدیل عیار طلا</a></li>
+                    <li><a href="{{ route('public.tools.wage-calculator') }}" class="hover:text-amber-400 transition-colors">فرمول محاسبه اجرت ساخت طلا</a></li>
+                    <li><a href="{{ route('public.tools.second-hand-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه طلای مستعمل و کم‌اجرت</a></li>
+                    <li><a href="{{ route('public.tools.coin-bubble') }}" class="hover:text-amber-400 transition-colors">محاسبه آنلاین حباب انواع سکه</a></li>
+                    <li><a href="{{ route('public.tools.mesghal') }}" class="hover:text-amber-400 transition-colors">تبدیل مظنه مثقال به گرم ۱۸</a></li>
+                    <li><a href="{{ route('public.tools.melted-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه و تبدیل طلای آبشده</a></li>
+                    <li><a href="{{ route('public.tools.karat-converter') }}" class="hover:text-amber-400 transition-colors">جدول و تبدیل عیار طلا</a></li>
                 </ul>
             </div>
 
-            {{-- ستون ۴: آموزش و قوانین --}}
+            {{-- ستون ۴: مقایسه‌ها و راهنماها --}}
             <div class="space-y-3">
-                <div class="font-bold text-white text-sm">آموزش و ارتباط</div>
-                <ul class="space-y-2.5 text-xs">
-                    <li><a href="{{ route('public.guides') }}" class="hover:text-amber-400 transition-colors">پایگاه دانش و مقالات تخصصی</a></li>
-                    <li><a href="{{ route('public.about') }}" class="hover:text-amber-400 transition-colors">درباره طلالایو</a></li>
+                <div class="font-bold text-white text-sm flex items-center gap-2">
+                    <span class="text-amber-400">⚖️</span>
+                    <span>مقایسه و راهنما</span>
+                </div>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="{{ route('public.led-vs-smart-board') }}" class="hover:text-amber-400 transition-colors">مقایسه تابلو LED با تلویزیون</a></li>
+                    <li><a href="{{ route('public.compare.tabangohar') }}" class="hover:text-amber-400 transition-colors">مقایسه طلالایو با تابان گوهر</a></li>
+                    <li><a href="{{ route('public.compare.tgju-tv') }}" class="hover:text-amber-400 transition-colors">مقایسه طلالایو با TGJU TV</a></li>
+                    <li><a href="{{ route('public.compare.tablotala') }}" class="hover:text-amber-400 transition-colors">مقایسه با تابلوی سنتی طلا</a></li>
+                    <li><a href="{{ route('public.tv-setup-guide') }}" class="hover:text-amber-400 transition-colors">راهنمای اتصال تلویزیون</a></li>
+                    <li><a href="{{ route('public.android-tv-gold-board') }}" class="hover:text-amber-400 transition-colors">راهنمای اندروید باکس طلافروشی</a></li>
+                    <li><a href="{{ route('public.pricing') }}" class="hover:text-amber-400 transition-colors">تعرفه‌ها و پلن‌های اشتراک</a></li>
+                </ul>
+            </div>
+
+            {{-- ستون ۵: بازار شهرها، API و حقوقی --}}
+            <div class="space-y-3">
+                <div class="font-bold text-white text-sm flex items-center gap-2">
+                    <span class="text-amber-400">🏛️</span>
+                    <span>شهرها، وب‌سرویس و قوانین</span>
+                </div>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="{{ route('public.cities.index') }}" class="hover:text-amber-400 transition-colors font-medium text-amber-300">تابلو طلا در شهرهای ایران</a></li>
+                    <li><a href="{{ route('public.guides') }}" class="hover:text-amber-400 transition-colors">پایگاه دانش و مقالات طلا</a></li>
+                    <li><a href="{{ route('public.widget') }}" class="hover:text-amber-400 transition-colors">ویجت نرخ طلا برای سایت‌ها</a></li>
+                    <li><a href="{{ route('public.api-docs') }}" class="hover:text-amber-400 transition-colors">وب‌سرویس و API عمومی نرخ</a></li>
+                    <li><a href="{{ route('public.about') }}" class="hover:text-amber-400 transition-colors">درباره سامانه طلالایو</a></li>
                     <li><a href="{{ route('public.contact') }}" class="hover:text-amber-400 transition-colors">تماس با ما و پشتیبانی</a></li>
-                    <li><a href="{{ route('public.terms') }}" class="hover:text-amber-400 transition-colors">قوانین و حریم خصوصی</a></li>
+                    <li><a href="{{ route('public.terms') }}" class="hover:text-amber-400 transition-colors">قوانین و مقررات استفاده</a></li>
+                    <li><a href="{{ route('public.privacy') }}" class="hover:text-amber-400 transition-colors">حریم خصوصی کاربران</a></li>
                 </ul>
             </div>
 
         </div>
 
-        <div class="max-w-7xl mx-auto border-t border-slate-800/80 mt-10 pt-6 text-center text-[11px] text-slate-500">
-            تمامی حقوق برای سامانه طلالایو (TalaLive.ir) محفوظ است &copy; {{ date('Y') }}.
+        {{-- ردیف پیوندهای سریع قطب‌های بازار طلا در استان‌ها --}}
+        <div class="max-w-7xl mx-auto border-t border-slate-900 mt-10 pt-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+                <div class="flex items-center gap-2 text-slate-300 font-bold">
+                    <span>📍</span>
+                    <span>تابلو طلا در قطب‌های بازار زرگری ایران:</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <a href="{{ route('public.cities.hub', 'tehran') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">تهران</a>
+                    <a href="{{ route('public.cities.hub', 'mashhad') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">مشهد</a>
+                    <a href="{{ route('public.cities.hub', 'isfahan') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">اصفهان</a>
+                    <a href="{{ route('public.cities.hub', 'tabriz') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">تبریز</a>
+                    <a href="{{ route('public.cities.hub', 'shiraz') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">شیراز</a>
+                    <a href="{{ route('public.cities.hub', 'hamedan') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">همدان</a>
+                    <a href="{{ route('public.cities.hub', 'yazd') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">یزد</a>
+                    <a href="{{ route('public.cities.hub', 'qom') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">قم</a>
+                    <a href="{{ route('public.cities.hub', 'ahvaz') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">اهواز</a>
+                    <a href="{{ route('public.cities.hub', 'rasht') }}" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:text-amber-400 text-slate-400 transition-all text-[11px]">رشت</a>
+                </div>
+            </div>
+        </div>
+
+        {{-- حق کپی‌رایت و مالکیت معنوی --}}
+        <div class="max-w-7xl mx-auto border-t border-slate-900 mt-6 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right text-[11px] text-slate-500">
+            <div>
+                تمامی حقوق مادی و معنوی برای سامانه ابری تابلوی طلافروشی طلالایو (TalaLive.ir) محفوظ است &copy; ۱۴۰۵.
+            </div>
+            <div class="flex items-center gap-4 text-slate-400">
+                <span>پشتیبانی فنی: <a href="tel:09187009064" class="hover:text-amber-400 font-mono" dir="ltr">0918 700 9064</a></span>
+            </div>
         </div>
     </footer>
 
@@ -481,7 +803,11 @@
             return {
                 darkMode: document.documentElement.classList.contains('dark'),
                 mobileMenuOpen: false,
+                productsDropdownOpen: false,
+                compareDropdownOpen: false,
                 toolsDropdownOpen: false,
+                guidesDropdownOpen: false,
+                devDropdownOpen: false,
 
                 init() {
                     window.addEventListener('talalive-theme-changed', (e) => {

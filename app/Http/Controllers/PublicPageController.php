@@ -325,6 +325,18 @@ class PublicPageController extends Controller
     }
 
     /**
+     * نمایه و فهرست شهرهای فعال بازار طلا (Local SEO Index)
+     */
+    public function citiesIndex()
+    {
+        $cityData = config('cities', []);
+        return view('pages.cities.index', [
+            'cities' => $cityData,
+            'rates' => $this->getRatesData()['rates'],
+        ]);
+    }
+
+    /**
      * لندینگ‌های محلی و شهرهای قطب بازار طلا (Local SEO Hub)
      */
     public function cityHub(string $city)

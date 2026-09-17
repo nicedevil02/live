@@ -232,6 +232,7 @@ Route::get('/guides', [PublicPageController::class, 'guidesIndex'])->name('publi
 Route::get('/guides/{slug}', [PublicPageController::class, 'guideShow'])->name('public.guides.show');
 
 // هاب شهرهای قطب بازار طلا (Local SEO)
+Route::get('/cities', [PublicPageController::class, 'citiesIndex'])->name('public.cities.index');
 Route::get('/cities/{city}', [PublicPageController::class, 'cityHub'])->name('public.cities.hub');
 
 // پیش‌نمایش آنلاین و دموی زنده تابلوی طلافروشی بدون نیاز به ثبت‌نام

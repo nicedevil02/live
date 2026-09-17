@@ -86,6 +86,10 @@ class SitemapController extends Controller
         $cities = array_keys(config('cities', []));
 
         $urls = [];
+        $urls[] = [
+            'url' => 'https://talalive.ir/cities',
+            'lastmod' => $this->getViewLastMod('pages.cities.index'),
+        ];
         foreach ($cities as $citySlug) {
             $urls[] = [
                 'url' => "https://talalive.ir/cities/{$citySlug}",

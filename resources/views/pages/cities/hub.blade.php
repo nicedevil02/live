@@ -3,6 +3,9 @@
 @section('title', $info['title'] ?? ('تابلو طلا فروشی در ' . $info['name'] . ' | طلالایو'))
 @section('meta_description', $info['meta_description'] ?? ('سامانه ابری تابلوی هوشمند طلافروشی ویژه گالری‌های طلا و جواهر در شهر ' . $info['name'] . '. نمایش لحظه‌ای نرخ طلا و سکه بدون مینی‌کیس.'))
 @section('canonical', 'https://talalive.ir/cities/' . $city)
+@if(empty($info['union_text']) || empty($info['bazaar_text']))
+@section('robots', 'noindex, follow')
+@endif
 
 @section('schema')
 <script type="application/ld+json">
@@ -52,7 +55,7 @@
           "@@type": "ListItem",
           "position": 2,
           "name": "شهرهای فعال",
-          "item": "https://talalive.ir/cities/{{ $city }}"
+          "item": "https://talalive.ir/cities"
         },
         {
           "@@type": "ListItem",
