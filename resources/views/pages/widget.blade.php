@@ -80,7 +80,7 @@
             {{-- انتخاب تم --}}
             <div class="space-y-2.5">
                 <label class="text-xs font-bold text-slate-700 dark:text-slate-300">انتخاب پالت رنگ (تم):</label>
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <button type="button" @click="theme = 'dark'" 
                             :class="theme === 'dark' ? 'border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-black' : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'"
                             class="py-2.5 px-3 rounded-xl border text-xs font-bold transition-all text-center">

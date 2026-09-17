@@ -268,7 +268,7 @@
                     </div>
 
                     {{-- نوار شاخص‌های اعتماد ویژه طلافروشان --}}
-                    <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-1 text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-bold">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 pt-1 text-xs text-slate-600 dark:text-slate-400 font-bold">
                         <div class="flex items-center gap-2 bg-slate-100/70 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800 px-3 py-2 rounded-xl">
                             <span class="text-amber-500 text-sm">⚡</span>
                             <span class="truncate">راه‌اندازی در ۶۰ ثانیه</span>
