@@ -68,13 +68,6 @@
           "operatingSystem" => "Smart TV (Samsung Tizen, LG webOS, Android TV), Web Browser, Android, Windows",
           "screenshot" => "https://talalive.ir/images/logo.png",
           "softwareVersion" => "2.5",
-          "aggregateRating" => [
-            "@type" => "AggregateRating",
-            "ratingValue" => "4.9",
-            "ratingCount" => "135",
-            "bestRating" => "5",
-            "worstRating" => "1"
-          ],
           "offers" => [
             "@type" => "Offer",
             "price" => "0",

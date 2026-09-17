@@ -59,6 +59,78 @@ class PublicPageController extends Controller
     }
 
     /**
+     * لندینگ تجاری نرخ‌نامه دیجیتال طلافروشی جایگزین تابلوهای ۷ رقمه
+     */
+    public function digitalRateBoard()
+    {
+        return view('pages.digital-rate-board');
+    }
+
+    /**
+     * لندینگ تجاری تابلو طلا بدون دستگاه ویژه اجرای تمام‌ابری روی تلویزیون
+     */
+    public function goldBoardWithoutDevice()
+    {
+        return view('pages.gold-board-without-device');
+    }
+
+    /**
+     * صفحه مقایسه تابان گوهر با طلالایو
+     */
+    public function compareTabangohar()
+    {
+        return view('pages.compare.tabangohar');
+    }
+
+    /**
+     * صفحه مقایسه تابلوی TGJU با طلالایو
+     */
+    public function compareTgjuTv()
+    {
+        return view('pages.compare.tgju-tv');
+    }
+
+    /**
+     * صفحه مقایسه اپلیکیشن تابلو طلا با طلالایو
+     */
+    public function compareTablotala()
+    {
+        return view('pages.compare.tablotala');
+    }
+
+    /**
+     * لندینگ تجاری تابلو آنلاین قیمت طلا و مسکوکات با نرخ لحظه‌ای
+     */
+    public function onlineGoldPriceBoard()
+    {
+        return view('pages.online-gold-price-board');
+    }
+
+    /**
+     * لندینگ تجاری تابلو صرافی و نرخ ارز برای تلویزیون هوشمند
+     */
+    public function currencyExchangeBoard()
+    {
+        return view('pages.currency-exchange-board');
+    }
+
+    /**
+     * لندینگ تجاری تابلو نرخ نقره و شمش برای تلویزیون
+     */
+    public function silverBullionBoard()
+    {
+        return view('pages.silver-bullion-board');
+    }
+
+    /**
+     * راهنمای فنی راه‌اندازی تابلو طلا روی اندروید تی‌وی و باکس اندروید
+     */
+    public function androidTvGoldBoard()
+    {
+        return view('pages.android-tv-gold-board');
+    }
+
+    /**
      * درباره طلالایو (سیگنال E-E-A-T و هویت برند)
      */
     public function about()
@@ -145,6 +217,24 @@ class PublicPageController extends Controller
     }
 
     /**
+     * ابزار تخصصی ۶: ماشین‌حساب آنلاین محاسبه اجرت ساخت طلا
+     */
+    public function toolWageCalculator()
+    {
+        $data = $this->getRatesData();
+        return view('pages.tools.wage-calculator', $data);
+    }
+
+    /**
+     * ابزار تخصصی ۷: محاسبه‌گر آنلاین قیمت‌گذاری طلای دست دوم و مستعمل
+     */
+    public function toolSecondHandGold()
+    {
+        $data = $this->getRatesData();
+        return view('pages.tools.second-hand-gold', $data);
+    }
+
+    /**
      * هاب مقالات، پایگاه دانش و راهنماهای صنف طلا و جواهر
      */
     public function guidesIndex()
@@ -160,7 +250,7 @@ class PublicPageController extends Controller
         $guides = [
             'gold-price-formula-18k' => [
                 'title' => 'فرمول دقیق محاسبه قیمت طلا ۱۸ عیار با اجرت، طلای دست دوم و سود در طلا فروشی',
-                'description' => 'آموزش گام‌به‌گام نحوه محاسبه فاکتور طلا، طلای دست دوم (دستدوم)، طلای کم اجرت (کماجرت)، سود ۷ درصد مغازه طلا فروشی و قانون جدید مالیات در سال ۱۴۰۴.',
+                'description' => 'آموزش گام‌به‌گام نحوه محاسبه فاکتور طلا، طلای دست دوم، طلای کم‌اجرت، سود ۷ درصد مغازه طلا فروشی و قانون جدید مالیات در سال ۱۴۰۵.',
                 'date' => '۱۴۰۴/۰۶/۲۰',
                 'view' => 'pages.guides.gold-price-formula',
             ],
@@ -178,9 +268,51 @@ class PublicPageController extends Controller
             ],
             'how-to-calculate-coin-bubble' => [
                 'title' => 'فرمول محاسبه حباب سکه امامی، بهار آزادی، نیم سکه و ربع سکه با انس جهانی',
-                'description' => 'نحوه محاسبه ارزش ذاتی و حباب سکه امامی، بهار آزادی، بهار ازادی، بهارآزادی، بهارازادی، نیم سکه و ربع سکه بر اساس وزن، عیار ۹۰۰ و نرخ لحظه ای طلا و دلار.',
+                'description' => 'نحوه محاسبه ارزش ذاتی و حباب سکه امامی، تمام بهار آزادی، نیم سکه و ربع سکه بر اساس وزن، عیار ۹۰۰ و نرخ لحظه ای طلا و دلار.',
                 'date' => '۱۴۰۴/۰۶/۱۲',
                 'view' => 'pages.guides.coin-bubble-calculation',
+            ],
+            'mazaneh-fardaei' => [
+                'title' => 'مظنه فردایی چیست و چه فرقی با مظنه نقدی دارد؟',
+                'description' => 'بررسی تفاوت مظنه فردایی و مظنه نقدی در بازار طلا، فرمول تبدیل مثقال ۱۷ به ۱۸ عیار با مثال عددی ۱ و نحوه نمایش در تابلوی طلالایو.',
+                'date' => '۱۴۰۵/۰۱/۱۵',
+                'view' => 'pages.guides.mazaneh-fardaei',
+            ],
+            'motefareghe-18' => [
+                'title' => 'تعویض و خرید متفرقه ۱۸ چیست؟ راهنمای طلافروش',
+                'description' => 'تعویض و خرید متفرقه ۱۸ چیست؟ تفاوت ۲ نرخ طلای متفرقه، نمونه فاکتور تعویض با برچسب مثال و نحوه نمایش در تابلوی طلالایو. مطالعه کنید.',
+                'date' => '۱۴۰۵/۰۱/۱۶',
+                'view' => 'pages.guides.motefareghe-18',
+            ],
+            'goldsmith-legal-profit' => [
+                'title' => 'سود قانونی طلافروشی چند درصد است؟ (۱۴۰۵)',
+                'description' => 'سود قانونی طلافروشی چند درصد است؟ تفکیک ۳ جزء فاکتور طلا (سود ۷٪، اجرت و مالیات)، فرمول محاسبه قانونی و بررسی مصوبه اتحادیه طلا. مطالعه کنید.',
+                'date' => '۱۴۰۵/۰۱/۱۸',
+                'view' => 'pages.guides.goldsmith-legal-profit',
+            ],
+            'led-board-price-1405' => [
+                'title' => 'قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵ — راهنمای کامل',
+                'description' => 'لیست قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵: بررسی قیمت متری انواع ماژول P10، هزینه‌های پنهان ساخت و مقایسه اقتصادی با تلویزیون. همین حالا مطالعه کنید.',
+                'date' => '۱۴۰۵/۰۱/۲۰',
+                'view' => 'pages.guides.led-board-price-1405',
+            ],
+            'gold-hallmark-inquiry' => [
+                'title' => 'استعلام انگ طلا و ری‌گیری — راهنمای کامل',
+                'description' => 'راهنمای استعلام انگ طلا و آزمایشگاه‌های ری‌گیری: روش خواندن شماره پاکت و عیار ۷۵۰ آبشده به همراه نکات رهگیری در سال ۱۴۰۵. همین حالا روش استعلام را بخوانید.',
+                'date' => '۱۴۰۵/۰۱/۲۲',
+                'view' => 'pages.guides.gold-hallmark-inquiry',
+            ],
+            'samsung-tizen-gold-board' => [
+                'title' => 'تابلو قیمت طلا روی تلویزیون سامسونگ (Tizen) | طلالایو',
+                'description' => 'راهنمای گام‌به‌گام اتصال مرورگر تایزن تلویزیون‌های سامسونگ به سامانه تابلوی طلالایو بدون نیاز به دانگل در سال ۱۴۰۵. همین حالا تابلوی مغازه را رایگان فعال کنید.',
+                'date' => '۱۴۰۵/۰۱/۲۳',
+                'view' => 'pages.guides.samsung-tizen-gold-board',
+            ],
+            'lg-webos-gold-board' => [
+                'title' => 'تابلو قیمت طلا روی تلویزیون ال‌جی (webOS) | طلالایو',
+                'description' => 'آموزش تنظیمات اتصال مرورگر webOS تلویزیون‌های ال‌جی به تابلوی طلا و فعال‌سازی حالت تمام‌صفحه در سال ۱۴۰۵. همین حالا ۵ دقیقه‌ای تابلوی مغازه را فعال کنید.',
+                'date' => '۱۴۰۵/۰۱/۲۴',
+                'view' => 'pages.guides.lg-webos-gold-board',
             ],
         ];
 
@@ -197,18 +329,7 @@ class PublicPageController extends Controller
      */
     public function cityHub(string $city)
     {
-        $cityData = [
-            'tehran'  => ['name' => 'تهران', 'bazaar' => 'بازار بزرگ تهران و سبزه میدان', 'title' => 'تابلو طلا فروشی و تابلوی هوشمند طلافروشی در تهران | سبزه میدان'],
-            'isfahan' => ['name' => 'اصفهان', 'bazaar' => 'بازار هنر و میدان نقش جهان', 'title' => 'تابلو طلا فروشی و تابلوی طلافروشی در اصفهان | بازار هنر'],
-            'mashhad' => ['name' => 'مشهد', 'bazaar' => 'راسته طلافروشان خسروی و پاساژ ارگ', 'title' => 'تابلو طلا فروشی و نرم‌افزار تابلوی طلا در مشهد | خسروی و ارگ'],
-            'tabriz'  => ['name' => 'تبریز', 'bazaar' => 'بازار تاریخی امیر و راسته طلافروشان', 'title' => 'تابلو طلا فروشی و تابلوی اعلام نرخ طلا در تبریز | بازار امیر'],
-            'shiraz'  => ['name' => 'شیراز', 'bazaar' => 'بازار زرگرها و زند', 'title' => 'تابلو طلا فروشی و تابلوی طلافروشی در شیراز | بازار زرگرها'],
-            'yazd'    => ['name' => 'یزد', 'bazaar' => 'بازار خان و راسته زرگری', 'title' => 'تابلو طلا فروشی و تابلوی نرخ طلا در یزد | بازار خان'],
-            'hamedan' => ['name' => 'همدان', 'bazaar' => 'راسته مظفریه و طلافروشان', 'title' => 'تابلو طلا فروشی و تابلوی هوشمند طلافروشی در همدان'],
-            'qom'     => ['name' => 'قم', 'bazaar' => 'بازار کهنه و راسته طلافروشان', 'title' => 'تابلو طلا فروشی و تابلوی دیجیتال طلا در قم'],
-            'ahvaz'   => ['name' => 'اهواز', 'bazaar' => 'خیابان امام و راسته طلا و جواهر', 'title' => 'تابلو طلا فروشی و تابلوی اعلام قیمت طلا در اهواز'],
-            'rasht'   => ['name' => 'رشت', 'bazaar' => 'بازار زرگران و میدان شهرداری', 'title' => 'تابلو طلا فروشی و تابلوی هوشمند طلافروشی در رشت'],
-        ];
+        $cityData = config('cities', []);
 
         if (!isset($cityData[$city])) {
             abort(404, 'شهر مورد نظر یافت نشد.');
@@ -276,5 +397,204 @@ class PublicPageController extends Controller
             'lastUpdated' => $lastFetch ? Carbon::parse($lastFetch)->diffForHumans() : 'لحظه‌ای',
             'apiTime'     => $apiTime,
         ];
+    }
+
+    /**
+     * صفحه پیش‌نمایش زنده تابلو بدون نیاز به ثبت‌نام (دموی عمومی آنلاین)
+     */
+    public function demo()
+    {
+        $ratesData = $this->getRatesData();
+        
+        $demoSetting = [
+            'shop_name' => 'گالری نمونه طلالایو',
+            'phone' => '۰۹۱۸۷۰۰۹۰۶۴',
+            'instagram' => 'talalive.ir',
+            'rubika' => 'talalive',
+            'theme_mode' => 'dark-glass',
+            'slider_interval_sec' => 8,
+            'show_weight' => true,
+            'show_labor' => true,
+            'show_profit' => true,
+            'qr_link' => 'https://talalive.ir',
+            'qr_label' => 'اسکن تابلوی زنده',
+            'qr_desc' => 'مشاهده روی گوشی همراه',
+            'published_at' => now()->toIso8601String(),
+        ];
+
+        $demoFeed = [
+            ['symbol' => 'gold18', 'name' => 'طلای ۱۸ عیار', 'value' => $ratesData['rates']['gold18'] ?: 3650000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'mesghal17', 'name' => 'مظنه مثقال ۱۷', 'value' => $ratesData['rates']['mesghal'] ?: 15800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'coin_emami', 'name' => 'سکه امامی', 'value' => $ratesData['rates']['coin_emami'] ?: 43500000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'coin_bahar', 'name' => 'تمام بهار آزادی', 'value' => $ratesData['rates']['coin_bahar'] ?: 39800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'coin_nim', 'name' => 'نیم سکه', 'value' => $ratesData['rates']['coin_nim'] ?: 23800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'coin_rob', 'name' => 'ربع سکه', 'value' => $ratesData['rates']['coin_rob'] ?: 15200000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'coin_gerami', 'name' => 'سکه گرمی', 'value' => $ratesData['rates']['coin_gerami'] ?: 7200000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'ounce', 'name' => 'انس جهانی طلا', 'value' => $ratesData['rates']['ons'] ?: 2720, 'unit' => 'دلار', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'usd', 'name' => 'دلار آزاد', 'value' => $ratesData['rates']['dollar'] ?: 68500, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'silver999', 'name' => 'هر گرم نقره ۹۹۹', 'value' => 84500, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+        ];
+
+        $demoItems = [
+            ['key' => 'gold18', 'label' => 'طلای ۱۸ عیار', 'enabled' => true, 'order' => 1],
+            ['key' => 'mesghal17', 'label' => 'مظنه مثقال ۱۷', 'enabled' => true, 'order' => 2],
+            ['key' => 'coin_emami', 'label' => 'سکه امامی', 'enabled' => true, 'order' => 3],
+            ['key' => 'coin_bahar', 'label' => 'تمام بهار آزادی', 'enabled' => true, 'order' => 4],
+            ['key' => 'coin_nim', 'label' => 'نیم سکه', 'enabled' => true, 'order' => 5],
+            ['key' => 'coin_rob', 'label' => 'ربع سکه', 'enabled' => true, 'order' => 6],
+            ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'enabled' => true, 'order' => 7],
+            ['key' => 'ounce', 'label' => 'انس جهانی طلا', 'enabled' => true, 'order' => 8],
+            ['key' => 'usd', 'label' => 'دلار آزاد', 'enabled' => true, 'order' => 9],
+            ['key' => 'silver999', 'label' => 'هر گرم نقره ۹۹۹', 'enabled' => true, 'order' => 10],
+        ];
+
+        $snapshot = [
+            'username' => 'demo',
+            'updatedAt' => now()->toIso8601String(),
+            'apiTime' => $ratesData['apiTime'] ?? 'لحظه‌ای',
+            'refreshIntervalSeconds' => 10,
+            'displayItems' => $demoItems,
+            'priceFeed' => $demoFeed,
+            'products' => [],
+            'settings' => (object)$demoSetting,
+        ];
+
+        return view('pages.demo', array_merge($ratesData, [
+            'snapshot' => $snapshot,
+        ]));
+    }
+
+    /**
+     * صفحه راهنما و سازنده کد ویجت امبد نرخ طلا
+     */
+    public function widgetGuide()
+    {
+        $ratesData = $this->getRatesData();
+        return view('pages.widget', $ratesData);
+    }
+
+    /**
+     * رندر مستقیم ویجت امبدشده داخل آی‌فریم
+     */
+    public function widgetEmbed(\Illuminate\Http\Request $request)
+    {
+        $ratesData = $this->getRatesData();
+        $theme = $request->query('theme', 'dark');
+        $size = $request->query('size', 'box');
+
+        $content = view('pages.widget-embed', array_merge($ratesData, [
+            'theme' => $theme,
+            'size'  => $size,
+        ]))->render();
+
+        return response($content, 200, [
+            'Content-Type'    => 'text/html; charset=utf-8',
+            'X-Frame-Options' => 'ALLOWALL',
+        ]);
+    }
+
+    /**
+     * وب‌سرویس عمومی RESTful نرخ لحظه‌ای طلا، سکه و ارز
+     */
+    public function apiRates(Request $request)
+    {
+        $ratesData = $this->getRatesData();
+        $rates = $ratesData['rates'];
+
+        return response()->json([
+            'status' => 'success',
+            'attribution' => [
+                'provider' => 'سامانه تابلوی طلای آنلاین طلالایو',
+                'website' => 'https://talalive.ir',
+                'terms' => 'استفاده از این وب‌سرویس منوط به درج لینک مستقیم و فعال به talalive.ir به عنوان منبع داده است.'
+            ],
+            'rate_limits' => [
+                'allowed_requests_per_minute' => 60,
+                'throttle_policy' => 'IP-based sliding window'
+            ],
+            'timestamp' => now()->toIso8601String(),
+            'api_time' => $ratesData['apiTime'] ?? 'لحظه‌ای',
+            'currency' => 'IRR (Toman)',
+            'data' => [
+                'gold' => [
+                    'gram_18k' => [
+                        'name' => 'طلای ۱۸ عیار (گرم)',
+                        'price' => (float)$rates['gold18'],
+                        'unit' => 'تومان'
+                    ],
+                    'gram_24k' => [
+                        'name' => 'طلای ۲۴ عیار (گرم)',
+                        'price' => (float)$rates['gold24'],
+                        'unit' => 'تومان'
+                    ],
+                    'mesghal_17k' => [
+                        'name' => 'مظنه مثقال ۱۷ عیار (تهران)',
+                        'price' => (float)$rates['mesghal'],
+                        'unit' => 'تومان'
+                    ],
+                    'ounce_global' => [
+                        'name' => 'انس جهانی طلا',
+                        'price' => (float)$rates['ons'],
+                        'unit' => 'دلار'
+                    ],
+                ],
+                'coins' => [
+                    'emami' => [
+                        'name' => 'سکه تمام طرح جدید (امامی)',
+                        'price' => (float)$rates['coin_emami'],
+                        'unit' => 'تومان'
+                    ],
+                    'bahar' => [
+                        'name' => 'سکه تمام بهار آزادی (طرح قدیم)',
+                        'price' => (float)$rates['coin_bahar'],
+                        'unit' => 'تومان'
+                    ],
+                    'half' => [
+                        'name' => 'نیم سکه بهار آزادی',
+                        'price' => (float)$rates['coin_nim'],
+                        'unit' => 'تومان'
+                    ],
+                    'quarter' => [
+                        'name' => 'ربع سکه بهار آزادی',
+                        'price' => (float)$rates['coin_rob'],
+                        'unit' => 'تومان'
+                    ],
+                    'gerami' => [
+                        'name' => 'سکه گرمی',
+                        'price' => (float)$rates['coin_gerami'],
+                        'unit' => 'تومان'
+                    ],
+                ],
+                'currency' => [
+                    'usd_free' => [
+                        'name' => 'دلار آمریکا (آزاد)',
+                        'price' => (float)$rates['dollar'],
+                        'unit' => 'تومان'
+                    ]
+                ]
+            ]
+        ], 200, [
+            'Content-Type' => 'application/json; charset=utf-8',
+            'Access-Control-Allow-Origin' => '*',
+            'Cache-Control' => 'public, max-age=15',
+        ]);
+    }
+
+    /**
+     * صفحه مستندات جامع وب‌سرویس عمومی و API نرخ لحظه‌ای طلا
+     */
+    public function apiDocs()
+    {
+        $ratesData = $this->getRatesData();
+        return view('pages.api-docs', $ratesData);
+    }
+
+    /**
+     * صفحه فرود معرفی و دانلود اپلیکیشن موبایل و تلویزیون طلالایو
+     */
+    public function appLanding()
+    {
+        $ratesData = $this->getRatesData();
+        return view('pages.app', $ratesData);
     }
 }

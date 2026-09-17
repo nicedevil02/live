@@ -2,6 +2,7 @@
 
 @section('title', 'دانشنامه و مقالات تخصصی صنف طلا، تابلو طلا فروشی و تابلوی طلافروشی | طلالایو')
 @section('meta_description', 'مجموعه مقالات و راهنماهای تخصصی درباره تابلو طلا فروشی، تابلوی هوشمند طلافروشی، راهنمای اتصال تلویزیون مغازه، فرمول‌های محاسبه طلای آب شده، مظنه و مالیات طلا.')
+@section('canonical', 'https://talalive.ir/guides')
 
 @section('schema')
 <script type="application/ld+json">
@@ -141,7 +142,7 @@
                     </a>
                 </h2>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    چرا دوران تابلوهای پرمصرف و گران‌قیمت LED به سر آمده و چگونه می‌توان ۴۰ میلیون تومان در راه‌اندازی مغازه صرفه‌جویی کرد؟
+                    چرا دوران تابلوهای پرمصرف و پرهزینه LED به سر آمده و چگونه تلویزیون موجود در مغازه بهترین جایگزین اقتصادی است؟
                 </p>
             </div>
             <a href="{{ route('public.led-vs-smart-board') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
@@ -150,7 +151,83 @@
             </a>
         </article>
 
-        {{-- کارت ۶: تبدیل مظنه به گرم --}}
+        {{-- کارت ۶: مظنه فردایی و نقدی --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold">مظنه و بازار</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.guides.show', 'mazaneh-fardaei') }}">
+                        مظنه فردایی چیست و چه فرقی با مظنه نقدی دارد؟
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    بررسی عمیق تفاوت مظنه نقدی، فردایی و جهانی، نحوه تبدیل مظنه به گرم و اهمیت آن در تابلوی اعلام قیمت طلافروشی.
+                </p>
+            </div>
+            <a href="{{ route('public.guides.show', 'mazaneh-fardaei') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت ۷: تعویض و خرید متفرقه ۱۸ --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[11px] font-bold">طلای کارکرده</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.guides.show', 'motefareghe-18') }}">
+                        تعویض و خرید متفرقه ۱۸ چیست؟ راهنمای طلافروش
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    تعریف متفرقه در صنف طلا، جدول تفاوت خرید و تعویض متفرقه، فاکتور نمونه و نحوه تنظیم این دو نرخ در تابلوی مغازه.
+                </p>
+            </div>
+            <a href="{{ route('public.guides.show', 'motefareghe-18') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت ۸: سود قانونی طلافروشی --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-teal-500/10 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 text-[11px] font-bold">قوانین و صنف</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.guides.show', 'goldsmith-legal-profit') }}">
+                        سود قانونی طلافروشی چند درصد است؟ (۱۴۰۵)
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    تفکیک اجرت ساخت، سود ۷ درصد فروشنده و مالیات ارزش افزوده بر اساس مصوبه رسمی اتحادیه همراه با فرمول دقیق و مثال فاکتور.
+                </p>
+            </div>
+            <a href="{{ route('public.guides.show', 'goldsmith-legal-profit') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت مقاله: استعلام انگ طلا و ری‌گیری --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold">طلای آبشده و عیارسنجی</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                    <a href="{{ route('public.guides.show', 'gold-hallmark-inquiry') }}">
+                        استعلام انگ طلا و ری‌گیری — راهنمای کامل خواندن شماره پاکت و عیار
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    آموزش نحوه خواندن کد انگ، نحوه استعلام شماره پاکت از آزمایشگاه‌های ری‌گیری رسمی اتحادیه و نکات اعتبارسنجی طلای آبشده.
+                </p>
+            </div>
+            <a href="{{ route('public.guides.show', 'gold-hallmark-inquiry') }}" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 pt-2">
+                <span>مطالعه کامل مقاله</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت ۹: تبدیل مظنه به گرم --}}
         <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
                 <span class="px-3 py-1 rounded-lg bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 text-[11px] font-bold">ابزارهای صنفی</span>
@@ -199,6 +276,63 @@
             <div class="text-[11px] text-amber-600 dark:text-amber-400 pt-2 font-bold">
                 ✓ دسترسی ۲۴ ساعته از موبایل و لپ‌تاپ
             </div>
+        </article>
+
+        {{-- کارت جدید: تابلو طلا روی اندروید تی‌وی --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">اندروید تی‌وی و باکس</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    <a href="/android-tv-gold-board">
+                        آموزش راه‌اندازی تابلو طلا روی اندروید تی‌وی و باکس اندروید
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    مراحل نصب مرورگر TV Bro، تمام‌صفحه بدون نوار آدرس، جلوگیری از خاموشی صفحه و راه‌اندازی خودکار پس از وصل برق.
+                </p>
+            </div>
+            <a href="/android-tv-gold-board" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1.5 pt-2">
+                <span>مشاهده آموزش تصویری</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت جدید: تابلو طلا روی سامسونگ (تایزن) --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-[11px] font-bold">سامسونگ (Tizen OS)</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    <a href="/guides/samsung-tizen-gold-board">
+                        آموزش راه‌اندازی تابلو قیمت طلا سامسونگ روی سیستم‌عامل تایزن
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    تنظیمات مرورگر سامسونگ اینترنت، غیرفعال‌سازی خاموشی خودکار Eco Solution و باز شدن خودکار تابلو با روشن شدن تلویزیون.
+                </p>
+            </div>
+            <a href="/guides/samsung-tizen-gold-board" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 flex items-center gap-1.5 pt-2">
+                <span>مشاهده راهنمای تایزن</span>
+                <span>&larr;</span>
+            </a>
+        </article>
+
+        {{-- کارت جدید: تابلو طلا روی ال‌جی (webOS) --}}
+        <article class="glass-card-gold p-7 rounded-3xl space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+                <span class="px-3 py-1 rounded-lg bg-pink-500/10 dark:bg-pink-500/20 text-pink-700 dark:text-pink-300 text-[11px] font-bold">ال‌جی (webOS)</span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-pink-600 dark:hover:text-pink-400 transition-colors">
+                    <a href="/guides/lg-webos-gold-board">
+                        آموزش تنظیم و اجرای تابلو قیمت طلا ال‌جی در سیستم‌عامل webOS
+                    </a>
+                </h2>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    اتصال با مرورگر Web Browser، ثبت کلید میانبر ۱ ریموت کنترل جادویی، حالت تمام‌صفحه و غیرفعال‌سازی خاموشی خودکار.
+                </p>
+            </div>
+            <a href="/guides/lg-webos-gold-board" class="text-xs font-bold text-pink-600 dark:text-pink-400 hover:text-pink-700 flex items-center gap-1.5 pt-2">
+                <span>مشاهده راهنمای webOS</span>
+                <span>&larr;</span>
+            </a>
         </article>
 
     </div>

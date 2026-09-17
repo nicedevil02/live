@@ -564,6 +564,8 @@ class AuthController extends Controller
             ['key' => 'mesghal17', 'label' => 'مثقال ۱۷', 'order' => 13],
             ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'order' => 14],
             ['key' => 'usdt', 'label' => 'تتر', 'order' => 15],
+            ['key' => 'silver999', 'label' => 'گرم نقره ۹۹۹', 'order' => 16],
+            ['key' => 'silver925', 'label' => 'نقره ۹۲۵', 'order' => 17],
         ];
 
         foreach ($items as $item) {

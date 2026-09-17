@@ -25,9 +25,9 @@
 
     <title>@yield('title', 'طلالایو | تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی')</title>
     <meta name="description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر آنلاین نرخ لحظه ای طلا و سکه برای مغازه طلا فروشی. اتصال تلویزیون بدون نیاز به کیس، فرمول‌ساز سود و ویترین لوکس در طلالایو.')">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <meta name="robots" content="@yield('meta_robots', 'index, follow, max-image-preview:large, max-snippet:-1')">
     <meta name="author" content="طلالایو - TalaLive">
-    <link rel="canonical" href="@yield('canonical', url()->current())">
+    <link rel="canonical" href="@yield('canonical', 'https://talalive.ir' . (request()->getPathInfo() === '/' ? '' : request()->getPathInfo()))">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -64,15 +64,13 @@
           ],
           "url": "https://talalive.ir",
           "logo": "https://talalive.ir/images/logo.png",
-          "sameAs": [
-            "https://rubika.ir/talalive"
-          ],
+          "sameAs": @json(config('app.organization.same_as', ['https://rubika.ir/talalive'])),
           "address": {
             "@@type": "PostalAddress",
-            "addressLocality": "همدان",
-            "addressRegion": "همدان",
-            "streetAddress": "راسته مظفریه",
-            "addressCountry": "IR"
+            "addressLocality": "{{ config('app.organization.address.locality', 'همدان') }}",
+            "addressRegion": "{{ config('app.organization.address.region', 'همدان') }}",
+            "streetAddress": "{{ config('app.organization.address.street', 'راسته مظفریه') }}",
+            "addressCountry": "{{ config('app.organization.address.country', 'IR') }}"
           },
           "foundingDate": "2024",
           "description": "سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه و ارز و ویترین دیجیتال گالری‌های طلا و جواهر و مغازه طلا فروشی بدون نیاز به مینی‌کیس.",
@@ -268,8 +266,8 @@
                     </div>
                 </div>
 
-                <a href="/#faq" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all">
-                    سوالات متداول
+                <a href="{{ route('public.contact') }}" class="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.contact') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    پشتیبانی و تماس
                 </a>
             </nav>
 
@@ -412,122 +410,67 @@
         @yield('content')
     </main>
 
-    {{-- فوتر معنایی و جامع سئو --}}
+    {{-- فوتر معنایی و استاندارد سئو (حداکثر ۱۴ پیوند طبیعی و باکیفیت) --}}
     <footer class="border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             
-            {{-- ستون ۱: معرفی طلالایو و اعتماد --}}
+            {{-- ستون ۱: معرفی برند و راه‌های ارتباطی --}}
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو">
                     <div>
                         <div class="text-base font-black text-amber-400">طلالایو &middot; TalaLive</div>
-                        <p class="text-[11px] text-slate-500">سامانه ابری تابلوی هوشمند نرخ طلا و سکه</p>
+                        <p class="text-[11px] text-slate-500">سامانه ابری تابلوی هوشمند طلافروشی</p>
                     </div>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
-                    طلالایو سامانه تخصصی و ابری تابلوی هوشمند طلافروشی در ایران است. بدون نیاز به کامپیوتر یا دانگل مجزا، هر نوع تلویزیون در مغازه طلا فروشی را به تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه، حباب بازار و ویترین جواهرات بدل کنید.
+                    سامانه تخصصی نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی تلویزیون‌های هوشمند بدون نیاز به کامپیوتر یا تجهیزات سخت‌افزاری اضافه.
                 </p>
-                <div class="flex items-center gap-3 text-xs text-slate-500 pt-1">
-                    <span class="flex items-center gap-1">
-                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        <span>پایداری و در دسترس‌پذیری ابری</span>
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                        <span>۱۴ روز تست رایگان</span>
-                    </span>
+                <div class="pt-1">
+                    <a href="https://rubika.ir/talalive" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                        <span>ارتباط در روبیکا: talalive@</span>
+                    </a>
                 </div>
             </div>
 
-            {{-- ستون ۲: خدمات و مقایسه‌ها --}}
+            {{-- ستون ۲: خدمات سامانه --}}
             <div class="space-y-3">
-                <div class="font-bold text-white text-sm">سامانه و تابلوی هوشمند</div>
-                <ul class="space-y-2 text-xs">
-                    <li><a href="/" class="hover:text-amber-400 transition-colors">صفحه اصلی و اتصال تلویزیون</a></li>
-                    <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی و طلا فروشی</a></li>
-                    <li><a href="{{ route('public.led-vs-smart-board') }}" class="hover:text-amber-400 transition-colors font-bold text-amber-300">مقایسه تابلوی هوشمند با تابلو LED</a></li>
-                    <li><a href="{{ route('public.pricing') }}" class="hover:text-amber-400 transition-colors">تعرفه‌ها و قیمت تابلو طلا فروشی</a></li>
-                    <li><a href="{{ route('public.tv-setup-guide') }}" class="hover:text-amber-400 transition-colors">راهنمای اتصال تلویزیون مغازه</a></li>
-                    <li><a href="{{ route('admin.login') }}" class="hover:text-amber-400 transition-colors">ورود به پنل مدیریت گالری</a></li>
-                    <li><a href="{{ route('admin.register') }}" class="hover:text-amber-400 transition-colors">ثبت‌نام گالری جدید</a></li>
+                <div class="font-bold text-white text-sm">خدمات</div>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی</a></li>
+                    <li><a href="{{ route('public.pricing') }}" class="hover:text-amber-400 transition-colors">تعرفه‌ها و اشتراک</a></li>
+                    <li><a href="{{ route('public.led-vs-smart-board') }}" class="hover:text-amber-400 transition-colors">مقایسه با تابلوهای LED</a></li>
+                    <li><a href="{{ route('public.tv-setup-guide') }}" class="hover:text-amber-400 transition-colors">راهنمای اتصال تلویزیون</a></li>
                 </ul>
             </div>
 
-            {{-- ستون ۳: ابزارهای زرگری و محاسباتی --}}
+            {{-- ستون ۳: ابزارهای محاسباتی طلا --}}
             <div class="space-y-3">
-                <div class="font-bold text-white text-sm">ابزارهای آنلاین زرگری</div>
-                <ul class="space-y-2 text-xs">
-                    <li><a href="{{ route('public.tools.gold-price') }}" class="hover:text-amber-400 transition-colors">محاسبه قیمت طلا با سود و اجرت</a></li>
-                    <li><a href="{{ route('public.tools.coin-bubble') }}" class="hover:text-amber-400 transition-colors">محاسبه‌گر آنلاین حباب انواع سکه</a></li>
-                    <li><a href="{{ route('public.tools.mesghal') }}" class="hover:text-amber-400 transition-colors">فرمول تبدیل مظنه مثقال به گرم</a></li>
-                    <li><a href="{{ route('public.tools.melted-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه طلای آب شده و عیار خطی</a></li>
-                    <li><a href="{{ route('public.tools.karat-converter') }}" class="hover:text-amber-400 transition-colors">تبدیل عیار طلا (۷۵۰ به سایر عیارها)</a></li>
-                    <li><a href="{{ route('public.guides') }}" class="hover:text-blue-400 transition-colors">دانشنامه تخصصی و مقالات صنف طلا</a></li>
+                <div class="font-bold text-white text-sm">ابزارها</div>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="{{ route('public.tools.gold-price') }}" class="hover:text-amber-400 transition-colors">محاسبه قیمت طلا با اجرت</a></li>
+                    <li><a href="{{ route('public.tools.coin-bubble') }}" class="hover:text-amber-400 transition-colors">محاسبه حباب انواع سکه</a></li>
+                    <li><a href="{{ route('public.tools.mesghal') }}" class="hover:text-amber-400 transition-colors">تبدیل مظنه مثقال به گرم</a></li>
+                    <li><a href="{{ route('public.tools.melted-gold') }}" class="hover:text-amber-400 transition-colors">محاسبه طلای آب‌شده</a></li>
+                    <li><a href="{{ route('public.tools.karat-converter') }}" class="hover:text-amber-400 transition-colors">تبدیل عیار طلا</a></li>
                 </ul>
             </div>
 
-            {{-- ستون ۴: اطلاعات تماس و اعتماد صنف --}}
+            {{-- ستون ۴: آموزش و قوانین --}}
             <div class="space-y-3">
-                <div class="font-bold text-white text-sm">ارتباط و اعتماد قانونی</div>
-                <div class="space-y-2 text-xs">
-                    <p class="text-slate-300">
-                        <span class="text-slate-500">پشتیبانی تلفنی و روبیکا:</span>
-                        <a href="tel:09187009064" class="font-mono font-bold text-slate-200 hover:text-amber-400 block" dir="ltr">0918 700 9064</a>
-                    </p>
-                    <p class="text-slate-300">
-                        <span class="text-slate-500">تلفن دفتر پشتیبانی:</span>
-                        <a href="tel:08135223847" class="font-mono font-bold text-slate-200 hover:text-amber-400 block" dir="ltr">081 3522 3847</a>
-                    </p>
-                    <div class="pt-1">
-                        <a href="https://rubika.ir/talalive" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                            <span>ارتباط در پیام‌رسان روبیکا</span>
-                        </a>
-                    </div>
-                    <ul class="space-y-1 text-[11px] text-slate-400 pt-2">
-                        <li><a href="{{ route('public.about') }}" class="hover:text-amber-400 transition-colors">&larr; درباره سامانه طلالایو</a></li>
-                        <li><a href="{{ route('public.contact') }}" class="hover:text-amber-400 transition-colors">&larr; تماس با تیم پشتیبانی و نشانی</a></li>
-                        <li><a href="{{ route('public.terms') }}" class="hover:text-amber-400 transition-colors">&larr; شرایط استفاده از خدمات</a></li>
-                        <li><a href="{{ route('public.privacy') }}" class="hover:text-amber-400 transition-colors">&larr; حریم خصوصی و امنیت داده‌ها</a></li>
-                    </ul>
-                </div>
+                <div class="font-bold text-white text-sm">آموزش و ارتباط</div>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="{{ route('public.guides') }}" class="hover:text-amber-400 transition-colors">پایگاه دانش و مقالات تخصصی</a></li>
+                    <li><a href="{{ route('public.about') }}" class="hover:text-amber-400 transition-colors">درباره طلالایو</a></li>
+                    <li><a href="{{ route('public.contact') }}" class="hover:text-amber-400 transition-colors">تماس با ما و پشتیبانی</a></li>
+                    <li><a href="{{ route('public.terms') }}" class="hover:text-amber-400 transition-colors">قوانین و حریم خصوصی</a></li>
+                </ul>
             </div>
 
         </div>
 
-        {{-- ابر کلمات کلیدی سئو و کپی‌رایت --}}
-        <div class="max-w-7xl mx-auto border-t border-slate-800/80 mt-10 pt-6 space-y-4">
-            <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500">
-                <span class="text-slate-400 font-bold">دسترسی سریع کلمات کلیدی:</span>
-                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">تابلوی هوشمند طلافروشی</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">تابلو طلا فروشی</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">تابلوی طلا فروشی</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.led-vs-smart-board') }}" class="text-slate-400 hover:text-amber-400">تابلو ال ای دی طلا فروشی</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.smart-gold-board') }}" class="text-slate-400 hover:text-amber-400">نرم‌افزار تابلوی زنده طلا</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.tv-setup-guide') }}" class="text-slate-400 hover:text-amber-400">تابلو قیمت طلا برای تلویزیون</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.tools.gold-price') }}" class="text-slate-400 hover:text-amber-400">محاسبه آنلاین قیمت طلا با اجرت</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.gold-calculator') }}" class="text-slate-400 hover:text-amber-400">محاسبه طلای دست دوم و کم اجرت</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.tools.coin-bubble') }}" class="text-slate-400 hover:text-amber-400">حباب سنج سکه امامی، بهار آزادی و نیم سکه</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.tools.mesghal') }}" class="text-slate-400 hover:text-amber-400">فرمول مظنه مثقال طلا به گرم</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.tools.melted-gold') }}" class="text-slate-400 hover:text-amber-400">محاسبه وزن شرطی طلای آب‌شده</a>
-                <span>&bull;</span>
-                <a href="{{ route('public.pricing') }}" class="text-slate-400 hover:text-amber-400">قیمت تابلو طلا فروشی</a>
-            </div>
-            
-            <div class="text-center text-[11px] text-slate-500">
-                تمامی حقوق مادی و معنوی متعلق به سامانه طلالایو (TalaLive.ir) می‌باشد &copy; {{ date('Y') }}. طراحی شده با بالاترین استانداردهای امنیتی ابری ویژه اتحادیه و صنف طلا و جواهر کشور.
-            </div>
+        <div class="max-w-7xl mx-auto border-t border-slate-800/80 mt-10 pt-6 text-center text-[11px] text-slate-500">
+            تمامی حقوق برای سامانه طلالایو (TalaLive.ir) محفوظ است &copy; {{ date('Y') }}.
         </div>
     </footer>
 

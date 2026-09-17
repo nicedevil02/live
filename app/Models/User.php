@@ -152,6 +152,11 @@ class User extends Authenticatable
         return $this->hasMany(ProductSlide::class, 'user_id');
     }
 
+    public function products()
+    {
+        return $this->productSlides();
+    }
+
     public function payments()
     {
         return $this->hasMany(Payment::class, 'user_id')->latest();

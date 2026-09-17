@@ -82,11 +82,8 @@ class SitemapController extends Controller
     {
         $cityDate = $this->getViewLastMod('pages.cities.hub');
 
-        $cities = [
-            'tehran', 'isfahan', 'mashhad', 'tabriz',
-            'shiraz', 'yazd', 'hamedan', 'qom',
-            'ahvaz', 'rasht',
-        ];
+        // در گام ۷.۴ تمامی ۱۰ شهر با محتوای اختصاصی کامل در نقشه سایت قرار می‌گیرند
+        $cities = array_keys(config('cities', []));
 
         $urls = [];
         foreach ($cities as $citySlug) {
@@ -111,7 +108,12 @@ class SitemapController extends Controller
                     $q->whereNull('expires_at')
                       ->orWhere('expires_at', '>', now());
                 })
-                ->whereHas('products')
+                ->where(function ($q) {
+                    $q->whereHas('productSlides')
+                      ->orWhereHas('displaySetting', function ($sq) {
+                          $sq->whereNotNull('shop_name')->where('shop_name', '!=', '');
+                      });
+                })
                 ->select(['username', 'updated_at'])
                 ->limit(500)
                 ->get();
@@ -142,10 +144,22 @@ class SitemapController extends Controller
             ['url' => 'https://talalive.ir/led-vs-smart-board', 'lastmod' => $this->getViewLastMod('pages.led-vs-smart-board')],
             ['url' => 'https://talalive.ir/pricing', 'lastmod' => $this->getViewLastMod('pages.pricing')],
             ['url' => 'https://talalive.ir/tv-setup-guide', 'lastmod' => $this->getViewLastMod('pages.tv-setup-guide')],
+            ['url' => 'https://talalive.ir/digital-rate-board', 'lastmod' => $this->getViewLastMod('pages.digital-rate-board')],
+            ['url' => 'https://talalive.ir/gold-board-without-device', 'lastmod' => $this->getViewLastMod('pages.gold-board-without-device')],
+            ['url' => 'https://talalive.ir/online-gold-price-board', 'lastmod' => $this->getViewLastMod('pages.online-gold-price-board')],
+            ['url' => 'https://talalive.ir/currency-exchange-board', 'lastmod' => $this->getViewLastMod('pages.currency-exchange-board')],
+            ['url' => 'https://talalive.ir/silver-bullion-board', 'lastmod' => $this->getViewLastMod('pages.silver-bullion-board')],
+            ['url' => 'https://talalive.ir/compare/tabangohar', 'lastmod' => $this->getViewLastMod('pages.compare.tabangohar')],
+            ['url' => 'https://talalive.ir/compare/tgju-tv', 'lastmod' => $this->getViewLastMod('pages.compare.tgju-tv')],
+            ['url' => 'https://talalive.ir/compare/tablotala', 'lastmod' => $this->getViewLastMod('pages.compare.tablotala')],
             ['url' => 'https://talalive.ir/about', 'lastmod' => $this->getViewLastMod('pages.about')],
             ['url' => 'https://talalive.ir/contact', 'lastmod' => $this->getViewLastMod('pages.contact')],
             ['url' => 'https://talalive.ir/terms', 'lastmod' => $this->getViewLastMod('pages.terms')],
             ['url' => 'https://talalive.ir/privacy', 'lastmod' => $this->getViewLastMod('pages.privacy')],
+            ['url' => 'https://talalive.ir/demo', 'lastmod' => $this->getViewLastMod('pages.demo')],
+            ['url' => 'https://talalive.ir/widget', 'lastmod' => $this->getViewLastMod('pages.widget')],
+            ['url' => 'https://talalive.ir/api-docs', 'lastmod' => $this->getViewLastMod('pages.api-docs')],
+            ['url' => 'https://talalive.ir/app', 'lastmod' => $this->getViewLastMod('pages.app')],
         ];
     }
 
@@ -161,6 +175,8 @@ class SitemapController extends Controller
             ['url' => 'https://talalive.ir/tools/mesghal', 'lastmod' => $this->getViewLastMod('pages.tools.mesghal')],
             ['url' => 'https://talalive.ir/tools/melted-gold', 'lastmod' => $this->getViewLastMod('pages.tools.melted-gold')],
             ['url' => 'https://talalive.ir/tools/karat-converter', 'lastmod' => $this->getViewLastMod('pages.tools.karat-converter')],
+            ['url' => 'https://talalive.ir/tools/wage-calculator', 'lastmod' => $this->getViewLastMod('pages.tools.wage-calculator')],
+            ['url' => 'https://talalive.ir/tools/second-hand-gold', 'lastmod' => $this->getViewLastMod('pages.tools.second-hand-gold')],
         ];
     }
 
@@ -175,6 +191,14 @@ class SitemapController extends Controller
             ['url' => 'https://talalive.ir/guides/gold-tax-regulations', 'lastmod' => $this->getViewLastMod('pages.guides.gold-tax-regulations')],
             ['url' => 'https://talalive.ir/guides/best-tv-for-jewelry-shop', 'lastmod' => $this->getViewLastMod('pages.guides.best-tv-for-jewelry-shop')],
             ['url' => 'https://talalive.ir/guides/how-to-calculate-coin-bubble', 'lastmod' => $this->getViewLastMod('pages.guides.coin-bubble-calculation')],
+            ['url' => 'https://talalive.ir/guides/mazaneh-fardaei', 'lastmod' => $this->getViewLastMod('pages.guides.mazaneh-fardaei')],
+            ['url' => 'https://talalive.ir/guides/motefareghe-18', 'lastmod' => $this->getViewLastMod('pages.guides.motefareghe-18')],
+            ['url' => 'https://talalive.ir/guides/goldsmith-legal-profit', 'lastmod' => $this->getViewLastMod('pages.guides.goldsmith-legal-profit')],
+            ['url' => 'https://talalive.ir/guides/led-board-price-1405', 'lastmod' => $this->getViewLastMod('pages.guides.led-board-price-1405')],
+            ['url' => 'https://talalive.ir/guides/gold-hallmark-inquiry', 'lastmod' => $this->getViewLastMod('pages.guides.gold-hallmark-inquiry')],
+            ['url' => 'https://talalive.ir/android-tv-gold-board', 'lastmod' => $this->getViewLastMod('pages.android-tv-gold-board')],
+            ['url' => 'https://talalive.ir/guides/samsung-tizen-gold-board', 'lastmod' => $this->getViewLastMod('pages.guides.samsung-tizen-gold-board')],
+            ['url' => 'https://talalive.ir/guides/lg-webos-gold-board', 'lastmod' => $this->getViewLastMod('pages.guides.lg-webos-gold-board')],
         ];
     }
 

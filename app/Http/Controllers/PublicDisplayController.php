@@ -25,7 +25,6 @@ class PublicDisplayController extends Controller
     public function show($username)
     {
         $user = \App\Models\User::where('username', $username)->firstOrFail();
-        $this->validateDisplayToken($user);
 
         // بررسی تایید بودن اکانت
         if (!$user->is_approved && !$user->is_super_admin) {
@@ -35,20 +34,66 @@ class PublicDisplayController extends Controller
         }
 
         // بررسی انقضای زمانی حساب
-        if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
+        $isExpired = ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin);
+        if ($isExpired) {
             return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 100px 20px; background: #fef2f2; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 500px; background: #fff; border: 1px solid #fecaca; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);'><div style='font-size: 56px; margin-bottom: 24px;'>⚠️</div><h2 style='color: #991b1b; margin-bottom: 12px; font-weight: 800;'>پایان اعتبار نمایشگر</h2><p style='color: #7f1d1d; font-size: 15px; line-height: 1.7; margin: 0;'>اعتبار زمانی استفاده از تابلوی این گالری به پایان رسیده است. لطفاً جهت تمدید اعتبار و فعال‌سازی مجدد با مدیریت سامانه تماس حاصل فرمایید.</p></div></div>", 402, [
                 'X-Robots-Tag' => 'noindex, follow',
             ]);
         }
 
         $snapshot = $this->buildSnapshot($user);
-        return view('display.live', ['snapshot' => $snapshot, 'username' => $username]);
+
+        // استخراج نام، شهر و مشخصات گالری جهت بهینه‌سازی لوکال سئو و اسکیما
+        $shopName = !empty($user->displaySetting?->shop_name) ? $user->displaySetting->shop_name : ($user->name ?? 'طلا و مسکوکات');
+        $galleryDisplayName = str_starts_with($shopName, 'گالری') ? $shopName : 'گالری ' . $shopName;
+
+        $cityName = null;
+        $citySlug = null;
+        $galleryAddress = null;
+
+        foreach (config('cities', []) as $slug => $c) {
+            if (!empty($c['galleries'])) {
+                foreach ($c['galleries'] as $g) {
+                    if (isset($g['username']) && $g['username'] === $user->username) {
+                        $cityName = $c['name'];
+                        $citySlug = $slug;
+                        $galleryAddress = $g['address'] ?? null;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if (!$cityName) {
+            $cityName = 'تهران';
+            $citySlug = 'tehran';
+        }
+
+        $pageTitle = "قیمت لحظه‌ای طلا و سکه — {$galleryDisplayName} در {$cityName} | طلالایو";
+        $metaDescription = "مشاهده قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در {$galleryDisplayName} {$cityName}. تابلوی آنلاین ویترین طلافروشی متصل به شبکه هوشمند ابری طلالایو.";
+        $galleryIntro = "تابلوی اعلام قیمت لحظه‌ای طلا، مسکوکات و ارز {$galleryDisplayName} واقع در {$cityName}. نرخ‌ها به صورت خودکار و برخط مطابق آخرین نوسانات بازار طلا و اتحادیه به‌روزرسانی می‌شوند.";
+        $phone = $user->displaySetting?->phone ?? '';
+
+        return view('display.live', [
+            'snapshot'           => $snapshot,
+            'username'           => $username,
+            'user'               => $user,
+            'shopName'           => $shopName,
+            'galleryDisplayName' => $galleryDisplayName,
+            'cityName'           => $cityName,
+            'citySlug'           => $citySlug,
+            'galleryAddress'     => $galleryAddress,
+            'galleryIntro'       => $galleryIntro,
+            'pageTitle'          => $pageTitle,
+            'metaDescription'    => $metaDescription,
+            'phone'              => $phone,
+            'isExpired'          => $isExpired,
+        ]);
     }
 
     public function snapshot($username)
     {
         $user = \App\Models\User::where('username', $username)->firstOrFail();
-        $this->validateDisplayToken($user);
 
         if (!$user->is_approved && !$user->is_super_admin) {
             abort(403, 'حساب کاربری در انتظار تایید مدیریت است.');

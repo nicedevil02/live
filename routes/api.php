@@ -53,3 +53,7 @@ Route::get('/public/cron/market-fetch', function () {
         ], 500);
     }
 })->middleware('throttle:60,1');
+
+// وب‌سرویس عمومی RESTful نرخ لحظه‌ای طلا، سکه و ارز
+Route::get('/v1/rates', [\App\Http\Controllers\PublicPageController::class, 'apiRates'])->middleware('throttle:60,1');
+

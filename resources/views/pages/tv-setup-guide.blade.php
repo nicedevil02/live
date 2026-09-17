@@ -2,6 +2,7 @@
 
 @section('title', 'راهنمای اتصال تلویزیون به تابلوی طلافروشی و مغازه طلا فروشی | طلالایو')
 @section('meta_description', 'آموزش گام‌به‌گام نحوه اتصال تلویزیون‌های هوشمند به سامانه تابلوی طلا فروشی و طلافروشی طلالایو بدون کابل و مینی‌کیس. تنظیمات مرورگر و جلوگیری از خاموشی خودکار تلویزیون.')
+@section('canonical', 'https://talalive.ir/tv-setup-guide')
 
 @section('schema')
 <script type="application/ld+json">
@@ -54,16 +55,30 @@
 @section('content')
 <div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
 
+    {{-- تفکیک راهنمای اتصال از راهنمای خرید سخت‌افزار --}}
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">📺</span>
+            <div class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                <strong class="font-bold text-amber-700 dark:text-amber-300">هنوز برای مغازه تلویزیون تهیه نکرده‌اید؟</strong>
+                <span>این صفحه آموزش تخصصی «چگونگی اتصال» است. اگر در مرحله انتخاب و خرید نمایشگر هستید، راهنمای سخت‌افزار را بخوانید:</span>
+            </div>
+        </div>
+        <a href="/guides/best-tv-for-jewelry-shop" class="whitespace-nowrap px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-colors shadow-sm">
+            راهنمای خرید بهترین تلویزیون طلافروشی ←
+        </a>
+    </div>
+
     {{-- هدر راهنما --}}
     <div class="text-center space-y-4 max-w-3xl mx-auto">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold">
-            <span>راهنمای فنی و تجهیزات گالری</span>
+            <span>راهنمای فنی: چگونه تلویزیون را به تابلو وصل کنیم؟</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
-            آموزش اتصال انواع تلویزیون هوشمند به تابلوی طلالایو
+            آموزش اتصال تلویزیون به تابلوی طلافروشی
         </h1>
         <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-            هیچ نیازی به خرید قطعه اضافه یا سیم‌کشی وجود ندارد. در ۳ مرحله ساده تلویزیون برند سامسونگ، ال‌جی، سونی یا اسنوای خود را به تابلوی زنده قیمت طلا و سکه متصل کنید.
+            این راهنما به شما آموزش می‌دهد <strong>چگونه</strong> در کمتر از ۳ دقیقه، بدون نیاز به خرید قطعه اضافه، مینی‌کیس یا کابل‌کشی، با مرورگر وب داخلی هر نوع تلویزیون هوشمند (سامسونگ، ال‌جی، سونی یا اسنوا) به تابلوی اعلام نرخ زنده طلالایو متصل شوید.
         </p>
     </div>
 
@@ -104,30 +119,44 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {{-- سامسونگ --}}
-            <div class="bg-white dark:bg-slate-900/60 p-7 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <span class="px-3 py-1 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 font-black text-xs">سامسونگ (Tizen OS)</span>
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white">تلویزیون‌های هوشمند سامسونگ</h3>
+            <div class="bg-white dark:bg-slate-900/60 p-7 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 font-black text-xs">سامسونگ (Tizen OS)</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">تلویزیون‌های هوشمند سامسونگ</h3>
+                    </div>
+                    <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 list-disc list-inside leading-relaxed">
+                        <li>دکمه Home روی ریموت کنترل را بزنید و آیکون آبی رنگ کره زمین (Internet) را باز کنید.</li>
+                        <li>آدرس <span class="text-amber-600 dark:text-amber-400 font-mono font-bold">talalive.ir</span> را در نوار بالای مرورگر وارد کنید.</li>
+                        <li>روی علامت ستاره یا منوی سه‌نقطه کلیک کرده و گزینه <strong>Add to Bookmarks</strong> را بزنید.</li>
+                        <li>در تنظیمات مرورگر، گزینه «Open previous pages upon startup» را تیک بزنید تا با هر بار روشن شدن تلویزیون، تابلو بدون فوت وقت باز شود.</li>
+                    </ul>
                 </div>
-                <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 list-disc list-inside leading-relaxed">
-                    <li>دکمه Home روی ریموت کنترل را بزنید و آیکون آبی رنگ کره زمین (Internet) را باز کنید.</li>
-                    <li>آدرس <span class="text-amber-600 dark:text-amber-400 font-mono font-bold">talalive.ir</span> را در نوار بالای مرورگر وارد کنید.</li>
-                    <li>روی علامت ستاره یا منوی سه‌نقطه کلیک کرده و گزینه <strong>Add to Bookmarks</strong> را بزنید.</li>
-                    <li>در تنظیمات مرورگر، گزینه «Open previous pages upon startup» را تیک بزنید تا با هر بار روشن شدن تلویزیون، تابلو بدون فوت وقت باز شود.</li>
-                </ul>
+                <div class="pt-2">
+                    <a href="/guides/samsung-tizen-gold-board" class="inline-block text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                        راهنمای تخصصی راه‌اندازی روی سامسونگ تایزن ←
+                    </a>
+                </div>
             </div>
 
             {{-- ال‌جی --}}
-            <div class="bg-white dark:bg-slate-900/60 p-7 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <span class="px-3 py-1 rounded-xl bg-pink-500/10 dark:bg-pink-500/20 text-pink-600 dark:text-pink-400 font-black text-xs">ال‌جی (webOS)</span>
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white">تلویزیون‌های هوشمند ال‌جی LG</h3>
+            <div class="bg-white dark:bg-slate-900/60 p-7 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1 rounded-xl bg-pink-500/10 dark:bg-pink-500/20 text-pink-600 dark:text-pink-400 font-black text-xs">ال‌جی (webOS)</span>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">تلویزیون‌های هوشمند ال‌جی LG</h3>
+                    </div>
+                    <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 list-disc list-inside leading-relaxed">
+                        <li>با ریموت کنترل جادویی، برنامه <strong>Web Browser</strong> را از منوی لانچر اجرا نمایید.</li>
+                        <li>آدرس سایت را جستجو کرده و پس از جفت‌سازی، آیکون تمام‌صفحه (Full Screen) را در گوشه صفحه کلیک کنید.</li>
+                        <li>پیشنهاد می‌شود در تنظیمات عمومی (General -> Eco Service)، گزینه خاموشی خودکار پس از چند ساعت بی‌حرکتی را غیرفعال کنید.</li>
+                    </ul>
                 </div>
-                <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 list-disc list-inside leading-relaxed">
-                    <li>با ریموت کنترل جادویی، برنامه <strong>Web Browser</strong> را از منوی لانچر اجرا نمایید.</li>
-                    <li>آدرس سایت را جستجو کرده و پس از جفت‌سازی، آیکون تمام‌صفحه (Full Screen) را در گوشه صفحه کلیک کنید.</li>
-                    <li>پیشنهاد می‌شود در تنظیمات عمومی (General -> Eco Service)، گزینه خاموشی خودکار پس از چند ساعت بی‌حرکتی را غیرفعال کنید.</li>
-                </ul>
+                <div class="pt-2">
+                    <a href="/guides/lg-webos-gold-board" class="inline-block text-xs font-bold text-pink-600 dark:text-pink-400 hover:underline">
+                        راهنمای تخصصی راه‌اندازی روی ال‌جی webOS ←
+                    </a>
+                </div>
             </div>
 
             {{-- تلویزیون‌های اندرویدی (سونی، اسنوا، دوو، تی‌سی‌ال، ایکس‌ویژن) --}}
@@ -143,6 +172,11 @@
                     <p>
                         می‌توانید میانبر صفحه تابلوی خود را روی صفحه اصلی (Home Screen) تلویزیون سنجاق کنید تا کارکنان مغازه با فشردن یک دکمه تابلو را فعال کنند.
                     </p>
+                </div>
+                <div class="pt-2">
+                    <a href="/android-tv-gold-board" class="inline-block px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs transition-colors">
+                        راهنمای تخصصی راه‌اندازی تابلو طلا روی اندروید تی‌وی و باکس اندروید ←
+                    </a>
                 </div>
             </div>
 

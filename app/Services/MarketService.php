@@ -687,6 +687,7 @@ class MarketService
             'coin_emami' => 'سکه امامی', 'coin_bahar' => 'سکه بهار آزادی', 'coin_nim' => 'نیم سکه',
             'coin_rob' => 'ربع سکه', 'coin_gerami' => 'سکه گرمی', 'euro' => 'یورو',
             'dirham' => 'درهم', 'usdt' => 'تتر', 'bitcoin' => 'بیت کوین',
+            'silver999' => 'گرم نقره ۹۹۹', 'silver925' => 'نقره ۹۲۵',
         ];
 
         $feed = [];

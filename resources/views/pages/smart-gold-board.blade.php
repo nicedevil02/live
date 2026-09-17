@@ -1,7 +1,8 @@
 @extends('layouts.public')
 
-@section('title', 'تابلوی هوشمند طلافروشی و تابلو طلا فروشی | جایگزین مدرن تابلوهای سنتی | طلالایو')
-@section('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی. نمایش لحظه ای قیمت طلا، سکه بهار آزادی، نیم سکه و ربع سکه روی تلویزیون بدون مینی‌کیس.')
+@section('title', 'تابلوی هوشمند طلافروشی روی تلویزیون مغازه | طلالایو')
+@section('meta_description', 'تابلوی هوشمند طلافروشی برای نمایش زنده نرخ طلا و مسکوکات روی انواع تلویزیون با اتصال وای‌فای و بدون نیاز به مینی‌کیس. ۱۴ روز تست کاملاً رایگان را آغاز کنید.')
+@section('canonical', 'https://talalive.ir/smart-gold-board')
 
 @section('schema')
 <script type="application/ld+json">
@@ -98,7 +99,7 @@
         </div>
         
         <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-tight">
-            تابلوی هوشمند طلافروشی و مغازه طلا فروشی؛ <br>
+            تابلوی هوشمند طلافروشی روی تلویزیون مغازه؛ <br>
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
                 لوکس، ابری و بدون نیاز به مینی‌کیس
             </span>
@@ -112,8 +113,9 @@
             <a href="{{ route('admin.register') }}" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105 cursor-pointer">
                 تست رایگان و ثبت‌نام گالری
             </a>
-            <a href="/" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-sm transition-all shadow-sm cursor-pointer">
-                مشاهده پیش‌نمایش روی تلویزیون
+            <a href="{{ url('/demo') }}" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-sm transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2">
+                <span>مشاهده پیش‌نمایش زنده تابلو (/demo)</span>
+                <span>⚡</span>
             </a>
         </div>
     </div>
@@ -207,6 +209,13 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="mt-6 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+            <div class="font-bold text-slate-900 dark:text-white mb-2">راهنماهای تخصصی جایگزینی تابلو:</div>
+            <p>
+                اگر به دنبال جایگزینی تابلوی سنتی ۷ رقمه سون سگمنت هستید، راهنمای <a href="{{ route('public.digital-rate-board') }}" class="text-amber-600 dark:text-amber-400 font-bold underline hover:text-amber-500">نرخ نامه دیجیتال طلافروشی</a> را بخوانید. همچنین برای آشنایی با راه‌اندازی بدون خرید هرگونه کیس یا سخت‌افزار، به صفحه <a href="{{ route('public.gold-board-without-device') }}" class="text-amber-600 dark:text-amber-400 font-bold underline hover:text-amber-500">تابلو طلا بدون دستگاه</a> مراجعه فرمایید.
+            </p>
+        </div>
     </div>
 
     {{-- قابلیت‌های ویژه تابلوی طلالایو --}}
@@ -265,6 +274,29 @@
                 </p>
             </div>
         </div>
+
+        {{-- پوشش ارز و نقره و شمش --}}
+        <div class="mt-8 p-6 sm:p-8 rounded-3xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+            <div class="space-y-1.5 text-right">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✨</span>
+                    <h3 class="text-base font-black text-slate-900 dark:text-white">
+                        پشتیبانی چندمنظوره از تابلوهای صرافی، نقره و شمش
+                    </h3>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+                    علاوه بر طلا و جواهر، امکان راه‌اندازی اختصاصی <a href="{{ route('public.currency-exchange-board') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلو صرافی و نرخ ارز</a> و همچنین <a href="{{ route('public.silver-bullion-board') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلو نرخ نقره و شمش</a> با ردیف‌های تفکیکی عیارهای ۹۹۹ و ۹۲۵ فراهم است.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0 flex-wrap">
+                <a href="{{ route('public.currency-exchange-board') }}" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-colors">
+                    مشاهده تابلوی صرافی ←
+                </a>
+                <a href="{{ route('public.silver-bullion-board') }}" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-colors">
+                    مشاهده تابلوی نقره ←
+                </a>
+            </div>
+        </div>
     </div>
 
     {{-- سوالات متداول --}}
@@ -295,6 +327,28 @@
                 </p>
             </div>
         </div>
+    </div>
+
+    {{-- لینک به بازار مجاور: صرافی و نرخ ارز --}}
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center sm:text-right">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">آیا در کنار طلا، معاملات ارزی و حواله نیز انجام می‌دهید؟</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400">سامانه طلالایو نسخه اختصاصی نمایشگر دو نرخه خرید و فروش انواع ارز و حواله را برای صرافی‌ها ارائه می‌دهد.</p>
+        </div>
+        <a href="/currency-exchange-board" class="whitespace-nowrap px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-colors shadow-sm">
+            مشاهده تابلو صرافی و نرخ ارز ←
+        </a>
+    </div>
+
+    {{-- لینک به بازار مجاور: نقره و شمش --}}
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center sm:text-right">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">فروشگاه نقره، کارگاه ساچمه یا مرکز معاملات شمش دارید؟</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400">نمایشگر زنده عیارهای ۹۹۹، ۹۹۵ و ۹۲۵ نقره به همراه شمش‌های طلا را روی تلویزیون مشاهده کنید.</p>
+        </div>
+        <a href="/silver-bullion-board" class="whitespace-nowrap px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs transition-colors shadow-sm">
+            مشاهده تابلو نرخ نقره و شمش ←
+        </a>
     </div>
 
     {{-- بنر دعوت به اقدام نهایی --}}

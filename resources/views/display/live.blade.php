@@ -7,9 +7,45 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="TalaLive">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="{{ ($isExpired ?? false) ? 'noindex, follow' : 'index, follow, max-image-preview:large' }}">
+    <title>{{ $pageTitle ?? ("قیمت لحظه‌ای طلا و سکه — " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران') . " | طلالایو") }}</title>
+    <meta name="description" content="{{ $metaDescription ?? ("مشاهده آنلاین قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در " . ($galleryDisplayName ?? 'گالری طلا') . " " . ($cityName ?? '') . ". نرخ‌های بروزرسانی شده متصل به شبکه ابری طلالایو.") }}">
+    <link rel="canonical" href="{{ url('/' . ($username ?? '')) }}">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
-    <title>Live Gold Display</title>
+
+    {{-- اسکیما ساختاریافته JewelryStore (زیرمجموعه LocalBusiness) صنف طلا و جواهر بدون امتیاز ساختگی --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "JewelryStore",
+        "@@id": "{{ url('/' . ($username ?? '')) }}#store",
+        "name": "{{ $galleryDisplayName ?? 'گالری طلا' }}",
+        "url": "{{ url('/' . ($username ?? '')) }}",
+        "description": "{{ $galleryIntro ?? ("تابلوی آنلاین اعلام قیمت طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در شهر " . ($cityName ?? 'ایران')) }}",
+        @if(!empty($phone))
+        "telephone": "{{ $phone }}",
+        @endif
+        "priceRange": "$$$$",
+        "currenciesAccepted": "IRR",
+        "paymentAccepted": "Cash, Credit Card",
+        "address": {
+            "@@type": "PostalAddress",
+            "addressLocality": "{{ $cityName ?? 'تهران' }}",
+            "addressCountry": "IR"@if(!empty($galleryAddress)),
+            "streetAddress": "{{ $galleryAddress }}"
+            @endif
+        },
+        "areaServed": {
+            "@@type": "City",
+            "name": "{{ $cityName ?? 'تهران' }}"
+        },
+        "parentOrganization": {
+            "@@type": "Organization",
+            "name": "طلالایو",
+            "url": "https://talalive.ir"
+        }
+    }
+    </script>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
@@ -810,13 +846,22 @@
                 </div>
 
                 {{-- نام فروشگاه (وسط) --}}
-                <div class="order-2 flex w-[24%] flex-col items-center justify-center text-center">
+                <div class="order-2 flex w-[28%] flex-col items-center justify-center text-center">
                     <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
-                        class="max-w-full break-words text-4xl xl:text-5xl font-black tracking-tight leading-tight" x-text="settings.shop_name"></h1>
+                        class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
-                         class="mt-1 px-4 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
+                         class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
                          ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
                     </div>
+                    {{-- متن معرفی کوتاه و ناوبری برگشتی --}}
+                    <p class="text-[11px] text-slate-300/85 mt-1 max-w-sm mx-auto leading-relaxed line-clamp-2">
+                        {{ $galleryIntro ?? ("تابلوی اعلام قیمت لحظه‌ای طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران')) }}
+                    </p>
+                    <nav aria-label="راهنمای دسترسی" class="mt-1 flex items-center justify-center gap-2 text-[10px] font-bold">
+                        <a href="{{ url('/') }}" class="text-amber-400 hover:text-amber-300 transition-colors">صفحه اصلی طلالایو</a>
+                        <span class="text-slate-400 opacity-60">•</span>
+                        <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}" class="text-amber-400 hover:text-amber-300 transition-colors">طلافروشی‌های {{ $cityName ?? 'تهران' }}</a>
+                    </nav>
                 </div>
 
                 {{-- تاریخ و ساعت (سمت چپ) --}}
@@ -1077,17 +1122,24 @@
                 {{-- Background decorative glows inside the footer --}}
                 <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.15),transparent_50%)]"></div>
 
-                {{-- سمت راست: کپسول تبلیغ و راه‌اندازی اختصاصی TalaLive جهت جذب همکاران و طلافروشان --}}
+                {{-- سمت راست: کپسول تبلیغ و راه‌اندازی اختصاصی TalaLive و لینک برگشتی به شهر --}}
                 <div class="flex items-center gap-3 h-full z-10">
-                    <a href="https://talalive.ir" target="_blank" 
+                    <a href="{{ url('/') }}" 
                        class="group flex items-center gap-2.5 px-4 py-1.5 rounded-full border transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer"
                        :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'">
                         <span class="flex h-2.5 w-2.5 relative">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
                         </span>
-                        <span class="text-xs font-black tracking-wide">راه‌اندازی این تابلوی هوشمند برای فروشگاه شما:</span>
+                        <span class="text-xs font-black tracking-wide">راه‌اندازی تابلوی هوشمند:</span>
                         <span class="font-mono font-black text-xs px-2.5 py-0.5 rounded-full" :class="isLightTheme ? 'bg-amber-300/80 text-amber-950' : 'bg-amber-400/30 text-amber-300 border border-amber-400/40'">TalaLive.ir</span>
+                    </a>
+
+                    <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}" 
+                       class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 hover:border-amber-400/40 transition-all hover:scale-105"
+                       :class="isLightTheme ? 'text-slate-800 bg-black/5 hover:bg-black/10' : 'text-slate-200 bg-white/5 hover:bg-white/10'">
+                        <span>مراکز طلای {{ $cityName ?? 'تهران' }}</span>
+                        <span>←</span>
                     </a>
                 </div>
 

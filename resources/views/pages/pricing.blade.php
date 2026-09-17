@@ -62,6 +62,13 @@
         <p class="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
             بدون هیچ هزینه سخت‌افزاری یا دستگاه‌های گران‌قیمت. با همان تلویزیون مغازه شروع کنید.
         </p>
+
+        <div class="pt-2 flex items-center justify-center gap-3">
+            <a href="{{ url('/demo') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-bold text-xs transition-all shadow-sm">
+                <span>⚡ مشاهده پیش‌نمایش زنده تابلو بدون نیاز به ثبت‌نام (/demo)</span>
+                <span>←</span>
+            </a>
+        </div>
     </div>
 
     {{-- پلن‌های اشتراک --}}
@@ -124,6 +131,44 @@
             </div>
             <a href="{{ route('admin.register') }}" class="w-full py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs text-center transition-all cursor-pointer">
                 انتخاب پلن فصلی
+            </a>
+        </div>
+    </div>
+
+    {{-- بخش مقایسه با سایر راه‌حل‌ها و رقبا --}}
+    <div class="mt-16 pt-12 border-t border-slate-200 dark:border-slate-800 space-y-8">
+        <div class="text-center space-y-3">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                مقایسه شفاف طلالایو با سایر گزینه‌ها و نرم‌افزارهای بازار
+            </h2>
+            <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto">
+                قبل از خرید و تصمیم‌گیری، بررسی و مقایسه مستقل ویژگی‌ها، هزینه‌ها و معماری نرم‌افزارهای صنف طلا را مطالعه کنید:
+            </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="{{ route('public.compare.tabangohar') }}" class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 transition-all hover:shadow-lg group">
+                <div class="text-xs text-amber-500 font-bold mb-1">مقایسه نرم‌افزار</div>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors">مقایسه با تابان گوهر</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">بررسی مقایسه‌ای نیاز به مینی‌کیس، هزینه اولیه و امکانات تحت وب در برابر تابان گوهر.</p>
+            </a>
+
+            <a href="{{ route('public.compare.tgju-tv') }}" class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 transition-all hover:shadow-lg group">
+                <div class="text-xs text-amber-500 font-bold mb-1">مقایسه تلویزیون نرخ</div>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors">مقایسه با TGJU TV</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">تفاوت سامانه ابری تخصصی طلافروشی با نسخه نمایش عمومی و رایگان شبکه اطلاع‌رسانی طلا.</p>
+            </a>
+
+            <a href="{{ route('public.compare.tablotala') }}" class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 transition-all hover:shadow-lg group">
+                <div class="text-xs text-amber-500 font-bold mb-1">مقایسه اپلیکیشن</div>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors">مقایسه با تابلوی نرخ طلا</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">سامانه ابری تحت وب در برابر اپلیکیشن‌های اندرویدی نیازمند نصب و آپدیت دستی.</p>
+            </a>
+
+            <a href="{{ route('public.led-vs-smart-board') }}" class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 transition-all hover:shadow-lg group">
+                <div class="text-xs text-amber-500 font-bold mb-1">تحلیل اقتصادی TCO</div>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors">مقایسه هزینه با تابلوی LED</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 line-clamp-2">محاسبه هزینه‌های پنهان خرید ماژول، استهلاک، پاور و تعمیرات در افق ۳ ساله.</p>
             </a>
         </div>
     </div>

@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'صفحه مورد نظر یافت نشد (خطای ۴۰۴) | طلالایو')
+@section('meta_robots', 'noindex, nofollow')
 @section('meta_description', 'صفحه‌ای که به دنبال آن بودید یافت نشد یا به آدرس جدیدی منتقل شده است.')
 
 @section('content')

@@ -1,7 +1,8 @@
 @extends('layouts.public')
 
-@section('title', 'ماشین حساب طلا و حباب سنج سکه | محاسبه قیمت طلا در مغازه طلا فروشی | طلالایو')
-@section('meta_description', 'محاسبه آنلاین و دقیق قیمت طلا در طلا فروشی، طلای دست دوم و کم اجرت. محاسبه آنی حباب سکه امامی، بهار آزادی، نیم سکه و ربع سکه با نرخ لحظه ای طلالایو.')
+@section('title', 'ماشین حساب طلا — ابزارهای آنلاین محاسبات طلا و سکه | طلالایو')
+@section('meta_description', 'مجموعه تخصصی ماشین حساب طلا: ۷ ابزار آنلاین محاسبه فاکتور طلا، حباب سکه، اجرت ساخت، طلای دست دوم، آبشده و عیار با فرمول رسمی اتحادیه در سال ۱۴۰۵.')
+@section('canonical', 'https://talalive.ir/gold-calculator')
 
 @section('schema')
 <script type="application/ld+json">
@@ -10,26 +11,64 @@
   "@@graph": [
     {
       "@@type": "WebApplication",
-      "name": "ماشین حساب آنلاین قیمت طلا و حباب سنج سکه طلالایو",
-      "alternateName": [
-        "ماشین حساب طلا",
-        "محاسبه انلاین طلا",
-        "محاسبه قیمت طلا در طلا فروشی",
-        "حباب سنج سکه",
-        "محاسبه طلای دست دوم",
-        "محاسبه طلای کم اجرت",
-        "حباب سکه بهار آزادی",
-        "حباب نیم سکه",
-        "حباب ربع سکه"
-      ],
+      "name": "مجموعه تخصصی ماشین حساب طلا و ابزارهای صنف طلالایو",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
+      "url": "https://talalive.ir/gold-calculator",
       "offers": {
         "@@type": "Offer",
         "price": "0",
         "priceCurrency": "IRR"
       },
-      "description": "ابزار رایگان و تعاملی محاسبه فاکتور طلا با اجرت، طلای دست دوم و کم اجرت، سود ۷ درصد مغازه طلا فروشی و حباب سنج انواع سکه بهار آزادی، نیم سکه و ربع سکه."
+      "description": "۷ ابزار آنلاین و رایگان محاسبات طلا و سکه شامل محاسبه فاکتور طلا با اجرت و مالیات، حباب سنج سکه، طلای دست دوم، آبشده، مظنه و تبدیل عیار."
+    },
+    {
+      "@@type": "ItemList",
+      "name": "ابزارهای تخصصی ماشین حساب طلا طلالایو",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "محاسبه قیمت طلا با اجرت و مالیات",
+          "url": "https://talalive.ir/tools/gold-price-calculator"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "حباب سنج سکه",
+          "url": "https://talalive.ir/tools/coin-bubble"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 3,
+          "name": "محاسبه اجرت طلا",
+          "url": "https://talalive.ir/tools/wage-calculator"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 4,
+          "name": "قیمت‌گذاری طلای دست دوم",
+          "url": "https://talalive.ir/tools/second-hand-gold"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 5,
+          "name": "تبدیل مظنه به گرم",
+          "url": "https://talalive.ir/tools/mesghal"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 6,
+          "name": "محاسبه طلای آبشده",
+          "url": "https://talalive.ir/tools/melted-gold"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 7,
+          "name": "تبدیل عیار طلا",
+          "url": "https://talalive.ir/tools/karat-converter"
+        }
+      ]
     },
     {
       "@@type": "BreadcrumbList",
@@ -43,7 +82,7 @@
         {
           "@@type": "ListItem",
           "position": 2,
-          "name": "ماشین‌حساب آنلاین طلا و حباب سکه",
+          "name": "ماشین حساب طلا",
           "item": "https://talalive.ir/gold-calculator"
         }
       ]
@@ -54,339 +93,322 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16" 
-     x-data="{
-        activeTab: 'gold',
-        // متغیرهای طلا
-        gramRate: {{ $rates['gold18'] }},
-        weight: 4.5,
-        ojratPercent: 12,
-        profitPercent: 7,
-        taxPercent: 9,
+<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
 
-        // متغیرهای حباب سکه
-        coinType: 'emami',
-        marketCoinPrice: {{ $rates['coin_emami'] }},
-        gold24Rate: {{ $rates['gold24'] }},
-
-        // توابع محاسباتی طلا
-        get rawGoldTotal() {
-            return Math.round(this.gramRate * this.weight);
-        },
-        get ojratTotal() {
-            return Math.round(this.rawGoldTotal * (this.ojratPercent / 100));
-        },
-        get profitTotal() {
-            return Math.round((this.rawGoldTotal + this.ojratTotal) * (this.profitPercent / 100));
-        },
-        get taxTotal() {
-            // بر اساس قانون جدید مالیات طلا: ۹ درصد فقط به سود و اجرت تعلق می‌گیرد
-            return Math.round((this.ojratTotal + this.profitTotal) * (this.taxPercent / 100));
-        },
-        get grandTotal() {
-            return this.rawGoldTotal + this.ojratTotal + this.profitTotal + this.taxTotal;
-        },
-
-        // محاسبات حباب سکه (وزن بر حسب گرم با عیار ۹۰۰ از ۲۴ عیار)
-        get coinSpecs() {
-            const specs = {
-                emami: { weight: 8.133, purity: 0.900, name: 'سکه تمام طرح جدید (امامی)' },
-                bahar: { weight: 8.133, purity: 0.900, name: 'سکه بهار آزادی' },
-                half: { weight: 4.066, purity: 0.900, name: 'نیم سکه بهار آزادی' },
-                quarter: { weight: 2.033, purity: 0.900, name: 'ربع سکه بهار آزادی' },
-                gerami: { weight: 1.011, purity: 0.900, name: 'سکه گرمی' }
-            };
-            return specs[this.coinType] || specs.emami;
-        },
-        get intrinsicCoinValue() {
-            // ارزش ذاتی = وزن * (عیار / ۲۴) * قیمت هر گرم ۲۴ عیار
-            const pureWeight = this.coinSpecs.weight * (this.coinSpecs.purity / 1); // 90% طلا
-            // تبدیل به طلای ۱۸ عیار یا ۲۴ عیار
-            return Math.round(this.coinSpecs.weight * (900 / 750) * this.gramRate);
-        },
-        get coinBubbleToman() {
-            return Math.round(this.marketCoinPrice - this.intrinsicCoinValue);
-        },
-        get coinBubblePercent() {
-            if (this.marketCoinPrice <= 0) return 0;
-            return ((this.coinBubbleToman / this.marketCoinPrice) * 100).toFixed(1);
-        },
-
-        changeCoin(type, price) {
-            this.coinType = type;
-            this.marketCoinPrice = price;
-        },
-
-        formatNumber(num) {
-            return new Intl.NumberFormat('fa-IR').format(Math.round(num));
-        }
-     }">
-
-    {{-- هدر صفحه --}}
+    {{-- هدر صفحه و تعریف ۴۰ کلمه‌ای منبع حقیقت --}}
     <div class="text-center space-y-4 max-w-3xl mx-auto">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold">
             <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
             <span>متصل به نرخ‌های زنده سامانه طلالایو (آخرین بروزرسانی: {{ $lastUpdated }})</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
-            ماشین‌حساب آنلاین قیمت طلا و حباب انواع سکه
+            ماشین حساب طلا و ابزارهای آنلاین محاسبات صنف طلا
         </h1>
-        <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
-            محاسبه دقیق فاکتور خرید طلا مطابق فرمول رسمی اتحادیه و قانون جدید مالیات بر ارزش افزوده، به همراه آنالیز حباب سکه با نرخ‌های رسمی روز.
+        <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-justify sm:text-center">
+            <strong>ماشین حساب طلا</strong> مجموعه‌ای از ابزارهای آنلاین و تخصصی محاسباتی برای طلافروشان و خریداران است که بر مبنای فرمول‌های رسمی اتحادیه، نرخ طلای خام، سود ۷ درصد قانونی، اجرت ساخت، ارزش ذاتی و حباب سکه را شفاف و دقیق محاسبه می‌کند.
         </p>
     </div>
 
-    {{-- نوار تب‌های انتخاب ابزار --}}
-    <div class="flex justify-center">
-        <div class="bg-slate-200/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-300 dark:border-slate-800 flex gap-2">
-            <button @click="activeTab = 'gold'" 
-                    :class="activeTab === 'gold' ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
-                    class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
-                محاسبه قیمت طلا و فاکتور
-            </button>
-            <button @click="activeTab = 'bubble'" 
-                    :class="activeTab === 'bubble' ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
-                    class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer">
-                حباب‌سنج انواع سکه
-            </button>
+    {{-- نوار زنده نرخ‌های بازار --}}
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+            <div class="text-[11px] text-slate-500">طلای ۱۸ عیار (۷۵۰)</div>
+            <div class="text-sm font-bold font-mono text-amber-600 dark:text-amber-400 mt-1">
+                {{ number_format($rates['gold18']) }} <span class="text-[10px] text-slate-400">تومان</span>
+            </div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+            <div class="text-[11px] text-slate-500">مظنه مثقال تهران</div>
+            <div class="text-sm font-bold font-mono text-amber-600 dark:text-amber-400 mt-1">
+                {{ number_format($rates['mesghal']) }} <span class="text-[10px] text-slate-400">تومان</span>
+            </div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+            <div class="text-[11px] text-slate-500">سکه تمام امامی</div>
+            <div class="text-sm font-bold font-mono text-slate-900 dark:text-white mt-1">
+                {{ number_format($rates['coin_emami']) }} <span class="text-[10px] text-slate-400">تومان</span>
+            </div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+            <div class="text-[11px] text-slate-500">سکه تمام بهار آزادی</div>
+            <div class="text-sm font-bold font-mono text-slate-900 dark:text-white mt-1">
+                {{ number_format($rates['coin_bahar']) }} <span class="text-[10px] text-slate-400">تومان</span>
+            </div>
+        </div>
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center col-span-2 sm:col-span-4 lg:col-span-1">
+            <div class="text-[11px] text-slate-500">طلای ۲۴ عیار (۹۹۹)</div>
+            <div class="text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">
+                {{ number_format($rates['gold24']) }} <span class="text-[10px] text-slate-400">تومان</span>
+            </div>
         </div>
     </div>
 
-    {{-- بخش ۱: ماشین حساب طلا با اجرت و سود --}}
-    <div x-show="activeTab === 'gold'" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {{-- ورودی‌های کاربر --}}
-        <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
-                <span>پارامترهای محاسبه فاکتور طلا</span>
+    {{-- کارت‌های هفت ابزار تخصصی (Hub Grid) --}}
+    <div class="space-y-6">
+        <div class="text-center space-y-2">
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                دسترسی به ۷ ابزار آنلاین محاسبات طلا و مسکوکات
             </h2>
+            <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">
+                ابزار مورد نظر خود را انتخاب کنید و محاسبات را به صورت تعاملی و متصل به نرخ‌های روز انجام دهید
+            </p>
+        </div>
 
-            {{-- قیمت هر گرم طلای ۱۸ عیار --}}
-            <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">نرخ پایه هر گرم طلای ۱۸ عیار خام (تومان):</label>
-                    <span class="text-amber-600 dark:text-amber-400 font-mono font-bold" x-text="formatNumber(gramRate) + ' تومان'"></span>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            {{-- ابزار ۱: فاکتور طلا --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">🧮</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300">فرمول رسمی اتحادیه</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        محاسبه قیمت طلا با اجرت و مالیات
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        محاسبه دقیق فاکتور خرید طلا با تفکیک سود ۷ درصد طلافروشی، اجرت ساخت کارگاه و اعمال مالیات ۹ درصدی ارزش افزوده فقط بر سود و اجرت.
+                    </p>
                 </div>
-                <input type="number" x-model.number="gramRate" class="w-full bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
+                <a href="/tools/gold-price-calculator" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs text-center transition-colors shadow-sm block">
+                    محاسبه فاکتور رسمی طلا ←
+                </a>
             </div>
 
-            {{-- وزن طلا به گرم --}}
-            <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">وزن مصنوعات یا زیورآلات (گرم):</label>
-                    <span class="text-amber-600 dark:text-amber-400 font-mono font-bold" x-text="weight + ' گرم'"></span>
+            {{-- ابزار ۲: حباب سنج سکه --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg">🪙</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">۵ نوع سکه بانکی</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        حباب سنج و حباب گیر انواع سکه
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        محاسبه بلادرنگ ارزش ذاتی بر اساس طلای ۹۰۰ و درصد حباب سکه تمام امامی، بهار آزادی، نیم سکه، ربع سکه و سکه گرمی به همراه هشدار ریسک.
+                    </p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <input type="range" min="0.5" max="100" step="0.1" x-model.number="weight" class="w-full accent-amber-500 cursor-pointer">
-                    <input type="number" step="0.01" x-model.number="weight" class="w-24 bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-mono text-center text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
-                </div>
+                <a href="/tools/coin-bubble" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs text-center transition-colors shadow-sm block">
+                    آنالیز حباب انواع سکه ←
+                </a>
             </div>
 
-            {{-- اجرت ساخت طلا (درصد) --}}
-            <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">اجرت ساخت (درصد):</label>
-                    <span class="text-amber-600 dark:text-amber-400 font-mono font-bold" x-text="ojratPercent + ' ٪'"></span>
+            {{-- ابزار ۳: محاسبه اجرت --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg">💎</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300">جدول درصدهای ۱۴۰۵</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        محاسبه اجرت ساخت و کارمزد طلا
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        محاسبه دستمزد ساخت النگو، سرویس، زنجیر و کارهای خارجی به تفکیک درصد و ریال به همراه جدول مرجع اجرت متداول مصنوعات در بازار.
+                    </p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <input type="range" min="0" max="40" step="1" x-model.number="ojratPercent" class="w-full accent-amber-500 cursor-pointer">
-                    <input type="number" x-model.number="ojratPercent" class="w-24 bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-mono text-center text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
-                </div>
-                <p class="text-[11px] text-slate-500">معمولاً النگو و طلای بدون نگین ۱۰ الی ۱۶ درصد و سرویس‌های خارجی ۱۸ تا ۲۸ درصد اجرت دارند.</p>
+                <a href="/tools/wage-calculator" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs text-center transition-colors shadow-sm block">
+                    محاسبه اجرت ساخت طلا ←
+                </a>
             </div>
 
-            {{-- سود طلافروشی (درصد) --}}
-            <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">سود قانونی طلافروشی (طبق مصوبه اتحادیه ۷٪):</label>
-                    <span class="text-amber-600 dark:text-amber-400 font-mono font-bold" x-text="profitPercent + ' ٪'"></span>
+            {{-- ابزار ۴: طلای دست دوم --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg">♻️</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-700 dark:text-blue-300">طلای مستعمل و کم‌اجرت</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        قیمت‌گذاری طلای دست دوم و مستعمل
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        محاسبه ارزش خرید طلای کارکرده بدون اجرت با احتساب کسر افت وزنی سنگ و نگین، سود مجاز ۵ الی ۷ درصدی و قیمت منصفانه خرید مغازه.
+                    </p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <input type="range" min="0" max="15" step="1" x-model.number="profitPercent" class="w-full accent-amber-500 cursor-pointer">
-                    <input type="number" x-model.number="profitPercent" class="w-24 bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-mono text-center text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
-                </div>
+                <a href="/tools/second-hand-gold" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs text-center transition-colors shadow-sm block">
+                    محاسبه قیمت طلای دست دوم ←
+                </a>
             </div>
 
-            {{-- مالیات بر ارزش افزوده --}}
-            <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">مالیات بر ارزش افزوده (۹٪ طبق قانون فقط بر سود و اجرت):</label>
-                    <span class="text-emerald-600 dark:text-emerald-400 font-mono font-bold">قانون مصوب ۱۴۰۰</span>
+            {{-- ابزار ۵: مظنه به گرم --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">⚖️</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300">مظنه ۱۷ به ۱۸ عیار</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        تبدیل مظنه مثقال به گرم طلای ۱۸ عیار
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        تبدیل ریاضی یک مثقال طلای ۱۷ عیار (۴.۳۳۱۸ گرم) به قیمت یک گرم طلای ۱۸ عیار (۷۵۰) با فرمول دقیق تقسیم بر ۴.۳۳۱۸ و ۴.۶۰۸.
+                    </p>
                 </div>
+                <a href="/tools/mesghal" class="w-full py-3 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white font-bold text-xs text-center transition-colors shadow-sm block">
+                    تبدیل مثقال به گرم ←
+                </a>
+            </div>
+
+            {{-- ابزار ۶: طلای آبشده --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg">🔥</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-700 dark:text-rose-300">انگ و ری‌گیری</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        محاسبه طلای آبشده و خط آزمایشگاه
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        تبدیل وزن و عیار اعلامی آزمایشگاه ری‌گیری به طلای ۱۸ عیار استاندارد، محاسبه ارزش ریالی خط آبشده و استعلام شماره پاکت.
+                    </p>
+                </div>
+                <a href="/tools/melted-gold" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs text-center transition-colors shadow-sm block">
+                    محاسبه طلای آبشده ←
+                </a>
+            </div>
+
+            {{-- ابزار ۷: تبدیل عیار --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4 md:col-span-2 lg:col-span-1">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="w-10 h-10 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center text-lg">🔄</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-teal-500/10 text-teal-700 dark:text-teal-300">طلا و نقره</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                        تبدیل عیار طلا و نقره (۷۰۵ تا ۹۹۹)
+                    </h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        فرمول استاندارد تبدیل وزن عیارهای مختلف طلا (۷۰۵، ۷۴۰، ۷۵۰، ۸۷۵، ۹۹۹) و عیارهای نقره ۹۲۵ و ۹۹۵ به معادل ۱۸ عیار استاندارد.
+                    </p>
+                </div>
+                <a href="/tools/karat-converter" class="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs text-center transition-colors shadow-sm block">
+                    تبدیل عیارهای طلا و نقره ←
+                </a>
             </div>
 
         </div>
-
-        {{-- خروجی فاکتور نهایی --}}
-        <div class="lg:col-span-5 glass-card-gold p-6 sm:p-8 rounded-3xl space-y-6">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">ریز محاسبات فاکتور رسمی طلا</h2>
-
-            <div class="space-y-3.5 text-xs sm:text-sm border-b border-slate-200 dark:border-slate-800 pb-5">
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>ارزش طلای خام:</span>
-                    <span class="font-mono text-slate-900 dark:text-white font-bold" x-text="formatNumber(rawGoldTotal) + ' تومان'"></span>
-                </div>
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>اجرت ساخت کارگاه:</span>
-                    <span class="font-mono text-amber-600 dark:text-amber-400 font-bold" x-text="'+ ' + formatNumber(ojratTotal) + ' تومان'"></span>
-                </div>
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>سود مصوب فروشنده (۷٪):</span>
-                    <span class="font-mono text-amber-600 dark:text-amber-400 font-bold" x-text="'+ ' + formatNumber(profitTotal) + ' تومان'"></span>
-                </div>
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>مالیات ارزش افزوده (۹٪ سود و اجرت):</span>
-                    <span class="font-mono text-emerald-600 dark:text-emerald-400 font-bold" x-text="'+ ' + formatNumber(taxTotal) + ' تومان'"></span>
-                </div>
-            </div>
-
-            {{-- مبلغ نهایی پرداختی --}}
-            <div class="bg-amber-500/10 dark:bg-slate-950/80 p-5 rounded-2xl border border-amber-500/30 text-center space-y-2">
-                <p class="text-xs text-slate-600 dark:text-slate-400 font-bold">مبلغ نهایی قابل پرداخت مشتری:</p>
-                <div class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-amber-300 dark:via-amber-400 dark:to-yellow-400 font-mono" x-text="formatNumber(grandTotal) + ' تومان'">
-                </div>
-            </div>
-
-            {{-- یادداشت آموزشی --}}
-            <div class="bg-slate-100 dark:bg-slate-900/60 p-4 rounded-xl text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed border border-slate-200 dark:border-slate-800">
-                <strong class="text-amber-600 dark:text-amber-400">💡 نکته مهم حقوقی:</strong> بر اساس قانون جدید مصوب سال ۱۴۰۰ مجلس شورای اسلامی، اصل طلای خام از مالیات بر ارزش افزوده معاف است و مالیات ۹ درصد تنها باید بر سرجمع «اجرت ساخت + سود مغازه‌دار» اعمال شود.
-            </div>
-        </div>
-
     </div>
 
-    {{-- بخش ۲: حباب‌سنج سکه --}}
-    <div x-show="activeTab === 'bubble'" x-cloak class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {{-- انتخاب سکه و قیمت --}}
-        <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
-                <span>انتخاب نوع مسکوکات بانکی</span>
-            </h2>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <button @click="changeCoin('emami', {{ $rates['coin_emami'] }})" 
-                        :class="coinType === 'emami' ? 'border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'"
-                        class="p-4 rounded-2xl border text-center transition-all cursor-pointer shadow-sm">
-                    <div class="font-bold text-xs">سکه تمام امامی</div>
-                    <div class="text-[11px] font-mono mt-1 text-slate-500 dark:text-slate-400" x-text="formatNumber({{ $rates['coin_emami'] }})"></div>
-                </button>
-
-                <button @click="changeCoin('bahar', {{ $rates['coin_bahar'] }})" 
-                        :class="coinType === 'bahar' ? 'border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'"
-                        class="p-4 rounded-2xl border text-center transition-all cursor-pointer shadow-sm">
-                    <div class="font-bold text-xs">تمام بهار آزادی</div>
-                    <div class="text-[11px] font-mono mt-1 text-slate-500 dark:text-slate-400" x-text="formatNumber({{ $rates['coin_bahar'] }})"></div>
-                </button>
-
-                <button @click="changeCoin('half', {{ $rates['coin_half'] }})" 
-                        :class="coinType === 'half' ? 'border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'"
-                        class="p-4 rounded-2xl border text-center transition-all cursor-pointer shadow-sm">
-                    <div class="font-bold text-xs">نیم سکه</div>
-                    <div class="text-[11px] font-mono mt-1 text-slate-500 dark:text-slate-400" x-text="formatNumber({{ $rates['coin_half'] }})"></div>
-                </button>
-
-                <button @click="changeCoin('quarter', {{ $rates['coin_quarter'] }})" 
-                        :class="coinType === 'quarter' ? 'border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'"
-                        class="p-4 rounded-2xl border text-center transition-all cursor-pointer shadow-sm">
-                    <div class="font-bold text-xs">ربع سکه</div>
-                    <div class="text-[11px] font-mono mt-1 text-slate-500 dark:text-slate-400" x-text="formatNumber({{ $rates['coin_quarter'] }})"></div>
-                </button>
-
-                <button @click="changeCoin('gerami', {{ $rates['coin_gerami'] }})" 
-                        :class="coinType === 'gerami' ? 'border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'"
-                        class="p-4 rounded-2xl border text-center transition-all cursor-pointer shadow-sm">
-                    <div class="font-bold text-xs">سکه گرمی</div>
-                    <div class="text-[11px] font-mono mt-1 text-slate-500 dark:text-slate-400" x-text="formatNumber({{ $rates['coin_gerami'] }})"></div>
-                </button>
-            </div>
-
-            {{-- قیمت بازاری سکه --}}
-            <div class="space-y-2 pt-3">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">قیمت معامله سکه در بازار (تومان):</label>
-                    <span class="text-amber-600 dark:text-amber-400 font-mono font-bold" x-text="formatNumber(marketCoinPrice) + ' تومان'"></span>
-                </div>
-                <input type="number" x-model.number="marketCoinPrice" class="w-full bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
-            </div>
-
-            <div class="space-y-2">
-                <div class="flex justify-between items-center text-xs">
-                    <label class="text-slate-700 dark:text-slate-300 font-bold">مبنای طلای خام (هر گرم ۱۸ عیار):</label>
-                    <span class="text-amber-600 dark:text-amber-400 font-mono font-bold" x-text="formatNumber(gramRate) + ' تومان'"></span>
-                </div>
-                <input type="number" x-model.number="gramRate" class="w-full bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500">
-            </div>
-
+    {{-- جدول مقایسه و راهنمای جامع ابزارها --}}
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <span>جدول راهنمای انتخاب ابزار مناسب در صنف طلا و جواهر</span>
+        </h2>
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table class="w-full text-right text-xs sm:text-sm">
+                <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold">
+                    <tr>
+                        <th class="p-3.5">عنوان ابزار</th>
+                        <th class="p-3.5">پارامترهای ورودی</th>
+                        <th class="p-3.5">خروجی محاسباتی</th>
+                        <th class="p-3.5">کاربر اصلی</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/gold-price-calculator" class="text-amber-600 dark:text-amber-400 hover:underline">محاسبه قیمت طلا با اجرت</a></td>
+                        <td class="p-3.5">وزن، اجرت ساخت، نرخ روز ۱۸</td>
+                        <td class="p-3.5">تفکیک طلای خام، سود، اجرت و مالیات</td>
+                        <td class="p-3.5">خریدار زیورآلات و طلافروش ویترین</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/coin-bubble" class="text-amber-600 dark:text-amber-400 hover:underline">حباب سنج انواع سکه</a></td>
+                        <td class="p-3.5">نوع سکه، قیمت روز بازار، انس</td>
+                        <td class="p-3.5">ارزش ذاتی، حباب تومانی و درصد حباب</td>
+                        <td class="p-3.5">سرمایه‌گذاران سکه و صرافان</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/wage-calculator" class="text-amber-600 dark:text-amber-400 hover:underline">محاسبه اجرت ساخت</a></td>
+                        <td class="p-3.5">نوع مصنوع، وزن، درصد یا تومان اجرت</td>
+                        <td class="p-3.5">اجرت کل، سود ۷ درصد و مالیات اجرت</td>
+                        <td class="p-3.5">کارگاه‌های طلاسازی و خریداران</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/second-hand-gold" class="text-amber-600 dark:text-amber-400 hover:underline">قیمت‌گذاری طلای دست دوم</a></td>
+                        <td class="p-3.5">وزن ناخالص، کسر افت، نرخ خام</td>
+                        <td class="p-3.5">مبلغ نهایی خرید منصفانه</td>
+                        <td class="p-3.5">فروشندگان طلای کارکرده و طلافروش</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/mesghal" class="text-amber-600 dark:text-amber-400 hover:underline">تبدیل مظنه به گرم</a></td>
+                        <td class="p-3.5">مظنه روز مثقال ۱۷ عیار</td>
+                        <td class="p-3.5">قیمت دقیق یک گرم طلای ۱۸ عیار</td>
+                        <td class="p-3.5">بنکداران و مغازه‌داران</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/melted-gold" class="text-amber-600 dark:text-amber-400 hover:underline">محاسبه طلای آبشده</a></td>
+                        <td class="p-3.5">وزن ترازوی آبشده، عیار خط ری‌گیری</td>
+                        <td class="p-3.5">وزن تبدیل‌شده به عیار ۷۵۰ و ارزش کل</td>
+                        <td class="p-3.5">معامله‌گران آبشده و کیفی‌ها</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3.5 font-bold"><a href="/tools/karat-converter" class="text-amber-600 dark:text-amber-400 hover:underline">تبدیل عیار طلا و نقره</a></td>
+                        <td class="p-3.5">وزن اولیه، عیار مبدا، عیار مقصد</td>
+                        <td class="p-3.5">وزن معادل در عیار مقصد</td>
+                        <td class="p-3.5">ریخته‌گران، آزمایشگاه‌ها و کارگاه‌ها</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        {{-- نتایج تحلیل حباب سکه --}}
-        <div class="lg:col-span-5 glass-card-gold p-6 sm:p-8 rounded-3xl space-y-6">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white" x-text="'آنالیز حباب ' + coinSpecs.name"></h2>
-
-            <div class="space-y-3.5 text-xs sm:text-sm border-b border-slate-200 dark:border-slate-800 pb-5">
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>وزن دقیق سکه:</span>
-                    <span class="font-mono text-slate-900 dark:text-white font-bold" x-text="coinSpecs.weight + ' گرم'"></span>
-                </div>
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>عیار ضرب بانکی:</span>
-                    <span class="font-mono text-slate-900 dark:text-white font-bold">۹۰۰ از ۱۰۰۰ (۲۱.۶ عیار)</span>
-                </div>
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>ارزش طلای خالص درون سکه:</span>
-                    <span class="font-mono text-emerald-600 dark:text-emerald-400 font-bold" x-text="formatNumber(intrinsicCoinValue) + ' تومان'"></span>
-                </div>
-                <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                    <span>حباب اسمی (اضافه‌بها):</span>
-                    <span class="font-mono text-rose-600 dark:text-red-400 font-bold" x-text="formatNumber(coinBubbleToman) + ' تومان'"></span>
-                </div>
-            </div>
-
-            {{-- درصد حباب --}}
-            <div class="bg-amber-500/10 dark:bg-slate-950/80 p-5 rounded-2xl border border-amber-500/30 text-center space-y-2">
-                <p class="text-xs text-slate-600 dark:text-slate-400 font-bold">درصد حباب نسبت به قیمت بازار:</p>
-                <div class="text-3xl font-black font-mono" 
-                     :class="coinBubblePercent > 20 ? 'text-rose-600 dark:text-red-400' : (coinBubblePercent > 10 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400')" 
-                     x-text="coinBubblePercent + ' ٪'">
-                </div>
-                <p class="text-[11px]" :class="coinBubblePercent > 20 ? 'text-rose-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-400'">
-                    <span x-show="coinBubblePercent > 20">⚠️ حباب بسیار بالاست؛ خرید برای سرمایه‌گذاری پرریسک می‌باشد.</span>
-                    <span x-show="coinBubblePercent <= 20 && coinBubblePercent > 10">⚡ حباب در وضعیت متوسط است.</span>
-                    <span x-show="coinBubblePercent <= 10">✅ حباب منطقی است و قیمت نزدیک به طلای خام می‌باشد.</span>
-                </p>
-            </div>
-        </div>
-
     </div>
 
-    {{-- محتوای متنی غنی و سئو درباره فرمول‌های طلا --}}
+    {{-- محتوای آموزشی سئو درباره فرمول‌های ۴ گانه صنف طلا --}}
     <div class="glass-panel p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">راهنمای محاسبه قیمت طلا در مغازه طلا فروشی و طلافروشی‌ها</h2>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            فرمول رسمی و قانونی محاسبه قیمت طلا در طلافروشی‌ها چیست؟
+        </h2>
         <p>
-            شاید برای شما هم پیش آمده باشد که هنگام خرید از مغازه طلا فروشی، قیمت نهایی فاکتور با ضرب ساده وزن در نرخ روز متفاوت باشد. در بازار طلای ایران، ۴ عامل کلیدی قیمت نهایی را در طلا فروشی مشخص می‌کنند:
+            در بازار طلای کشور، فاکتور رسمی فروش طلا از جمع چهار بخش مشخص تشکیل می‌شود:
         </p>
         <ol class="list-decimal list-inside space-y-2 text-slate-700 dark:text-slate-300">
-            <li><strong>ارزش طلای خام:</strong> وزن قطعه ضرب در قیمت روز طلای ۱۸ عیار (۷۵۰).</li>
-            <li><strong>اجرت ساخت:</strong> دستمزد کارگاه طلاسازی که بسته به مدل، ظرافت و سنگ‌های به کار رفته از ۷ درصد تا ۳۰ درصد متغیر است.</li>
-            <li><strong>سود طلا فروشی (طلافروش):</strong> طبق آیین‌نامه رسمی اتحادیه صنف طلا و جواهر، سود قانونی طلا فروشی معادل ۷ درصد از جمع طلای خام و اجرت می‌باشد.</li>
-            <li><strong>مالیات بر ارزش افزوده (VAT):</strong> مطابق ماده ۲۶ قانون مالیات بر ارزش افزوده مصوب دی‌ماه ۱۴۰۰، طلای خام از مالیات معاف است و مالیات ۹ درصدی تنها به جمع اجرت ساخت و سود فروشنده در طلا فروشی تعلق می‌گیرد.</li>
+            <li><strong>ارزش طلای خام:</strong> حاصل‌ضرب وزن دقیق قطعه طلا (گرم) در قیمت روز هر گرم طلای ۱۸ عیار استاندارد (۷۵۰).</li>
+            <li><strong>اجرت ساخت کارگاه:</strong> درصدی از ارزش طلای خام که به عنوان دستمزد طراحی و ساخت به کارگاه تعلق می‌گیرد (معمولاً بین ۸ تا ۲۵ درصد). برای بررسی جزئیات، مقاله <a href="/guides/goldsmith-legal-profit" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">سود قانونی طلافروشی</a> را بخوانید.</li>
+            <li><strong>سود طلافروش:</strong> طبق مصوبه مصوب صنف طلا و جواهر، دقیقاً معادل ۷ درصد از جمع طلای خام و اجرت ساخت است.</li>
+            <li><strong>مالیات بر ارزش افزوده (VAT):</strong> مطابق ماده ۲۶ قانون مالیات مصوب دی‌ماه ۱۴۰۰، اصل طلای خام از مالیات معاف بوده و مالیات ۹ درصدی تنها به جمع «اجرت ساخت + سود طلافروش» تعلق می‌گیرد.</li>
         </ol>
 
-        <div class="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white">فرمول محاسبه طلای دست دوم، طلای کم‌اجرت و بدون اجرت</h3>
+        <div class="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">
+                چرا طلالایو ابزارهای آنلاین را در اختیار عموم و طلافروشان قرار داده است؟
+            </h3>
             <p>
-                بسیاری از خریداران برای حفظ ارزش دارایی و سرمایه‌گذاری، به دنبال <strong>طلای دست دوم</strong> یا <strong>طلای کم‌اجرت</strong> هستند:
+                شفافیت قیمت‌گذاری، جلب اعتماد مشتریان گالری و جلوگیری از اشتباهات محاسباتی هدف اصلی توسعه ابزارهای طلالایو است. طلافروشان گرامی علاوه بر استفاده از این ابزارها، می‌توانند با راه‌اندازی <a href="/smart-gold-board" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلوی هوشمند طلافروشی</a> روی تلویزیون مغازه، تمامی این نرخ‌ها را به صورت خودکار و لحظه‌ای در معرض دید مراجعین قرار دهند.
             </p>
-            <ul class="list-disc list-inside space-y-1.5 text-slate-700 dark:text-slate-300">
-                <li><strong>طلای دست دوم و بدون اجرت:</strong> اجرت ساخت در این طلاها صفر درصد است و تنها سود مغازه طلا فروشی (معمولاً ۵ تا ۷ درصد) به ارزش طلای خام افزوده می‌شود.</li>
-                <li><strong>طلای کم‌اجرت:</strong> اجرت کارگاهی این کارها بسیار پایین است (بین ۳ تا ۷ درصد) و برای سرمایه‌گذاری گزینه‌ای ایده‌آل به حساب می‌آیند.</li>
-                <li><strong>سکه تمام بهار آزادی:</strong> برخلاف طلاهای زینتی، سکه‌ها اجرت ساخت ندارند و ارزش ذاتی آن‌ها منحصراً بر مبنای طلای عیار ۹۰۰ به همراه حباب بازار آزاد تعیین می‌گردد.</li>
-            </ul>
         </div>
     </div>
+
+    {{-- CTA میانی --}}
+    @include('partials.cta-inline', [
+        'title' => 'تمامی نرخ‌های روز و ابزارها را روی تلویزیون مغازه داشته باشید',
+        'subtitle' => 'با سامانه ابری طلالایو، بدون نیاز به مینی‌کیس، تلویزیون گالری خود را به تابلوی مدرن اعلام نرخ تبدیل کنید.',
+        'buttonText' => '۱۴ روز تست کاملاً رایگان',
+        'buttonUrl' => route('admin.register')
+    ])
+
+    {{-- مطالب مرتبط --}}
+    @include('partials.related-links', [
+        'links' => [
+            [
+                'url' => '/tools/gold-price-calculator',
+                'title' => 'محاسبه قیمت طلا با اجرت و مالیات',
+                'desc' => 'ماشین‌حساب آنلاین فاکتور رسمی طلا با سود ۷ درصد و مالیات ۹ درصد اجرت.'
+            ],
+            [
+                'url' => '/tools/coin-bubble',
+                'title' => 'حباب سنج سکه بانکی',
+                'desc' => 'آنالیز ارزش ذاتی و حباب ۵ نوع سکه بهار آزادی، نیم، ربع و گرمی.'
+            ],
+            [
+                'url' => '/smart-gold-board',
+                'title' => 'تابلوی هوشمند طلافروشی روی تلویزیون',
+                'desc' => 'نمایشگر دیجیتال قیمت طلا و سکه بدون نیاز به مینی‌کیس و کابل‌کشی.'
+            ]
+        ]
+    ])
 
 </div>
 @endsection

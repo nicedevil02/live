@@ -15,14 +15,13 @@ class FetchMarketDataMiddleware
     public function handle(Request $request, Closure $next)
     {
         // فقط اگر دیتای مارکت در کش وجود نداشت (مثلاً اولین بار بعد از نصب) اقدام به واکشی می‌کنیم.
-        // در بقیه موارد، Schedule Task مسئول آپدیت در پس‌زمینه است.
-        if (!\App\Models\MarketCache::exists()) {
-            try {
+        try {
+            if (!\App\Models\MarketCache::exists()) {
                 $service = resolve(MarketService::class);
                 $service->refreshIfStale(0); // اجبار به واکشی
-            } catch (\Throwable $e) {
-                \Log::warning('Market data initial fetch error: ' . $e->getMessage());
             }
+        } catch (\Throwable $e) {
+            \Log::warning('Market data initial fetch error: ' . $e->getMessage());
         }
 
         return $next($request);

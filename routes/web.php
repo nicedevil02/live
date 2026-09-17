@@ -46,6 +46,7 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
     Route::post('/register/send-otp', [AuthController::class, 'sendRegisterOtp'])->name('register.send-otp')->middleware('throttle:5,1');
     Route::post('/register', [AuthController::class, 'register']);
 });
+Route::redirect('/login', '/admin/login');
 
 // پنل مدیریت محافظت شده
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
@@ -194,6 +195,19 @@ Route::get('/smart-gold-board', [PublicPageController::class, 'smartGoldBoard'])
 Route::get('/led-vs-smart-board', [PublicPageController::class, 'ledVsSmartBoard'])->name('public.led-vs-smart-board');
 Route::get('/pricing', [PublicPageController::class, 'pricing'])->name('public.pricing');
 Route::get('/tv-setup-guide', [PublicPageController::class, 'tvSetupGuide'])->name('public.tv-setup-guide');
+Route::get('/digital-rate-board', [PublicPageController::class, 'digitalRateBoard'])->name('public.digital-rate-board');
+Route::get('/gold-board-without-device', [PublicPageController::class, 'goldBoardWithoutDevice'])->name('public.gold-board-without-device');
+
+// صفحات مقایسه رقبا و راهکارهای بازار (Competitor & Solution Comparison)
+Route::prefix('compare')->name('public.compare.')->group(function () {
+    Route::get('/tabangohar', [PublicPageController::class, 'compareTabangohar'])->name('tabangohar');
+    Route::get('/tgju-tv', [PublicPageController::class, 'compareTgjuTv'])->name('tgju-tv');
+    Route::get('/tablotala', [PublicPageController::class, 'compareTablotala'])->name('tablotala');
+});
+Route::get('/online-gold-price-board', [PublicPageController::class, 'onlineGoldPriceBoard'])->name('public.online-gold-price-board');
+Route::get('/currency-exchange-board', [PublicPageController::class, 'currencyExchangeBoard'])->name('public.currency-exchange-board');
+Route::get('/silver-bullion-board', [PublicPageController::class, 'silverBullionBoard'])->name('public.silver-bullion-board');
+Route::get('/android-tv-gold-board', [PublicPageController::class, 'androidTvGoldBoard'])->name('public.android-tv-gold-board');
 
 // صفحات اعتماد و حقوقی برند (E-E-A-T Signals)
 Route::get('/about', [PublicPageController::class, 'about'])->name('public.about');
@@ -209,6 +223,8 @@ Route::prefix('tools')->name('public.tools.')->group(function () {
     Route::get('/mesghal', [PublicPageController::class, 'toolMesghal'])->name('mesghal');
     Route::get('/melted-gold', [PublicPageController::class, 'toolMeltedGold'])->name('melted-gold');
     Route::get('/karat-converter', [PublicPageController::class, 'toolKaratConverter'])->name('karat-converter');
+    Route::get('/wage-calculator', [PublicPageController::class, 'toolWageCalculator'])->name('wage-calculator');
+    Route::get('/second-hand-gold', [PublicPageController::class, 'toolSecondHandGold'])->name('second-hand-gold');
 });
 
 // مقالات و پایگاه دانش صنف طلا و جواهر
@@ -217,6 +233,19 @@ Route::get('/guides/{slug}', [PublicPageController::class, 'guideShow'])->name('
 
 // هاب شهرهای قطب بازار طلا (Local SEO)
 Route::get('/cities/{city}', [PublicPageController::class, 'cityHub'])->name('public.cities.hub');
+
+// پیش‌نمایش آنلاین و دموی زنده تابلوی طلافروشی بدون نیاز به ثبت‌نام
+Route::get('/demo', [PublicPageController::class, 'demo'])->name('public.demo');
+
+// ویجت امبدشدنی نرخ طلا برای وب‌سایت‌ها و وبلاگ‌ها
+Route::get('/widget', [PublicPageController::class, 'widgetGuide'])->name('public.widget');
+Route::get('/widget/embed', [PublicPageController::class, 'widgetEmbed'])->name('public.widget.embed');
+
+// مستندات وب‌سرویس عمومی و API نرخ لحظه‌ای طلا
+Route::get('/api-docs', [PublicPageController::class, 'apiDocs'])->name('public.api-docs');
+
+// صفحه فرود اپلیکیشن موبایل و تلویزیون هوشمند طلالایو
+Route::get('/app', [PublicPageController::class, 'appLanding'])->name('public.app');
 
 // صفحه نمایشگر اختصاصی مغازه (باید آخرین مسیر باشد تا با سایر آدرس‌ها تداخل نداشته باشد)
 Route::get('/{username}', [PublicDisplayController::class, 'show'])->name('display.live');

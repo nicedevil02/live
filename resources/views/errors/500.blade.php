@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'خطای موقت سرور (خطای ۵۰۰) | طلالایو')
+@section('meta_robots', 'noindex, nofollow')
 @section('meta_description', 'خطای موقت در پردازش درخواست، تیم فنی طلالایو در حال بررسی و رفع موضوع است.')
 
 @section('content')
@@ -26,8 +27,11 @@
             <button onclick="window.location.reload()" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/20 transition-all cursor-pointer">
                 بارگذاری مجدد صفحه
             </button>
+            <a href="{{ route('public.smart-gold-board') }}" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500 text-amber-600 dark:text-amber-400 font-bold text-sm transition-all cursor-pointer">
+                تابلوی هوشمند طلافروشی
+            </a>
             <a href="/" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-sm transition-all cursor-pointer">
-                صفحه اصلی طلالایو
+                صفحه اصلی
             </a>
         </div>
     </div>

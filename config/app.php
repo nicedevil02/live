@@ -123,4 +123,24 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Organization Details for Schema & E-E-A-T
+    |--------------------------------------------------------------------------
+    */
+    'organization' => [
+        'name' => 'طلالایو (TalaLive)',
+        'same_as' => [
+            'https://rubika.ir/talalive',
+        ],
+        'address' => [
+            'locality' => 'همدان',
+            'region' => 'همدان',
+            'street' => 'راسته مظفریه',
+            'country' => 'IR',
+        ],
+        'phone_support' => '+989187009064',
+        'phone_tech' => '+988135223847',
+    ],
+
 ];
