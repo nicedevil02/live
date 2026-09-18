@@ -29,8 +29,8 @@
     <string name="disconnect_confirm_desc">با قطع اتصال، این دستگاه از پنل خارج شده و برای اتصال مجدد باید کد جدید بگیرید.</string>
     <string name="btn_disconnect_confirm">قطع اتصال قطعی</string>
     <string name="device_info_format">گالری: %1$s&#10;نسخه اپلیکیشن: %2$s (کد %3$d)&#10;نسخه وب‌ویو: %4$s&#10;آخرین نرخ دریافتی: %5$s</string>
-    <string name="device_revoked_title">این دستگاه از پنل مدیریت حذف شده است</string>
-    <string name="device_revoked_desc">برای اتصال مجدد این تلویزیون، کد جدید بگیرید.</string>
+    <string name="device_revoked_title">اتصال تلویزیون از پنل متوقف شده است</string>
+    <string name="device_revoked_desc">اتصال این دستگاه توسط پنل کاربری متوقف شد. با فعال‌سازی مجدد در پنل، تابلو خودکار وصل خواهد شد یا برای اتصال جدید کد تازه دریافت کنید.</string>
     <string name="btn_get_new_code">دریافت کد اتصال جدید</string>
     <string name="update_mandatory_title">دریافت نسخه جدید طلالایو TV</string>
     <string name="update_downloading">در حال دریافت فایل به‌روزرسانی: %1$d%%</string>

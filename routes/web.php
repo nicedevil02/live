@@ -181,6 +181,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::put('/devices/{device}', [TvDeviceController::class, 'update'])->name('devices.update');
     Route::delete('/devices/{device}', [TvDeviceController::class, 'destroy'])->name('devices.destroy');
     Route::post('/devices/{device}/restore', [TvDeviceController::class, 'restore'])->name('devices.restore');
+    Route::delete('/devices/{device}/force-delete', [TvDeviceController::class, 'forceDelete'])->name('devices.force-delete');
 
     // جفت‌سازی تلویزیون هوشمند با گوشی (نیازمند تایید کاربر با متد POST)
     Route::match(['get', 'post'], '/pair/{session_code}', [PublicDisplayController::class, 'pairDevice'])->name('pair');

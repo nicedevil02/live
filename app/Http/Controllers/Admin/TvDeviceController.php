@@ -111,4 +111,19 @@ class TvDeviceController extends Controller
         return redirect()->route('admin.devices.index')
             ->with('success', 'دستگاه تلویزیون مجدداً فعال شد.');
     }
+
+    /**
+     * حذف دائمی و کامل دستگاه از دیتابیس
+     */
+    public function forceDelete(TvDevice $device)
+    {
+        $this->ensureTvDevicesTable();
+        $this->authorizeDevice($device);
+
+        $label = $device->label ?: ('دستگاه #' . $device->id);
+        $device->delete();
+
+        return redirect()->route('admin.devices.index')
+            ->with('success', 'دستگاه «' . $label . '» با موفقیت از سیستم حذف شد.');
+    }
 }

@@ -92,6 +92,7 @@ class BoardActivity : Activity() {
         }
     }
 
+    private var isRevokedDialogShown = false
     private var currentHeartbeatIntervalMs = 30_000L
     private val heartbeatRunnable = object : Runnable {
         override fun run() {
@@ -652,7 +653,8 @@ class BoardActivity : Activity() {
                 if (hb != null) {
                     if (hb.revoked) {
                         Log.w(tag, "Device revoked from admin panel!")
-                        TvPrefs.clearPairing(this)
+                        isRevokedDialogShown = true
+                        currentHeartbeatIntervalMs = 15_000L
                         try {
                             webView?.stopLoading()
                             webView?.loadUrl("about:blank")
@@ -664,10 +666,17 @@ class BoardActivity : Activity() {
                             getString(R.string.device_revoked_desc),
                             getString(R.string.btn_get_new_code)
                         ) {
+                            TvPrefs.clearPairing(this)
                             startActivity(Intent(this, PairingActivity::class.java))
                             finish()
                         }
                     } else {
+                        if (isRevokedDialogShown) {
+                            Log.i(tag, "Device re-activated from panel! Restoring board.")
+                            isRevokedDialogShown = false
+                            hideDiagnostic()
+                            loadBoardUrl()
+                        }
                         if (hb.intervalSeconds > 0) {
                             currentHeartbeatIntervalMs = (hb.intervalSeconds.coerceIn(10, 900)) * 1000L
                         }
