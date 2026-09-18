@@ -9,7 +9,8 @@
   "url": "{{ $url ?? url()->current() }}",
   "provider": {
     "@@type": "Organization",
-    "name": "طلالایو (TalaLive)",
+    "name": "طلالایو (طلا لایو)",
+    "alternateName": ["طلا لایو", "طلالایو", "Tala Live", "TalaLive", "سامانه طلا لایو"],
     "url": "https://talalive.ir",
     "logo": "https://talalive.ir/images/logo.png"
   },

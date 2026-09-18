@@ -23,18 +23,18 @@
         }
     </script>
 
-    <title>@yield('title', 'طلالایو | تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی')</title>
-    <meta name="description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر آنلاین نرخ لحظه ای طلا و سکه برای مغازه طلا فروشی. اتصال تلویزیون بدون نیاز به کیس، فرمول‌ساز سود و ویترین لوکس در طلالایو.')">
+    <title>@yield('title', 'طلالایو (طلا لایو) | تابلوی هوشمند طلافروشی و نمایشگر نرخ مغازه طلا فروشی')</title>
+    <meta name="description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند طلافروشی و نمایشگر آنلاین نرخ لحظه ای طلا و سکه برای مغازه طلا فروشی. اتصال تلویزیون بدون نیاز به کیس در سامانه طلا لایو (طلالایو).')">
     <meta name="robots" content="@yield('meta_robots', 'index, follow, max-image-preview:large, max-snippet:-1')">
-    <meta name="author" content="طلالایو - TalaLive">
+    <meta name="author" content="طلالایو - طلا لایو (TalaLive)">
     <link rel="canonical" href="@yield('canonical', 'https://talalive.ir' . (request()->getPathInfo() === '/' ? '' : request()->getPathInfo()))">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو')">
+    <meta property="og:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو (طلا لایو)')">
     <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، سکه و ارز ویژه تلویزیون مغازه‌های طلافروشی و طلا فروشی‌ها.')">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="طلالایو">
+    <meta property="og:site_name" content="طلالایو - طلا لایو">
     <meta property="og:image" content="@yield('og_image', asset('images/og-cover.png'))">
     <meta property="og:image:secure_url" content="@yield('og_image', asset('images/og-cover.png'))">
     <meta property="og:image:width" content="@yield('og_image_width', '1200')">
@@ -58,8 +58,13 @@
         {
           "@@type": "Organization",
           "@@id": "https://talalive.ir/#organization",
-          "name": "طلالایو (TalaLive)",
+          "name": "طلالایو (طلا لایو)",
           "alternateName": [
+            "طلا لایو",
+            "طلالایو",
+            "Tala Live",
+            "TalaLive",
+            "سامانه طلا لایو",
             "سامانه ابری تابلوی هوشمند طلافروشی",
             "تابلوی طلا فروشی",
             "تابلو طلا فروشی",
@@ -101,7 +106,15 @@
           "@@type": "WebSite",
           "@@id": "https://talalive.ir/#website",
           "url": "https://talalive.ir",
-          "name": "طلالایو | سامانه هوشمند تابلوی طلافروشی و طلا فروشی",
+          "name": "طلالایو (طلا لایو)",
+          "alternateName": [
+            "طلا لایو",
+            "طلالایو",
+            "Tala Live",
+            "TalaLive",
+            "سامانه طلا لایو",
+            "سامانه ابری تابلوی هوشمند طلافروشی"
+          ],
           "publisher": {
             "@@id": "https://talalive.ir/#organization"
           },
@@ -186,7 +199,7 @@
             {{-- لوگو و نام برند --}}
             <a href="/" class="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0">
                 <div class="relative shrink-0">
-                    <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" fetchpriority="high" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="لوگوی طلالایو">
+                    <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" fetchpriority="high" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
                     <span class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-amber-500"></span>
@@ -679,14 +692,14 @@
             {{-- ستون ۱: معرفی برند و راه‌های ارتباطی --}}
             <div class="space-y-4 sm:col-span-2 md:col-span-1 lg:col-span-1">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo.png') }}" width="40" height="40" loading="lazy" decoding="async" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو">
+                    <img src="{{ asset('images/logo.png') }}" width="40" height="40" loading="lazy" decoding="async" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو (طلا لایو)">
                     <div>
-                        <div class="text-base font-black text-amber-400">طلالایو &middot; TalaLive</div>
+                        <div class="text-base font-black text-amber-400">طلالایو (طلا لایو) &middot; TalaLive</div>
                         <p class="text-[11px] text-slate-500">سامانه ابری تابلوی هوشمند طلافروشی</p>
                     </div>
                 </div>
                 <p class="text-slate-400 text-xs leading-relaxed">
-                    سامانه تخصصی نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی انواع تلویزیون‌های هوشمند بدون نیاز به خرید کیس، مینی‌کامپیوتر یا دستگاه سخت‌افزاری واسط.
+                    سامانه تخصصی طلا لایو (طلالایو): نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی انواع تلویزیون‌های هوشمند بدون نیاز به خرید کیس، مینی‌کامپیوتر یا دستگاه سخت‌افزاری واسط.
                 </p>
                 <div class="space-y-2 text-[11px] text-slate-400 border-t border-slate-900 pt-3">
                     <div class="flex items-center gap-2">

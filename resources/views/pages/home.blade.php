@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'طلالایو — سامانه ابری مدیریت تابلو و نرخ لحظه‌ای طلافروشی')
-@section('meta_description', 'سامانه هوشمند و ابری تابلوی طلافروشی طلالایو: نمایش آنلاین نرخ طلا، سکه و ارز روی تلویزیون مغازه بدون مینی‌کیس در کمتر از ۳ دقیقه با تست رایگان ۱۴ روزه.')
+@section('title', 'طلالایو (طلا لایو) — سامانه ابری مدیریت تابلو و نرخ لحظه‌ای طلافروشی')
+@section('meta_description', 'سامانه هوشمند و ابری طلا لایو (طلالایو): نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی تلویزیون مغازه بدون مینی‌کیس در کمتر از ۳ دقیقه با تست رایگان ۱۴ روزه.')
 @section('canonical', 'https://talalive.ir/')
 
 @section('schema')
@@ -12,9 +12,13 @@
         [
           "@type" => ["SoftwareApplication", "WebApplication"],
           "@id" => "https://talalive.ir/#software",
-          "name" => "طلالایو - سامانه تابلوی طلافروشی و طلا فروشی",
+          "name" => "طلالایو (طلا لایو) - سامانه تابلوی طلافروشی و طلا فروشی",
           "alternateName" => [
+            "طلا لایو",
+            "طلالایو",
             "TalaLive",
+            "Tala Live",
+            "سامانه طلا لایو",
             "تابلوی طلا فروشی",
             "تابلو طلا فروشی",
             "نرم افزار تابلوی طلا فروشی",
@@ -46,7 +50,14 @@
         [
           "@type" => "Organization",
           "@id" => "https://talalive.ir/#organization",
-          "name" => "طلالایو (TalaLive)",
+          "name" => "طلالایو (طلا لایو)",
+          "alternateName" => [
+            "طلا لایو",
+            "طلالایو",
+            "Tala Live",
+            "TalaLive",
+            "سامانه طلا لایو"
+          ],
           "url" => "https://talalive.ir",
           "logo" => "https://talalive.ir/images/logo.png",
           "sameAs" => [
@@ -98,6 +109,14 @@
           "@type" => "FAQPage",
           "@id" => "https://talalive.ir/#faq",
           "mainEntity" => [
+            [
+              "@type" => "Question",
+              "name" => "سامانه طلا لایو (طلالایو) چیست و چه کاربردی برای مغازه طلافروشی دارد؟",
+              "acceptedAnswer" => [
+                "@type" => "Answer",
+                "text" => "سامانه طلا لایو (طلالایو - TalaLive) پلتفرم ابری هوشمند مدیریت و نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز ویژه تلویزیون‌های مغازه طلافروشی است که بدون نیاز به خرید مینی‌کیس، کامپیوتر یا دانگل واسط، تابلوی نرخ رسمی، فرمول‌ساز سود قانونی و ویترین دیجیتال گالری را فعال می‌کند."
+              ]
+            ],
             [
               "@type" => "Question",
               "name" => "آیا برای راه‌اندازی تابلوی طلالایو نیاز به خرید کامپیوتر یا دستگاه جداگانه در مغازه هست؟",
@@ -208,7 +227,7 @@
                     <div class="space-y-4">
                         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
                             <span class="block text-base sm:text-xl lg:text-2xl text-amber-600 dark:text-amber-400 font-extrabold tracking-normal mb-2 leading-snug">
-                                سامانه هوشمند طلالایو
+                                سامانه هوشمند طلالایو (طلا لایو)
                             </span>
                             مدیریت ابری تابلو و نرخ لحظه‌ای <br>
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-400">
@@ -216,7 +235,7 @@
                             </span>
                         </h1>
                         <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-                            خداحافظی همیشگی با تابلوهای سنتی، زشت و گران‌قیمت LED. بدون نیاز به مینی‌کیس، کامپیوتر یا کابل‌کشی؛ تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه و ویترین دیجیتال جواهرات خود را تنها در ۶۰ ثانیه با ریموت تلویزیون مغازه روشن کنید.
+                            خداحافظی همیشگی با تابلوهای سنتی، زشت و گران‌قیمت LED. با سامانه طلا لایو (طلالایو) بدون نیاز به مینی‌کیس، کامپیوتر یا کابل‌کشی؛ تابلوی اختصاصی نرخ لحظه‌ای طلا، سکه و ویترین دیجیتال جواهرات خود را تنها در ۶۰ ثانیه با ریموت تلویزیون مغازه روشن کنید.
                         </p>
                     </div>
 
@@ -1213,6 +1232,16 @@
             </div>
 
             <div class="space-y-3">
+                <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+                    <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
+                        <span>سامانه طلا لایو (طلالایو) چیست و چه کاربردی برای مغازه طلافروشی دارد؟</span>
+                        <span class="faq-icon transition-transform duration-200 text-amber-500">▼</span>
+                    </summary>
+                    <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                        سامانه طلا لایو (طلالایو - TalaLive) پلتفرم ابری هوشمند مدیریت و نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز ویژه تلویزیون‌های مغازه طلافروشی است که بدون نیاز به خرید مینی‌کیس، کامپیوتر یا دانگل واسط، تابلوی نرخ رسمی، فرمول‌ساز سود قانونی و ویترین دیجیتال گالری را فعال می‌کند.
+                    </p>
+                </details>
+
                 <details class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
                     <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-slate-900 dark:text-white">
                         <span>آیا برای راه‌اندازی تابلوی طلالایو نیاز به خرید کامپیوتر یا دستگاه جداگانه در مغازه هست؟</span>
