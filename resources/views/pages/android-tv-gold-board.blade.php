@@ -3,6 +3,8 @@
 @section('title', 'تابلو طلا روی اندروید تی‌وی — راه‌اندازی ۳ دقیقه‌ای | طلالایو')
 @section('meta_description', 'آموزش تصویری راه‌اندازی تابلوی نرخ طلالایو روی تلویزیون هوشمند اندرویدی و اندروید باکس در کمتر از ۳ دقیقه با تست رایگان. همین حالا آنلاین اجرا کنید.')
 @section('canonical', 'https://talalive.ir/android-tv-gold-board')
+@section('og_image', asset('images/guides/android-tv-gold-board.webp'))
+@section('og_image_alt', 'آموزش راه‌اندازی تابلو طلا روی اندروید تی‌وی طلالایو')
 
 @section('schema')
 <script type="application/ld+json">
@@ -13,6 +15,9 @@
       "@@type": "TechArticle",
       "headline": "آموزش راه‌اندازی تابلو طلا روی اندروید تی‌وی و اندروید باکس",
       "description": "راهنمای گام‌به‌گام و تصویری اجرای تابلوی نرخ لحظه‌ای طلالایو روی تلویزیون‌های مجهز به Android TV و باکس اندروید بدون نیاز به مینی‌کیس.",
+      "image": [
+        "https://talalive.ir/images/guides/android-tv-gold-board.webp"
+      ],
       "datePublished": "2025-10-01",
       "dateModified": "2026-09-16",
       "author": {
@@ -92,6 +97,15 @@
             <strong>تابلو طلا روی اندروید تی‌وی</strong> راهکاری نرم‌افزاری و ابری برای نمایش زنده نرخ طلا و سکه روی تلویزیون‌ها و باکس‌های مجهز به سیستم‌عامل Android TV است که بدون نیاز به کیس، با مرورگر وب یا اپلیکیشن نیتیو اختصاصی در ۳ دقیقه راه‌اندازی می‌شود.
         </p>
     </div>
+
+    {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+    <figure class="relative rounded-3xl overflow-hidden border border-emerald-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+        <img src="{{ asset('images/guides/android-tv-gold-board.webp') }}" 
+             alt="آموزش راه‌اندازی تابلو طلا روی اندروید تی‌وی و اندروید باکس" 
+             width="1200" height="675" 
+             loading="eager" fetchpriority="high" decoding="async"
+             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+    </figure>
 
     {{-- بنر ویژه اپلیکیشن نیتیو تلویزیون --}}
     <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border-2 border-amber-500/40 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">

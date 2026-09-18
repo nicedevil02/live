@@ -3,11 +3,14 @@
 @section('title', 'مظنه فردایی چیست و چه فرقی با مظنه نقدی دارد؟ | طلالایو')
 @section('meta_description', 'مظنه فردایی و نقدی چیست؟ مقایسه ۳ مظنه بازار طلا، فرمول تبدیل مثقال ۱۷ به ۱۸ عیار با ۱ مثال عددی و نمایش زنده در تابلوی طلالایو. مطالعه کنید.')
 @section('canonical', 'https://talalive.ir/guides/mazaneh-fardaei')
+@section('og_image', asset('images/guides/mazaneh-fardaei.webp'))
+@section('og_image_alt', 'مظنه فردایی چیست و چه فرقی با مظنه نقدی دارد؟')
 
 @section('schema')
 @include('partials.schema-article', [
     'headline' => 'مظنه فردایی چیست و چه تفاوتی با مظنه نقدی و جهانی دارد؟',
     'description' => 'بررسی جامع مفهوم مظنه فردایی، مظنه نقدی و مظنه جهانی در بازار طلا همراه با فرمول تبدیل مثقال به گرم ۱۸ عیار.',
+    'image' => 'https://talalive.ir/images/guides/mazaneh-fardaei.webp',
     'datePublished' => '2026-03-20',
     'dateModified' => date('Y-m-d'),
     'author' => 'تیم تحریریه و تحلیل بازار طلالایو',

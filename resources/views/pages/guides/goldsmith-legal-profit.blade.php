@@ -3,11 +3,14 @@
 @section('title', 'سود قانونی طلافروشی چند درصد است؟ (۱۴۰۵) | طلالایو')
 @section('meta_description', 'سود قانونی طلافروشی چند درصد است؟ تفکیک ۳ جزء فاکتور طلا (سود ۷٪، اجرت و مالیات)، فرمول محاسبه قانونی و بررسی مصوبه اتحادیه طلا. مطالعه کنید.')
 @section('canonical', 'https://talalive.ir/guides/goldsmith-legal-profit')
+@section('og_image', asset('images/guides/goldsmith-legal-profit.webp'))
+@section('og_image_alt', 'سود قانونی طلافروشی چند درصد است و فاکتور طلا چگونه محاسبه می‌شود؟')
 
 @section('schema')
 @include('partials.schema-article', [
     'headline' => 'سود قانونی طلافروشی چند درصد است و فاکتور طلا چگونه محاسبه می‌شود؟',
     'description' => 'بررسی کامل مصوبه اتحادیه طلا درباره سود قانونی ۷ درصدی طلافروشان، نحوه تفکیک اجرت ساخت و مالیات بر ارزش افزوده در فاکتور رسمی.',
+    'image' => 'https://talalive.ir/images/guides/goldsmith-legal-profit.webp',
     'datePublished' => '2026-03-25',
     'dateModified' => date('Y-m-d'),
     'author' => 'تیم حقوقی و قوانین صنفی طلالایو',
@@ -38,6 +41,15 @@
         <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white leading-tight">
             سود قانونی طلافروشی چند درصد است و فاکتور طلا چگونه محاسبه می‌شود؟
         </h1>
+
+        {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+        <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+            <img src="{{ asset('images/guides/goldsmith-legal-profit.webp') }}" 
+                 alt="سود قانونی طلافروشی چند درصد است و فاکتور طلا چگونه محاسبه می‌شود؟" 
+                 width="1200" height="675" 
+                 loading="eager" fetchpriority="high" decoding="async"
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+        </figure>
 
         {{-- تعریف صریح در ۴۰ کلمه اول --}}
         <div class="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border-r-4 border-amber-500 text-slate-800 dark:text-slate-200 text-sm sm:text-base leading-relaxed font-medium">

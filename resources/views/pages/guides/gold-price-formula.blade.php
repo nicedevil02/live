@@ -3,6 +3,8 @@
 @section('title', $guide['title'] . ' | پایگاه دانش طلالایو')
 @section('meta_description', $guide['description'])
 @section('canonical', 'https://talalive.ir/guides/' . $slug)
+@section('og_image', asset($guide['image']))
+@section('og_image_alt', $guide['title'])
 
 @section('schema')
 <script type="application/ld+json">
@@ -13,6 +15,9 @@
       "@@type": "Article",
       "headline": "{{ $guide['title'] }}",
       "description": "{{ $guide['description'] }}",
+      "image": [
+        "{{ url($guide['image']) }}"
+      ],
       "datePublished": "2025-09-10",
       "dateModified": "2026-09-12",
       "author": {
@@ -65,6 +70,15 @@
             {{ $guide['description'] }}
         </p>
     </div>
+
+    {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+    <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+        <img src="{{ asset($guide['image']) }}" 
+             alt="{{ $guide['title'] }}" 
+             width="1200" height="675" 
+             loading="eager" fetchpriority="high" decoding="async"
+             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+    </figure>
 
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-6 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
         <h2 class="text-xl font-bold text-slate-900 dark:text-white">فرمول استاندارد محاسبه قیمت طلا در مغازه طلا فروشی</h2>

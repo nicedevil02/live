@@ -21,6 +21,8 @@
         "@@id": "{{ url('/' . ($username ?? '')) }}#store",
         "name": "{{ $galleryDisplayName ?? 'گالری طلا' }}",
         "url": "{{ url('/' . ($username ?? '')) }}",
+        "image": "https://talalive.ir/images/og-cover.png",
+        "logo": "https://talalive.ir/images/logo.png",
         "description": "{{ $galleryIntro ?? ("تابلوی آنلاین اعلام قیمت طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در شهر " . ($cityName ?? 'ایران')) }}",
         @if(!empty($phone))
         "telephone": "{{ $phone }}",
@@ -773,7 +775,9 @@
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
         <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
             <img :src="bingWallpaperUrl" 
-                 alt="Bing Wallpaper" 
+                 alt="تصویر پس‌زمینه روز تابلوی طلالایو" 
+                 width="1920" height="1080"
+                 loading="lazy" decoding="async"
                  class="w-full h-full object-cover transition-opacity duration-1000"
                  x-on:error="$el.src = '/images/bing/today.jpg'">
 
@@ -851,7 +855,7 @@
                         <template x-if="settings.rubika">
                             <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
-                                <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" class="w-5 h-5 object-contain shrink-0">
+                                <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" width="20" height="20" loading="lazy" decoding="async" alt="روبیکا" class="w-5 h-5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
                             </div>
                         </template>
@@ -861,7 +865,10 @@
                     <div class="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] shrink-0">
                         <div class="relative bg-white p-2 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/30 shrink-0 overflow-hidden group">
                             <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(settings.qr_link || (window.location.origin + '/' + (snapshotData.username || '')))" 
-                                 alt="QR Code" class="w-24 h-24 xl:w-28 xl:h-28 object-contain rounded-lg">
+                                 alt="کد QR اختصاصی تابلوی طلافروشی {{ $galleryDisplayName ?? 'طلالایو' }}" 
+                                 width="112" height="112"
+                                 loading="lazy" decoding="async"
+                                 class="w-24 h-24 xl:w-28 xl:h-28 object-contain rounded-lg">
                             {{-- خط اسکن لیزری امبینت --}}
                             <div class="pointer-events-none absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_rgba(251,191,36,0.85)] animate-laser-sweep"></div>
                         </div>

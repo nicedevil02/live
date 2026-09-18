@@ -280,7 +280,7 @@
             {{-- لوگو و نام برند --}}
             <a href="/" class="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0">
                 <div class="relative shrink-0">
-                    <img src="{{ asset('images/logo.png') }}" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="لوگوی سامانه طلالایو">
+                    <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" fetchpriority="high" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="لوگوی سامانه طلالایو">
                     <span class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-amber-500"></span>
@@ -527,7 +527,7 @@
 
                     {{-- کادر تصویر QR Code --}}
                     <div class="relative bg-white p-3 rounded-2xl overflow-hidden shadow-xl border-2 border-amber-400/30">
-                        <img id="qrImage" src="" alt="Pairing QR Code" class="w-56 h-56 object-contain">
+                        <img id="qrImage" src="" alt="کد QR جفت‌سازی تلویزیون هوشمند طلالایو" width="224" height="224" class="w-56 h-56 object-contain">
                         <div id="qrLoader" class="absolute inset-0 bg-white flex items-center justify-center">
                             <div class="w-10 h-10 border-4 border-slate-200 border-t-amber-500 rounded-full animate-spin"></div>
                         </div>
@@ -554,7 +554,7 @@
                     <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
                         <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
                         <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
+                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="14" height="14" loading="lazy" decoding="async" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
                             <span>پشتیبانی روبیکا</span>
                         </a>
                     </div>
@@ -714,6 +714,8 @@
                     <div class="relative rounded-2xl bg-black overflow-hidden border border-slate-800 aspect-[16/9] shadow-2xl group flex items-center justify-center">
                         <img src="{{ asset($previewImage) }}" 
                              alt="پیش‌نمایش تابلوی زنده طلا و سکه طلالایو روی تلویزیون هوشمند" 
+                             width="1920" height="1080"
+                             loading="lazy" decoding="async"
                              class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.01]">
                         
                         {{-- افکت انعکاس شیشه و نور ملایم تلویزیون --}}
@@ -1708,7 +1710,7 @@
             {{-- ستون ۱: معرفی طلالایو --}}
             <div class="space-y-4 md:col-span-2">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 object-contain rounded-xl bg-slate-800 border border-slate-700 p-1" alt="طلالایو">
+                    <img src="{{ asset('images/logo.png') }}" width="40" height="40" loading="lazy" decoding="async" class="h-10 w-10 object-contain rounded-xl bg-slate-800 border border-slate-700 p-1" alt="طلالایو">
                     <div>
                         <div class="text-base font-black text-amber-400">طلالایو &middot; TalaLive</div>
                         <p class="text-[11px] text-slate-400">نرم‌افزار تابلوی هوشمند نرخ طلا و سکه ویژه تلویزیون‌های طلافروشی و مغازه طلا فروشی</p>
@@ -1751,7 +1753,7 @@
                     </p>
                     <div class="pt-1">
                         <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="16" height="16" loading="lazy" decoding="async" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                             <span>ارتباط در پیام‌رسان روبیکا</span>
                         </a>
                     </div>

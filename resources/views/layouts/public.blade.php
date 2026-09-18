@@ -35,14 +35,20 @@
     <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، سکه و ارز ویژه تلویزیون مغازه‌های طلافروشی و طلا فروشی‌ها.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="طلالایو">
-    <meta property="og:image" content="@yield('og_image', asset('images/logo.png'))">
+    <meta property="og:image" content="@yield('og_image', asset('images/og-cover.png'))">
+    <meta property="og:image:secure_url" content="@yield('og_image', asset('images/og-cover.png'))">
+    <meta property="og:image:width" content="@yield('og_image_width', '1200')">
+    <meta property="og:image:height" content="@yield('og_image_height', '630')">
+    <meta property="og:image:type" content="@yield('og_image_type', 'image/png')">
+    <meta property="og:image:alt" content="@yield('og_image_alt', 'سامانه ابری تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو')">
     <meta property="og:locale" content="fa_IR">
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو')">
     <meta name="twitter:description" content="@yield('meta_description', 'نمایش آنلاین و لحظه ای نرخ طلا و مسکوکات روی تلویزیون مغازه طلافروشی و طلا فروشی بدون مینی‌کیس.')">
-    <meta name="twitter:image" content="@yield('og_image', asset('images/logo.png'))">
+    <meta name="twitter:image" content="@yield('og_image', asset('images/og-cover.png'))">
+    <meta name="twitter:image:alt" content="@yield('og_image_alt', 'سامانه ابری تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو')">
 
     <!-- Schema.org Global Graph (Organization + WebSite) -->
     <script type="application/ld+json">
@@ -180,7 +186,7 @@
             {{-- لوگو و نام برند --}}
             <a href="/" class="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0">
                 <div class="relative shrink-0">
-                    <img src="{{ asset('images/logo.png') }}" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="لوگوی طلالایو">
+                    <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" fetchpriority="high" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="لوگوی طلالایو">
                     <span class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-amber-500"></span>
@@ -673,7 +679,7 @@
             {{-- ستون ۱: معرفی برند و راه‌های ارتباطی --}}
             <div class="space-y-4 sm:col-span-2 md:col-span-1 lg:col-span-1">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو">
+                    <img src="{{ asset('images/logo.png') }}" width="40" height="40" loading="lazy" decoding="async" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو">
                     <div>
                         <div class="text-base font-black text-amber-400">طلالایو &middot; TalaLive</div>
                         <p class="text-[11px] text-slate-500">سامانه ابری تابلوی هوشمند طلافروشی</p>

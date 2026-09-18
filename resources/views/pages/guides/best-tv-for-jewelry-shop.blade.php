@@ -3,6 +3,8 @@
 @section('title', 'بهترین تلویزیون برای مغازه طلافروشی — راهنمای خرید ۱۴۰۵')
 @section('meta_description', 'راهنمای جامع خرید بهترین تلویزیون برای ویترین طلافروشی: بررسی روشنایی نیت، پنل ضد انعکاس و زاویه دید سامسونگ و ال‌جی در سال ۱۴۰۵ برای اتصال به تابلو طلا.')
 @section('canonical', 'https://talalive.ir/guides/best-tv-for-jewelry-shop')
+@section('og_image', asset('images/guides/best-tv-gold-shop.webp'))
+@section('og_image_alt', 'راهنمای جامع خرید بهترین تلویزیون برای ویترین مغازه طلافروشی')
 
 @section('schema')
 <script type="application/ld+json">
@@ -13,6 +15,9 @@
       "@@type": "Article",
       "headline": "بهترین تلویزیون برای مغازه طلافروشی — راهنمای خرید ۱۴۰۵",
       "description": "راهنمای جامع خرید بهترین تلویزیون برای ویترین طلافروشی: بررسی روشنایی نیت، پنل ضد انعکاس و زاویه دید سامسونگ و ال‌جی در سال ۱۴۰۵.",
+      "image": [
+        "https://talalive.ir/images/guides/best-tv-gold-shop.webp"
+      ],
       "datePublished": "2025-09-10",
       "dateModified": "2026-09-16",
       "author": {
@@ -80,6 +85,15 @@
             <strong>بهترین تلویزیون برای طلافروشی</strong> نمایشگری با روشنایی حداقل ۳۵۰ نیت، پنل ضد انعکاس مات، زاویه دید عریض و مرورگر وب پایدار است که بدون خطر سوختگی پیکسل، نرخ‌های زنده طلا و جواهرات ویترین را به مدت ۱۰ ساعت مداوم با وضوح خیره‌کننده نمایش دهد.
         </p>
     </div>
+
+    {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+    <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+        <img src="{{ asset('images/guides/best-tv-gold-shop.webp') }}" 
+             alt="بهترین تلویزیون برای مغازه طلافروشی و نمایشگر ویترین طلالایو" 
+             width="1200" height="675" 
+             loading="eager" fetchpriority="high" decoding="async"
+             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+    </figure>
 
     {{-- معیارهای کلیدی انتخاب نمایشگر --}}
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">

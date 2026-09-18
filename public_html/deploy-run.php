@@ -75,7 +75,7 @@ if (function_exists('shell_exec')) {
     $disabled = array_map('trim', $disabled);
     if (!in_array('shell_exec', $disabled)) {
         $shellAllowed = true;
-        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin master 2>&1 && git reset --hard origin/master 2>&1';
+        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin master 2>&1 && git reset --hard FETCH_HEAD 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
             $log[] = 'Git pull output: ' . trim($gitOutput);
@@ -153,8 +153,8 @@ foreach ($dirsToSync as $dir) {
     syncDirectory("$sourceDir/$dir", "$targetDir/$dir", $copiedFiles, $copiedDirs);
 }
 
-// Sync public_html (exclude deploy script itself to prevent overwrite while executing)
-syncDirectory("$sourceDir/public_html", "$targetDir/public_html", $copiedFiles, $copiedDirs, ['deploy-run.php']);
+// Sync public_html (including download APK, talalive-tv.json and .htaccess)
+syncDirectory("$sourceDir/public_html", "$targetDir/public_html", $copiedFiles, $copiedDirs);
 
 // Sync root files
 foreach ($filesToSync as $file) {
@@ -208,6 +208,13 @@ if (empty($migrateOutput) && file_exists("$targetDir/vendor/autoload.php") && fi
     }
 }
 
+$activeUsers = [];
+try {
+    if (class_exists(\App\Models\User::class)) {
+        $activeUsers = \App\Models\User::pluck('username')->filter()->values()->all();
+    }
+} catch (\Throwable $e) {}
+
 $duration = round(microtime(true) - $startTime, 3);
 
 header('Content-Type: application/json; charset=utf-8');
@@ -219,6 +226,7 @@ echo json_encode([
         'files_synced' => $copiedFiles,
         'directories_created' => $copiedDirs,
         'views_cache_cleared' => $clearedViews,
+        'active_users' => $activeUsers,
     ],
     'log' => $log,
     'git' => $gitOutput ? trim($gitOutput) : 'Synchronized from repository snapshot',
