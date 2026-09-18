@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tala_bg">#020617</color>
+    <color name="tala_card">#0F172A</color>
+    <color name="tala_gold">#F59E0B</color>
+    <color name="tala_gold_light">#FDE68A</color>
+    <color name="tala_text">#F8FAFC</color>
+    <color name="tala_text_muted">#94A3B8</color>
+    <color name="tala_red">#EF4444</color>
+    <color name="tala_green">#10B981</color>
+</resources>

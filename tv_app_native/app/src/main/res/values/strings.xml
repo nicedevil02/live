@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">طلالایو TV</string>
+    <string name="pairing_title">اتصال تابلوی طلالایو</string>
+    <string name="pairing_desc">برای اتصال تابلو، این کد را در پنل کاربری خود در بخش «تلویزیون‌های من» وارد کنید:</string>
+    <string name="pairing_or_scan">یا تصویر زیر را با دوربین گوشی اسکن کنید</string>
+    <string name="btn_send_sms">ارسال کد با پیامک به موبایل</string>
+    <string name="enter_mobile_title">شماره موبایل طلافروش</string>
+    <string name="enter_mobile_hint">۰۹۱۲۳۴۵۶۷۸۹</string>
+    <string name="btn_confirm">ارسال پیامک</string>
+    <string name="btn_cancel">انصراف</string>
+    <string name="sms_sent_success">پیامک حاوی لینک اتصال با موفقیت ارسال شد.</string>
+    <string name="sms_failed">خطا در ارسال پیامک. لطفاً کد را در پنل وارد کنید.</string>
+    <string name="pairing_waiting">در انتظار جفت‌سازی از طریق پنل...</string>
+    <string name="offline_title">اتصال اینترنت قطع است</string>
+    <string name="offline_last_rate">آخرین نرخ دریافتی: %1$s</string>
+    <string name="offline_retry_countdown">تلاش مجدد در %1$d ثانیه...</string>
+    <string name="ssl_error_title">ساعت این دستگاه اشتباه است</string>
+    <string name="ssl_error_desc">تاریخ دستگاه: %1$s — تاریخ واقعی: %2$s&#10;از تنظیمات دستگاه، تاریخ و ساعت را روی «خودکار از شبکه» بگذارید.</string>
+    <string name="webview_outdated_title">موتور نمایش این دستگاه قدیمی است (نسخهٔ %1$s)</string>
+    <string name="webview_outdated_desc">برای نمایش درست تابلو، «Android System WebView» را از فروشگاه دستگاه به‌روزرسانی کنید.&#10;نسخهٔ موردنیاز: ۸۰ یا بالاتر</string>
+    <string name="btn_try_anyway">با این حال تلاش کن</string>
+    <string name="remote_back_exit_toast">برای خروج، یک بار دیگر دکمه بازگشت را بزنید</string>
+    <string name="menu_title">منوی تنظیمات تابلو</string>
+    <string name="menu_reload">بارگذاری مجدد تابلو</string>
+    <string name="menu_device_info">مشخصات دستگاه</string>
+    <string name="menu_disconnect">قطع اتصال این دستگاه</string>
+    <string name="disconnect_confirm_title">تأیید قطع اتصال تابلو</string>
+    <string name="disconnect_confirm_desc">با قطع اتصال، این دستگاه از پنل خارج شده و برای اتصال مجدد باید کد جدید بگیرید.</string>
+    <string name="btn_disconnect_confirm">قطع اتصال قطعی</string>
+    <string name="device_info_format">گالری: %1$s&#10;نسخه اپلیکیشن: %2$s (کد %3$d)&#10;نسخه وب‌ویو: %4$s&#10;آخرین نرخ دریافتی: %5$s</string>
+    <string name="device_revoked_title">این دستگاه از پنل مدیریت حذف شده است</string>
+    <string name="device_revoked_desc">برای اتصال مجدد این تلویزیون، کد جدید بگیرید.</string>
+    <string name="btn_get_new_code">دریافت کد اتصال جدید</string>
+</resources>
