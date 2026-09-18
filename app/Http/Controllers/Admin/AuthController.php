@@ -617,8 +617,6 @@ class AuthController extends Controller
                 $cleanCode = \App\Http\Controllers\PublicDisplayController::normalizeDigits((string) $pendingCode);
                 $sessionCode = null;
 
-                \App\Http\Controllers\PublicDisplayController::ensureTvSessionsTable();
-
                 $dbSession = \Illuminate\Support\Facades\DB::table('tv_sessions')
                     ->where('activation_code', $cleanCode)
                     ->where('expires_at', '>', now())
@@ -639,6 +637,14 @@ class AuthController extends Controller
                         $user->save();
                     }
 
+                    $device = \App\Models\TvDevice::create([
+                        'device_token' => bin2hex(random_bytes(24)),
+                        'user_id'      => $user->id,
+                        'username'     => $user->username,
+                        'label'        => null,
+                        'last_seen_at' => now(),
+                    ]);
+
                     try {
                         \Illuminate\Support\Facades\DB::table('tv_sessions')
                             ->where('session_code', $sessionCode)
@@ -646,15 +652,18 @@ class AuthController extends Controller
                                 'is_paired'       => true,
                                 'paired_user_id'  => $user->id,
                                 'paired_username' => $user->username,
-                                'paired_token'    => $user->display_token,
+                                'paired_token'    => $device->device_token,
                                 'updated_at'      => now(),
                             ]);
                     } catch (\Throwable $e) {}
 
                     \Illuminate\Support\Facades\Cache::put('pairing_' . $sessionCode, [
-                        'user_id'  => $user->id,
-                        'username' => $user->username,
-                        'token'    => $user->display_token
+                        'paired'        => true,
+                        'user_id'       => $user->id,
+                        'username'      => $user->username,
+                        'device_token'  => $device->device_token,
+                        'token'         => $device->device_token,
+                        'display_token' => $user->display_token ?: $device->device_token,
                     ], 7200);
 
                     \Illuminate\Support\Facades\Cache::forget('tv_session_' . $cleanCode);

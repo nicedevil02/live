@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\DisplayItemController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\TvDeviceController;
 
 // ریشه سایت → صفحه اصلی و لندینگ‌پیج تجاری طلالایو (یا ریدایرکت به داشبورد در صورت لاگین)
 Route::get('/', function () {
@@ -175,6 +176,12 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/security', [AuthController::class, 'editSecurity'])->name('security');
     Route::put('/security', [AuthController::class, 'updateSecurity'])->name('security.update');
     
+    // مدیریت دستگاه‌های تلویزیون متصل (تلویزیون‌های من)
+    Route::get('/devices', [TvDeviceController::class, 'index'])->name('devices.index');
+    Route::put('/devices/{device}', [TvDeviceController::class, 'update'])->name('devices.update');
+    Route::delete('/devices/{device}', [TvDeviceController::class, 'destroy'])->name('devices.destroy');
+    Route::post('/devices/{device}/restore', [TvDeviceController::class, 'restore'])->name('devices.restore');
+
     // جفت‌سازی تلویزیون هوشمند با گوشی (نیازمند تایید کاربر با متد POST)
     Route::match(['get', 'post'], '/pair/{session_code}', [PublicDisplayController::class, 'pairDevice'])->name('pair');
 });

@@ -8,6 +8,7 @@ Route::get('/display/health/{username}', [PublicDisplayController::class, 'healt
 Route::get('/tv/check/{session_code}', [PublicDisplayController::class, 'checkPairingStatus']);
 Route::post('/tv/register-session', [PublicDisplayController::class, 'registerSession']);
 Route::post('/tv/magic-sms', [PublicDisplayController::class, 'sendMagicSms'])->middleware('throttle:5,1');
+Route::post('/tv/heartbeat', [PublicDisplayController::class, 'heartbeat'])->middleware('throttle:30,1');
 
 // Endpoint برای دریافت دستی قیمت‌ها (محافظت‌شده با توکن و محدودیت نرخ)
 Route::post('/display/refresh', function () {

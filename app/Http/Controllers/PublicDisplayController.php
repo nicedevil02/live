@@ -103,28 +103,6 @@ class PublicDisplayController extends Controller
             abort(402, 'اعتبار زمانی حساب به پایان رسیده است.');
         }
 
-        // بروزرسانی خودکار و تضمینی نرخ تتر هر ۱۰ ثانیه (Self-Healing 10s Auto Refresh)
-        try {
-            $usdtCache = \App\Models\MarketCache::where('symbol', 'usdt')->first();
-            $needsUsdtFetch = false;
-            if (!$usdtCache || !$usdtCache->fetched_at) {
-                $needsUsdtFetch = true;
-            } else {
-                $diff = now()->diffInSeconds($usdtCache->fetched_at);
-                if ($diff >= 10) {
-                    $needsUsdtFetch = true;
-                }
-            }
-
-            if ($needsUsdtFetch) {
-                \Illuminate\Support\Facades\Cache::lock('usdt_snapshot_fetch_lock', 6)->get(function () {
-                    $this->marketService->fetchFastMovingPrices();
-                });
-            }
-        } catch (\Throwable $e) {
-            \Log::warning('Auto USDT refresh in snapshot error: ' . $e->getMessage());
-        }
-
         return response()->json($this->buildSnapshot($user));
     }
 
@@ -170,6 +148,7 @@ class PublicDisplayController extends Controller
         $priceFeed = $this->marketService->getPriceFeed($user);
 
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
+        $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
 
         $bingWallpaper = null;
         if (str_starts_with($settings->theme_mode ?? '', 'bing-')) {
@@ -186,15 +165,18 @@ class PublicDisplayController extends Controller
         }
 
         return [
-            'username'     => $user->username,
-            'updatedAt'    => $lastFetch ? \Illuminate\Support\Carbon::parse($lastFetch)->toISOString() : now()->toISOString(),
-            'apiTime'      => \Cache::get('market_api_last_time', '---'),
+            'username'               => $user->username,
+            'updatedAt'              => $lastFetch ? \Illuminate\Support\Carbon::parse($lastFetch)->toISOString() : now()->toISOString(),
+            'dataAgeSeconds'         => $ageSeconds,
+            'isStale'                => $ageSeconds === null || $ageSeconds > 180,
+            'serverTime'             => now()->toIso8601String(),
+            'apiTime'                => \Cache::get('market_api_last_time', '---'),
             'refreshIntervalSeconds' => $this->marketService->currentRefreshIntervalSeconds(),
-            'displayItems' => $items,
-            'priceFeed'    => $priceFeed,
-            'products'     => $products,
-            'settings'     => $settings,
-            'bingWallpaper'=> $bingWallpaper,
+            'displayItems'           => $items,
+            'priceFeed'              => $priceFeed,
+            'products'               => $products,
+            'settings'               => $settings,
+            'bingWallpaper'          => $bingWallpaper,
         ];
     }
 
@@ -206,28 +188,42 @@ class PublicDisplayController extends Controller
         return view('display.pairing');
     }
 
+
     /**
-     * اطمینان از وجود جدول tv_sessions در پایگاه داده (Self-Healing Schema)
+     * اتصال دائمی دستگاه تلویزیون به حساب کاربری و صدور توکن مستقل سخت‌افزاری
      */
-    public static function ensureTvSessionsTable(): void
+    private function attachDevice(\App\Models\User $user, string $sessionCode, ?string $activationCode = null): \App\Models\TvDevice
     {
-        try {
-            if (!Schema::hasTable('tv_sessions')) {
-                Schema::create('tv_sessions', function ($table) {
-                    $table->id();
-                    $table->string('session_code', 100)->unique()->index();
-                    $table->string('activation_code', 10)->index();
-                    $table->unsignedBigInteger('paired_user_id')->nullable()->index();
-                    $table->string('paired_username', 100)->nullable();
-                    $table->string('paired_token', 255)->nullable();
-                    $table->boolean('is_paired')->default(false)->index();
-                    $table->timestamp('expires_at')->nullable()->index();
-                    $table->timestamps();
-                });
-            }
-        } catch (\Throwable $e) {
-            \Log::warning('ensureTvSessionsTable error: ' . $e->getMessage());
+        $device = \App\Models\TvDevice::create([
+            'device_token' => bin2hex(random_bytes(24)),   // ۴۸ کاراکتر
+            'user_id'      => $user->id,
+            'username'     => $user->username,
+            'label'        => null,
+            'last_seen_at' => now(),
+        ]);
+
+        DB::table('tv_sessions')->where('session_code', $sessionCode)->update([
+            'is_paired'       => true,
+            'paired_user_id'  => $user->id,
+            'paired_username' => $user->username,
+            'paired_token'    => $device->device_token,
+            'updated_at'      => now(),
+        ]);
+
+        Cache::put('pairing_' . $sessionCode, [
+            'paired'        => true,
+            'user_id'       => $user->id,
+            'username'      => $user->username,
+            'device_token'  => $device->device_token,
+            'token'         => $device->device_token,
+            'display_token' => $user->display_token ?: $device->device_token,
+        ], 7200);
+
+        if ($activationCode) {
+            Cache::forget('tv_session_' . $activationCode);
         }
+
+        return $device;
     }
 
     /**
@@ -238,15 +234,19 @@ class PublicDisplayController extends Controller
         // ۱. بررسی کش موقت
         $data = Cache::get('pairing_' . $session_code);
         if ($data && !empty($data['username']) && !empty($data['token'])) {
+            $deviceToken = $data['device_token'] ?? $data['token'];
+            $displayToken = $data['display_token'] ?? $data['token'];
             return response()->json([
-                'paired' => true,
-                'username' => $data['username'],
-                'display_token' => $data['token']
+                'paired'                => true,
+                'username'              => $data['username'],
+                'device_token'          => $deviceToken,
+                'token'                 => $deviceToken,
+                'display_token'         => $displayToken,
+                'poll_interval_seconds' => 3,
             ]);
         }
 
         // ۲. بررسی دیتابیس در صورت نبود یا انقضای کش
-        self::ensureTvSessionsTable();
         try {
             $dbSession = DB::table('tv_sessions')
                 ->where('session_code', $session_code)
@@ -254,24 +254,33 @@ class PublicDisplayController extends Controller
                 ->first();
 
             if ($dbSession && $dbSession->paired_username && $dbSession->paired_token) {
+                $user = \App\Models\User::find($dbSession->paired_user_id);
+                $displayToken = $user?->display_token ?: $dbSession->paired_token;
+
                 // کش مجدد جهت تسریع درخواست‌های بعدی
                 Cache::put('pairing_' . $session_code, [
-                    'user_id'  => $dbSession->paired_user_id,
-                    'username' => $dbSession->paired_username,
-                    'token'    => $dbSession->paired_token,
+                    'paired'        => true,
+                    'user_id'       => $dbSession->paired_user_id,
+                    'username'      => $dbSession->paired_username,
+                    'device_token'  => $dbSession->paired_token,
+                    'token'         => $dbSession->paired_token,
+                    'display_token' => $displayToken,
                 ], 7200);
 
                 return response()->json([
-                    'paired' => true,
-                    'username' => $dbSession->paired_username,
-                    'display_token' => $dbSession->paired_token
+                    'paired'                => true,
+                    'username'              => $dbSession->paired_username,
+                    'device_token'          => $dbSession->paired_token,
+                    'token'                 => $dbSession->paired_token,
+                    'display_token'         => $displayToken,
+                    'poll_interval_seconds' => 3,
                 ]);
             }
         } catch (\Throwable $e) {
             \Log::warning('checkPairingStatus DB error: ' . $e->getMessage());
         }
 
-        return response()->json(['paired' => false]);
+        return response()->json(['paired' => false, 'poll_interval_seconds' => 3]);
     }
 
     /**
@@ -330,30 +339,12 @@ class PublicDisplayController extends Controller
             ");
         }
 
-        self::ensureTvSessionsTable();
-
-        // ۱. بروزرسانی قطعی در دیتابیس
         try {
-            DB::table('tv_sessions')->updateOrInsert(
-                ['session_code' => $session_code],
-                [
-                    'is_paired'       => true,
-                    'paired_user_id'  => $user->id,
-                    'paired_username' => $user->username,
-                    'paired_token'    => $user->display_token,
-                    'updated_at'      => now(),
-                ]
-            );
+            $activationCode = DB::table('tv_sessions')->where('session_code', $session_code)->value('activation_code');
+            $this->attachDevice($user, $session_code, $activationCode);
         } catch (\Throwable $e) {
-            \Log::warning('pairDevice DB update error: ' . $e->getMessage());
+            \Log::warning('pairDevice attachDevice error: ' . $e->getMessage());
         }
-
-        // ۲. انجام اتصال در کش برای ۲ ساعت
-        Cache::put('pairing_' . $session_code, [
-            'user_id' => $user->id,
-            'username' => $user->username,
-            'token' => $user->display_token
-        ], 7200);
 
         if ($request->wantsJson() || $request->ajax() || $request->isJson()) {
             return response()->json([
@@ -379,12 +370,33 @@ class PublicDisplayController extends Controller
     }
 
     /**
+     * تولید کد فعال‌سازی ۶ کاراکتری با الفبای غیرمبهم (بدون 0, O, 1, I, L)
+     */
+    public static function makeActivationCode(int $length = 6): string
+    {
+        $alphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+        $max = strlen($alphabet) - 1;
+        for ($attempt = 0; $attempt < 8; $attempt++) {
+            $code = '';
+            for ($i = 0; $i < $length; $i++) {
+                $code .= $alphabet[random_int(0, $max)];
+            }
+            $taken = DB::table('tv_sessions')
+                ->where('activation_code', $code)
+                ->where('expires_at', '>', now())
+                ->exists();
+            if (!$taken) {
+                return $code;
+            }
+        }
+        throw new \RuntimeException('activation code generation exhausted');
+    }
+
+    /**
      * ثبت سشن موقت تلویزیون در سرور با ذخیره دوگانه در دیتابیس و کش (اعتبار ۲ ساعت)
      */
     public function registerSession(Request $request)
     {
-        self::ensureTvSessionsTable();
-
         $sessionCode = $request->input('session_code');
         $rawCode = (string) $request->input('activation_code', '');
         $activationCode = self::normalizeDigits($rawCode);
@@ -398,13 +410,9 @@ class PublicDisplayController extends Controller
             DB::table('tv_sessions')->where('expires_at', '<', now()->subDay())->delete();
         } catch (\Throwable $e) {}
 
-        // اگر کدی ارسال نشده یا کمتر از ۶ کاراکتر است، از روی سشن استخراج می‌کنیم
+        // اگر کدی ارسال نشده یا کمتر از ۶ کاراکتر است، با الفبای غیرمبهم تولید می‌کنیم
         if (empty($activationCode) || strlen($activationCode) < 6) {
-            if (strlen($sessionCode) >= 11) {
-                $activationCode = strtoupper(substr($sessionCode, 5, 6));
-            } else {
-                $activationCode = strtoupper(Str::random(6));
-            }
+            $activationCode = self::makeActivationCode();
         }
 
         $expiresAt = now()->addHours(2);
@@ -433,9 +441,11 @@ class PublicDisplayController extends Controller
         Cache::put('tv_code_for_' . $sessionCode, $activationCode, 7200);
 
         return response()->json([
-            'success' => true,
-            'activation_code' => $activationCode,
-            'session_code' => $sessionCode
+            'success'               => true,
+            'activation_code'       => $activationCode,
+            'session_code'          => $sessionCode,
+            'poll_interval_seconds' => 3,
+            'expires_in_seconds'    => 7200,
         ]);
     }
 
@@ -444,8 +454,6 @@ class PublicDisplayController extends Controller
      */
     public function pairWithCode(Request $request)
     {
-        self::ensureTvSessionsTable();
-
         $rawCode = (string) $request->input('activation_code', '');
         $activationCode = self::normalizeDigits($rawCode);
         
@@ -513,36 +521,13 @@ class PublicDisplayController extends Controller
 
         $user = auth()->user();
 
-        // اطمینان از وجود display_token
+        // اطمینان از وجود display_token برای سازگاری مرورگر
         if (empty($user->display_token)) {
             $user->display_token = Str::random(32);
             $user->save();
         }
 
-        // بروزرسانی قطعی در دیتابیس
-        try {
-            DB::table('tv_sessions')
-                ->where('session_code', $sessionCode)
-                ->update([
-                    'is_paired'       => true,
-                    'paired_user_id'  => $user->id,
-                    'paired_username' => $user->username,
-                    'paired_token'    => $user->display_token,
-                    'updated_at'      => now(),
-                ]);
-        } catch (\Throwable $e) {
-            \Log::warning('pairWithCode DB update error: ' . $e->getMessage());
-        }
-
-        // بروزرسانی در کش برای واکنش سریع صفحه تلویزیون
-        Cache::put('pairing_' . $sessionCode, [
-            'user_id'  => $user->id,
-            'username' => $user->username,
-            'token'    => $user->display_token
-        ], 7200);
-
-        // پاکسازی کش اولیه کد
-        Cache::forget('tv_session_' . $activationCode);
+        $this->attachDevice($user, $sessionCode, $activationCode);
 
         return response()->json([
             'success' => true,
@@ -555,8 +540,6 @@ class PublicDisplayController extends Controller
      */
     public function sendMagicSms(Request $request, \App\Services\SmsService $smsService)
     {
-        self::ensureTvSessionsTable();
-
         $phone = \App\Services\SmsService::normalizeMobile((string) $request->input('phone', ''));
         if (!preg_match('/^09[0-9]{9}$/', $phone)) {
             return response()->json(['success' => false, 'message' => 'شماره موبایل نامعتبر است. فرمت صحیح: ۰۹xxxxxxxxx'], 422);
@@ -596,8 +579,6 @@ class PublicDisplayController extends Controller
      */
     public function pairMagicShortLink(Request $request, $code)
     {
-        self::ensureTvSessionsTable();
-
         $cleanCode = self::normalizeDigits((string) $code);
         $sessionCode = null;
 
@@ -629,25 +610,7 @@ class PublicDisplayController extends Controller
                 $user->save();
             }
 
-            try {
-                DB::table('tv_sessions')
-                    ->where('session_code', $sessionCode)
-                    ->update([
-                        'is_paired'       => true,
-                        'paired_user_id'  => $user->id,
-                        'paired_username' => $user->username,
-                        'paired_token'    => $user->display_token,
-                        'updated_at'      => now(),
-                    ]);
-            } catch (\Throwable $e) {}
-
-            Cache::put('pairing_' . $sessionCode, [
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'token' => $user->display_token
-            ], 7200);
-
-            Cache::forget('tv_session_' . $cleanCode);
+            $this->attachDevice($user, $sessionCode, $cleanCode);
 
             return redirect()->route('admin.dashboard')->with('success_pair', 'تلویزیون مغازه با موفقیت به تابلوی گالری شما متصل شد! 🎉');
         }
@@ -655,5 +618,44 @@ class PublicDisplayController extends Controller
         // اگر کاربر هنوز لاگین نکرده باشد، کد را در سشن نگه می‌داریم و به صفحه لاگین می‌فرستیم
         session(['pending_pair_code' => $cleanCode]);
         return redirect()->route('admin.login')->with('info', 'جهت اتصال این تلویزیون به تابلوی اختصاصی، لطفاً ابتدا وارد حساب کاربری خود شوید.');
+    }
+
+    /**
+     * بررسی زنده بودن دستگاه، وضعیت ابطال، دریافت تنظیمات از راه دور و بررسی به‌روزرسانی
+     */
+    public function heartbeat(Request $request)
+    {
+        $token = (string) $request->input('device_token');
+        if (empty($token)) {
+            return response()->json(['revoked' => true, 'message' => 'device_token is required'], 400);
+        }
+
+        $device = \App\Models\TvDevice::where('device_token', $token)->first();
+        if (!$device || !is_null($device->revoked_at)) {
+            return response()->json(['revoked' => true]);
+        }
+
+        // بروزرسانی مشخصات فنی و آخرین زمان ضربان دستگاه
+        $device->update([
+            'last_seen_at'    => now(),
+            'app_version'     => $request->input('app_version') ?? $request->input('app_version_code'),
+            'android_release' => $request->input('android_release'),
+            'webview_version' => $request->input('webview_version'),
+        ]);
+
+        $baseUrl = rtrim(config('app.url', url('/')), '/');
+        $boardUrl = $baseUrl . '/' . $device->username . '?tv=1';
+        $tvConfig = config('tv', []);
+
+        return response()->json([
+            'revoked'                    => false,
+            'username'                   => $device->username,
+            'board_url'                  => $boardUrl,
+            'base_urls'                  => $tvConfig['base_urls'] ?? [$baseUrl],
+            'latest_version_code'        => (int) ($tvConfig['latest_version_code'] ?? 1),
+            'min_version_code'           => (int) ($tvConfig['min_version_code'] ?? 1),
+            'apk_url'                    => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
+            'heartbeat_interval_seconds' => (int) ($tvConfig['heartbeat_interval_seconds'] ?? 900),
+        ]);
     }
 }

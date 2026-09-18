@@ -161,4 +161,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class, 'user_id')->latest();
     }
+
+    public function tvDevices()
+    {
+        return $this->hasMany(TvDevice::class, 'user_id');
+    }
 }
+

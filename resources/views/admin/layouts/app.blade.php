@@ -68,6 +68,7 @@
                 @php
                     $links = [
                         ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard'],
+                        ['r' => 'admin.devices.index', 'l' => 'تلویزیون‌های من', 'i' => 'tv'],
                         ['r' => 'admin.subscription.index', 'l' => 'خرید و تمدید اشتراک', 'i' => 'crown'],
                         ['r' => 'admin.transactions.index', 'l' => 'تراکنش‌ها و مالی', 'i' => 'wallet', 'super_only' => true],
                         ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],

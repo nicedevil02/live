@@ -20,18 +20,16 @@
 
 #### گزینه ب: استفاده از API Endpoint (راحت‌تر)
 ```bash
-*/1 * * * * curl -s "https://yourdomain.com/api/public/cron/market-fetch?token=secure-market-fetch-token-2026" > /dev/null 2>&1
+*/1 * * * * curl -s "https://yourdomain.com/api/public/cron/market-fetch?token=talalive-cron-secret-2026" > /dev/null 2>&1
 ```
 
 مثال دقیق:
 ```bash
-*/1 * * * * curl -s "https://goldapp.com/api/public/cron/market-fetch?token=secure-market-fetch-token-2026" > /dev/null 2>&1
+*/1 * * * * curl -s "https://talalive.ir/api/public/cron/market-fetch?token=talalive-cron-secret-2026" > /dev/null 2>&1
 ```
 
-### حل 2: Middleware خودکار (Fallback)
-اگر cron job تنظیم نشود، میانبر `FetchMarketDataMiddleware` در هر درخواست HTTP بررسی می‌کند و اگر 60 ثانیه گذشته باشد، درخواست خودکار می‌شود.
-
-**نکته:** این روش فقط زمانی کار می‌کند که درخواست HTTP وجود داشته باشد. اگر هیچ کسی صفحه را نبیند، درخواست نمی‌شود.
+### حل 2: Middleware واکشی اولیه (Initial Seed Fallback)
+میانبر `FetchMarketDataMiddleware` فقط زمانی فعال می‌شود که جدول `market_cache` کاملاً خالی باشد (مثلاً پس از راه‌اندازی اولیه سامانه). این میانبر برای به‌روزرسانی مداوم نیست و اتکای کامل دریافت نرخ‌ها بر روی Cron Job (گزینه الف یا ب) است.
 
 ### حل 3: cPanel/Hosting Panel
 اگر hosting شما cPanel دارد:
@@ -42,15 +40,15 @@
 4. Common Settings: **Every Minute** انتخاب کنید
 5. Command: 
 ```
-curl -s "https://yourdomain.com/api/public/cron/market-fetch?token=secure-market-fetch-token-2026" > /dev/null 2>&1
+curl -s "https://talalive.ir/api/public/cron/market-fetch?token=talalive-cron-secret-2026" > /dev/null 2>&1
 ```
 6. Add Cron Job کلیک کنید
 
 ## تغییرات کد
 
-- ✅ **Middleware اضافه شد:** `app/Http/Middleware/FetchMarketDataMiddleware.php`
+- ✅ **Middleware آماده‌سازی:** `app/Http/Middleware/FetchMarketDataMiddleware.php` (تنها در صورت خالی بودن کش)
 - ✅ **API Endpoint اضافه شد:** `GET /api/public/cron/market-fetch`
-- ✅ **Cron Token اضافه شد:** `.env` میں `CRON_TOKEN`
+- ✅ **Cron Token اختصاصی:** در `.env` مقدار `CRON_TOKEN=talalive-cron-secret-2026`
 
 ## تست
 
