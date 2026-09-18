@@ -76,8 +76,9 @@ if (function_exists('shell_exec')) {
     $disabled = array_map('trim', $disabled);
     if (!in_array('shell_exec', $disabled)) {
         $shellAllowed = true;
-        // Fetch origin master and reset hard to ensure exact sync
-        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git checkout master 2>&1 && git fetch origin master 2>&1 && git reset --hard origin/master 2>&1';
+        $targetBranch = preg_replace('/[^a-zA-Z0-9_\-\/]/', '', $_GET['branch'] ?? 'master');
+        if (empty($targetBranch)) $targetBranch = 'master';
+        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout ' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
             $log[] = 'Git sync output: ' . trim($gitOutput);
