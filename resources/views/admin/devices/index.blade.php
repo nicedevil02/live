@@ -329,7 +329,7 @@
                         <span class="inline-block px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 font-mono font-black text-sm text-amber-600 dark:text-amber-400" dir="ltr">
                             talalive.ir/tv
                         </span>
-                        <a href="{{ url('/downloads/talalive-tv.apk') }}" target="_blank" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                        <a href="{{ url('/downloads/talalive-tv.apk?v=2') }}" target="_blank" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
                             ⬇️ دانلود فایل نصبی اندروید TV
                         </a>
                     </div>

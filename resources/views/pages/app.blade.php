@@ -45,7 +45,7 @@
                     <h2 class="text-base font-semibold text-slate-300">دریافت فایل نصبی رسمی تلویزیون و وب‌اپلیکیشن:</h2>
                     <div class="flex flex-wrap items-center gap-4">
                         <!-- دانلود مستقیم نسخه تلویزیون -->
-                        <a href="/downloads/talalive-tv.apk" class="app-badge-btn flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-xl text-right border border-amber-400/50">
+                        <a href="/downloads/talalive-tv.apk?v=2" class="app-badge-btn flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-xl text-right border border-amber-400/50">
                             <span class="text-3xl">📺</span>
                             <div>
                                 <span class="block text-xs font-bold text-slate-900">دانلود مستقیم اپلیکیشن تلویزیون</span>
