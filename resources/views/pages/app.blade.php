@@ -50,7 +50,7 @@
                             <div>
                                 <span class="block text-xs font-bold text-slate-900">دانلود مستقیم اپلیکیشن تلویزیون</span>
                                 <span class="block text-base font-black">طلالایو TV (نسخه ۱.۰.۰)</span>
-                                <span class="block text-[11px] text-slate-900 font-medium">حجم سبک ۵۴ کیلوبایت • ویژه اندروید تی‌وی و باکس</span>
+                                <span class="block text-[11px] text-slate-900 font-medium">حجم سبک ۵۲ کیلوبایت • ویژه اندروید تی‌وی و باکس</span>
                             </div>
                         </a>
 
