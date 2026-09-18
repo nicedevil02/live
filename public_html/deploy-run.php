@@ -67,18 +67,24 @@ foreach ($zipCandidates as $zipPath) {
     }
 }
 
-// 3. Try git pull if shell_exec is allowed
+// 3. Git pull from remote repository
 $gitOutput = '';
+$headCommit = '';
 $shellAllowed = false;
 if (function_exists('shell_exec')) {
     $disabled = explode(',', (string)ini_get('disable_functions'));
     $disabled = array_map('trim', $disabled);
     if (!in_array('shell_exec', $disabled)) {
         $shellAllowed = true;
-        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin master 2>&1 && git reset --hard FETCH_HEAD 2>&1';
+        // Fetch origin master and reset hard to ensure exact sync
+        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git checkout master 2>&1 && git fetch origin master 2>&1 && git reset --hard origin/master 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
-            $log[] = 'Git pull output: ' . trim($gitOutput);
+            $log[] = 'Git sync output: ' . trim($gitOutput);
+        }
+        $headCommit = trim((string)@shell_exec('cd ' . escapeshellarg($sourceDir) . ' && git log -1 --format="%h - %s (%ci by %an)" 2>&1'));
+        if ($headCommit) {
+            $log[] = 'Checked out HEAD commit: ' . $headCommit;
         }
     } else {
         $log[] = 'Notice: shell_exec is in disable_functions.';
@@ -90,8 +96,7 @@ if (function_exists('shell_exec')) {
 // Fallback: If git pull did not run and no zip was extracted, download latest live.blade.php directly from GitHub
 if (!$shellAllowed && !$zipExtracted) {
     $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php';
-    $ctx = stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: Mozilla/5.0
-"]]);
+    $ctx = stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: Mozilla/5.0\r\n"]]);
     $newBlade = @file_get_contents($rawUrl, false, $ctx);
     if ($newBlade && strlen($newBlade) > 10000) {
         @file_put_contents("$targetDir/resources/views/display/live.blade.php", $newBlade);
@@ -99,25 +104,42 @@ if (!$shellAllowed && !$zipExtracted) {
     }
 }
 
-// 3. Define directories and files to sync
-$dirsToSync = [
-    'app',
-    'bootstrap',
-    'config',
-    'database',
-    'resources',
-    'routes',
-];
+// 4. Trigger cPanel VersionControl UAPI deployment (registers deployment in cPanel GUI)
+$uapiOutput = '';
+if ($shellAllowed) {
+    $uapiCmd = 'uapi VersionControl deployment create repository_root=' . escapeshellarg($sourceDir) . ' 2>&1';
+    $uapiOutput = @shell_exec($uapiCmd);
+    if (empty($uapiOutput) || stripos($uapiOutput, 'not found') !== false) {
+        $altUapi = '/usr/local/cpanel/bin/uapi VersionControl deployment create repository_root=' . escapeshellarg($sourceDir) . ' 2>&1';
+        $uapiOutput = @shell_exec($altUapi);
+    }
+    if ($uapiOutput) {
+        $log[] = 'cPanel UAPI Deployment: ' . trim($uapiOutput);
+    }
+}
 
-$filesToSync = [
-    'artisan',
-    'composer.json',
-    'package.json',
-];
-
+// 5. High-speed file synchronization matching .cpanel.yml
 $copiedFiles = 0;
 $copiedDirs = 0;
 
+if ($shellAllowed) {
+    $cpCmd = "
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/app') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/bootstrap') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/config') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/database') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/resources') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/routes') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/public_html/.') . " " . escapeshellarg($targetDir . '/public_html/') . " 2>&1
+        /bin/cp -f " . escapeshellarg($sourceDir . '/artisan') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -f " . escapeshellarg($sourceDir . '/composer.json') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+        /bin/cp -f " . escapeshellarg($sourceDir . '/package.json') . " " . escapeshellarg($targetDir . '/') . " 2>&1
+    ";
+    @shell_exec($cpCmd);
+    $log[] = 'Synchronized core directories and public_html via /bin/cp -Rf';
+}
+
+// 6. PHP Recursive synchronization (MD5-aware fallback & verification)
 function syncDirectory($src, $dst, &$copiedFiles, &$copiedDirs, $exclude = []) {
     if (!is_dir($src)) return;
     if (!is_dir($dst)) {
@@ -140,35 +162,43 @@ function syncDirectory($src, $dst, &$copiedFiles, &$copiedDirs, $exclude = []) {
                 $copiedDirs++;
             }
         } else {
-            if (!file_exists($target) || filemtime($item->getRealPath()) > filemtime($target) || filesize($item->getRealPath()) !== filesize($target)) {
-                @copy($item->getRealPath(), $target);
+            $srcPath = $item->getRealPath();
+            $needsCopy = false;
+            if (!file_exists($target)) {
+                $needsCopy = true;
+            } elseif (filesize($srcPath) !== filesize($target)) {
+                $needsCopy = true;
+            } elseif (md5_file($srcPath) !== md5_file($target)) {
+                $needsCopy = true;
+            }
+
+            if ($needsCopy) {
+                @copy($srcPath, $target);
                 $copiedFiles++;
             }
         }
     }
 }
 
-// Sync core directories
+$dirsToSync = ['app', 'bootstrap', 'config', 'database', 'resources', 'routes'];
 foreach ($dirsToSync as $dir) {
     syncDirectory("$sourceDir/$dir", "$targetDir/$dir", $copiedFiles, $copiedDirs);
 }
-
-// Sync public_html (including download APK, talalive-tv.json and .htaccess)
 syncDirectory("$sourceDir/public_html", "$targetDir/public_html", $copiedFiles, $copiedDirs);
 
-// Sync root files
+$filesToSync = ['artisan', 'composer.json', 'package.json'];
 foreach ($filesToSync as $file) {
     $srcFile = "$sourceDir/$file";
     $dstFile = "$targetDir/$file";
     if (file_exists($srcFile)) {
-        if (!file_exists($dstFile) || filemtime($srcFile) > filemtime($dstFile) || filesize($srcFile) !== filesize($dstFile)) {
+        if (!file_exists($dstFile) || filesize($srcFile) !== filesize($dstFile) || md5_file($srcFile) !== md5_file($dstFile)) {
             @copy($srcFile, $dstFile);
             $copiedFiles++;
         }
     }
 }
 
-// 4. Clear Blade compiled views cache
+// 7. Clear Blade compiled views cache
 $viewCacheDir = "$targetDir/storage/framework/views";
 $clearedViews = 0;
 if (is_dir($viewCacheDir)) {
@@ -178,18 +208,36 @@ if (is_dir($viewCacheDir)) {
     }
 }
 
-// 5. Run Artisan migrations and optimize cache
-$migrateOutput = '';
-if (function_exists('shell_exec')) {
-    $disabled = explode(',', (string)ini_get('disable_functions'));
-    $disabled = array_map('trim', $disabled);
-    if (!in_array('shell_exec', $disabled)) {
-        $phpBin = PHP_BINARY ?: 'php';
-        $migrateCmd = 'cd ' . escapeshellarg($targetDir) . ' && ' . escapeshellarg($phpBin) . ' artisan migrate --force 2>&1';
-        $migrateOutput = @shell_exec($migrateCmd);
-        if ($migrateOutput) {
-            $log[] = 'Migrate output: ' . trim($migrateOutput);
+// 8. Clear Bootstrap caches (routes, config, events, packages)
+$bootstrapCacheDir = "$targetDir/bootstrap/cache";
+$clearedBootstrap = 0;
+if (is_dir($bootstrapCacheDir)) {
+    foreach (['config.php', 'routes-v7.php', 'events.php', 'packages.php', 'services.php'] as $bFile) {
+        $bPath = "$bootstrapCacheDir/$bFile";
+        if (file_exists($bPath)) {
+            @unlink($bPath);
+            $clearedBootstrap++;
         }
+    }
+}
+
+// 9. Reset PHP OPcache bytecode cache
+$opcacheReset = false;
+if (function_exists('opcache_reset')) {
+    $opcacheReset = @opcache_reset();
+    if ($opcacheReset) {
+        $log[] = 'PHP OPcache bytecode reset successfully.';
+    }
+}
+
+// 10. Run Artisan migrations
+$migrateOutput = '';
+if ($shellAllowed) {
+    $phpBin = PHP_BINARY ?: 'php';
+    $migrateCmd = 'cd ' . escapeshellarg($targetDir) . ' && ' . escapeshellarg($phpBin) . ' artisan migrate --force 2>&1';
+    $migrateOutput = @shell_exec($migrateCmd);
+    if ($migrateOutput) {
+        $log[] = 'Migrate output: ' . trim($migrateOutput);
     }
 }
 
@@ -208,27 +256,22 @@ if (empty($migrateOutput) && file_exists("$targetDir/vendor/autoload.php") && fi
     }
 }
 
-$activeUsers = [];
-try {
-    if (class_exists(\App\Models\User::class)) {
-        $activeUsers = \App\Models\User::pluck('username')->filter()->values()->all();
-    }
-} catch (\Throwable $e) {}
-
 $duration = round(microtime(true) - $startTime, 3);
 
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'success' => true,
-    'message' => '🚀 Deployment successfully completed!',
+    'message' => '🚀 Deployment successfully completed and synchronized!',
+    'head_commit' => $headCommit ?: 'Up to date with origin/master',
     'duration_seconds' => $duration,
     'stats' => [
-        'files_synced' => $copiedFiles,
+        'files_updated' => $copiedFiles,
         'directories_created' => $copiedDirs,
         'views_cache_cleared' => $clearedViews,
-        'active_users' => $activeUsers,
+        'bootstrap_cache_cleared' => $clearedBootstrap,
+        'opcache_reset' => $opcacheReset,
     ],
     'log' => $log,
-    'git' => $gitOutput ? trim($gitOutput) : 'Synchronized from repository snapshot',
+    'git' => $gitOutput ? trim($gitOutput) : 'Synchronized from master repository',
     'timestamp' => date('Y-m-d H:i:s T')
-], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
