@@ -8,5 +8,5 @@ return [
         'https://talalive.ir',
         'https://www.talalive.ir',
     ],
-    'heartbeat_interval_seconds' => (int) env('TV_HEARTBEAT_INTERVAL', 900),
+    'heartbeat_interval_seconds' => (int) env('TV_HEARTBEAT_INTERVAL', 30),
 ];

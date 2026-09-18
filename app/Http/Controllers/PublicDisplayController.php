@@ -656,7 +656,7 @@ class PublicDisplayController extends Controller
             'latest_version_code'        => (int) ($tvConfig['latest_version_code'] ?? 1),
             'min_version_code'           => (int) ($tvConfig['min_version_code'] ?? 1),
             'apk_url'                    => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
-            'heartbeat_interval_seconds' => (int) ($tvConfig['heartbeat_interval_seconds'] ?? 900),
+            'heartbeat_interval_seconds' => (int) ($tvConfig['heartbeat_interval_seconds'] ?? 30),
         ]);
     }
 }

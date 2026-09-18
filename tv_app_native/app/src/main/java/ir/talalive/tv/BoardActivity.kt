@@ -92,10 +92,11 @@ class BoardActivity : Activity() {
         }
     }
 
+    private var currentHeartbeatIntervalMs = 30_000L
     private val heartbeatRunnable = object : Runnable {
         override fun run() {
             performHeartbeat()
-            handler.postDelayed(this, 900_000L) // هر ۱۵ دقیقه
+            handler.postDelayed(this, currentHeartbeatIntervalMs)
         }
     }
 
@@ -652,6 +653,12 @@ class BoardActivity : Activity() {
                     if (hb.revoked) {
                         Log.w(tag, "Device revoked from admin panel!")
                         TvPrefs.clearPairing(this)
+                        try {
+                            webView?.stopLoading()
+                            webView?.loadUrl("about:blank")
+                        } catch (e: Exception) {
+                            Log.e(tag, "Error stopping webview on revocation", e)
+                        }
                         showDiagnostic(
                             getString(R.string.device_revoked_title),
                             getString(R.string.device_revoked_desc),
@@ -661,6 +668,9 @@ class BoardActivity : Activity() {
                             finish()
                         }
                     } else {
+                        if (hb.intervalSeconds > 0) {
+                            currentHeartbeatIntervalMs = (hb.intervalSeconds.coerceIn(10, 900)) * 1000L
+                        }
                         TvPrefs.saveHeartbeat(
                             this,
                             hb.boardUrl,
