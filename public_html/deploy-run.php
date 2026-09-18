@@ -199,6 +199,91 @@ foreach ($filesToSync as $file) {
     }
 }
 
+// 6.5. Synchronize Android TV APK binary (Rule U-03 Compliant)
+$apkMetaFile = "$targetDir/public_html/downloads/talalive-tv.json";
+$apkTarget = "$targetDir/public_html/downloads/talalive-tv.apk";
+$apkRepoTarget = "$sourceDir/public_html/downloads/talalive-tv.apk";
+$apkStatus = ['synced' => false];
+
+if (file_exists($apkMetaFile)) {
+    $meta = json_decode((string)file_get_contents($apkMetaFile), true);
+    $expectedSha = strtolower(trim((string)($meta['sha256'] ?? '')));
+    $expectedSize = (int)($meta['size_bytes'] ?? 0);
+    $apkStatus['expected_sha256'] = $expectedSha;
+    $apkStatus['expected_size'] = $expectedSize;
+
+    $currentSha = file_exists($apkTarget) ? strtolower(hash_file('sha256', $apkTarget)) : '';
+    $currentSize = file_exists($apkTarget) ? filesize($apkTarget) : 0;
+    $apkStatus['current_sha256'] = $currentSha;
+    $apkStatus['current_size'] = $currentSize;
+
+    // Check if update is needed
+    if (empty($currentSha) || $currentSha !== $expectedSha || $currentSize !== $expectedSize) {
+        $apkBinary = null;
+
+        // A. Check if uploaded via POST apk_base64
+        if (!empty($_POST['apk_base64'])) {
+            $apkBinary = base64_decode($_POST['apk_base64']);
+        }
+
+        // B. Check if present in repository source directory
+        if (!$apkBinary && file_exists($apkRepoTarget)) {
+            $repoSha = strtolower(hash_file('sha256', $apkRepoTarget));
+            if ($repoSha === $expectedSha) {
+                $apkBinary = file_get_contents($apkRepoTarget);
+            }
+        }
+
+        // C. Download from GitHub apk-dist branch CDN
+        if (!$apkBinary) {
+            $apkDistUrl = 'https://raw.githubusercontent.com/nicedevil02/live/apk-dist/talalive-tv.apk';
+            $ctx = stream_context_create([
+                'http' => [
+                    'timeout' => 20,
+                    'header' => "User-Agent: Mozilla/5.0 (TalaLive-Deploy)\r\n"
+                ],
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ]
+            ]);
+            $downloaded = @file_get_contents($apkDistUrl, false, $ctx);
+            if ($downloaded && strlen($downloaded) > 10000) {
+                $downSha = strtolower(hash('sha256', $downloaded));
+                if ($downSha === $expectedSha) {
+                    $apkBinary = $downloaded;
+                    $log[] = "Downloaded verified APK from GitHub apk-dist (" . strlen($downloaded) . " bytes)";
+                } else {
+                    $log[] = "Downloaded APK SHA256 mismatch: got $downSha, expected $expectedSha";
+                }
+            } else {
+                $log[] = "Notice: Could not download APK from $apkDistUrl";
+            }
+        }
+
+        if ($apkBinary) {
+            @mkdir(dirname($apkTarget), 0755, true);
+            @file_put_contents($apkTarget, $apkBinary);
+            @chmod($apkTarget, 0644);
+            @mkdir(dirname($apkRepoTarget), 0755, true);
+            @file_put_contents($apkRepoTarget, $apkBinary);
+            @chmod($apkRepoTarget, 0644);
+            $copiedFiles++;
+            $apkStatus['synced'] = true;
+            $apkStatus['final_size'] = filesize($apkTarget);
+            $apkStatus['final_sha256'] = hash_file('sha256', $apkTarget);
+            $log[] = "Successfully deployed talalive-tv.apk to $apkTarget (" . filesize($apkTarget) . " bytes)";
+        } else {
+            $log[] = "Warning: Could not obtain matching APK binary for $expectedSha";
+        }
+    } else {
+        $apkStatus['synced'] = true;
+        $apkStatus['final_size'] = $currentSize;
+        $apkStatus['final_sha256'] = $currentSha;
+        $apkStatus['message'] = "Already matching latest release";
+    }
+}
+
 // 7. Clear Blade compiled views cache
 $viewCacheDir = "$targetDir/storage/framework/views";
 $clearedViews = 0;
@@ -279,6 +364,7 @@ echo json_encode([
         'bootstrap_cache_cleared' => $clearedBootstrap,
         'opcache_reset' => $opcacheReset,
         'table_status' => $tableStatus,
+        'apk_status' => $apkStatus,
     ],
     'log' => $log,
     'recent_log_tail' => array_map('trim', $recentErrors),
