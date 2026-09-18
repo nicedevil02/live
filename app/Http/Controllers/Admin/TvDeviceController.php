@@ -6,18 +6,41 @@ use App\Http\Controllers\Controller;
 use App\Models\TvDevice;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 
 class TvDeviceController extends Controller
 {
+    /**
+     * اطمینان از وجود جدول دیتابیس tv_devices و اجرای خودکار مایگریشن در صورت عدم وجود
+     */
+    private function ensureTvDevicesTable(): void
+    {
+        try {
+            if (!Schema::hasTable('tv_devices')) {
+                Artisan::call('migrate', ['--force' => true]);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('ensureTvDevicesTable auto-migration notice: ' . $e->getMessage());
+        }
+    }
+
     /**
      * نمایش فهرست تلویزیون‌های متصل کاربر
      */
     public function index()
     {
+        $this->ensureTvDevicesTable();
+
         $user = auth()->user();
-        $devices = TvDevice::where('user_id', $user->id)
-            ->latest('last_seen_at')
-            ->get();
+        try {
+            $devices = TvDevice::where('user_id', $user->id)
+                ->latest('last_seen_at')
+                ->get();
+        } catch (\Throwable $e) {
+            \Log::error('TvDevice index error: ' . $e->getMessage());
+            $devices = collect();
+        }
 
         return view('admin.devices.index', compact('devices'));
     }

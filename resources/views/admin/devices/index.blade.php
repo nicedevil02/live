@@ -58,8 +58,9 @@
             @foreach($devices as $dev)
                 @php
                     $isRevoked = !is_null($dev->revoked_at);
-                    $lastSeenText = $dev->last_seen_at ? \App\Models\User::toJalali($dev->last_seen_at) : 'نامشخص';
-                    $isRecent = $dev->last_seen_at && now()->diffInMinutes($dev->last_seen_at) < 30;
+                    $lastSeenParsed = $dev->last_seen_at ? ($dev->last_seen_at instanceof \DateTimeInterface ? $dev->last_seen_at : \Carbon\Carbon::parse($dev->last_seen_at)) : null;
+                    $lastSeenText = $lastSeenParsed ? \App\Models\User::toJalali($lastSeenParsed) : 'نامشخص';
+                    $isRecent = $lastSeenParsed && now()->diffInMinutes($lastSeenParsed) < 30;
                 @endphp
                 <div class="bg-white dark:bg-slate-900 border {{ $isRevoked ? 'border-rose-200 dark:border-rose-900/40 opacity-75' : 'border-slate-200 dark:border-slate-800' }} rounded-3xl p-6 shadow-sm flex flex-col justify-between transition-all hover:shadow-md">
                     <div>

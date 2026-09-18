@@ -230,29 +230,36 @@ if (function_exists('opcache_reset')) {
     }
 }
 
-// 10. Run Artisan migrations
-$migrateOutput = '';
-if ($shellAllowed) {
-    $phpBin = PHP_BINARY ?: 'php';
-    $migrateCmd = 'cd ' . escapeshellarg($targetDir) . ' && ' . escapeshellarg($phpBin) . ' artisan migrate --force 2>&1';
-    $migrateOutput = @shell_exec($migrateCmd);
-    if ($migrateOutput) {
-        $log[] = 'Migrate output: ' . trim($migrateOutput);
-    }
-}
-
-// Fallback: in-process migration if shell_exec was disabled or failed
-if (empty($migrateOutput) && file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/bootstrap/app.php")) {
+// 10. Run Artisan migrations unconditionally & verify tables
+$tableStatus = [];
+$artisanMigrateOutput = '';
+if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/bootstrap/app.php")) {
     try {
         require_once "$targetDir/vendor/autoload.php";
         $app = require_once "$targetDir/bootstrap/app.php";
         $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
         $kernel->bootstrap();
+
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
-        $log[] = 'In-process migrate output: ' . trim($migrateOutput);
+        $artisanMigrateOutput = trim(\Illuminate\Support\Facades\Artisan::output());
+        if ($artisanMigrateOutput) {
+            $log[] = 'Migrate: ' . $artisanMigrateOutput;
+        }
+
+        $tableStatus['tv_devices'] = \Illuminate\Support\Facades\Schema::hasTable('tv_devices');
+        $tableStatus['tv_sessions'] = \Illuminate\Support\Facades\Schema::hasTable('tv_sessions');
     } catch (\Throwable $e) {
-        $log[] = 'In-process migrate error: ' . $e->getMessage();
+        $log[] = 'In-process bootstrap error: ' . $e->getMessage();
+    }
+}
+
+// 11. Read recent Laravel log errors if any
+$recentErrors = [];
+$logPath = "$targetDir/storage/logs/laravel.log";
+if (file_exists($logPath)) {
+    $lines = @file($logPath);
+    if (!empty($lines)) {
+        $recentErrors = array_slice($lines, -15);
     }
 }
 
@@ -270,8 +277,10 @@ echo json_encode([
         'views_cache_cleared' => $clearedViews,
         'bootstrap_cache_cleared' => $clearedBootstrap,
         'opcache_reset' => $opcacheReset,
+        'table_status' => $tableStatus,
     ],
     'log' => $log,
+    'recent_log_tail' => array_map('trim', $recentErrors),
     'git' => $gitOutput ? trim($gitOutput) : 'Synchronized from master repository',
     'timestamp' => date('Y-m-d H:i:s T')
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
