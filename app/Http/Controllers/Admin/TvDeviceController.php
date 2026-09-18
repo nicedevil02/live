@@ -6,32 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\TvDevice;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Schema;
 
 class TvDeviceController extends Controller
 {
-    /**
-     * اطمینان از وجود جدول دیتابیس tv_devices و اجرای خودکار مایگریشن در صورت عدم وجود
-     */
-    private function ensureTvDevicesTable(): void
-    {
-        try {
-            if (!Schema::hasTable('tv_devices')) {
-                Artisan::call('migrate', ['--force' => true]);
-            }
-        } catch (\Throwable $e) {
-            \Log::warning('ensureTvDevicesTable auto-migration notice: ' . $e->getMessage());
-        }
-    }
-
     /**
      * نمایش فهرست تلویزیون‌های متصل کاربر
      */
     public function index()
     {
-        $this->ensureTvDevicesTable();
-
         $user = auth()->user();
         try {
             $devices = TvDevice::where('user_id', $user->id)
@@ -64,7 +46,6 @@ class TvDeviceController extends Controller
      */
     public function update(Request $request, TvDevice $device)
     {
-        $this->ensureTvDevicesTable();
         $this->authorizeDevice($device);
 
         $validated = $request->validate([
@@ -84,7 +65,6 @@ class TvDeviceController extends Controller
      */
     public function destroy(TvDevice $device)
     {
-        $this->ensureTvDevicesTable();
         $this->authorizeDevice($device);
 
         $device->update([
@@ -100,7 +80,6 @@ class TvDeviceController extends Controller
      */
     public function restore(TvDevice $device)
     {
-        $this->ensureTvDevicesTable();
         $this->authorizeDevice($device);
 
         $device->update([
@@ -117,7 +96,6 @@ class TvDeviceController extends Controller
      */
     public function forceDelete(TvDevice $device)
     {
-        $this->ensureTvDevicesTable();
         $this->authorizeDevice($device);
 
         $label = $device->label ?: ('دستگاه #' . $device->id);

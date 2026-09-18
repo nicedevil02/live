@@ -15,21 +15,10 @@ class FetchMarketData extends Command
     {
         $this->info('Fetching market data...');
         
-        $now = \Illuminate\Support\Carbon::now('Asia/Tehran');
-        $hour = $now->hour;
-        
-        $iterations = ($hour >= 9 && $hour < 22) ? 6 : 1;
-
-        for ($i = 0; $i < $iterations; $i++) {
-            Cache::lock('market_fetch_lock', 25)->get(function () use ($service) {
-                $service->fetchAndCache();
-                Cache::put('market_last_fetch_at', now()->toISOString(), 3600);
-            });
-
-            if ($i < $iterations - 1) {
-                sleep(10);
-            }
-        }
+        Cache::lock('market_fetch_lock', 25)->get(function () use ($service) {
+            $service->refreshIfStale($service->currentRefreshIntervalSeconds());
+            Cache::put('market_last_fetch_at', now()->toISOString(), 3600);
+        });
         
         $this->info('Done.');
         return 0;

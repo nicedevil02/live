@@ -207,10 +207,12 @@ class PairingActivity : Activity() {
         content.addView(actionsRow)
 
         // 6. فوتر مشخصات
+        val pInfo = try { packageManager.getPackageInfo(packageName, 0) } catch (e: Exception) { null }
+        val appVer = pInfo?.versionName ?: "1.0.0"
         val webViewUa = try { WebSettings.getDefaultUserAgent(this) } catch (e: Exception) { "Unknown" }
         val chromeVer = extractChromeVersion(webViewUa)
         tvFooter = TextView(this).apply {
-            text = "TalaLive TV v1.0.0 · WebView: $chromeVer"
+            text = "TalaLive TV v$appVer · WebView: $chromeVer"
             setTextColor(Color.parseColor("#475569"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             gravity = Gravity.CENTER
@@ -265,8 +267,7 @@ class PairingActivity : Activity() {
 
     private fun loadQrCode(code: String) {
         val base = Config.baseUrls(this)[0]
-        val qrTargetUrl = "$base/p/$code"
-        val qrImgUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + java.net.URLEncoder.encode(qrTargetUrl, "UTF-8")
+        val qrImgUrl = "$base/api/tv/qr/$code"
 
         executor.execute {
             try {
@@ -275,17 +276,19 @@ class PairingActivity : Activity() {
                 conn.readTimeout = 5000
                 conn.doInput = true
                 conn.connect()
-                val bitmap = BitmapFactory.decodeStream(conn.inputStream)
-                if (bitmap != null) {
-                    handler.post {
-                        if (!isDestroyedActivity) {
-                            ivQr.setImageBitmap(bitmap)
-                            ivQr.visibility = View.VISIBLE
+                if (conn.responseCode == 200) {
+                    val bitmap = BitmapFactory.decodeStream(conn.inputStream)
+                    if (bitmap != null) {
+                        handler.post {
+                            if (!isDestroyedActivity) {
+                                ivQr.setImageBitmap(bitmap)
+                                ivQr.visibility = View.VISIBLE
+                            }
                         }
                     }
                 }
             } catch (e: Exception) {
-                Log.w(tag, "QR fetch failed: ${e.message}")
+                Log.w(tag, "Local QR fetch failed: ${e.message}")
             }
         }
     }

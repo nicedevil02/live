@@ -16,13 +16,17 @@ android {
         versionName = "1.0.0"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     signingConfigs {
         create("release") {
             val ksPath = System.getenv("TALA_KEYSTORE_PATH") ?: "../../keystore/talalive-tv-release.jks"
             storeFile = file(ksPath)
-            storePassword = System.getenv("TALA_KEYSTORE_PASSWORD") ?: "talalive2026"
+            storePassword = System.getenv("TALA_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("TALA_KEY_ALIAS") ?: "talalive"
-            keyPassword = System.getenv("TALA_KEY_PASSWORD") ?: "talalive2026"
+            keyPassword = System.getenv("TALA_KEY_PASSWORD")
         }
     }
 
@@ -34,7 +38,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         debug {
-            signingConfig = signingConfigs.getByName("release")
+            // Default Android debug signing
         }
     }
 

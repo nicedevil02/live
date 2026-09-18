@@ -97,7 +97,6 @@ class BoardActivity : Activity() {
     private val heartbeatRunnable = object : Runnable {
         override fun run() {
             performHeartbeat()
-            handler.postDelayed(this, currentHeartbeatIntervalMs)
         }
     }
 
@@ -128,53 +127,55 @@ class BoardActivity : Activity() {
         setIntent(newIntent)
         handleIntent(newIntent)
 
-        if (newIntent?.getBooleanExtra("clear_pairing", false) == true) {
-            TvPrefs.clearPairing(this)
-            startActivity(Intent(this, PairingActivity::class.java))
-            finish()
-            return
-        }
+        if (BuildConfig.DEBUG) {
+            if (newIntent?.getBooleanExtra("clear_pairing", false) == true) {
+                TvPrefs.clearPairing(this)
+                startActivity(Intent(this, PairingActivity::class.java))
+                finish()
+                return
+            }
 
-        if (newIntent?.getBooleanExtra("test_offline", false) == true) {
-            showOfflineOverlay()
-        } else if (newIntent?.getBooleanExtra("test_recreate", false) == true) {
-            recreateWebView()
-        } else if (newIntent?.getBooleanExtra("test_ssl_diag", false) == true) {
-            showDiagnostic(
-                getString(R.string.ssl_error_title),
-                getString(R.string.ssl_error_desc, "1970/01/01 00:00", "1405/06/27 12:00"),
-                getString(R.string.menu_reload)
-            ) {
+            if (newIntent?.getBooleanExtra("test_offline", false) == true) {
+                showOfflineOverlay()
+            } else if (newIntent?.getBooleanExtra("test_recreate", false) == true) {
+                recreateWebView()
+            } else if (newIntent?.getBooleanExtra("test_ssl_diag", false) == true) {
+                showDiagnostic(
+                    getString(R.string.ssl_error_title),
+                    getString(R.string.ssl_error_desc, "1970/01/01 00:00", "1405/06/27 12:00"),
+                    getString(R.string.menu_reload)
+                ) {
+                    recreateWebView()
+                }
+            } else if (newIntent?.hasExtra("test_min_chrome") == true) {
+                val minChrome = newIntent.getIntExtra("test_min_chrome", 80)
+                val cur = getChromeVersionInt()
+                if (cur < minChrome) {
+                    showDiagnostic(
+                        getString(R.string.webview_outdated_title, cur.toString()),
+                        getString(R.string.webview_outdated_desc),
+                        getString(R.string.btn_try_anyway)
+                    ) {
+                        hideDiagnostic()
+                        initAndLoadWebView()
+                    }
+                }
+            } else if (newIntent?.hasExtra("pair_board_url") == true) {
                 recreateWebView()
             }
-        } else if (newIntent?.hasExtra("test_min_chrome") == true) {
-            val minChrome = newIntent.getIntExtra("test_min_chrome", 80)
-            val cur = getChromeVersionInt()
-            if (cur < minChrome) {
-                showDiagnostic(
-                    getString(R.string.webview_outdated_title, cur.toString()),
-                    getString(R.string.webview_outdated_desc),
-                    getString(R.string.btn_try_anyway)
-                ) {
-                    hideDiagnostic()
-                    initAndLoadWebView()
-                }
-            }
-        } else if (newIntent?.hasExtra("pair_board_url") == true) {
-            recreateWebView()
         }
     }
 
     private fun handleIntent(inIntent: Intent?) {
-        if (inIntent == null) return
+        if (!BuildConfig.DEBUG || inIntent == null) return
         if (inIntent.getBooleanExtra("clear_pairing", false)) {
             TvPrefs.clearPairing(this)
             return
         }
         val pairUrl = inIntent.getStringExtra("pair_board_url")
-        if (!pairUrl.isNullOrBlank()) {
+        val token = inIntent.getStringExtra("pair_token")
+        if (!pairUrl.isNullOrBlank() && !token.isNullOrBlank()) {
             val user = inIntent.getStringExtra("pair_username") ?: "tv_demo"
-            val token = inIntent.getStringExtra("pair_token") ?: "demo_token_12345"
             TvPrefs.savePairing(this, user, token, pairUrl)
         }
     }
@@ -506,34 +507,36 @@ class BoardActivity : Activity() {
     }
 
     fun showSslDiagnostic(error: SslError) {
-        executor.execute {
-            val serverEpoch = Api.fetchServerEpochMillis(this)
-            val deviceEpoch = System.currentTimeMillis()
-            val diffHours = if (serverEpoch != null) Math.abs(deviceEpoch - serverEpoch) / (1000 * 3600) else 0
+        val cert = error.certificate
+        val notBefore = cert?.validNotBeforeDate
+        val notAfter = cert?.validNotAfterDate
+        val deviceEpoch = System.currentTimeMillis()
 
-            handler.post {
-                if (diffHours >= 24) {
-                    val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US)
-                    val devDate = sdf.format(Date(deviceEpoch))
-                    val srvDate = if (serverEpoch != null) sdf.format(Date(serverEpoch)) else "نامشخص"
+        val isDateInvalid = error.hasError(SslError.SSL_DATE_INVALID) ||
+                (notBefore != null && deviceEpoch < notBefore.time) ||
+                (notAfter != null && deviceEpoch > notAfter.time)
 
-                    showDiagnostic(
-                        getString(R.string.ssl_error_title),
-                        getString(R.string.ssl_error_desc, devDate, srvDate),
-                        getString(R.string.menu_reload)
-                    ) {
-                        recreateWebView()
-                    }
-                } else {
-                    showDiagnostic(
-                        "خطای گواهی امنیتی SSL",
-                        "امکان برقراری ارتباط امن با سرور مقدور نیست (کد خطا: ${error.primaryError}).",
-                        getString(R.string.menu_reload)
-                    ) {
-                        recreateWebView()
-                    }
-                }
+        if (isDateInvalid) {
+            val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US)
+            val devDate = sdf.format(Date(deviceEpoch))
+            val srvDate = if (notBefore != null) sdf.format(notBefore) else "نامشخص"
+
+            showDiagnostic(
+                getString(R.string.ssl_error_title),
+                getString(R.string.ssl_error_desc, devDate, srvDate),
+                getString(R.string.menu_reload)
+            ) {
+                recreateWebView()
             }
+            return
+        }
+
+        showDiagnostic(
+            "خطای گواهی امنیتی SSL",
+            "امکان برقراری ارتباط امن با سرور مقدور نیست (کد خطا: ${error.primaryError}).",
+            getString(R.string.menu_reload)
+        ) {
+            recreateWebView()
         }
     }
 
@@ -636,7 +639,12 @@ class BoardActivity : Activity() {
     }
 
     private fun performHeartbeat() {
-        val token = TvPrefs.getDeviceToken(this) ?: return
+        val token = TvPrefs.getDeviceToken(this)
+        if (token == null) {
+            handler.removeCallbacks(heartbeatRunnable)
+            handler.postDelayed(heartbeatRunnable, currentHeartbeatIntervalMs)
+            return
+        }
         val verCode = UpdateManager.getCurrentVersionCode(this)
         val androidRel = Build.VERSION.RELEASE ?: "Unknown"
         val webViewVer = getChromeVersion()
@@ -644,57 +652,64 @@ class BoardActivity : Activity() {
         executor.execute {
             val hb = Api.heartbeat(this, token, verCode, androidRel, webViewVer)
             handler.post {
-                if (hb != null) {
-                    if (hb.revoked) {
-                        Log.w(tag, "Device revoked from admin panel!")
-                        isRevokedDialogShown = true
-                        currentHeartbeatIntervalMs = 15_000L
-                        try {
-                            webView?.stopLoading()
-                            webView?.loadUrl("about:blank")
-                        } catch (e: Exception) {
-                            Log.e(tag, "Error stopping webview on revocation", e)
-                        }
-                        showDiagnostic(
-                            getString(R.string.device_revoked_title),
-                            getString(R.string.device_revoked_desc),
-                            getString(R.string.btn_get_new_code)
-                        ) {
-                            TvPrefs.clearPairing(this)
-                            startActivity(Intent(this, PairingActivity::class.java))
-                            finish()
-                        }
-                    } else {
-                        if (isRevokedDialogShown) {
-                            Log.i(tag, "Device re-activated from panel! Restoring board.")
-                            isRevokedDialogShown = false
-                            hideDiagnostic()
-                            loadBoardUrl()
-                        }
-                        if (hb.intervalSeconds > 0) {
-                            currentHeartbeatIntervalMs = (hb.intervalSeconds.coerceIn(10, 900)) * 1000L
-                        }
-                        TvPrefs.saveHeartbeat(
-                            this,
-                            hb.boardUrl,
-                            hb.baseUrlsJson,
-                            hb.latestVersionCode,
-                            hb.minVersionCode,
-                            hb.apkUrl
-                        )
+                try {
+                    if (hb != null) {
+                        if (hb.revoked) {
+                            Log.w(tag, "Device revoked from admin panel!")
+                            isRevokedDialogShown = true
+                            currentHeartbeatIntervalMs = 15_000L
+                            try {
+                                webView?.stopLoading()
+                                webView?.loadUrl("about:blank")
+                            } catch (e: Exception) {
+                                Log.e(tag, "Error stopping webview on revocation", e)
+                            }
+                            showDiagnostic(
+                                getString(R.string.device_revoked_title),
+                                getString(R.string.device_revoked_desc),
+                                getString(R.string.btn_get_new_code)
+                            ) {
+                                TvPrefs.clearPairing(this)
+                                startActivity(Intent(this, PairingActivity::class.java))
+                                finish()
+                            }
+                        } else {
+                            if (isRevokedDialogShown) {
+                                Log.i(tag, "Device re-activated from panel! Restoring board.")
+                                isRevokedDialogShown = false
+                                hideDiagnostic()
+                                loadBoardUrl()
+                            }
+                            if (hb.intervalSeconds > 0) {
+                                currentHeartbeatIntervalMs = (hb.intervalSeconds.coerceIn(10, 900)) * 1000L
+                            }
+                            TvPrefs.saveHeartbeat(
+                                this,
+                                hb.boardUrl,
+                                hb.baseUrlsJson,
+                                hb.latestVersionCode,
+                                hb.minVersionCode,
+                                hb.apkUrl
+                            )
 
-                        val curVer = UpdateManager.getCurrentVersionCode(this)
-                        val latestVer = hb.latestVersionCode
-                        val minVer = hb.minVersionCode
-                        val apkUrl = hb.apkUrl
+                            val curVer = UpdateManager.getCurrentVersionCode(this)
+                            val latestVer = hb.latestVersionCode
+                            val minVer = hb.minVersionCode
+                            val apkUrl = hb.apkUrl
 
-                        if (latestVer > curVer && !apkUrl.isNullOrBlank() && !isUpdating) {
-                            if (curVer < minVer) {
-                                triggerMandatoryUpdate(apkUrl, latestVer)
-                            } else {
-                                triggerOptionalUpdate(apkUrl, latestVer)
+                            if (latestVer > curVer && !apkUrl.isNullOrBlank() && !isUpdating) {
+                                if (curVer < minVer) {
+                                    triggerMandatoryUpdate(apkUrl, latestVer)
+                                } else {
+                                    triggerOptionalUpdate(apkUrl, latestVer)
+                                }
                             }
                         }
+                    }
+                } finally {
+                    if (!isDestroyedActivity) {
+                        handler.removeCallbacks(heartbeatRunnable)
+                        handler.postDelayed(heartbeatRunnable, currentHeartbeatIntervalMs)
                     }
                 }
             }
@@ -817,8 +832,14 @@ class BoardActivity : Activity() {
 
     private fun showDeviceInfoDialog() {
         val username = TvPrefs.getUsername(this) ?: "---"
-        val appVer = "1.0.0"
-        val appCode = 1
+        val pInfo = try { packageManager.getPackageInfo(packageName, 0) } catch (e: Exception) { null }
+        val appVer = pInfo?.versionName ?: "1.0.0"
+        val appCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            pInfo?.longVersionCode?.toInt() ?: 1
+        } else {
+            @Suppress("DEPRECATION")
+            pInfo?.versionCode ?: 1
+        }
         val wvVer = getChromeVersion()
         val lastRate = TvPrefs.getLastRateTime(this)
 
