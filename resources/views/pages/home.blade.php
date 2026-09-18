@@ -320,6 +320,8 @@
                                 <div class="relative rounded-2xl bg-[#020617] overflow-hidden border border-amber-500/30 aspect-[16/10] shadow-2xl group flex items-center justify-center select-none">
                                     <img src="{{ asset($previewImage) }}" 
                                          alt="اسکرین‌شات تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو روی تلویزیون مغازه" 
+                                         width="1600" height="1000"
+                                         loading="eager" fetchpriority="high" decoding="async"
                                          class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.02]">
                                     
                                     {{-- بازتاب فوتوریالیستیک شیشه و نور ملایم نمایشگر OLED --}}
@@ -437,7 +439,7 @@
                         <div class="pt-0.5 flex items-center justify-center gap-2 flex-wrap">
                             <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی در پیام‌رسان:</span>
                             <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
-                                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
+                                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="14" height="14" loading="lazy" decoding="async" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
                                 <span>پشتیبانی روبیکا</span>
                             </a>
                         </div>
@@ -556,7 +558,7 @@
                         <span class="font-mono text-sm" dir="ltr">0918 700 9064</span>
                     </a>
                     <a href="https://rubika.ir/talalive" target="_blank" class="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20 cursor-pointer">
-                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
+                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="16" height="16" loading="lazy" decoding="async" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                         <span>پشتیبانی در روبیکا</span>
                     </a>
                 </div>

@@ -3,11 +3,14 @@
 @section('title', 'تعویض و خرید متفرقه ۱۸ چیست؟ راهنمای طلافروش | طلالایو')
 @section('meta_description', 'تعویض و خرید متفرقه ۱۸ چیست؟ تفاوت ۲ نرخ طلای متفرقه، نمونه فاکتور تعویض با برچسب مثال و نحوه نمایش در تابلوی طلالایو. مطالعه کنید.')
 @section('canonical', 'https://talalive.ir/guides/motefareghe-18')
+@section('og_image', asset('images/guides/motefareghe-18.webp'))
+@section('og_image_alt', 'تعویض و خرید متفرقه ۱۸ چیست و چگونه محاسبه می‌شود؟')
 
 @section('schema')
 @include('partials.schema-article', [
     'headline' => 'تعویض متفرقه ۱۸ چیست و چه فرقی با خرید متفرقه طلا دارد؟',
     'description' => 'راهنمای جامع تعویض و خرید متفرقه ۱۸ عیار در بازار طلا، مقایسه حاشیه سود و نمونه فاکتور محاسبه برای طلافروشان.',
+    'image' => 'https://talalive.ir/images/guides/motefareghe-18.webp',
     'datePublished' => '2026-03-22',
     'dateModified' => date('Y-m-d'),
     'author' => 'تیم تحریریه و محاسبات صنفی طلالایو',
@@ -38,6 +41,15 @@
         <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white leading-tight">
             تعویض متفرقه ۱۸ چیست و چه تفاوتی با خرید متفرقه دارد؟
         </h1>
+
+        {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+        <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+            <img src="{{ asset('images/guides/motefareghe-18.webp') }}" 
+                 alt="تعویض متفرقه ۱۸ چیست و چه تفاوتی با خرید متفرقه دارد؟" 
+                 width="1200" height="675" 
+                 loading="eager" fetchpriority="high" decoding="async"
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+        </figure>
 
         {{-- تعریف صریح در ۴۰ کلمه اول --}}
         <div class="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border-r-4 border-amber-500 text-slate-800 dark:text-slate-200 text-sm sm:text-base leading-relaxed font-medium">

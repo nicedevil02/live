@@ -9,6 +9,7 @@ use App\Models\AuditLog;
 use App\Models\MarketCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -61,7 +62,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('image_file')) {
             $userId = auth()->id();
-            $path = $request->file('image_file')->store("products/{$userId}", 'public');
+            $path = $this->optimizeAndStoreProductImage($request->file('image_file'), $userId);
             $product->images()->create([
                 'id' => 'img-' . uniqid(),
                 'url' => '/storage/' . $path,
@@ -137,7 +138,7 @@ class ProductController extends Controller
         ]);
         $userId = auth()->id();
         $product = ProductSlide::where('user_id', $userId)->findOrFail($id);
-        $path = $request->file('image')->store("products/{$userId}", 'public');
+        $path = $this->optimizeAndStoreProductImage($request->file('image'), $userId);
         $img = $product->images()->create([
             'id' => 'img-' . uniqid(),
             'url' => '/storage/' . $path,
@@ -165,5 +166,66 @@ class ProductController extends Controller
 
         $img->delete();
         return response()->json(['ok' => true]);
+    }
+
+    /**
+     * بهینه‌سازی، فشرده‌سازی و تبدیل خودکار تصاویر آپلودی محصولات به فرمت بهینه WebP
+     */
+    protected function optimizeAndStoreProductImage($file, $userId): string
+    {
+        $dir = storage_path("app/public/products/{$userId}");
+        if (!file_exists($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $filename = 'prod_' . time() . '_' . Str::random(8) . '.webp';
+        $targetPath = $dir . DIRECTORY_SEPARATOR . $filename;
+
+        // در صورت پشتیبانی سرور از توابع GD و WebP
+        if (extension_loaded('gd') && function_exists('imagewebp')) {
+            try {
+                $realPath = $file->getRealPath();
+                $imageInfo = @getimagesize($realPath);
+                if ($imageInfo) {
+                    $mime = $imageInfo['mime'];
+                    $src = null;
+                    if ($mime === 'image/jpeg') {
+                        $src = @imagecreatefromjpeg($realPath);
+                    } elseif ($mime === 'image/png') {
+                        $src = @imagecreatefrompng($realPath);
+                    } elseif ($mime === 'image/webp') {
+                        $src = @imagecreatefromwebp($realPath);
+                    }
+
+                    if ($src) {
+                        $origW = imagesx($src);
+                        $origH = imagesy($src);
+                        $maxW = 1200;
+
+                        if ($origW > $maxW) {
+                            $newW = $maxW;
+                            $newH = (int) round(($origH * $maxW) / $origW);
+                            $dst = imagecreatetruecolor($newW, $newH);
+                            // حفظ شفافیت در صورت وجود لایه آلفا
+                            imagealphablending($dst, false);
+                            imagesavealpha($dst, true);
+                            imagecopyresampled($dst, $src, 0, 0, 0, 0, $newW, $newH, $origW, $origH);
+                            imagedestroy($src);
+                            $src = $dst;
+                        }
+
+                        imagewebp($src, $targetPath, 82);
+                        imagedestroy($src);
+
+                        return "products/{$userId}/{$filename}";
+                    }
+                }
+            } catch (\Throwable $e) {
+                // در صورت بروز هرگونه استثنا، ذخیره‌سازی استاندارد لاراول صورت گیرد
+            }
+        }
+
+        // روش پیش‌فرض و ایمن لاراول
+        return $file->store("products/{$userId}", 'public');
     }
 }

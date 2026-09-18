@@ -44,6 +44,15 @@
             مظنه فردایی چیست و چه تفاوتی با مظنه نقدی و جهانی دارد؟
         </h1>
 
+        {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+        <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+            <img src="{{ asset('images/guides/mazaneh-fardaei.webp') }}" 
+                 alt="مظنه فردایی چیست و چه تفاوتی با مظنه نقدی و جهانی دارد؟" 
+                 width="1200" height="675" 
+                 loading="eager" fetchpriority="high" decoding="async"
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+        </figure>
+
         {{-- تعریف صریح موضوع در ۴۰ کلمه اول --}}
         <div class="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border-r-4 border-amber-500 text-slate-800 dark:text-slate-200 text-sm sm:text-base leading-relaxed font-medium">
             <strong>مظنه طلا</strong> در بازار ایران برابر با قیمت یک مثقال (۴.۶۰۸۳ گرم) طلای ۱۷ عیار (۷۰۵) است. <strong>مظنه فردایی</strong> نرخ توافقی خرید و فروش طلای آبشده برای تسویه در روز کاری بعد است که بر پایه پیش‌بینی انتظارات تورمی، نوسان نرخ دلار و انس جهانی تعیین می‌شود.

@@ -7,6 +7,8 @@
 @section('title', $seo['title'] ?? 'قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵ — راهنمای کامل')
 @section('meta_description', $seo['desc'] ?? 'لیست قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵: بررسی قیمت متری انواع ماژول P10، هزینه‌های پنهان ساخت و مقایسه اقتصادی با تلویزیون. همین حالا مطالعه کنید.')
 @section('canonical', 'https://talalive.ir/guides/led-board-price-1405')
+@section('og_image', asset('images/guides/led-board-price-1405.webp'))
+@section('og_image_alt', 'قیمت تابلو ال ای دی طلافروشی در سال ۱۴۰۵ و مقایسه با تلویزیون هوشمند')
 
 @section('schema')
     {{-- اسکیمای استاندارد Article گوگل بدون ریتینگ --}}
@@ -16,7 +18,7 @@
         'url' => 'https://talalive.ir/guides/led-board-price-1405',
         'datePublished' => '2026-04-09T08:00:00+03:30',
         'dateModified' => '2026-09-16T10:00:00+03:30',
-        'image' => 'https://talalive.ir/images/og-guide.jpg',
+        'image' => 'https://talalive.ir/images/guides/led-board-price-1405.webp',
     ])
 @endsection
 
@@ -48,6 +50,15 @@
                 <span>•</span>
                 <span>📅 بازبینی: شهریور ۱۴۰۵</span>
             </div>
+
+            {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+            <figure class="mt-6 relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-950 group">
+                <img src="{{ asset('images/guides/led-board-price-1405.webp') }}" 
+                     alt="قیمت تابلو ال ای دی طلافروشی در سال ۱۴۰۵ و مقایسه با تابلوی هوشمند" 
+                     width="1200" height="675" 
+                     loading="eager" fetchpriority="high" decoding="async"
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+            </figure>
         </header>
 
         {{-- محتوای مقاله --}}

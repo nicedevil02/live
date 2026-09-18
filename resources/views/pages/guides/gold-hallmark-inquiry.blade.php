@@ -3,11 +3,14 @@
 @section('title', config('seo.pages.guides/gold-hallmark-inquiry.title'))
 @section('meta_description', config('seo.pages.guides/gold-hallmark-inquiry.desc'))
 @section('canonical', 'https://talalive.ir/guides/gold-hallmark-inquiry')
+@section('og_image', asset('images/guides/gold-hallmark-inquiry.webp'))
+@section('og_image_alt', 'راهنمای استعلام انگ طلا و ری‌گیری طلالایو')
 
 @section('schema')
 @include('partials.schema-article', [
     'headline' => config('seo.pages.guides/gold-hallmark-inquiry.title'),
     'description' => config('seo.pages.guides/gold-hallmark-inquiry.desc'),
+    'image' => 'https://talalive.ir/images/guides/gold-hallmark-inquiry.webp',
     'datePublished' => '2026-04-11',
     'dateModified' => '2026-04-11',
 ])
@@ -44,6 +47,15 @@
                 <span>•</span>
                 <span>تاریخ انتشار: فروردین ۱۴۰۵</span>
             </div>
+
+            {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+            <figure class="mt-6 relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+                <img src="{{ asset('images/guides/gold-hallmark-inquiry.webp') }}" 
+                     alt="استعلام انگ طلا و راهنمای خواندن عیار و شماره پاکت ری‌گیری" 
+                     width="1200" height="675" 
+                     loading="eager" fetchpriority="high" decoding="async"
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+            </figure>
         </header>
 
         {{-- سلب مسئولیت صریح E-E-A-T و خط قرمز عدم ادعای اعتبارسنجی رسمی --}}

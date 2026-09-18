@@ -3,6 +3,8 @@
 @section('title', 'تابلو قیمت طلا روی تلویزیون ال‌جی (webOS) | طلالایو')
 @section('meta_description', 'آموزش تنظیمات اتصال مرورگر webOS تلویزیون‌های ال‌جی به تابلوی طلا و فعال‌سازی حالت تمام‌صفحه در سال ۱۴۰۵. همین حالا ۵ دقیقه‌ای تابلوی مغازه را فعال کنید.')
 @section('canonical', 'https://talalive.ir/guides/lg-webos-gold-board')
+@section('og_image', asset('images/guides/lg-webos-gold-board.webp'))
+@section('og_image_alt', 'آموزش تنظیم و اجرای تابلو قیمت طلا ال‌جی در سیستم‌عامل webOS')
 
 @section('schema')
 <script type="application/ld+json">
@@ -13,6 +15,9 @@
       "@@type": "TechArticle",
       "headline": "آموزش گام‌به‌گام اتصال تلویزیون ال‌جی webOS به تابلو قیمت طلا طلالایو",
       "description": "دستورالعمل کامل پیکربندی نرم‌افزاری نمایشگرهای هوشمند شرکت ال‌جی بر پایه پلتفرم اختصاصی webOS با بهره‌گیری از ریموت موسی و شورت‌کات دکمه ۱.",
+      "image": [
+        "https://talalive.ir/images/guides/lg-webos-gold-board.webp"
+      ],
       "datePublished": "2026-04-12",
       "dateModified": "2026-09-16",
       "author": {
@@ -66,6 +71,15 @@
             راه‌اندازی <strong>تابلو قیمت طلا ال‌جی</strong> در فروشگاه‌های زرگری با استفاده از <strong>مرورگر تلویزیون ال‌جی</strong> در بستر هوشمند <strong>webOS</strong> و ماوس کنترل جادویی، راهکاری بی‌نیاز از سخت‌افزار جانبی است که مظنه روز را با شفافیت کامل روی ویترین منعکس می‌سازد.
         </p>
     </div>
+
+    {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+    <figure class="relative rounded-3xl overflow-hidden border border-rose-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+        <img src="{{ asset('images/guides/lg-webos-gold-board.webp') }}" 
+             alt="آموزش تنظیم و اجرای تابلو قیمت طلا ال‌جی در سیستم‌عامل webOS" 
+             width="1200" height="675" 
+             loading="eager" fetchpriority="high" decoding="async"
+             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+    </figure>
 
     {{-- فرآیند راه‌اندازی با ریموت جادویی --}}
     <div class="space-y-6">

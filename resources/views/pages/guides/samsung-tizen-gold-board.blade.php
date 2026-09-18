@@ -3,6 +3,8 @@
 @section('title', 'تابلو قیمت طلا روی تلویزیون سامسونگ (Tizen) | طلالایو')
 @section('meta_description', 'راهنمای گام‌به‌گام اتصال مرورگر تایزن تلویزیون‌های سامسونگ به سامانه تابلوی طلالایو بدون نیاز به دانگل در سال ۱۴۰۵. همین حالا تابلوی مغازه را رایگان فعال کنید.')
 @section('canonical', 'https://talalive.ir/guides/samsung-tizen-gold-board')
+@section('og_image', asset('images/guides/samsung-tizen-gold-board.webp'))
+@section('og_image_alt', 'راهنمای راه‌اندازی تابلو قیمت طلا روی تلویزیون سامسونگ تایزن')
 
 @section('schema')
 <script type="application/ld+json">
@@ -13,6 +15,9 @@
       "@@type": "TechArticle",
       "headline": "آموزش راه‌اندازی تابلو قیمت طلا سامسونگ روی سیستم‌عامل تایزن",
       "description": "راهنمای تخصصی اتصال مرورگر تلویزیون هوشمند سامسونگ با سیستم‌عامل Tizen به سامانه تابلوی زرگری طلالایو بدون نیاز به قطعه جانبی.",
+      "image": [
+        "https://talalive.ir/images/guides/samsung-tizen-gold-board.webp"
+      ],
       "datePublished": "2026-04-12",
       "dateModified": "2026-09-16",
       "author": {
@@ -92,6 +97,15 @@
             اجرای <strong>تابلو قیمت طلا سامسونگ</strong> روی تلویزیون‌های مجهز به سیستم‌عامل تایزن (Tizen OS) بدون نیاز به کامپیوتر یا دانگل، از طریق <strong>مرورگر تلویزیون سامسونگ</strong> (Samsung Internet) با اتصال وای‌فای در کمتر از ۳ دقیقه امکان‌پذیر است.
         </p>
     </div>
+
+    {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
+    <figure class="relative rounded-3xl overflow-hidden border border-blue-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+        <img src="{{ asset('images/guides/samsung-tizen-gold-board.webp') }}" 
+             alt="آموزش راه‌اندازی تابلو قیمت طلا سامسونگ روی سیستم‌عامل تایزن" 
+             width="1200" height="675" 
+             loading="eager" fetchpriority="high" decoding="async"
+             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.01]">
+    </figure>
 
     {{-- ۵ مرحله گام‌به‌گام راه‌اندازی در تایزن --}}
     <div class="space-y-6">
