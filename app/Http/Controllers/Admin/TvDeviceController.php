@@ -46,13 +46,26 @@ class TvDeviceController extends Controller
     }
 
     /**
+     * بررسی دسترسی کاربر به دستگاه (مالک یا سوپرادمین)
+     */
+    private function authorizeDevice(TvDevice $device): void
+    {
+        $user = auth()->user();
+        $isOwner = (int) $device->user_id === (int) $user->id;
+        $isSuperAdmin = (bool) ($user->is_super_admin ?? false);
+
+        if (!$isOwner && !$isSuperAdmin) {
+            abort(403, 'شما دسترسی مجاز به این دستگاه ندارید.');
+        }
+    }
+
+    /**
      * ویرایش نام/برچسب دستگاه تلویزیون
      */
     public function update(Request $request, TvDevice $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->ensureTvDevicesTable();
+        $this->authorizeDevice($device);
 
         $validated = $request->validate([
             'label' => 'nullable|string|max:100',
@@ -71,9 +84,8 @@ class TvDeviceController extends Controller
      */
     public function destroy(TvDevice $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->ensureTvDevicesTable();
+        $this->authorizeDevice($device);
 
         $device->update([
             'revoked_at' => now(),
@@ -88,9 +100,8 @@ class TvDeviceController extends Controller
      */
     public function restore(TvDevice $device)
     {
-        if ($device->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $this->ensureTvDevicesTable();
+        $this->authorizeDevice($device);
 
         $device->update([
             'revoked_at' => null,
