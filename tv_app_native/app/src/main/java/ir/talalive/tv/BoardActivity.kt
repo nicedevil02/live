@@ -50,6 +50,12 @@ class BoardActivity : Activity() {
     private lateinit var tvDiagDesc: TextView
     private lateinit var btnDiagAction: Button
 
+    private lateinit var updateOverlay: LinearLayout
+    private lateinit var tvUpdateTitle: TextView
+    private lateinit var tvUpdateStatus: TextView
+    private lateinit var btnUpdateInstall: Button
+    private var isUpdating = false
+
     private var isBoardReady = false
     private var lastTickTime = 0L
     private var backPressedTime = 0L
@@ -227,8 +233,55 @@ class BoardActivity : Activity() {
 
         buildOfflineOverlay()
         buildDiagnosticOverlay()
+        buildUpdateOverlay()
 
         setContentView(rootContainer)
+    }
+
+    private fun buildUpdateOverlay() {
+        updateOverlay = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            setBackgroundColor(Color.parseColor("#F5020617"))
+            visibility = View.GONE
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        }
+
+        tvUpdateTitle = TextView(this).apply {
+            text = getString(R.string.update_mandatory_title)
+            setTextColor(Color.parseColor("#EAB308"))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, dp(16))
+        }
+
+        tvUpdateStatus = TextView(this).apply {
+            text = ""
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, dp(24))
+        }
+
+        btnUpdateInstall = Button(this).apply {
+            text = getString(R.string.update_btn_install)
+            setBackgroundColor(Color.parseColor("#CA8A04"))
+            setTextColor(Color.BLACK)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            typeface = Typeface.DEFAULT_BOLD
+            setPadding(dp(32), dp(12), dp(32), dp(12))
+            isFocusable = true
+            visibility = View.GONE
+        }
+
+        updateOverlay.addView(tvUpdateTitle)
+        updateOverlay.addView(tvUpdateStatus)
+        updateOverlay.addView(btnUpdateInstall)
+        rootContainer.addView(updateOverlay)
     }
 
     private fun buildOfflineOverlay() {
@@ -567,7 +620,13 @@ class BoardActivity : Activity() {
         val delay = target.timeInMillis - now.timeInMillis
         handler.postDelayed({
             Log.i(tag, "4:00 AM Scheduled Reload triggered")
-            recreateWebView()
+            val pendingUpdate = UpdateManager.getUpdateApkFile(this)
+            if (pendingUpdate.exists() && UpdateManager.validateApk(this, pendingUpdate)) {
+                Log.i(tag, "Applying validated pending update at 4:00 AM")
+                UpdateManager.installApk(this, pendingUpdate)
+            } else {
+                recreateWebView()
+            }
             scheduleDailyReload() // برای روز بعد
         }, delay)
     }
@@ -582,7 +641,7 @@ class BoardActivity : Activity() {
 
     private fun performHeartbeat() {
         val token = TvPrefs.getDeviceToken(this) ?: return
-        val verCode = 1
+        val verCode = UpdateManager.getCurrentVersionCode(this)
         val androidRel = Build.VERSION.RELEASE ?: "Unknown"
         val webViewVer = getChromeVersion()
 
@@ -610,8 +669,72 @@ class BoardActivity : Activity() {
                             hb.minVersionCode,
                             hb.apkUrl
                         )
+
+                        val curVer = UpdateManager.getCurrentVersionCode(this)
+                        val latestVer = hb.latestVersionCode
+                        val minVer = hb.minVersionCode
+                        val apkUrl = hb.apkUrl
+
+                        if (latestVer > curVer && !apkUrl.isNullOrBlank() && !isUpdating) {
+                            if (curVer < minVer) {
+                                triggerMandatoryUpdate(apkUrl, latestVer)
+                            } else {
+                                triggerOptionalUpdate(apkUrl, latestVer)
+                            }
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    private fun triggerMandatoryUpdate(apkUrl: String, newVer: Int) {
+        isUpdating = true
+        runOnUiThread {
+            updateOverlay.visibility = View.VISIBLE
+            tvUpdateStatus.text = getString(R.string.update_downloading, 0)
+            btnUpdateInstall.visibility = View.GONE
+        }
+
+        executor.execute {
+            val file = UpdateManager.downloadApk(this, apkUrl) { pct ->
+                runOnUiThread {
+                    tvUpdateStatus.text = getString(R.string.update_downloading, pct)
+                }
+            }
+
+            if (file != null && UpdateManager.validateApk(this, file)) {
+                runOnUiThread {
+                    tvUpdateStatus.text = getString(R.string.update_ready_notice)
+                    btnUpdateInstall.visibility = View.VISIBLE
+                    btnUpdateInstall.setOnClickListener {
+                        UpdateManager.installApk(this, file)
+                    }
+                    btnUpdateInstall.requestFocus()
+                    UpdateManager.installApk(this, file)
+                }
+            } else {
+                runOnUiThread {
+                    tvUpdateStatus.text = getString(R.string.update_failed)
+                    isUpdating = false
+                    handler.postDelayed({
+                        updateOverlay.visibility = View.GONE
+                    }, 10000L)
+                }
+            }
+        }
+    }
+
+    private fun triggerOptionalUpdate(apkUrl: String, newVer: Int) {
+        val existing = UpdateManager.getUpdateApkFile(this)
+        if (existing.exists() && UpdateManager.validateApk(this, existing)) {
+            return
+        }
+
+        executor.execute {
+            val file = UpdateManager.downloadApk(this, apkUrl) { _ -> }
+            if (file != null && UpdateManager.validateApk(this, file)) {
+                Log.i(tag, "Optional update downloaded and validated. Ready for nightly restart.")
             }
         }
     }

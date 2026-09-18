@@ -32,4 +32,9 @@
     <string name="device_revoked_title">این دستگاه از پنل مدیریت حذف شده است</string>
     <string name="device_revoked_desc">برای اتصال مجدد این تلویزیون، کد جدید بگیرید.</string>
     <string name="btn_get_new_code">دریافت کد اتصال جدید</string>
+    <string name="update_mandatory_title">دریافت نسخه جدید طلالایو TV</string>
+    <string name="update_downloading">در حال دریافت فایل به‌روزرسانی: %1$d%%</string>
+    <string name="update_ready_notice">نسخهٔ جدید آماده است — روی دکمهٔ زیر بزنید و سپس در پنجره سیستم «نصب» را انتخاب کنید.</string>
+    <string name="update_btn_install">نصب نسخهٔ جدید</string>
+    <string name="update_failed">خطا در دریافت یا اعتبارسنجی فایل به‌روزرسانی</string>
 </resources>

@@ -89,8 +89,20 @@
             آموزش راه‌اندازی تابلو طلا روی اندروید تی‌وی و اندروید باکس
         </h1>
         <p class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
-            <strong>تابلو طلا روی اندروید تی‌وی</strong> راهکاری نرم‌افزاری و ابری برای نمایش زنده نرخ طلا و سکه روی تلویزیون‌ها و باکس‌های مجهز به سیستم‌عامل Android TV است که بدون نیاز به کیس، با مرورگر وب در ۳ دقیقه راه‌اندازی می‌شود.
+            <strong>تابلو طلا روی اندروید تی‌وی</strong> راهکاری نرم‌افزاری و ابری برای نمایش زنده نرخ طلا و سکه روی تلویزیون‌ها و باکس‌های مجهز به سیستم‌عامل Android TV است که بدون نیاز به کیس، با مرورگر وب یا اپلیکیشن نیتیو اختصاصی در ۳ دقیقه راه‌اندازی می‌شود.
         </p>
+    </div>
+
+    {{-- بنر ویژه اپلیکیشن نیتیو تلویزیون --}}
+    <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border-2 border-amber-500/40 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="space-y-2 text-right">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-slate-950">نسخه اختصاصی تلویزیون (پیشنهاد اول طلالایو)</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white">دانلود اپلیکیشن اختصاصی «طلالایو TV» برای تلویزیون و باکس</h2>
+            <p class="text-xs sm:text-sm text-slate-300">بدون نیاز به باز کردن مرورگر و بدون تنظیمات دستی؛ اپلیکیشن ۵۴ کیلوبایتی را نصب کرده و با یک کد تابلوی خود را متصل کنید.</p>
+        </div>
+        <a href="{{ route('public.app') }}" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-sm shadow-lg whitespace-nowrap transition-all">
+            دانلود مستقیم فایل نصبی تلویزیون
+        </a>
     </div>
 
     {{-- مقایسه مرورگرهای مخصوص تلویزیون اندروید --}}

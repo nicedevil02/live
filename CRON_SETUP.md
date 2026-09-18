@@ -59,10 +59,10 @@ curl -s "https://talalive.ir/api/public/cron/market-fetch?token=talalive-cron-se
 curl "https://yourdomain.com/api/public/cron/market-fetch"
 
 # با token
-curl "https://yourdomain.com/api/public/cron/market-fetch?token=secure-market-fetch-token-2026"
+curl "https://talalive.ir/api/public/cron/market-fetch?token=talalive-cron-secret-2026"
 
 # با verbose برای دیدن response
-curl -v "https://yourdomain.com/api/public/cron/market-fetch?token=secure-market-fetch-token-2026"
+curl -v "https://talalive.ir/api/public/cron/market-fetch?token=talalive-cron-secret-2026"
 ```
 
 ## بررسی وضعیت

@@ -65,5 +65,7 @@ tv_app_native/.gradle/
 tv_app_native/local.properties
 *.jks
 *.keystore
+public_html/downloads/*.apk
+!public_html/downloads/.gitkeep
 
 
