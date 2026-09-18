@@ -22,7 +22,7 @@ class PublicDisplayController extends Controller
         $this->marketService = $marketService;
     }
 
-    public function show($username)
+    public function show(Request $request, string $username)
     {
         $user = \App\Models\User::where('username', $username)->firstOrFail();
 
@@ -88,6 +88,7 @@ class PublicDisplayController extends Controller
             'metaDescription'    => $metaDescription,
             'phone'              => $phone,
             'isExpired'          => $isExpired,
+            'isTv'               => $request->boolean('tv'),
         ]);
     }
 

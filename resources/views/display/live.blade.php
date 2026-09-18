@@ -49,6 +49,21 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
+    @if($isTv ?? false)
+    <style>
+        html, body { cursor: none !important; overflow: hidden !important; }
+        * { -webkit-user-select: none !important; user-select: none !important; }
+        ::-webkit-scrollbar { display: none !important; }
+        :root { --tv-overscan: 2.5vmin; }
+        body { padding: var(--tv-overscan) !important; box-sizing: border-box; }
+        /* حذف هایلایت فوکوس مرورگر روی تلویزیون */
+        *:focus { outline: none !important; }
+        /* W-04: مقیاس خوانایی سه متری برای تلویزیون */
+        html { font-size: 115% !important; }
+        @media (min-width: 1920px) { html { font-size: 125% !important; } }
+        @media (max-width: 1280px) { html { font-size: 105% !important; } }
+    </style>
+    @endif
     <style>
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.05); } 20% { opacity: 1; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
@@ -741,6 +756,20 @@
             <span x-text="errorMessage || 'در حال تلاش مجدد برای اتصال به اینترنت مغازه... (آخرین قیمت‌های معتبر در حال نمایش است)'"></span>
         </div>
 
+        {{-- نوار هشدار دادهٔ کهنه (W-06 Stale Data Warning Banner) --}}
+        <div x-show="connectionState === 'online' && (snapshotData?.isStale ?? false)"
+             x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="-translate-y-full opacity-0"
+             x-transition:enter-end="translate-y-0 opacity-100"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="translate-y-0 opacity-100"
+             x-transition:leave-end="-translate-y-full opacity-0"
+             class="fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-600/95 text-white font-bold text-xs text-center backdrop-blur-md shadow-md flex items-center justify-center gap-2">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-200 animate-ping"></span>
+            <span>نرخ‌ها در حال به‌روزرسانی — آخرین دریافت: <strong x-text="staleTimeText"></strong></span>
+        </div>
+
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
         <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
             <img :src="bingWallpaperUrl" 
@@ -1415,7 +1444,7 @@
                 now: new Date(),
                 refreshTimer: null,
                 isFullscreen: false,
-                zoomLevel: parseFloat(localStorage.getItem('display_zoom') || '1'),
+                zoomLevel: parseFloat(localStorage.getItem('display_zoom') || '{{ ($isTv ?? false) ? "1.15" : "1" }}'),
                 showControls: false,
                 controlsTimer: null,
 
@@ -1461,6 +1490,17 @@
                 get weekDay() { return this.now.toLocaleDateString('fa-IR', { weekday: 'long' }); },
                 get dateText() { return this.now.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }); },
                 get timeText() { return this.now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); },
+                get staleTimeText() {
+                    const dt = this.snapshotData?.updatedAt;
+                    if (!dt) return '---';
+                    try {
+                        const d = new Date(dt);
+                        if (isNaN(d.getTime())) return dt;
+                        return d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+                    } catch (e) {
+                        return dt;
+                    }
+                },
                 get refreshIntervalMs() {
                     const seconds = Number(this.snapshotData?.refreshIntervalSeconds || 60);
                     return Math.max(seconds, 5) * 1000;
@@ -1567,6 +1607,11 @@
  
                         this.connectionState = 'online';
                         this.errorMessage = '';
+
+                        // W-05: در پایان هر واکشی موفق اسنپ‌شات
+                        if (window.TalaTV && window.TalaTV.onPriceTick) {
+                            window.TalaTV.onPriceTick(String(newData.updatedAt || ''), newData.isStale ? 1 : 0);
+                        }
                     } catch (e) {
                         console.error('Fetch error:', e);
                         if (!navigator.onLine) {
@@ -1663,10 +1708,27 @@
                     setInterval(() => { this.now = new Date(); }, 1000);
 
                     this.scheduleSnapshotRefresh();
+
+                    // W-05: بلافاصله بعد از اولین رندر موفق قیمت‌ها
+                    if (window.TalaTV && window.TalaTV.onBoardReady) {
+                        window.TalaTV.onBoardReady();
+                    }
                 }
             };
         }
 
+        @if($isTv ?? false)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+                .then(function (rs) { rs.forEach(function (r) { r.unregister(); }); })
+                .catch(function (e) { console.warn('sw unregister failed', e); });
+        }
+        if (window.caches && caches.keys) {
+            caches.keys().then(function (keys) {
+                keys.forEach(function (k) { caches.delete(k); });
+            }).catch(function (e) { console.warn('cache clear failed', e); });
+        }
+        @else
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').catch(error => {
@@ -1674,6 +1736,7 @@
                 });
             });
         }
+        @endif
     </script>
 </body>
 </html>
