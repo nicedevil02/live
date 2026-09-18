@@ -4,13 +4,7 @@
     <string name="pairing_title">اتصال تابلوی طلالایو</string>
     <string name="pairing_desc">برای اتصال تابلو، این کد را در پنل کاربری خود در بخش «تلویزیون‌های من» وارد کنید:</string>
     <string name="pairing_or_scan">یا تصویر زیر را با دوربین گوشی اسکن کنید</string>
-    <string name="btn_send_sms">ارسال کد با پیامک به موبایل</string>
-    <string name="enter_mobile_title">شماره موبایل طلافروش</string>
-    <string name="enter_mobile_hint">۰۹۱۲۳۴۵۶۷۸۹</string>
-    <string name="btn_confirm">ارسال پیامک</string>
     <string name="btn_cancel">انصراف</string>
-    <string name="sms_sent_success">پیامک حاوی لینک اتصال با موفقیت ارسال شد.</string>
-    <string name="sms_failed">خطا در ارسال پیامک. لطفاً کد را در پنل وارد کنید.</string>
     <string name="pairing_waiting">در انتظار جفت‌سازی از طریق پنل...</string>
     <string name="offline_title">اتصال اینترنت قطع است</string>
     <string name="offline_last_rate">آخرین نرخ دریافتی: %1$s</string>

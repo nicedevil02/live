@@ -42,11 +42,6 @@ object Api {
         val intervalSeconds: Int
     )
 
-    data class SmsResult(
-        val success: Boolean,
-        val message: String
-    )
-
     private fun openConnection(urlStr: String, method: String): HttpURLConnection {
         val url = URL(urlStr)
         val conn = url.openConnection() as HttpURLConnection
@@ -178,32 +173,6 @@ object Api {
         return null
     }
 
-    fun requestMagicSms(ctx: Context, sessionCode: String, mobile: String): SmsResult {
-        val bases = Config.baseUrls(ctx)
-        for (base in bases) {
-            try {
-                val conn = openConnection("$base/api/tv/magic-sms", "POST")
-                conn.doOutput = true
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
-
-                val payload = JSONObject().apply {
-                    put("session_code", sessionCode)
-                    put("mobile", mobile)
-                }
-
-                OutputStreamWriter(conn.outputStream, "UTF-8").use { it.write(payload.toString()) }
-
-                val raw = readResponse(conn)
-                val json = JSONObject(raw)
-                val success = json.optBoolean("success", conn.responseCode in 200..299)
-                val msg = json.optString("message", "")
-                return SmsResult(success, msg)
-            } catch (e: Exception) {
-                Log.w(TAG, "magic-sms error on $base: ${e.message}")
-            }
-        }
-        return SmsResult(false, "Connection error")
-    }
 
     fun fetchServerEpochMillis(ctx: Context): Long? {
         val bases = Config.baseUrls(ctx)

@@ -1,17 +1,13 @@
 package ir.talalive.tv
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.InputType
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -37,8 +33,8 @@ class PairingActivity : Activity() {
 
     private lateinit var tvCode: TextView
     private lateinit var tvStatus: TextView
+    private lateinit var tvScanPrompt: TextView
     private lateinit var ivQr: ImageView
-    private lateinit var btnSms: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var tvFooter: TextView
 
@@ -140,7 +136,7 @@ class PairingActivity : Activity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
                 gravity = Gravity.CENTER_HORIZONTAL
-                bottomMargin = dp(20)
+                bottomMargin = dp(16)
             }
             layoutParams = lp
         }
@@ -175,38 +171,31 @@ class PairingActivity : Activity() {
         statusLayout.addView(tvStatus)
         content.addView(statusLayout)
 
-        // 5. بخش QR Code و دکمه پیامک
-        val actionsRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
+        // 5. راهنمای اسکن QR کد
+        tvScanPrompt = TextView(this).apply {
+            text = getString(R.string.pairing_or_scan)
+            setTextColor(Color.parseColor("#64748B"))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
             gravity = Gravity.CENTER
-            setPadding(0, 0, 0, dp(20))
+            setPadding(0, 0, 0, dp(12))
+            visibility = View.GONE
         }
+        content.addView(tvScanPrompt)
 
+        // 6. تصویر QR کد برای اسکن سریع با دوربین گوشی
         ivQr = ImageView(this).apply {
-            val lp = LinearLayout.LayoutParams(dp(130), dp(130)).apply {
-                rightMargin = dp(28)
+            val lp = LinearLayout.LayoutParams(dp(150), dp(150)).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+                bottomMargin = dp(16)
             }
             layoutParams = lp
             setBackgroundColor(Color.WHITE)
+            setPadding(dp(6), dp(6), dp(6), dp(6))
             visibility = View.GONE
         }
-        actionsRow.addView(ivQr)
+        content.addView(ivQr)
 
-        btnSms = Button(this).apply {
-            text = getString(R.string.btn_send_sms)
-            setBackgroundColor(Color.parseColor("#F59E0B"))
-            setTextColor(Color.parseColor("#020617"))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            typeface = Typeface.DEFAULT_BOLD
-            setPadding(dp(24), dp(14), dp(24), dp(14))
-            isFocusable = true
-            isFocusableInTouchMode = true
-            setOnClickListener { showMobileInputDialog() }
-        }
-        actionsRow.addView(btnSms)
-        content.addView(actionsRow)
-
-        // 6. فوتر مشخصات
+        // 7. فوتر مشخصات دستگاه
         val pInfo = try { packageManager.getPackageInfo(packageName, 0) } catch (e: Exception) { null }
         val appVer = pInfo?.versionName ?: "1.0.0"
         val webViewUa = try { WebSettings.getDefaultUserAgent(this) } catch (e: Exception) { "Unknown" }
@@ -216,15 +205,13 @@ class PairingActivity : Activity() {
             setTextColor(Color.parseColor("#475569"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             gravity = Gravity.CENTER
-            setPadding(0, dp(16), 0, 0)
+            setPadding(0, dp(8), 0, 0)
         }
         content.addView(tvFooter)
 
         scroll.addView(content)
         root.addView(scroll)
         setContentView(root)
-
-        btnSms.requestFocus()
     }
 
     private fun extractChromeVersion(ua: String): String {
@@ -242,11 +229,14 @@ class PairingActivity : Activity() {
             handler.post {
                 if (isDestroyedActivity) return@post
                 progressBar.visibility = View.GONE
-                if (result != null) {
+
+                if (result != null && result.activationCode.isNotBlank()) {
                     currentSessionCode = result.sessionCode
                     currentActivationCode = result.activationCode
                     pollIntervalSec = result.pollIntervalSeconds
+
                     tvCode.text = result.activationCode
+                    tvStatus.text = "کد را در پنل کاربری بخش «تلویزیون‌های من» ثبت نمایید"
 
                     loadQrCode(result.activationCode)
                     startPolling()
@@ -283,6 +273,7 @@ class PairingActivity : Activity() {
                             if (!isDestroyedActivity) {
                                 ivQr.setImageBitmap(bitmap)
                                 ivQr.visibility = View.VISIBLE
+                                tvScanPrompt.visibility = View.VISIBLE
                             }
                         }
                     }
@@ -326,64 +317,6 @@ class PairingActivity : Activity() {
     private fun stopPolling() {
         isPolling = false
         handler.removeCallbacks(pollRunnable)
-    }
-
-    private fun showMobileInputDialog() {
-        val sCode = currentSessionCode
-        if (sCode.isNullOrBlank()) {
-            Toast.makeText(this, "لطفاً تا دریافت کد منتظر بمانید", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val input = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_PHONE
-            hint = getString(R.string.enter_mobile_hint)
-            gravity = Gravity.CENTER
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
-            setTextColor(Color.WHITE)
-            setHintTextColor(Color.parseColor("#64748B"))
-            setPadding(dp(16), dp(16), dp(16), dp(16))
-            setBackgroundColor(Color.parseColor("#1E293B"))
-        }
-
-        val container = FrameLayout(this).apply {
-            setPadding(dp(24), dp(16), dp(24), dp(8))
-            addView(input)
-        }
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(getString(R.string.enter_mobile_title))
-            .setView(container)
-            .setPositiveButton(getString(R.string.btn_confirm)) { _, _ ->
-                val mobile = input.text.toString().trim()
-                sendSms(sCode, mobile)
-            }
-            .setNegativeButton(getString(R.string.btn_cancel), null)
-            .create()
-
-        dialog.show()
-        input.requestFocus()
-    }
-
-    private fun sendSms(sessionCode: String, mobile: String) {
-        val cleanMobile = mobile.replace("[^0-9]".toRegex(), "")
-        if (cleanMobile.length != 11 || !cleanMobile.startsWith("09")) {
-            Toast.makeText(this, "شماره موبایل باید ۱۱ رقم بوده و با ۰۹ شروع شود", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        progressBar.visibility = View.VISIBLE
-        executor.execute {
-            val res = Api.requestMagicSms(this, sessionCode, cleanMobile)
-            handler.post {
-                progressBar.visibility = View.GONE
-                if (res.success) {
-                    Toast.makeText(this, getString(R.string.sms_sent_success), Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, res.message.ifBlank { getString(R.string.sms_failed) }, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
     }
 
     private fun dp(v: Int): Int {

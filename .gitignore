@@ -62,6 +62,7 @@ public_html/storage/*
 tv_app_native/build/
 tv_app_native/app/build/
 tv_app_native/.gradle/
+tv_app_native/.kotlin/
 tv_app_native/local.properties
 *.jks
 *.keystore
