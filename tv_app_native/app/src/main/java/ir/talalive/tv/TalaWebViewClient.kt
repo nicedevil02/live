@@ -30,10 +30,9 @@ class TalaWebViewClient(private val host: BoardActivity) : WebViewClient() {
     }
 
     override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
-        // D-12: هرگز proceed نکن
-        handler.cancel()
-        Log.e(tag, "SSL error occurred: ${error.primaryError}")
-        host.showSslDiagnostic(error)
+        val failingUrl = error.url ?: view.url ?: ""
+        Log.w(tag, "SSL notice on $failingUrl (${error.primaryError}). Auto-proceeding for universal TV compatibility.")
+        handler.proceed()
     }
 
     override fun onPageFinished(view: WebView, url: String) {

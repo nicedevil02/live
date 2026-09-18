@@ -50,6 +50,67 @@
     </script>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
+    {{-- Polyfills برای اجرای روان روی انواع وب‌ویوهای قدیمی تلویزیون بدون نیاز به آپدیت --}}
+    <script>
+        (function() {
+            if (!String.prototype.replaceAll) {
+                String.prototype.replaceAll = function(str, newStr) {
+                    if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+                        return this.replace(str, newStr);
+                    }
+                    return this.replace(new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), newStr);
+                };
+            }
+            if (!Object.fromEntries) {
+                Object.fromEntries = function(entries) {
+                    if (!entries) return {};
+                    var obj = {};
+                    for (var i = 0; i < entries.length; i++) {
+                        var pair = entries[i];
+                        if (pair && pair.length >= 2) { obj[pair[0]] = pair[1]; }
+                    }
+                    return obj;
+                };
+            }
+            if (!Object.assign) {
+                Object.assign = function(target) {
+                    if (target == null) throw new TypeError('Cannot convert undefined or null to object');
+                    var to = Object(target);
+                    for (var index = 1; index < arguments.length; index++) {
+                        var nextSource = arguments[index];
+                        if (nextSource != null) {
+                            for (var nextKey in nextSource) {
+                                if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) { to[nextKey] = nextSource[nextKey]; }
+                            }
+                        }
+                    }
+                    return to;
+                };
+            }
+            if (!Array.prototype.find) {
+                Array.prototype.find = function(predicate) {
+                    if (this == null) throw new TypeError('Array.prototype.find called on null or undefined');
+                    if (typeof predicate !== 'function') throw new TypeError('predicate must be a function');
+                    var list = Object(this);
+                    var length = list.length >>> 0;
+                    var thisArg = arguments[1];
+                    for (var i = 0; i < length; i++) {
+                        var value = list[i];
+                        if (predicate.call(thisArg, value, i, list)) return value;
+                    }
+                    return undefined;
+                };
+            }
+            if (!Array.prototype.includes) {
+                Array.prototype.includes = function(searchElement, fromIndex) {
+                    return this.indexOf(searchElement, fromIndex) !== -1;
+                };
+            }
+            window.addEventListener('error', function(e) {
+                console.warn('TalaLive handled legacy browser event:', e ? e.message : 'unknown');
+            });
+        })();
+    </script>
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
     @if($isTv ?? false)
     <style>

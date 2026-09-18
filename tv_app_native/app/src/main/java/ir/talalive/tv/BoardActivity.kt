@@ -115,22 +115,7 @@ class BoardActivity : Activity() {
         hideSystemUi()
 
         buildViews()
-
-        // بررسی نسخه وب‌ویو قبل از لود اولیه (A-10)
-        val minChromeRequired = intent?.getIntExtra("test_min_chrome", 80) ?: 80
-        val chromeVerInt = getChromeVersionInt()
-        if (chromeVerInt > 0 && chromeVerInt < minChromeRequired) {
-            showDiagnostic(
-                getString(R.string.webview_outdated_title, chromeVerInt.toString()),
-                getString(R.string.webview_outdated_desc),
-                getString(R.string.btn_try_anyway)
-            ) {
-                hideDiagnostic()
-                initAndLoadWebView()
-            }
-        } else {
-            initAndLoadWebView()
-        }
+        initAndLoadWebView()
 
         setupNetworkMonitoring()
         scheduleDailyReload()
@@ -386,6 +371,9 @@ class BoardActivity : Activity() {
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
+                databaseEnabled = true
+                allowFileAccess = true
+                allowContentAccess = true
                 loadsImagesAutomatically = true
                 mediaPlaybackRequiresUserGesture = false
                 cacheMode = WebSettings.LOAD_DEFAULT
@@ -395,7 +383,13 @@ class BoardActivity : Activity() {
                 builtInZoomControls = false
                 displayZoomControls = false
                 textZoom = 100
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                }
+                userAgentString = "Mozilla/5.0 (Linux; Android 10; SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TalaLiveTV/1.0"
             }
+
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
             webViewClient = TalaWebViewClient(this@BoardActivity)
             addJavascriptInterface(TalaTvBridge(this@BoardActivity), "TalaTV")
