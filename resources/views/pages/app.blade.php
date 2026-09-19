@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'دانلود اپلیکیشن طلالایو — تابلوی طلافروشی برای اندروید و تلویزیون هوشمند')
-@section('meta_desc', 'دانلود اپلیکیشن اندروید و اندروید تی‌وی طلالایو. مدیریت آنلاین تابلوی طلا، اتصال هوشمند به تلویزیون مغازه بدون کابل، و استعلام زنده مظنه و سکه در گوشی.')
+@section('title', 'دانلود اپلیکیشن طلالایو | نرم‌افزار تابلوی طلافروشی و تلویزیون هوشمند Android TV')
+@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۲.۰.۱ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه بدون مینی‌کیس با راه‌اندازی در ۶۰ ثانیه.')
 @section('canonical', 'https://talalive.ir/app')
 
 @push('styles')
@@ -11,334 +11,568 @@
     }
     .app-badge-btn:hover {
         transform: translateY(-3px);
-        box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2);
+        box-shadow: 0 12px 28px -6px rgba(245, 158, 11, 0.25);
+    }
+    .tv-mockup-shadow {
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15), 0 0 35px -5px rgba(245, 158, 11, 0.15);
+    }
+    .dark .tv-mockup-shadow {
+        box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 45px -5px rgba(245, 158, 11, 0.25);
     }
 </style>
 @endpush
 
 @section('content')
-<div class="py-12 text-slate-800 dark:text-slate-100 min-h-screen">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumb -->
-        <nav class="flex items-center text-sm text-slate-500 dark:text-slate-400 mb-8 space-x-2 space-x-reverse" aria-label="مسیر راهنما">
-            <a href="/" class="hover:text-amber-500 dark:hover:text-amber-400 transition-colors">صفحه اصلی</a>
-            <span>/</span>
-            <span class="text-amber-600 dark:text-amber-400 font-medium">دانلود اپلیکیشن طلالایو</span>
-        </nav>
+<div class="relative w-full overflow-hidden text-slate-800 dark:text-slate-100 transition-colors duration-300">
 
-        <!-- Hero Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
-            <div class="lg:col-span-7 text-right">
-                <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 mb-4">
-                    نسخه همراه و تلویزیون هوشمند طلالایو
-                </span>
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight">
-                    دانلود اپلیکیشن هوشمند طلالایو | کنترل تابلوی طلا و مشاهده لحظه‌ای نرخ‌ها
-                </h1>
-                <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
-                    با اپلیکیشن طلالایو، مدیریت کامل تابلوی قیمت طلافروشی و ویترین دیجیتال همیشه در دستان شماست. بدون نیاز به کامپیوتر یا کابل‌کشی، با گوشی خود تلویزیون مغازه را تنظیم کنید و در هر لحظه مظنه مثقال و قیمت سکه را به مشتریان نمایش دهید.
-                </p>
+    {{-- پس‌زمینه نوری و هاله‌های امبیانت در سراسر عرض مانیتور --}}
+    <div class="absolute -top-32 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/15 via-yellow-500/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/3 -left-32 w-[550px] h-[550px] bg-gradient-to-tr from-blue-600/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[500px] h-[500px] bg-gradient-to-tl from-amber-500/10 via-yellow-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-                {{-- لینک‌های دانلود مستقیم و استورها --}}
-                <div class="space-y-4">
-                    <h2 class="text-base font-semibold text-slate-700 dark:text-slate-300">دریافت فایل نصبی رسمی تلویزیون و وب‌اپلیکیشن:</h2>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <!-- دانلود مستقیم نسخه تلویزیون -->
-                        <a href="/downloads/talalive-tv.apk?v=2.0.1" class="app-badge-btn flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-xl text-right border border-amber-400/50">
-                            <span class="text-3xl">📺</span>
-                            <div>
-                                <span class="block text-xs font-bold text-slate-900">دانلود مستقیم اپلیکیشن تلویزیون</span>
-                                <span class="block text-base font-black">طلالایو TV (نسخه ۲.۰.۱)</span>
-                                <span class="block text-[11px] text-slate-900 font-medium">حجم ۱.۰ مگابایت • ویژه اندروید تی‌وی و اندروید باکس</span>
-                            </div>
-                        </a>
+    {{-- ۱. بخش هیرو تمام‌صفحه (Full-Viewport Hero) --}}
+    <section class="relative min-h-[calc(100vh-120px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 xl:px-12 py-8 lg:py-14 z-10">
+        <div class="w-full max-w-7xl mx-auto flex flex-col">
 
-                        <!-- وب اپلیکیشن PWA (سازگار با گوشی، آیفون و لپ‌تاپ) -->
-                        <a href="/admin/login" class="app-badge-btn flex items-center gap-3 px-5 py-4 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white shadow-lg text-right">
-                            <span class="text-2xl">⚡</span>
-                            <div>
-                                <span class="block text-[11px] text-slate-500 dark:text-slate-400 font-normal">نسخه بدون نیاز به نصب</span>
-                                <span class="block text-sm font-black text-amber-600 dark:text-amber-400">پنل وب و PWA گوشی</span>
-                                <span class="block text-[10px] text-emerald-600 dark:text-emerald-400">سازگار با اندروید و iOS</span>
-                            </div>
-                        </a>
+            <!-- Breadcrumb Navigation -->
+            <nav class="flex items-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6 space-x-2 space-x-reverse" aria-label="مسیر راهنما">
+                <a href="/" class="hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium">صفحه اصلی</a>
+                <span class="text-slate-300 dark:text-slate-600">/</span>
+                <span class="text-amber-600 dark:text-amber-400 font-bold">دانلود اپلیکیشن تابلوی طلافروشی</span>
+            </nav>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center w-full">
+                
+                {{-- ستون راست: معرفی سئو، ارزش نرم‌افزار و کارت‌های دانلود (۷ ستون) --}}
+                <div class="lg:col-span-7 text-right space-y-6">
+                    
+                    {{-- بج نسخه جدید و پشتیبانی سیستم‌ها --}}
+                    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                        <span>نسخه جدید ۲.۰.۱ • ویژه تلویزیون‌های هوشمند، اندروید باکس و موبایل</span>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-2 pt-2 text-xs text-slate-600 dark:text-slate-400">
-                        <span class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">🔒 امضای دیجیتال رسمی ۳۰ ساله</span>
-                        <span class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">⚡ بدون وابستگی و بدون کندی</span>
-                        <span class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">🔄 مجهز به سیستم خودکار به‌روزرسانی</span>
+                    {{-- تیتر اصلی H1 فوق‌العاده قوی سئو --}}
+                    <div class="space-y-4">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-[1.2] tracking-tight">
+                            دانلود مستقیم اپلیکیشن طلالایو
+                            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-400 text-2xl sm:text-3xl lg:text-4xl mt-1.5 font-extrabold">
+                                نرم‌افزار هوشمند تابلوی طلافروشی و تلویزیون
+                            </span>
+                        </h1>
+                        <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+                            با اپلیکیشن رسمی طلالایو، هر تلویزیون هوشمند یا اندروید باکس را بدون نیاز به کامپیوتر، مینی‌کیس یا کابل‌کشی به تابلوی دیجیتال لوکس طلا و جواهر تبدیل کنید. قیمت لحظه‌ای طلا، سکه و ویترین محصولات را تنها در ۶۰ ثانیه با موبایل خود از راه دور تنظیم و مدیریت نمایید.
+                        </p>
                     </div>
-                </div>
-            </div>
 
-            <!-- Visual / Mockup Preview -->
-            <div class="lg:col-span-5 flex justify-center">
-                <div class="relative w-full max-w-sm">
-                    <!-- Glow effect -->
-                    <div class="absolute -inset-1 bg-gradient-to-r from-amber-500 to-amber-700 rounded-3xl blur-xl opacity-20 dark:opacity-30"></div>
-                    <!-- Mockup Phone Shell -->
-                    <div class="relative bg-slate-100 dark:bg-slate-800 border-4 border-slate-300 dark:border-slate-700 rounded-[2.5rem] p-4 shadow-2xl overflow-hidden">
-                        <div class="flex justify-center mb-4">
-                            <div class="w-20 h-4 bg-slate-300 dark:bg-slate-900 rounded-full"></div>
+                    {{-- پنل دانلود و راه‌اندازی سریع --}}
+                    <div class="bg-white/95 dark:bg-slate-900/85 border border-slate-200 dark:border-amber-500/30 rounded-3xl p-5 sm:p-7 shadow-xl shadow-slate-200/50 dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] backdrop-blur-xl space-y-5">
+                        
+                        <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-amber-300 flex items-center gap-2">
+                                <span>📥</span>
+                                <span>دریافت فایل نصبی رسمی تلویزیون و پنل تحت وب:</span>
+                            </span>
+                            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                                نسخه رسمی و تایید شده
+                            </span>
                         </div>
-                        <div class="bg-white dark:bg-slate-950 rounded-2xl p-4 text-center border border-slate-200 dark:border-slate-800 space-y-4 shadow-inner">
-                            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 text-xs">
-                                <span class="text-emerald-600 dark:text-emerald-400 font-bold">● تابلوی متصل: سالن اصلی</span>
-                                <span class="text-slate-500 dark:text-slate-400">طلالایو TV v2.0.1</span>
-                            </div>
-                            <div class="bg-amber-500/5 dark:bg-slate-900/90 rounded-xl p-3 border border-amber-500/20 text-right">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">نرخ هر گرم طلای ۱۸ عیار</span>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xl font-black text-amber-600 dark:text-amber-400">{{ number_format($rates['gold18'] ?: 3650000) }}</span>
-                                    <span class="text-xs text-slate-500 dark:text-slate-400">تومان</span>
+
+                        {{-- دکمه‌های دانلود --}}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- دانلود مستقیم APK برای تلویزیون -->
+                            <a href="/downloads/talalive-tv.apk?v=2.0.1" 
+                               class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-lg shadow-amber-500/20 text-right border border-amber-400/50 group">
+                                <span class="text-3xl group-hover:scale-110 transition-transform">📺</span>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-[11px] font-bold text-slate-900 opacity-90">دانلود مستقیم اپلیکیشن تلویزیون</span>
+                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۲.۰.۱)</span>
+                                    <span class="block text-[10px] text-slate-900 font-medium">حجم ۱.۰ مگابایت • اندروید تی‌وی و باکس</span>
                                 </div>
-                            </div>
-                            <div class="bg-slate-50 dark:bg-slate-900/90 rounded-xl p-3 border border-slate-200 dark:border-slate-800 text-right">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">مظنه مثقال ۱۷ عیار تهران</span>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xl font-black text-slate-900 dark:text-white">{{ number_format($rates['mesghal'] ?: 15800000) }}</span>
-                                    <span class="text-xs text-slate-500 dark:text-slate-400">تومان</span>
+                            </a>
+
+                            <!-- ورود به پنل وب و PWA گوشی -->
+                            <a href="/admin/login" 
+                               class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white shadow-md text-right group">
+                                <span class="text-3xl group-hover:scale-110 transition-transform">⚡</span>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-[11px] text-slate-500 dark:text-slate-400 font-normal">نسخه بدون نیاز به نصب</span>
+                                    <span class="block text-base font-black text-amber-600 dark:text-amber-400 truncate">پنل وب و PWA موبایل</span>
+                                    <span class="block text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">سازگار با اندروید، آیفون و ویندوز</span>
                                 </div>
-                            </div>
-                            <div class="bg-slate-50 dark:bg-slate-900/90 rounded-xl p-3 border border-slate-200 dark:border-slate-800 text-right">
-                                <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">سکه تمام طرح جدید (امامی)</span>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xl font-black text-slate-900 dark:text-white">{{ number_format($rates['coin_emami'] ?: 43500000) }}</span>
-                                    <span class="text-xs text-slate-500 dark:text-slate-400">تومان</span>
-                                </div>
-                            </div>
-                            <div class="pt-2">
-                                <a href="/demo" class="block w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black rounded-lg shadow">
-                                    مشاهده دموی زنده تابلوی کامل
+                            </a>
+                        </div>
+
+                        {{-- لینک‌های کمکی: اتصال سریع و دموی زنده --}}
+                        <div class="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs">
+                            <span class="text-slate-500 dark:text-slate-400">نیاز به تست سریع یا اتصال تلویزیون دارید؟</span>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('display.tv') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold border border-amber-500/25 transition-colors">
+                                    <span>📺 اتصال با کد ۶ رقمی (/tv)</span>
+                                </a>
+                                <a href="{{ url('/demo') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-700 transition-colors">
+                                    <span>مشاهده دموی زنده</span>
+                                    <span>←</span>
                                 </a>
                             </div>
                         </div>
                     </div>
+
+                    {{-- نوار شاخص‌های اعتماد ۴‌گانه --}}
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs text-slate-600 dark:text-slate-400 font-bold">
+                        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 py-2 rounded-xl shadow-sm">
+                            <span class="text-amber-500">⚡</span>
+                            <span class="truncate">راه‌اندازی در ۶۰ ثانیه</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 py-2 rounded-xl shadow-sm">
+                            <span class="text-emerald-500">🛡️</span>
+                            <span class="truncate">پایداری ۱۰۰٪ آفلاین</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 py-2 rounded-xl shadow-sm">
+                            <span class="text-blue-500">📺</span>
+                            <span class="truncate">انواع تلویزیون هوشمند</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 py-2 rounded-xl shadow-sm">
+                            <span class="text-amber-500">🔒</span>
+                            <span class="truncate">امضای دیجیتال ۳۰ ساله</span>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- ستون چپ: شو روم بصری دوگانه (تلویزیون هوشمند + موبایل کنترل‌کننده شناور) (۵ ستون) --}}
+                <div class="lg:col-span-5 flex flex-col justify-center items-center relative w-full">
+                    
+                    {{-- هاله نوری پشت تلویزیون --}}
+                    <div class="absolute -inset-4 bg-gradient-to-r from-amber-500/25 via-yellow-500/30 to-amber-600/20 blur-3xl rounded-[40px] opacity-75 dark:opacity-90 pointer-events-none"></div>
+
+                    {{-- فریم تلویزیون ۶۵ اینچ هوشمند طلالایو --}}
+                    <div class="relative w-full rounded-[28px] p-2.5 sm:p-3 bg-gradient-to-b from-slate-300 via-slate-400 to-slate-500 dark:from-slate-700 dark:via-slate-800 dark:to-slate-950 tv-mockup-shadow border border-slate-300/80 dark:border-slate-700/60 transition-transform duration-500 hover:scale-[1.01]">
+                        
+                        {{-- صفحه نمایشگر زنده تلویزیون --}}
+                        <div class="relative rounded-2xl bg-slate-950 overflow-hidden border border-amber-500/30 text-white aspect-[16/10] flex flex-col justify-between p-3.5 sm:p-4 shadow-2xl select-none">
+                            
+                            {{-- هدر تابلوی تلویزیون --}}
+                            <div class="flex items-center justify-between border-b border-amber-500/20 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-slate-950 font-black text-xs flex items-center justify-center shadow-md shadow-amber-500/30">
+                                        زر
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-black text-xs text-amber-300 tracking-tight">گالری طلا و جواهر طلالایو</div>
+                                        <div class="text-[9px] text-slate-400">تابلوی رسمی نرخ لحظه‌ای و مسکوکات</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/40 px-2 py-0.5 rounded-full text-emerald-400 text-[10px] font-black shadow-sm">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                        <span>نرخ لحظه‌ای</span>
+                                    </div>
+                                    <div class="text-left font-mono text-xs text-amber-400/90 font-black" dir="ltr">
+                                        {{ date('H:i') }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- کارت‌های نرخ‌های واقعی لوکس --}}
+                            <div class="grid grid-cols-2 gap-2 my-auto">
+                                {{-- طلای ۱۸ عیار --}}
+                                <div class="bg-gradient-to-b from-amber-500/15 via-slate-900/90 to-slate-950 border border-amber-400/50 rounded-xl p-2 text-right space-y-0.5 shadow-lg shadow-amber-500/10">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] text-amber-300 font-black">طلای ۱۸ عیار (گرم)</span>
+                                        <span class="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">شاخص</span>
+                                    </div>
+                                    <div class="text-sm sm:text-base font-black text-amber-400 font-mono tracking-wider drop-shadow-[0_2px_8px_rgba(251,191,36,0.3)]" dir="ltr">
+                                        {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '۴,۶۵۰,۰۰۰' }}
+                                    </div>
+                                    <div class="text-[9px] text-emerald-400 font-bold flex items-center justify-between">
+                                        <span>تومان</span>
+                                        <span class="font-mono text-[8px] text-slate-400">۱۸K</span>
+                                    </div>
+                                </div>
+
+                                {{-- سکه تمام امامی --}}
+                                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-300 font-bold">سکه بهار آزادی (امامی)</div>
+                                    <div class="text-sm sm:text-base font-black text-amber-300 font-mono tracking-wider" dir="ltr">
+                                        {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '۵۲,۸۰۰,۰۰۰' }}
+                                    </div>
+                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                </div>
+
+                                {{-- مظنه مثقال تهران --}}
+                                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-300 font-bold">مظنه مثقال ۱۷ عیار</div>
+                                    <div class="text-sm sm:text-base font-black text-white font-mono tracking-wider" dir="ltr">
+                                        {{ !empty($rates['mesghal']) && $rates['mesghal'] > 0 ? number_format($rates['mesghal']) : '۲۰,۱۵۰,۰۰۰' }}
+                                    </div>
+                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                </div>
+
+                                {{-- انس طلا / نیم سکه --}}
+                                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="text-[10px] text-slate-300 font-bold">نیم سکه بهار آزادی</div>
+                                    <div class="text-sm sm:text-base font-black text-white font-mono tracking-wider" dir="ltr">
+                                        {{ !empty($rates['coin_half']) && $rates['coin_half'] > 0 ? number_format($rates['coin_half']) : '۲۷,۲۰۰,۰۰۰' }}
+                                    </div>
+                                    <div class="text-[9px] text-emerald-400 font-bold">تومان</div>
+                                </div>
+                            </div>
+
+                            {{-- فوتر تابلوی تلویزیون --}}
+                            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[9px] text-slate-400">
+                                <span>نسخه نرم‌افزار: طلالایو TV ۲.۰.۱</span>
+                                <span class="text-emerald-400">● اتصال بی‌سیم فعال</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- موبایل شناور در گوشه تلویزیون (نشان‌دهنده کنترل تابلو با گوشی) --}}
+                    <div class="hidden sm:block absolute -bottom-6 -left-6 w-44 rounded-2xl p-2 bg-slate-900 border-2 border-amber-400/60 shadow-2xl shadow-black/60 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                        <div class="flex justify-center mb-1">
+                            <div class="w-8 h-1 bg-slate-700 rounded-full"></div>
+                        </div>
+                        <div class="bg-slate-950 rounded-xl p-2 text-[10px] space-y-1.5 text-right">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+                                <span class="text-emerald-400 font-bold text-[9px]">● متصل به تلویزیون</span>
+                                <span class="text-amber-400 font-mono text-[9px]">TalaLive</span>
+                            </div>
+                            <div class="bg-slate-900 p-1.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 block text-[8px]">کنترل حاشیه سود مغازه</span>
+                                <span class="font-bold text-amber-300 text-[10px]">+ ۱.۵٪ حاشیه قانونی</span>
+                            </div>
+                            <div class="bg-amber-500/20 text-amber-300 text-center py-1 rounded text-[9px] font-bold">
+                                📱 ریموت و مدیریت فعال
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
+    </section>
 
-        <!-- 6 Mandatory TV Installation Guides (U-04) -->
-        <div class="space-y-8 mb-16">
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 mb-3">
-                    راهنمای جامع راه‌اندازی بدون نیاز به تکنسین
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                    آموزش گام‌به‌گام نصب و راه‌اندازی اپلیکیشن روی تلویزیون مغازه
-                </h2>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">
-                    برای اتصال پایدار و دائمی تابلوی طلالایو روی انواع تلویزیون هوشمند (Sony, TCL, Snowa, Daewoo, X.Vision) و اندروید باکس‌ها، مراحل زیر را طی کنید:
+    {{-- ۲. شبکه ۴‌ستونه قابلیت‌های تخصصی اپلیکیشن طلالایو --}}
+    <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 my-12 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <span class="inline-block px-3.5 py-1 rounded-full text-xs font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/25 mb-3">
+                چرا اپلیکیشن اختصاصی تلویزیون طلالایو؟
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                ویژگی‌های مهندسی‌شده ویژه استفاده دائمی روی تلویزیون مغازه
+            </h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                برخلاف روش‌های قدیمی که نیازمند کامپیوتر یا مینی‌کیس بودند، اپلیکیشن طلالایو مستقیماً برای کارکرد بی‌وقفه ۲۴ ساعته طراحی شده است:
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {{-- کارت ۱ --}}
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg shadow-slate-200/40 dark:shadow-none hover:border-amber-500/40 transition-colors">
+                <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl mb-4 border border-amber-500/20">
+                    ⚡
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">روشن شدن خودکار با برق مغازه</h3>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    مجهز به سرویس بومی Boot Receiver؛ هنگام باز کردن مغازه و اتصال برق، تلویزیون مستقیماً تابلوی قیمت‌ها را باز می‌کند بدون نیاز به ریموت.
                 </p>
             </div>
 
+            {{-- کارت ۲ --}}
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg shadow-slate-200/40 dark:shadow-none hover:border-amber-500/40 transition-colors">
+                <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mb-4 border border-emerald-500/20">
+                    🛡️
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">کارکرد ۱۰۰٪ پایدار آفلاین</h3>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    در زمان قطعی اینترنت، تابلوی شما هرگز سیاه یا خاموش نمی‌شود؛ بلکه آخرین نرخ‌های معتبر همراه با برچسب ساعت به صورت مداوم نمایش می‌یابند.
+                </p>
+            </div>
+
+            {{-- کارت ۳ --}}
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg shadow-slate-200/40 dark:shadow-none hover:border-amber-500/40 transition-colors">
+                <div class="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl mb-4 border border-blue-500/20">
+                    🖥️
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">محافظت از پنل و ضد سایه (Anti-Burn-in)</h3>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    بهینه‌سازی مصرف پردازنده و جابه‌جایی میکرومتری اجزای ثابت برای حفظ سلامت دائمی پیکسل‌های تلویزیون‌های LED و OLED در ساعات طولانی.
+                </p>
+            </div>
+
+            {{-- کارت ۴ --}}
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg shadow-slate-200/40 dark:shadow-none hover:border-amber-500/40 transition-colors">
+                <div class="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl mb-4 border border-purple-500/20">
+                    📲
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">کنترل بی‌سیم با گوشی از هر نقطه</h3>
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    حتی زمانی که در مغازه حضور ندارید، با گوشی موبایل خود می‌توانید فرمول سود، اسلایدشوی محصولات و نحوه نمایش تابلو را تغییر دهید.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    {{-- ۳. آموزش گام‌به‌گام نصب و راه‌اندازی (شبکه ۲ ستونه متعادل) --}}
+    <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 my-16 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <span class="inline-block px-3.5 py-1 rounded-full text-xs font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/25 mb-3">
+                راهنمای جامع راه‌اندازی بدون نیاز به تکنسین
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                آموزش گام‌به‌گام نصب و راه‌اندازی اپلیکیشن روی انواع تلویزیون طلافروشی
+            </h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                برای اتصال پایدار و دائمی تابلوی طلالایو روی انواع تلویزیون هوشمند (Sony, TCL, Snowa, Daewoo, X.Vision, Xiaomi) و اندروید باکس‌ها، مراحل زیر را طی کنید:
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            
             <!-- گام ۱: فعال‌سازی منابع ناشناس -->
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center flex-shrink-0 border border-amber-500/30 dark:border-amber-500/40">
-                        ۱
-                    </div>
-                    <div class="space-y-3 flex-1">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">فعال‌سازی مجوز «نصب از منابع ناشناس» (Unknown Sources)</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            چون اپلیکیشن طلالایو به صورت مستقیم (APK) نصب می‌شود، سیستم‌عامل اندروید به صورت پیش‌فرض برای امنیت نصب برنامه‌ها را متوقف می‌کند. قبل از نصب باید این مجوز را فعال کنید:
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">در تلویزیون‌های Android TV و Google TV:</span>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    به <strong>تنظیمات (Settings)</strong> > <strong>برنامه‌ها (Apps)</strong> > <strong>امنیت و محدودیت‌ها (Security & Restrictions)</strong> بروید و گزینه <strong>نصب برنامه‌های ناشناس (Install Unknown Apps)</strong> را برای مرورگر یا فایل منیجر خود روی حالت <span class="text-emerald-600 dark:text-emerald-400 font-bold">مجاز (Allow)</span> بگذارید.
-                                </p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">در اندروید باکس‌های معمولی:</span>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    به <strong>تنظیمات (Settings)</strong> > <strong>امنیت (Security)</strong> رفته و تیک گزینه <strong>منابع ناشناخته (Unknown Sources)</strong> را فعال نمایید.
-                                </p>
-                            </div>
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+                            ۱
                         </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                            فعال‌سازی مجوز «نصب از منابع ناشناس» (Unknown Sources)
+                        </h3>
                     </div>
-                </div>
-            </div>
-
-            <!-- گام ۲: روش‌های انتقال فایل به تلویزیون -->
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center flex-shrink-0 border border-amber-500/30 dark:border-amber-500/40">
-                        ۲
-                    </div>
-                    <div class="space-y-3 flex-1">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">روش‌های انتقال و دانلود فایل نصبی در تلویزیون</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            می‌توانید از یکی از سه روش سادهٔ زیر برای رساندن فایل نصبی به تلویزیون یا باکس مغازه استفاده کنید:
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60 text-right">
-                                <span class="text-2xl block mb-2">💾</span>
-                                <strong class="text-sm font-bold text-slate-900 dark:text-white block mb-1">روش اول: فلش مموری</strong>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">فایل APK را با کامپیوتر یا گوشی دانلود کرده، داخل فلش بریزید و با فایل منیجر تلویزیون نصب کنید.</p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60 text-right">
-                                <span class="text-2xl block mb-2">🌐</span>
-                                <strong class="text-sm font-bold text-slate-900 dark:text-white block mb-1">روش دوم: مرورگر تلویزیون</strong>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">مرورگر تلویزیون (Chrome یا TV Bro) را باز کنید، آدرس <code class="text-amber-600 dark:text-amber-400">talalive.ir/app</code> را وارد کرده و دکمه دانلود را بزنید.</p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60 text-right">
-                                <span class="text-2xl block mb-2">📲</span>
-                                <strong class="text-sm font-bold text-slate-900 dark:text-white block mb-1">روش سوم: ارسال با وای‌فای</strong>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">با نصب اپلیکیشن رایگان <strong>Send Files to TV</strong> روی گوشی و تلویزیون، فایل را در ۱ ثانیه با وای‌فای منتقل کنید.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- گام ۳: مراحل جفت‌سازی -->
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center flex-shrink-0 border border-amber-500/30 dark:border-amber-500/40">
-                        ۳
-                    </div>
-                    <div class="space-y-3 flex-1">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">اتصال و جفت‌سازی تابلو با پنل مغازه (۳ روش)</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            پس از نصب، اپلیکیشن «طلالایو TV» را اجرا کنید. یک کد ۶ کاراکتری درشت همراه با QR Code روی صفحه ظاهر می‌شود. برای اتصال تابلو به حساب کاربری خود، یکی از ۳ راه زیر را انجام دهید:
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">الف) ورود کد در پنل:</span>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    در گوشی وارد پنل کاربری بخش <strong>تلویزیون‌های من</strong> شوید، دکمه «افزودن دستگاه» را بزنید و کد ۶ حرفی را وارد کنید.
-                                </p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">ب) اسکن QR Code:</span>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    دوربین گوشی خود را جلوی بارکد تلویزیون بگیرید؛ لینک باز می‌شود و با تایید در پنل، تابلو درجا فعال می‌گردد.
-                                </p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">ج) ارسال پیامک:</span>
-                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    روی دکمه «ارسال پیامک به موبایلم» با ریموت بزنید، شمارهٔ خود را وارد کنید تا لینک اتصال مستقیم پیامک شود.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- گام ۴: حل مشکل بالا نیامدن پس از قطع برق -->
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center flex-shrink-0 border border-amber-500/30 dark:border-amber-500/40">
-                        ۴
-                    </div>
-                    <div class="space-y-3 flex-1">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">اگر تلویزیون شما پس از قطع برق خودش بالا نمی‌آید</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            اپلیکیشن طلالایو مجهز به گیرندهٔ خودکار روشن شدن با برق (Boot Receiver) است. با این حال در برخی تلویزیون‌های جدید با اندروید ۱۰ و بالاتر به دلیل سیاست‌های امنیتی گوگل، اجرای خودکار پس‌زمینه محدود شده است. برای حل دائمی این موضوع:
-                        </p>
-                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60 space-y-2">
-                            <strong class="text-sm font-bold text-amber-600 dark:text-amber-400 block">انتخاب طلالایو به عنوان صفحهٔ پیش‌فرض خانه (Home Launcher):</strong>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        چون اپلیکیشن طلالایو به صورت مستقیم (APK) نصب می‌شود، اندروید به طور پیش‌فرض برای امنیت نصب برنامه‌ها را متوقف می‌کند. قبل از نصب این مجوز را فعال کنید:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">تلویزیون‌های Android TV و Google TV:</span>
                             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                به <strong>تنظیمات تلویزیون</strong> > <strong>برنامه‌ها</strong> > <strong>برنامه‌های پیش‌فرض (Default Apps)</strong> > <strong>برنامه خانه (Home App)</strong> رفته و گزینه <strong>«طلالایو TV»</strong> را به عنوان برنامه پیش‌فرض انتخاب کنید. با این کار، تلویزیون بلافاصله پس از اتصال به برق و روشن شدن، مستقیماً تابلوی قیمت‌ها را نمایش می‌دهد.
+                                تنظیمات > برنامه‌ها > امنیت > <strong>نصب برنامه‌های ناشناس</strong> را برای مرورگر یا فایل منیجر روی <span class="text-emerald-600 dark:text-emerald-400 font-bold">مجاز (Allow)</span> بگذارید.
+                            </p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">اندروید باکس‌های معمولی:</span>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                تنظیمات (Settings) > امنیت (Security) > تیک گزینه <strong>منابع ناشناخته (Unknown Sources)</strong> را فعال نمایید.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- گام ۵: حل مشکل عدم به‌روزرسانی قیمت‌ها (آپدیت وب‌ویو) -->
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center flex-shrink-0 border border-amber-500/30 dark:border-amber-500/40">
-                        ۵
-                    </div>
-                    <div class="space-y-3 flex-1">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">اگر تابلو بالا می‌آید ولی قیمت‌ها عوض نمی‌شوند (آپدیت موتور نمایش)</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            سامانه مدرن طلالایو از فناوری نسل جدید جاوااسکریپت برای به‌روزرسانی ثانیه‌ای نرخ‌ها استفاده می‌کند که نیازمند موتور نمایش <strong>Android System WebView</strong> نسخهٔ ۸۰ یا بالاتر است. اگر تلویزیون شما پیام هشدار موتور قدیمی نمایش داد:
-                        </p>
-                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60 text-xs text-slate-600 dark:text-slate-300 space-y-2">
-                            <p>۱. فروشگاه <strong>Google Play Store</strong> یا <strong>بازار</strong> را در تلویزیون باز کنید.</p>
-                            <p>۲. عبارت <strong>Android System WebView</strong> را جستجو کنید و دکمهٔ <strong>به‌روزرسانی (Update)</strong> را بزنید.</p>
-                            <p>۳. پس از اتمام آپدیت، یک بار تلویزیون را خاموش و روشن کنید؛ تابلوی شما با حداکثر سرعت و بدون وقفه قیمت‌ها را تغییر خواهد داد.</p>
+            <!-- گام ۲: روش‌های انتقال فایل به تلویزیون -->
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+                            ۲
                         </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                            روش‌های انتقال و دانلود فایل نصبی در تلویزیون
+                        </h3>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        می‌توانید از یکی از سه روش سادهٔ زیر برای رساندن فایل نصبی به تلویزیون یا باکس مغازه استفاده کنید:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 text-right">
+                            <span class="text-xl block mb-1">💾</span>
+                            <strong class="text-xs font-bold text-slate-900 dark:text-white block mb-0.5">روش اول: فلش مموری</strong>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">دانلود فایل با کامپیوتر، انتقال به فلش و نصب با فایل‌منیجر.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 text-right">
+                            <span class="text-xl block mb-1">🌐</span>
+                            <strong class="text-xs font-bold text-slate-900 dark:text-white block mb-0.5">روش دوم: مرورگر</strong>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">ورود به <code class="text-amber-600 dark:text-amber-400">talalive.ir/app</code> با مرورگر تلویزیون و دانلود مستقیم.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 text-right">
+                            <span class="text-xl block mb-1">📲</span>
+                            <strong class="text-xs font-bold text-slate-900 dark:text-white block mb-0.5">روش سوم: با وای‌فای</strong>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">با نرم‌افزار Send Files to TV فایل را در ۱ ثانیه انتقال دهید.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- گام ۳: مراحل جفت‌سازی -->
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+                            ۳
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                            اتصال و جفت‌سازی تابلو با پنل مغازه (۳ روش)
+                        </h3>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        پس از نصب، اپلیکیشن را باز کنید. یک کد ۶ کاراکتری درشت همراه با بارکد QR ظاهر می‌شود؛ یکی از ۳ راه زیر را انجام دهید:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">الف) ورود کد در پنل:</span>
+                            <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">در بخش تلویزیون‌های من در پنل، دکمه افزودن دستگاه را بزنید و کد را وارد کنید.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">ب) اسکن QR Code:</span>
+                            <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">دوربین موبایل را جلوی بارکد تلویزیون بگیرید تا درجا فعال شود.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">ج) پیامک لینک:</span>
+                            <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">دکمه ارسال پیامک را با ریموت بزنید و شماره موبایل را وارد نمایید.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- گام ۴: حل مشکل بالا نیامدن پس از قطع برق -->
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+                            ۴
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                            اگر تلویزیون شما پس از قطع برق خودش بالا نمی‌آید
+                        </h3>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        اپلیکیشن طلالایو مجهز به گیرندهٔ خودکار روشن شدن با برق (Boot Receiver) است. با این حال در برخی تلویزیون‌های جدید با اندروید ۱۰ به بالا:
+                    </p>
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-1.5">
+                        <strong class="text-xs font-bold text-amber-600 dark:text-amber-400 block">انتخاب طلالایو به عنوان برنامه پیش‌فرض خانه (Home Launcher):</strong>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            به <strong>تنظیمات تلویزیون</strong> > <strong>برنامه‌ها</strong> > <strong>برنامه‌های پیش‌فرض (Default Apps)</strong> > <strong>برنامه خانه (Home App)</strong> رفته و گزینه <strong>«طلالایو TV»</strong> را انتخاب کنید تا با وصل برق فوراً تابلو باز شود.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- گام ۵: حل مشکل عدم به‌روزرسانی قیمت‌ها (آپدیت وب‌ویو) -->
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+                            ۵
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                            اگر تابلو بالا می‌آید ولی قیمت‌ها عوض نمی‌شوند (آپدیت موتور نمایش)
+                        </h3>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        سامانه طلالایو از فناوری نسل جدید جاوااسکریپت برای به‌روزرسانی ثانیه‌ای نرخ‌ها استفاده می‌کند که نیازمند <strong>Android System WebView</strong> نسخه ۸۰ به بالاست:
+                    </p>
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 text-xs text-slate-600 dark:text-slate-300 space-y-1.5">
+                        <p>۱. فروشگاه <strong>Google Play Store</strong> یا <strong>بازار</strong> را در تلویزیون باز کنید.</p>
+                        <p>۲. عبارت <strong>Android System WebView</strong> را جستجو کرده و دکمه <strong>به‌روزرسانی (Update)</strong> را بزنید.</p>
+                        <p>۳. پس از آپدیت، یک‌بار تلویزیون را خاموش و روشن کنید تا قیمت‌ها با حداکثر سرعت به‌روزرسانی شوند.</p>
                     </div>
                 </div>
             </div>
 
             <!-- گام ۶: رفتار کلیدهای ریموت کنترل -->
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center flex-shrink-0 border border-amber-500/30 dark:border-amber-500/40">
-                        ۶
+            <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-lg flex items-center justify-center shrink-0 border border-amber-500/30">
+                            ۶
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                            کلیدهای میانبر ریموت کنترل در اپلیکیشن
+                        </h3>
                     </div>
-                    <div class="space-y-3 flex-1">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">کلیدهای میانبر ریموت کنترل در اپلیکیشن</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">دکمه MENU یا نگه‌داشتن OK:</span>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">باز شدن منوی تنظیمات شامل بارگذاری مجدد، اطلاعات نسخه دستگاه، و گزینهٔ قطع اتصال.</p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">دکمه BACK (بازگشت):</span>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">برای جلوگیری از خروج ناخواسته شاگردان یا مشتریان، نیاز به دو بار فشردن دکمه در ۳ ثانیه دارد.</p>
-                            </div>
-                            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/60">
-                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">قطع اینترنت:</span>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">نمایش خودکار لایهٔ آفلاین نیتیو با ساعت آخرین نرخ و اتصال مجدد هوشمند بدون نیاز به ریموت.</p>
-                            </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">MENU یا نگه‌داشتن OK:</span>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">باز شدن منوی تنظیمات، بارگذاری مجدد، اطلاعات نسخه و قطع اتصال.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">دکمه BACK (بازگشت):</span>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">برای جلوگیری از خروج تصادفی، نیازمند دو بار فشردن در ۳ ثانیه است.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80">
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">قطع اینترنت:</span>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">نمایش خودکار لایه آفلاین نیتیو با ساعت آخرین نرخ و اتصال مجدد هوشمند.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- FAQ Section -->
-        <div class="bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/60 rounded-2xl p-6 sm:p-8 mb-12 shadow-lg">
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">سؤالات متداول درباره اپلیکیشن طلالایو</h2>
-            <div class="space-y-6 text-slate-600 dark:text-slate-300">
-                <div>
-                    <h3 class="text-base font-semibold text-amber-600 dark:text-amber-400 mb-2">۱. آیا استفاده از اپلیکیشن هزینه جداگانه دارد؟</h3>
-                    <p class="text-sm leading-relaxed">
-                        خیر؛ با تهیه هر یک از پلن‌های اشتراک طلالایو، دسترسی به پنل اپلیکیشن موبایل، مدیریت تابلو و به‌روزرسانی‌ها کاملاً رایگان خواهد بود.
+        </div>
+    </section>
+
+    {{-- ۴. بخش سوالات متداول (FAQ) سئومحور --}}
+    <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 my-16 relative z-10">
+        <div class="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/40 dark:shadow-none">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                    سؤالات متداول درباره اپلیکیشن تابلوی طلالایو
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">
+                    پاسخ به سوالات متداول طلافروشان درباره نحوه دانلود، نصب و پشتیبانی اپلیکیشن تلویزیون
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800">
+                    <h3 class="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400 mb-2">۱. آیا استفاده از اپلیکیشن هزینه جداگانه دارد؟</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        خیر؛ با تهیه هر یک از پلن‌های اشتراک طلالایو، دسترسی به پنل اپلیکیشن موبایل، مدیریت تابلو و تمامی به‌روزرسانی‌های نسخه تلویزیون کاملاً رایگان خواهد بود.
                     </p>
                 </div>
-                <div>
-                    <h3 class="text-base font-semibold text-amber-600 dark:text-amber-400 mb-2">۲. چگونه می‌توانم بدون استور، نسخه تحت وب را در گوشی ذخیره کنم؟</h3>
-                    <p class="text-sm leading-relaxed">
-                        کافیست با مرورگر گوشی وارد آدرس <a href="/admin/login" class="text-amber-600 dark:text-amber-400 underline font-semibold">talalive.ir/admin/login</a> شوید و گزینه «Add to Home screen» (افزودن به صفحه اصلی) را انتخاب فرمایید تا آیکون اپلیکیشن همانند برنامه‌های معمولی روی صفحه گوشی ظاهر شود.
+
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800">
+                    <h3 class="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400 mb-2">۲. اگر تلویزیون مغازه اندروید نباشد (مثل سامسونگ یا ال‌جی) چه کنیم؟</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        تلویزیون‌های سامسونگ (Tizen) و ال‌جی (webOS) بدون نیاز به نصب هیچ نرم‌افزاری، مستقیماً از طریق مرورگر داخلی تلویزیون با آدرس <a href="{{ route('display.tv') }}" class="text-amber-600 dark:text-amber-400 underline font-bold">talalive.ir/tv</a> متصل می‌شوند. همچنین می‌توانید یک اندروید باکس ساده به تلویزیون وصل کنید.
+                    </p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800">
+                    <h3 class="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400 mb-2">۳. چگونه بدون استور، نسخه وب را در گوشی آیفون یا اندروید ذخیره کنیم؟</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        با مرورگر گوشی به آدرس <a href="/admin/login" class="text-amber-600 dark:text-amber-400 underline font-bold">talalive.ir/admin/login</a> بروید و گزینه «Add to Home screen» (افزودن به صفحه اصلی) را بزنید تا همانند یک اپلیکیشن واقعی روی صفحه ظاهر شود.
+                    </p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/80 dark:border-slate-800">
+                    <h3 class="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400 mb-2">۴. در صورت قطعی اینترنت در طلافروشی، نمایشگر خاموش می‌شود؟</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        خیر؛ اپلیکیشن به صورت خودکار آخرین نرخ‌های معتبر را به همراه ساعت دقیق آخرین استعلام حفظ کرده و به مشتریان نمایش می‌دهد و به محض اتصال مجدد اینترنت، بدون دخالت دست آپدیت می‌شود.
                     </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    {{-- ۵. بنر تبدیل پایانی تمام‌عرض (Full-Width Conversion CTA) --}}
+    <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 mb-16 relative z-10">
+        <div class="relative rounded-3xl p-8 sm:p-12 overflow-hidden bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-slate-950 shadow-2xl shadow-amber-500/20 text-center sm:text-right flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 max-w-xl">
+                <h3 class="text-2xl sm:text-3xl font-black">
+                    آماده‌اید تابلوی مدرن طلافروشی خود را روشن کنید؟
+                </h3>
+                <p class="text-sm sm:text-base text-slate-900 font-medium">
+                    همین حالا ثبت‌نام کنید و از ۱۴ روز تست کاملاً رایگان سامانه طلالایو روی تلویزیون مغازه خود بدون نیاز به پیش‌پرداخت بهره‌مند شوید.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap justify-center shrink-0">
+                <a href="{{ route('admin.register') }}" class="px-6 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 text-amber-400 hover:text-amber-300 font-black text-sm shadow-xl transition-all hover:scale-105">
+                    <span>ثبت‌نام گالری طلا (۱۴ روز رایگان)</span>
+                    <span>🚀</span>
+                </a>
+                <a href="{{ url('/demo') }}" class="px-5 py-3.5 rounded-2xl bg-white/30 hover:bg-white/40 text-slate-950 font-black text-sm transition-all">
+                    <span>مشاهده دموی زنده تابلو</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
 </div>
 
-<script>
-function scrollToNotify(platform) {
-    const notifySec = document.getElementById('notify-section');
-    if (notifySec) {
-        notifySec.scrollIntoView({ behavior: 'smooth' });
-    }
-    const sel = document.getElementById('wl-platform');
-    if (sel && platform) {
-        if (platform.includes('اندروید') || platform.includes('بازار') || platform.includes('مایکت')) {
-            sel.value = 'android_phone';
-        }
-    }
-}
-
-function handleWaitlistSubmit(e) {
-    e.preventDefault();
-    document.getElementById('waitlist-form').classList.add('hidden');
-    document.getElementById('waitlist-success').classList.remove('hidden');
-}
-</script>
-
+{{-- داده‌های ساختاریافته موتورهای جستجو (Schema.org JSON-LD) --}}
 <script type="application/ld+json">
 {
   "@@context": "https://schema.org",
@@ -346,20 +580,68 @@ function handleWaitlistSubmit(e) {
     {
       "@@type": "SoftwareApplication",
       "@@id": "https://talalive.ir/app#software",
-      "name": "اپلیکیشن طلالایو",
-      "operatingSystem": "Android, iOS, Web",
+      "name": "اپلیکیشن طلالایو TV",
+      "operatingSystem": "Android TV, Google TV, Android Box, Web Browser",
       "applicationCategory": "BusinessApplication",
-      "description": "نرم‌افزار هوشمند مدیریت تابلوی طلافروشی و استعلام لحظه‌ای مظنه آبشده و سکه.",
+      "description": "نرم‌افزار هوشمند مدیریت تابلوی طلافروشی، نمایش لحظه‌ای نرخ طلا و سکه روی تلویزیون مغازه بدون نیاز به کامپیوتر یا مینی‌کیس.",
+      "softwareVersion": "2.0.1",
+      "fileSize": "1050232",
+      "downloadUrl": "https://talalive.ir/downloads/talalive-tv.apk",
       "offers": {
         "@@type": "Offer",
         "price": "0",
-        "priceCurrency": "IRR"
+        "priceCurrency": "IRR",
+        "category": "Free Trial"
       },
       "publisher": {
         "@@type": "Organization",
         "name": "طلالایو",
         "url": "https://talalive.ir"
       }
+    },
+    {
+      "@@type": "BreadcrumbList",
+      "@@id": "https://talalive.ir/app#breadcrumb",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "صفحه اصلی",
+          "item": "https://talalive.ir"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "دانلود اپلیکیشن تابلوی طلافروشی",
+          "item": "https://talalive.ir/app"
+        }
+      ]
+    },
+    {
+      "@@type": "HowTo",
+      "@@id": "https://talalive.ir/app#howto",
+      "name": "آموزش نصب و اتصال اپلیکیشن طلالایو روی تلویزیون مغازه",
+      "description": "راهنمای گام‌به‌گام نصب نرم‌افزار طلالایو روی انواع تلویزیون اندروید تی‌وی و اتصال آن به پنل مغازه بدون کابل‌کشی.",
+      "step": [
+        {
+          "@@type": "HowToStep",
+          "position": 1,
+          "name": "فعال‌سازی مجوز نصب از منابع ناشناس",
+          "text": "در تنظیمات تلویزیون به بخش امنیت رفته و مجوز Install Unknown Apps را فعال کنید."
+        },
+        {
+          "@@type": "HowToStep",
+          "position": 2,
+          "name": "انتقال فایل APK به تلویزیون",
+          "text": "فایل نصبی talalive-tv.apk را با فلش مموری یا مرورگر تلویزیون باز کنید."
+        },
+        {
+          "@@type": "HowToStep",
+          "position": 3,
+          "name": "جفت‌سازی با کد ۶ رقمی یا اسکن بارکد",
+          "text": "کد ۶ رقمی نمایش داده شده روی تلویزیون را در پنل موبایل خود وارد کنید."
+        }
+      ]
     },
     {
       "@@type": "FAQPage",
@@ -375,10 +657,10 @@ function handleWaitlistSubmit(e) {
         },
         {
           "@@type": "Question",
-          "name": "آیا برای تلویزیون مغازه به دانلود نرم‌افزار نیاز داریم؟",
+          "name": "اگر تلویزیون مغازه اندروید نباشد چه کنیم؟",
           "acceptedAnswer": {
             "@@type": "Answer",
-            "text": "خیر، تلویزیون‌های هوشمند مستقیماً از طریق مرورگر اینترنت متصل می‌شوند."
+            "text": "تلویزیون‌های سامسونگ و ال‌جی مستقیماً از طریق مرورگر اینترنت بدون نیاز به نرم‌افزار متصل می‌شوند."
           }
         }
       ]
