@@ -1600,15 +1600,28 @@
         </template>
 
         {{-- Imperial Royal Gold Silk Mesh (تارهای طلای شاهنشاهی ۲۴ عیار - ۱۰۰٪ استاتیک و بدون بار پردازنده) --}}
-        <template x-if="themeKey === 'imperial-onyx' || themeKey === 'imperial-pearl'">
+        <template x-if="themeKey === 'imperial-onyx'">
             <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none opacity-60">
                 <svg class="w-full h-full object-cover" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
-                    <path d="M-100 200 C350 100, 700 450, 1100 240 C1380 90, 1520 340, 1600 300" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.24)' : 'rgba(217,119,6,0.20)'" stroke-width="2"/>
-                    <path d="M-100 240 C400 140, 750 490, 1150 280 C1420 130, 1550 380, 1600 340" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.18)' : 'rgba(217,119,6,0.15)'" stroke-width="1.6"/>
-                    <path d="M-100 280 C450 180, 800 530, 1200 320 C1460 170, 1580 420, 1600 380" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.12)' : 'rgba(217,119,6,0.10)'" stroke-width="1.2"/>
-                    <path d="M-100 640 C420 450, 800 840, 1200 640 C1440 500, 1560 700, 1600 640" :stroke="themeKey === 'imperial-onyx' ? 'rgba(245,158,11,0.20)' : 'rgba(217,119,6,0.18)'" stroke-width="2"/>
-                    <path d="M-100 680 C470 490, 840 880, 1240 680 C1480 540, 1580 740, 1600 680" :stroke="themeKey === 'imperial-onyx' ? 'rgba(245,158,11,0.14)' : 'rgba(217,119,6,0.12)'" stroke-width="1.5"/>
-                    <path d="M-100 720 C520 530, 880 920, 1280 720 C1510 580, 1600 780, 1600 720" :stroke="themeKey === 'imperial-onyx' ? 'rgba(245,158,11,0.08)' : 'rgba(217,119,6,0.08)'" stroke-width="1.2"/>
+                    <path d="M-100 200 C350 100, 700 450, 1100 240 C1380 90, 1520 340, 1600 300" stroke="rgba(251,191,36,0.24)" stroke-width="2"/>
+                    <path d="M-100 240 C400 140, 750 490, 1150 280 C1420 130, 1550 380, 1600 340" stroke="rgba(251,191,36,0.18)" stroke-width="1.6"/>
+                    <path d="M-100 280 C450 180, 800 530, 1200 320 C1460 170, 1580 420, 1600 380" stroke="rgba(251,191,36,0.12)" stroke-width="1.2"/>
+                    <path d="M-100 640 C420 450, 800 840, 1200 640 C1440 500, 1560 700, 1600 640" stroke="rgba(245,158,11,0.20)" stroke-width="2"/>
+                    <path d="M-100 680 C470 490, 840 880, 1240 680 C1480 540, 1580 740, 1600 680" stroke="rgba(245,158,11,0.14)" stroke-width="1.5"/>
+                    <path d="M-100 720 C520 530, 880 920, 1280 720 C1510 580, 1600 780, 1600 720" stroke="rgba(245,158,11,0.08)" stroke-width="1.2"/>
+                </svg>
+            </div>
+        </template>
+
+        <template x-if="themeKey === 'imperial-pearl'">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none opacity-60">
+                <svg class="w-full h-full object-cover" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+                    <path d="M-100 200 C350 100, 700 450, 1100 240 C1380 90, 1520 340, 1600 300" stroke="rgba(217,119,6,0.20)" stroke-width="2"/>
+                    <path d="M-100 240 C400 140, 750 490, 1150 280 C1420 130, 1550 380, 1600 340" stroke="rgba(217,119,6,0.15)" stroke-width="1.6"/>
+                    <path d="M-100 280 C450 180, 800 530, 1200 320 C1460 170, 1580 420, 1600 380" stroke="rgba(217,119,6,0.10)" stroke-width="1.2"/>
+                    <path d="M-100 640 C420 450, 800 840, 1200 640 C1440 500, 1560 700, 1600 640" stroke="rgba(217,119,6,0.18)" stroke-width="2"/>
+                    <path d="M-100 680 C470 490, 840 880, 1240 680 C1480 540, 1580 740, 1600 680" stroke="rgba(217,119,6,0.12)" stroke-width="1.5"/>
+                    <path d="M-100 720 C520 530, 880 920, 1280 720 C1510 580, 1600 780, 1600 720" stroke="rgba(217,119,6,0.08)" stroke-width="1.2"/>
                 </svg>
             </div>
         </template>
@@ -1630,7 +1643,7 @@
         </div>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
-        <div id="tv-stage-viewport" class="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
+        <div id="tv-stage-viewport" class="absolute inset-0 z-10 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
             <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between gap-2 overflow-hidden select-none will-change-transform">
 
             {{-- Header --}}
