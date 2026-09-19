@@ -20,6 +20,8 @@
     <string name="menu_device_info">مشخصات دستگاه</string>
     <string name="menu_disconnect">قطع اتصال این دستگاه</string>
     <string name="menu_overscan">تنظیم حاشیهٔ تصویر (Overscan)</string>
+    <string name="menu_switch_native">نمایش تابلوی مستقل (حالت نیتیو)</string>
+    <string name="menu_switch_web">تلاش مجدد با حالت وب</string>
     <string name="overscan_dialog_title">تنظیم حاشیهٔ امن تصویر</string>
     <string name="disconnect_confirm_title">تأیید قطع اتصال تابلو</string>
     <string name="disconnect_confirm_desc">با قطع اتصال، این دستگاه از پنل خارج شده و برای اتصال مجدد باید کد جدید بگیرید.</string>

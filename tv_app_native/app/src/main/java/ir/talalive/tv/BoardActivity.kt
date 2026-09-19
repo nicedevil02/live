@@ -65,9 +65,25 @@ class BoardActivity : Activity() {
     private var retryCountdownSec = 5
     private var isDestroyedActivity = false
 
+    enum class RenderMode { WEB, NATIVE }
+
+    private var currentRenderMode = RenderMode.WEB
+    private var nativeBoardView: NativeBoardView? = null
+    private var readyWatchdogFailCount = 0
+    private val renderCrashTimestamps = mutableListOf<Long>()
+    private var nativePollDelayMs = 60_000L
+    private var nativeRetryCount = 0
+    private val clockSdf = SimpleDateFormat("HH:mm:ss", Locale.US)
+
     private val readyWatchdogRunnable = Runnable {
         if (!isBoardReady) {
-            Log.w(tag, "Board ready timeout (25s) elapsed without onBoardReady call")
+            readyWatchdogFailCount++
+            Log.w(tag, "Board ready timeout (25s) elapsed (failCount=$readyWatchdogFailCount)")
+            if (readyWatchdogFailCount >= 2) {
+                Log.w(tag, "Watchdog failed twice in a row. Auto-switching to Native Board.")
+                switchToNativeBoard("watchdog_double_timeout")
+                return@Runnable
+            }
             val probe = WebViewProbe.probe(this@BoardActivity)
             val verStr = probe.versionName ?: if (probe.majorVersion > 0) "${probe.majorVersion}" else "Unknown"
             showDiagnostic(
@@ -94,6 +110,22 @@ class BoardActivity : Activity() {
         }
     }
 
+    private val nativeSnapshotRunnable = object : Runnable {
+        override fun run() {
+            if (currentRenderMode != RenderMode.NATIVE || isDestroyedActivity) return
+            performNativeSnapshotFetch()
+        }
+    }
+
+    private val nativeClockRunnable = object : Runnable {
+        override fun run() {
+            if (currentRenderMode == RenderMode.NATIVE && !isDestroyedActivity) {
+                nativeBoardView?.updateClock(clockSdf.format(Date()))
+                handler.postDelayed(this, 1000L)
+            }
+        }
+    }
+
     private var isRevokedDialogShown = false
     private var currentHeartbeatIntervalMs = 30_000L
     private val heartbeatRunnable = object : Runnable {
@@ -116,7 +148,20 @@ class BoardActivity : Activity() {
         hideSystemUi()
 
         buildViews()
-        initAndLoadWebView()
+
+        val probe = WebViewProbe.probe(this)
+        val shouldForceNative = TvPrefs.isForcedNative(this) || !probe.available || (probe.majorVersion in 1..69)
+        if (shouldForceNative) {
+            val reason = when {
+                TvPrefs.isForcedNative(this) -> "pref_forced_native"
+                !probe.available -> "webview_probe_unavailable"
+                else -> "webview_outdated_v${probe.majorVersion}"
+            }
+            Log.i(tag, "Startup selecting NATIVE board mode ($reason)")
+            switchToNativeBoard(reason)
+        } else {
+            initAndLoadWebView()
+        }
 
         setupNetworkMonitoring()
         scheduleDailyReload()
@@ -164,6 +209,20 @@ class BoardActivity : Activity() {
                 }
             } else if (newIntent?.hasExtra("pair_board_url") == true) {
                 recreateWebView()
+            } else if (newIntent?.getBooleanExtra("test_native_mode", false) == true) {
+                switchToNativeBoard("intent_test")
+            } else if (newIntent?.getBooleanExtra("test_sample_snapshot", false) == true) {
+                switchToNativeBoard("intent_sample_test")
+                try {
+                    val raw = assets.open("N-07-snapshot-sample.json").bufferedReader(Charsets.UTF_8).use { it.readText() }
+                    val model = BoardModel.parse(raw)
+                    Log.i(tag, "Parsed sample snapshot: rows=${model?.rows?.size}")
+                    if (model != null) {
+                        nativeBoardView?.updateData(model)
+                    }
+                } catch (e: Exception) {
+                    Log.e(tag, "Failed to load sample snapshot from assets", e)
+                }
             }
         }
     }
@@ -186,11 +245,18 @@ class BoardActivity : Activity() {
         super.onResume()
         hideSystemUi()
         webView?.onResume()
+        if (currentRenderMode == RenderMode.NATIVE) {
+            handler.removeCallbacks(nativeClockRunnable)
+            handler.post(nativeClockRunnable)
+        }
     }
 
     override fun onPause() {
         super.onPause()
         webView?.onPause()
+        if (currentRenderMode == RenderMode.NATIVE) {
+            handler.removeCallbacks(nativeClockRunnable)
+        }
     }
 
     override fun onDestroy() {
@@ -425,11 +491,7 @@ class BoardActivity : Activity() {
         } catch (t: Throwable) {
             Log.e(tag, "WebView creation failed", t)
             webView = null
-            showDiagnostic(
-                getString(R.string.webview_missing_title),
-                getString(R.string.webview_missing_desc),
-                getString(R.string.menu_reload)
-            ) { recreateWebView() }
+            switchToNativeBoard("webview_creation_failed")
         }
     }
 
@@ -464,13 +526,143 @@ class BoardActivity : Activity() {
         runOnUiThread {
             if (fromRenderCrash) {
                 TvPrefs.incrementRenderCrashCount(this)
-                Log.w(tag, "Render crash detected. render_crash_count=${TvPrefs.getRenderCrashCount(this)}")
+                val now = System.currentTimeMillis()
+                renderCrashTimestamps.removeAll { now - it > 3600_000L }
+                renderCrashTimestamps.add(now)
+                Log.w(tag, "Render crash detected. total=${TvPrefs.getRenderCrashCount(this)}, inLastHour=${renderCrashTimestamps.size}")
+                if (renderCrashTimestamps.size >= 3) {
+                    Log.w(tag, "3 render crashes within 1 hour. Auto-switching to Native Board.")
+                    switchToNativeBoard("hourly_render_crashes")
+                    return@runOnUiThread
+                }
             }
             Log.i(tag, "Recreating WebView instance")
             hideOfflineOverlay()
             hideDiagnostic()
             initAndLoadWebView()
         }
+    }
+
+    fun switchToNativeBoard(reason: String) {
+        runOnUiThread {
+            Log.w(tag, "Switching to NATIVE board mode. Reason: $reason")
+            currentRenderMode = RenderMode.NATIVE
+            TvPrefs.setForcedNative(this, true)
+
+            // Stop webview and timers
+            handler.removeCallbacks(readyWatchdogRunnable)
+            handler.removeCallbacks(countdownRunnable)
+            destroyCurrentWebView()
+            hideOfflineOverlay()
+            hideDiagnostic()
+
+            // Prepare native board view
+            if (nativeBoardView == null) {
+                nativeBoardView = NativeBoardView(this).apply {
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    )
+                }
+                rootContainer.addView(nativeBoardView, 0)
+            } else {
+                nativeBoardView?.visibility = View.VISIBLE
+            }
+
+            // Immediately display cached snapshot if available
+            val cachedJson = TvPrefs.getLastSnapshotJson(this)
+            if (!cachedJson.isNullOrBlank()) {
+                val cachedModel = BoardModel.parse(cachedJson)
+                if (cachedModel != null) {
+                    val lastMillis = TvPrefs.getLastSnapshotMillis(this)
+                    val isOfflineLong = lastMillis > 0 && (System.currentTimeMillis() - lastMillis > 15 * 60 * 1000L)
+                    nativeBoardView?.setOfflineStatus(isOfflineLong)
+                    nativeBoardView?.updateData(cachedModel)
+                    Log.i(tag, "Displayed cached snapshot (${cachedModel.rows.size} rows)")
+                }
+            }
+
+            // Start clock
+            handler.removeCallbacks(nativeClockRunnable)
+            handler.post(nativeClockRunnable)
+
+            // Start snapshot fetch immediately
+            handler.removeCallbacks(nativeSnapshotRunnable)
+            performNativeSnapshotFetch()
+        }
+    }
+
+    fun switchToWebBoard() {
+        runOnUiThread {
+            Log.i(tag, "Switching to WEB board mode from menu")
+            currentRenderMode = RenderMode.WEB
+            TvPrefs.setForcedNative(this, false)
+
+            handler.removeCallbacks(nativeSnapshotRunnable)
+            handler.removeCallbacks(nativeClockRunnable)
+            nativeBoardView?.visibility = View.GONE
+
+            initAndLoadWebView()
+        }
+    }
+
+    private fun performNativeSnapshotFetch() {
+        val username = TvPrefs.getUsername(this)
+        if (username.isNullOrBlank()) {
+            Log.w(tag, "No username for snapshot fetch; redirecting to Pairing")
+            startActivity(Intent(this, PairingActivity::class.java))
+            finish()
+            return
+        }
+
+        executor.execute {
+            val json = SnapshotApi.fetch(this@BoardActivity, username)
+            handler.post {
+                if (isDestroyedActivity || currentRenderMode != RenderMode.NATIVE) return@post
+
+                if (!json.isNullOrBlank()) {
+                    val model = BoardModel.parse(json)
+                    if (model != null) {
+                        nativeRetryCount = 0
+                        TvPrefs.saveSnapshot(this@BoardActivity, json)
+                        if (model.updatedAtText.isNotBlank()) {
+                            TvPrefs.updateTick(this@BoardActivity, model.updatedAtText)
+                        }
+                        nativeBoardView?.setOfflineStatus(false)
+                        nativeBoardView?.updateData(model)
+
+                        val interval = model.refreshIntervalSeconds.coerceIn(30, 300)
+                        nativePollDelayMs = interval * 1000L
+                        Log.d(tag, "Native snapshot updated (${model.rows.size} items). Next in ${interval}s")
+                    } else {
+                        Log.w(tag, "Failed to parse snapshot JSON")
+                        handleNativeFetchError()
+                    }
+                } else {
+                    Log.w(tag, "SnapshotApi.fetch returned null")
+                    handleNativeFetchError()
+                }
+
+                handler.removeCallbacks(nativeSnapshotRunnable)
+                handler.postDelayed(nativeSnapshotRunnable, nativePollDelayMs)
+            }
+        }
+    }
+
+    private fun handleNativeFetchError() {
+        nativeRetryCount++
+        nativePollDelayMs = when {
+            nativeRetryCount <= 2 -> 5_000L
+            nativeRetryCount <= 4 -> 10_000L
+            nativeRetryCount <= 6 -> 20_000L
+            else -> 60_000L
+        }
+        val lastSnapMillis = TvPrefs.getLastSnapshotMillis(this)
+        val now = System.currentTimeMillis()
+        if (lastSnapMillis > 0 && (now - lastSnapMillis) > 15 * 60 * 1000L) {
+            nativeBoardView?.setOfflineStatus(true)
+        }
+        Log.w(tag, "Snapshot fetch retry in ${nativePollDelayMs / 1000}s (retryCount=$nativeRetryCount)")
     }
 
     fun onPageLoadFinished() {
@@ -482,6 +674,7 @@ class BoardActivity : Activity() {
     fun markBoardReady() {
         Log.i(tag, "TalaTV.onBoardReady signal received! Board successfully rendered.")
         isBoardReady = true
+        readyWatchdogFailCount = 0
         TvPrefs.resetRenderCrashCount(this)
         handler.removeCallbacks(readyWatchdogRunnable)
         hideOfflineOverlay()
@@ -605,7 +798,9 @@ class BoardActivity : Activity() {
                 override fun onAvailable(network: Network) {
                     Log.i(tag, "Network restored via NetworkCallback. Reloading board.")
                     runOnUiThread {
-                        if (offlineOverlay.visibility == View.VISIBLE) {
+                        if (currentRenderMode == RenderMode.NATIVE) {
+                            performNativeSnapshotFetch()
+                        } else if (offlineOverlay.visibility == View.VISIBLE) {
                             hideOfflineOverlay()
                             loadBoardUrl()
                         }
@@ -619,7 +814,9 @@ class BoardActivity : Activity() {
                     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
                     val net = cm?.activeNetworkInfo
                     if (net != null && net.isConnected) {
-                        if (offlineOverlay.visibility == View.VISIBLE) {
+                        if (currentRenderMode == RenderMode.NATIVE) {
+                            performNativeSnapshotFetch()
+                        } else if (offlineOverlay.visibility == View.VISIBLE) {
                             hideOfflineOverlay()
                             loadBoardUrl()
                         }
@@ -649,7 +846,11 @@ class BoardActivity : Activity() {
                 Log.i(tag, "Applying validated pending update at 4:00 AM")
                 UpdateManager.installApk(this, pendingUpdate)
             } else {
-                recreateWebView()
+                if (currentRenderMode == RenderMode.NATIVE) {
+                    performNativeSnapshotFetch()
+                } else {
+                    recreateWebView()
+                }
             }
             scheduleDailyReload() // برای روز بعد
         }, delay)
@@ -838,8 +1039,15 @@ class BoardActivity : Activity() {
     }
 
     private fun showTvMenu() {
+        val switchText = if (currentRenderMode == RenderMode.NATIVE) {
+            getString(R.string.menu_switch_web)
+        } else {
+            getString(R.string.menu_switch_native)
+        }
+
         val items = arrayOf(
             getString(R.string.menu_reload),
+            switchText,
             getString(R.string.menu_device_info),
             getString(R.string.menu_disconnect),
             getString(R.string.menu_overscan)
@@ -849,10 +1057,23 @@ class BoardActivity : Activity() {
             .setTitle(getString(R.string.menu_title))
             .setItems(items) { _, which ->
                 when (which) {
-                    0 -> recreateWebView()
-                    1 -> showDeviceInfoDialog()
-                    2 -> confirmDisconnect()
-                    3 -> showOverscanDialog()
+                    0 -> {
+                        if (currentRenderMode == RenderMode.NATIVE) {
+                            performNativeSnapshotFetch()
+                        } else {
+                            recreateWebView()
+                        }
+                    }
+                    1 -> {
+                        if (currentRenderMode == RenderMode.NATIVE) {
+                            switchToWebBoard()
+                        } else {
+                            switchToNativeBoard("user_menu_toggle")
+                        }
+                    }
+                    2 -> showDeviceInfoDialog()
+                    3 -> confirmDisconnect()
+                    4 -> showOverscanDialog()
                 }
             }
             .setNegativeButton("بستن", null)
@@ -895,8 +1116,10 @@ class BoardActivity : Activity() {
             "غیرفعال / در دسترس نیست"
         }
         val lastRate = TvPrefs.getLastRateTime(this)
+        val modeStr = if (currentRenderMode == RenderMode.NATIVE) "نیتیو (مستقل)" else "وب‌ویو (مرورگر)"
 
-        val info = getString(R.string.device_info_format, username, appVer, appCode, wvVer, lastRate)
+        val info = getString(R.string.device_info_format, username, appVer, appCode, wvVer, lastRate) +
+                "\nحالت نمایش فعال: $modeStr"
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.menu_device_info))

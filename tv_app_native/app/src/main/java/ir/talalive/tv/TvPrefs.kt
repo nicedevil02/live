@@ -67,4 +67,20 @@ object TvPrefs {
     fun resetRenderCrashCount(ctx: Context) {
         get(ctx).edit().remove("render_crash_count").apply()
     }
+
+    fun getLastSnapshotJson(ctx: Context): String? = get(ctx).getString("last_snapshot_json", null)
+    fun getLastSnapshotMillis(ctx: Context): Long = get(ctx).getLong("last_snapshot_millis", 0L)
+
+    fun saveSnapshot(ctx: Context, rawJson: String) {
+        get(ctx).edit()
+            .putString("last_snapshot_json", rawJson)
+            .putLong("last_snapshot_millis", System.currentTimeMillis())
+            .apply()
+    }
+
+    fun isForcedNative(ctx: Context): Boolean = get(ctx).getBoolean("forced_native", false)
+
+    fun setForcedNative(ctx: Context, value: Boolean) {
+        get(ctx).edit().putBoolean("forced_native", value).apply()
+    }
 }
