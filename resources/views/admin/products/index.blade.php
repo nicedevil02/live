@@ -30,6 +30,36 @@
         @include('admin.products.partials.create-form')
     </div>
 
+    {{-- Slider Timing Card --}}
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">زمان‌بندی چرخش اسلایدر ویترین</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">مدت زمان مکث و نمایش هر محصول در تلویزیون قبل از تعویض خودکار اسلاید</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap">
+                <template x-for="opt in [{val:5, label:'۵ ثانیه', sub:'سریع'},{val:8, label:'۸ ثانیه', sub:'متوسط'},{val:12, label:'۱۲ ثانیه', sub:'آرام'},{val:20, label:'۲۰ ثانیه', sub:'خیلی آرام'}]" :key="opt.val">
+                    <button @click="setSliderInterval(opt.val)" :disabled="isSavingTiming"
+                            class="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 transition-all text-xs sm:text-sm font-bold cursor-pointer disabled:opacity-50"
+                            :class="sliderInterval === opt.val
+                                ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 shadow-sm shadow-amber-500/10'
+                                : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-amber-300 dark:hover:border-slate-600'">
+                        <span x-text="opt.label"></span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-md font-normal"
+                              :class="sliderInterval === opt.val ? 'bg-amber-200/60 dark:bg-amber-800/40 text-amber-800 dark:text-amber-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'"
+                              x-text="opt.sub"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
+    </div>
+
     {{-- Products Grid --}}
     <div x-show="isLoading" class="flex items-center justify-center py-20">
         <div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -67,10 +97,37 @@ document.addEventListener('alpine:init', () => {
         products: [],
         editingProduct: null,
         isLoading: true,
+        sliderInterval: @json(auth()->user()->displaySetting->slider_interval_sec ?? 8),
+        isSavingTiming: false,
         toast: { show: false, message: '', type: 'success' },
 
         get visibleCount() { return this.products.filter(p => p.is_visible).length; },
         get hiddenCount() { return this.products.length - this.visibleCount; },
+
+        async setSliderInterval(val) {
+            this.sliderInterval = val;
+            this.isSavingTiming = true;
+            try {
+                const res = await fetch("{{ route('admin.slider-timing.update') }}", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ slider_interval_sec: val })
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.message || 'خطا در ذخیره زمان‌بندی اسلایدر');
+                }
+                this.showToast(`زمان‌بندی اسلایدر روی ${val} ثانیه تنظیم شد و بلافاصله در تلویزیون اعمال گردید.`, 'success');
+            } catch (e) {
+                this.showToast(e.message || 'خطا در ذخیره زمان‌بندی', 'error');
+            } finally {
+                this.isSavingTiming = false;
+            }
+        },
 
         async init() {
             try {

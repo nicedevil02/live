@@ -169,6 +169,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/formulas/global-18k-preview', [FormulaController::class, 'global18kPreview'])->name('formulas.preview');
     Route::get('/display-items', [DisplayItemController::class, 'index'])->name('display-items');
     Route::put('/display-items', [DisplayItemController::class, 'update'])->name('display-items.update');
+    Route::get('/shop-profile', [DisplaySettingController::class, 'shopProfile'])->name('shop-profile');
+    Route::put('/shop-profile', [DisplaySettingController::class, 'updateShopProfile'])->name('shop-profile.update');
+    Route::put('/slider-timing', [DisplaySettingController::class, 'updateSliderTiming'])->name('slider-timing.update');
     Route::get('/display-control', [DisplaySettingController::class, 'index'])->name('display-control');
     Route::put('/display-settings', [DisplaySettingController::class, 'update'])->name('display-settings.update');
     Route::post('/publish', [DisplaySettingController::class, 'publish'])->name('publish');

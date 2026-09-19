@@ -14,7 +14,7 @@
             <div>
                 <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">تنظیمات تابلو نمایش</h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                    پوسته بصری، اطلاعات فروشگاه، سرعت اسلایدر و کاشی‌های قیمت
+                    انتخاب پوسته بصری، نحوه نمایش اجزا و چیدمان کاشی‌های قیمت
                     <span x-show="settings.published_at" class="mr-3 text-emerald-600 dark:text-emerald-400">
                         · آخرین انتشار: <span x-text="new Date(settings.published_at).toLocaleString('fa-IR')"></span>
                     </span>
@@ -79,86 +79,6 @@
                             <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed pr-5" x-text="theme.desc"></p>
                         </label>
                     </template>
-                </div>
-            </div>
-
-            {{-- Shop Info & Timing --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Shop Info --}}
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 mb-4">اطلاعات فروشگاه</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="type" class="w-4 h-4"></i> عنوان</label>
-                            <input type="text" x-model="settings.shop_name" placeholder="مثال: گالری طلای سجاد"
-                                   class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow">
-                        </div>
-                        <div>
-                            <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="phone" class="w-4 h-4"></i> تلفن</label>
-                            <input type="text" dir="ltr" x-model="settings.phone" placeholder="021-xxxxxxxx"
-                                   class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="instagram" class="w-4 h-4"></i> اینستاگرام</label>
-                                <input type="text" dir="ltr" x-model="settings.instagram" placeholder="@page"
-                                       class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left">
-                            </div>
-                            <div>
-                                <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="message-circle" class="w-4 h-4"></i> روبیکا</label>
-                                <input type="text" dir="ltr" x-model="settings.rubika" placeholder="@channel"
-                                       class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Slider Timing --}}
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-                    <div class="flex items-center gap-2 mb-4">
-                        <i data-lucide="clock" class="w-5 h-5 text-amber-500"></i>
-                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">زمان‌بندی اسلایدر</h3>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <template x-for="opt in [{val:5, label:'۵ ثانیه', sub:'سریع'},{val:8, label:'۸ ثانیه', sub:'متوسط'},{val:12, label:'۱۲ ثانیه', sub:'آرام'},{val:20, label:'۲۰ ثانیه', sub:'خیلی آرام'}]" :key="opt.val">
-                            <button @click="settings.slider_interval_sec = opt.val"
-                                    class="flex flex-col items-center gap-1 py-3 rounded-xl border-2 transition-all text-sm font-semibold"
-                                    :class="settings.slider_interval_sec === opt.val
-                                        ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'
-                                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-amber-300'">
-                                <span x-text="opt.label"></span>
-                                <span class="text-[10px] font-normal" :class="settings.slider_interval_sec === opt.val ? 'text-amber-500' : 'text-slate-400'" x-text="opt.sub"></span>
-                            </button>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            {{-- QR Code Setting --}}
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-                <div class="flex items-center gap-2 mb-4">
-                    <i data-lucide="qr-code" class="w-5 h-5 text-indigo-500"></i>
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">تنظیم کد QR اختصاصی (لینک دعوت یا وب‌سایت)</h3>
-                </div>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
-                    می‌توانید لینک دعوت کانال ایتا، روبیکا، تلگرام یا آدرس وب‌سایت خود را اینجا وارد کنید. این لینک به شکل یک کد QR در سربرگ تلویزیون نمایش داده می‌شود تا مشتریان بتوانند با اسکن آن عضو شوند.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="link" class="w-4 h-4"></i> لینک دعوت / آدرس (URL)</label>
-                        <input type="text" dir="ltr" x-model="settings.qr_link" placeholder="https://rubika.ir/my_channel"
-                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left">
-                    </div>
-                    <div>
-                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="tag" class="w-4 h-4"></i> عنوان کد QR (بالا)</label>
-                        <input type="text" x-model="settings.qr_label" placeholder="مثال: نوبت‌دهی آنلاین / پشتیبانی روبیکا"
-                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
-                    </div>
-                    <div>
-                        <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5"><i data-lucide="tag" class="w-4 h-4"></i> توضیح زیر کد QR (پایین)</label>
-                        <input type="text" x-model="settings.qr_desc" placeholder="مثال: عضویت در شبکه‌های اجتماعی"
-                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
-                    </div>
                 </div>
             </div>
         </div>

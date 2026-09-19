@@ -68,15 +68,16 @@
                 @php
                     $links = [
                         ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard'],
+                        ['r' => 'admin.shop-profile', 'l' => 'اطلاعات فروشگاه و QR', 'i' => 'store'],
+                        ['r' => 'admin.products.index', 'l' => 'ویترین طلا (اسلایدر)', 'i' => 'gem'],
+                        ['r' => 'admin.display-control', 'l' => 'تنظیمات پوسته و نمایش', 'i' => 'sliders-horizontal'],
+                        ['r' => 'admin.formulas', 'l' => 'فرمول‌های محاسبه', 'i' => 'variable'],
                         ['r' => 'admin.devices.index', 'l' => 'تلویزیون‌های من', 'i' => 'tv'],
                         ['r' => 'admin.subscription.index', 'l' => 'خرید و تمدید اشتراک', 'i' => 'crown'],
                         ['r' => 'admin.transactions.index', 'l' => 'تراکنش‌ها و مالی', 'i' => 'wallet', 'super_only' => true],
                         ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],
                         ['r' => 'admin.sms-status', 'l' => 'درگاه پیامک (s.api.ir)', 'i' => 'message-square', 'super_only' => true],
                         ['r' => 'admin.sources', 'l' => 'منابع دریافت API', 'i' => 'rss', 'super_only' => true],
-                        ['r' => 'admin.formulas', 'l' => 'فرمول‌های محاسبه', 'i' => 'variable'],
-                        ['r' => 'admin.products.index', 'l' => 'ویترین طلا (اسلایدر)', 'i' => 'gem'],
-                        ['r' => 'admin.display-control', 'l' => 'تنظیمات پوسته و نمایش', 'i' => 'sliders-horizontal'],
                         ['r' => 'admin.logs', 'l' => 'گزارشات سیستم', 'i' => 'file-text', 'super_only' => true],
                     ];
                 @endphp
