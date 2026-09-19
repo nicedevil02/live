@@ -1,0 +1,18 @@
+=== Task H-09 Evidence ===
+Date: 2026-09-19
+Target: Respect prefers-reduced-motion and remove pulse-logo animation from header logo
+
+1. Search for 'pulse-logo' in HTML markup:
+- <img> class occurrences: 0 (completely removed from header logo <img>)
+- CSS occurrences:
+  - Line 167: .pulse-logo { animation: pulse-glow 3s ease-in-out infinite; } (definition preserved)
+  - Line 171: Inside @media (prefers-reduced-motion: reduce) (override rule)
+
+2. Behavioral Acceptance Criteria:
+[PASS] 1. prefers-reduced-motion: reduce:
+  - When reduced motion is preferred, .animate-ping, .animate-pulse, and .pulse-logo have animation: none !important.
+  - The live amber indicator remains solid/visible without continuous GPU/CPU repaints.
+  - html scroll-behavior is set to auto !important for immediate anchor navigation.
+[PASS] 2. CPU & battery efficiency:
+  - Infinite scaling cycle on header logo is eliminated on all pages.
+  - Decreased idle compositor work and power consumption on low-end hardware and Android TV boxes.

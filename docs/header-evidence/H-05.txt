@@ -1,0 +1,28 @@
+=== Task H-05 Evidence ===
+Date: 2026-09-19
+Target: Rewire 5 dropdowns to exclusive menu with outside-click and Escape listeners
+
+1. Search for 'DropdownOpen' in resources/views/layouts/public.blade.php:
+Matches found: 0
+
+2. Behavioral Checklist (3 criteria x 5 dropdowns = 15 tests):
+[x] 1. products (سامانه‌ها): Hover in opens, hover out closes
+[x] 2. products (سامانه‌ها): Click opens, click outside closes
+[x] 3. products (سامانه‌ها): Click opens, Escape key closes
+[x] 4. compare (مقایسه‌ها): Hover in opens, hover out closes
+[x] 5. compare (مقایسه‌ها): Click opens, click outside closes
+[x] 6. compare (مقایسه‌ها): Click opens, Escape key closes
+[x] 7. tools (ابزارها): Hover in opens, hover out closes
+[x] 8. tools (ابزارها): Click opens, click outside closes
+[x] 9. tools (ابزارها): Click opens, Escape key closes
+[x] 10. guides (آموزش و شهرها): Hover in opens, hover out closes
+[x] 11. guides (آموزش و شهرها): Click opens, click outside closes
+[x] 12. guides (آموزش و شهرها): Click opens, Escape key closes
+[x] 13. dev (API و ویجت): Hover in opens, hover out closes
+[x] 14. dev (API و ویجت): Click opens, click outside closes
+[x] 15. dev (API و ویجت): Click opens, Escape key closes
+
+3. Touch / Responsive Verification:
+- Device toolbar width 1280px (touch emulation).
+- Tapping 'products' opens 'products'.
+- Tapping 'tools' immediately switches to 'tools', closing 'products' without overlap.

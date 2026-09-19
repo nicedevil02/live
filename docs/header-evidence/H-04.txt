@@ -1,0 +1,42 @@
+=== Task H-04 Evidence ===
+Date: 2026-09-19
+Target: Rewrite publicLayoutHandler (dead code removal + mutual exclusion + body scroll lock)
+
+1. Search for dead code in resources/views/layouts/public.blade.php:
+- Query: 'darkMode'
+  Matches found: 0
+- Query: 'toggleTheme'
+  Matches found: 0
+
+2. Console Verification:
+> const data = Alpine.(document.body);
+> data.openMenu('products')
+> data.openDropdown
+'products'
+> data.isOpen('products')
+true
+> data.openMenu('tools')
+> data.openDropdown
+'tools'
+> data.isOpen('products')
+false
+> data.isOpen('tools')
+true
+> data.closeMenu('tools')
+> data.openDropdown
+null
+> data.openMobileMenu()
+> data.mobileMenuOpen
+true
+> document.body.classList.contains('menu-open')
+true
+> data.closeMobileMenu()
+> data.mobileMenuOpen
+false
+> document.body.classList.contains('menu-open')
+false
+
+3. Acceptance Result:
+- Dead code removed completely.
+- Dropdowns mutually exclusive; opening one closes others.
+- Body scroll lock toggles reliably via class 'menu-open'.

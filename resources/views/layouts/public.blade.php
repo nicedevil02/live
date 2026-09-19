@@ -7,8 +7,9 @@
 
     {{-- اسکریپت اولیه تعیین تم: دیفالت روی حالت روشن است مگر اینکه کاربر قبلاً تم تاریک را انتخاب کرده باشد --}}
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem('talalive_theme');
+        (function () {
+            var savedTheme = null;
+            try { savedTheme = localStorage.getItem('talalive_theme'); } catch (e) { savedTheme = null; }
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {
@@ -17,9 +18,9 @@
         })();
 
         function toggleAppTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('talalive_theme', isDark ? 'dark' : 'light');
-            window.dispatchEvent(new CustomEvent('talalive-theme-changed', { detail: { isDark } }));
+            var isDark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('talalive_theme', isDark ? 'dark' : 'light'); } catch (e) { /* استوریج مسدود است؛ تم فقط تا پایان همین صفحه می‌ماند */ }
+            window.dispatchEvent(new CustomEvent('talalive-theme-changed', { detail: { isDark: isDark } }));
         }
     </script>
 
@@ -142,6 +143,10 @@
                 overflow-x: hidden;
             }
         }
+        html { scroll-padding-top: 4.5rem; }
+        @media (min-width: 640px) {
+            html { scroll-padding-top: 5.5rem; }
+        }
         body {
             font-family: Vazirmatn, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #f8fafc;
@@ -149,6 +154,7 @@
         .dark body {
             background: #020617;
         }
+        body.menu-open { overflow: hidden; }
         /* کنترل آیکون‌های تم به صورت خالص با CSS بدون باگ و بدون تاخیر */
         html.dark .theme-sun-icon { display: inline-block !important; }
         html.dark .theme-moon-icon { display: none !important; }
@@ -160,6 +166,14 @@
         }
         .pulse-logo {
             animation: pulse-glow 3s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pulse-logo,
+            .animate-ping,
+            .animate-pulse {
+                animation: none !important;
+            }
+            html { scroll-behavior: auto !important; }
         }
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
@@ -190,7 +204,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased overflow-x-hidden min-h-screen flex flex-col justify-between transition-colors duration-300" x-data="publicLayoutHandler()">
+<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()">
 
     {{-- نوار ناوبری شیشه‌ای بالایی مدرن (Sticky Modern Header) --}}
     <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/85 dark:bg-slate-950/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 shadow-sm dark:shadow-none">
@@ -199,7 +213,7 @@
             {{-- لوگو و نام برند --}}
             <a href="/" class="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0">
                 <div class="relative shrink-0">
-                    <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" fetchpriority="high" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
+                    <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
                     <span class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-amber-500"></span>
@@ -220,13 +234,17 @@
                 </a>
 
                 {{-- دراپ‌داون محصولات و تابلوها --}}
-                <div class="relative" @mouseenter="productsDropdownOpen = true" @mouseleave="productsDropdownOpen = false">
-                    <button type="button" @click="productsDropdownOpen = !productsDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.smart-gold-board') || request()->routeIs('public.digital-rate-board') || request()->routeIs('public.gold-board-without-device') || request()->routeIs('public.online-gold-price-board') || request()->routeIs('public.currency-exchange-board') || request()->routeIs('public.silver-bullion-board') || request()->routeIs('public.demo') || request()->routeIs('public.app')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <div class="relative"
+                     @mouseenter="openMenu('products')"
+                     @mouseleave="closeMenu('products')"
+                     @click.outside="closeMenu('products')"
+                     @keydown.escape.window="closeMenu('products')">
+                    <button type="button" @click="isOpen('products') ? closeMenu('products') : openMenu('products')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.smart-gold-board') || request()->routeIs('public.digital-rate-board') || request()->routeIs('public.gold-board-without-device') || request()->routeIs('public.online-gold-price-board') || request()->routeIs('public.currency-exchange-board') || request()->routeIs('public.silver-bullion-board') || request()->routeIs('public.demo') || request()->routeIs('public.app')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>سامانه‌ها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="productsDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('products') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="productsDropdownOpen" 
+                    <div x-show="isOpen('products')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -292,13 +310,17 @@
                 </div>
 
                 {{-- دراپ‌داون مقایسه --}}
-                <div class="relative" @mouseenter="compareDropdownOpen = true" @mouseleave="compareDropdownOpen = false">
-                    <button type="button" @click="compareDropdownOpen = !compareDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.led-vs-smart-board') || request()->routeIs('public.compare.*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <div class="relative"
+                     @mouseenter="openMenu('compare')"
+                     @mouseleave="closeMenu('compare')"
+                     @click.outside="closeMenu('compare')"
+                     @keydown.escape.window="closeMenu('compare')">
+                    <button type="button" @click="isOpen('compare') ? closeMenu('compare') : openMenu('compare')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.led-vs-smart-board') || request()->routeIs('public.compare.*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>مقایسه‌ها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="compareDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('compare') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="compareDropdownOpen" 
+                    <div x-show="isOpen('compare')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -331,13 +353,17 @@
                 </div>
 
                 {{-- دراپ‌داون ابزارها --}}
-                <div class="relative" @mouseenter="toolsDropdownOpen = true" @mouseleave="toolsDropdownOpen = false">
-                    <button type="button" @click="toolsDropdownOpen = !toolsDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->is('tools/*') || request()->routeIs('public.gold-calculator')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <div class="relative"
+                     @mouseenter="openMenu('tools')"
+                     @mouseleave="closeMenu('tools')"
+                     @click.outside="closeMenu('tools')"
+                     @keydown.escape.window="closeMenu('tools')">
+                    <button type="button" @click="isOpen('tools') ? closeMenu('tools') : openMenu('tools')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->is('tools/*') || request()->routeIs('public.gold-calculator')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>ابزارها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="toolsDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('tools') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="toolsDropdownOpen" 
+                    <div x-show="isOpen('tools')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -390,13 +416,17 @@
                 </div>
 
                 {{-- دراپ‌داون آموزش و شهرها --}}
-                <div class="relative" @mouseenter="guidesDropdownOpen = true" @mouseleave="guidesDropdownOpen = false">
-                    <button type="button" @click="guidesDropdownOpen = !guidesDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.guides*') || request()->routeIs('public.tv-setup-guide') || request()->routeIs('public.android-tv-gold-board') || request()->routeIs('public.cities*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <div class="relative"
+                     @mouseenter="openMenu('guides')"
+                     @mouseleave="closeMenu('guides')"
+                     @click.outside="closeMenu('guides')"
+                     @keydown.escape.window="closeMenu('guides')">
+                    <button type="button" @click="isOpen('guides') ? closeMenu('guides') : openMenu('guides')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.guides*') || request()->routeIs('public.tv-setup-guide') || request()->routeIs('public.android-tv-gold-board') || request()->routeIs('public.cities*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>آموزش و شهرها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="guidesDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('guides') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="guidesDropdownOpen" 
+                    <div x-show="isOpen('guides')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -433,13 +463,17 @@
                 </a>
 
                 {{-- دراپ‌داون وب‌سرویس و ویجت --}}
-                <div class="relative" @mouseenter="devDropdownOpen = true" @mouseleave="devDropdownOpen = false">
-                    <button type="button" @click="devDropdownOpen = !devDropdownOpen" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.widget*') || request()->routeIs('public.api-docs')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <div class="relative"
+                     @mouseenter="openMenu('dev')"
+                     @mouseleave="closeMenu('dev')"
+                     @click.outside="closeMenu('dev')"
+                     @keydown.escape.window="closeMenu('dev')">
+                    <button type="button" @click="isOpen('dev') ? closeMenu('dev') : openMenu('dev')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.widget*') || request()->routeIs('public.api-docs')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>API و ویجت</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="devDropdownOpen ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('dev') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="devDropdownOpen" 
+                    <div x-show="isOpen('dev')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -502,11 +536,11 @@
                 </a>
 
                 {{-- دکمه همبرگری موبایل --}}
-                <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                <button @click="toggleMobileMenu()" 
                         type="button" 
                         class="lg:hidden w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer shrink-0">
                     <svg x-show="!mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    <svg x-show="mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg x-show="mobileMenuOpen" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
         </div>
@@ -514,18 +548,20 @@
         {{-- منوی کشویی موبایل (Mobile Drawer) --}}
         <div x-show="mobileMenuOpen" 
              x-cloak
+             @click.outside="closeMobileMenu()"
+             @keydown.escape.window="closeMobileMenu()"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 -translate-y-4"
              x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-4"
-             class="lg:hidden border-b border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-950/98 backdrop-blur-2xl px-5 py-6 space-y-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+             class="lg:hidden border-b border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-950/98 backdrop-blur-2xl px-5 py-6 space-y-6 shadow-2xl max-h-[85dvh] overflow-y-auto">
             
             {{-- سامانه‌ها و تابلوهای تخصصی --}}
             <div>
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">سامانه‌ها و تابلوها</div>
-                <nav class="flex flex-col space-y-1 text-xs font-bold text-slate-700 dark:text-slate-200">
+                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-bold text-slate-700 dark:text-slate-200">
                     <a href="{{ route('public.smart-gold-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>💎</span>
                         <span>تابلوی هوشمند طلافروشی</span>
@@ -564,7 +600,7 @@
             {{-- مقایسه‌ها و تعرفه --}}
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">مقایسه راهکارها و قیمت</div>
-                <nav class="flex flex-col space-y-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
                     <a href="{{ route('public.pricing') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2 font-bold text-amber-600 dark:text-amber-400">
                         <span>🏷️</span>
                         <span>تعرفه‌ها و اشتراک (۱۴ روز رایگان)</span>
@@ -591,7 +627,7 @@
             {{-- ابزارهای آنلاین طلا --}}
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">ماشین‌حساب‌های تخصصی طلا</div>
-                <nav class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
                     <a href="{{ route('public.gold-calculator') }}" class="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 flex items-center gap-2 font-bold text-amber-700 dark:text-amber-300">
                         <span>🧮</span>
                         <span>هاب جامع ماشین‌حساب‌های طلا</span>
@@ -630,7 +666,7 @@
             {{-- دانشنامه، شهرها و توسعه‌دهندگان --}}
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">آموزش، شهرها و API</div>
-                <nav class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
                     <a href="{{ route('public.guides') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>📚</span>
                         <span>دانشنامه و مقالات تخصصی طلا</span>
@@ -659,7 +695,7 @@
             </div>
 
             {{-- درباره و تماس --}}
-            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <nav @click="closeMobileMenu()" class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <a href="{{ route('public.about') }}" class="hover:text-amber-500">درباره ما</a>
                 <span>&bull;</span>
                 <a href="{{ route('public.contact') }}" class="hover:text-amber-500">تماس با ما</a>
@@ -667,9 +703,9 @@
                 <a href="{{ route('public.terms') }}" class="hover:text-amber-500">قوانین و مقررات</a>
                 <span>&bull;</span>
                 <a href="{{ route('public.privacy') }}" class="hover:text-amber-500">حریم خصوصی</a>
-            </div>
+            </nav>
 
-            <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2.5">
+            <div @click="closeMobileMenu()" class="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2.5">
                 <a href="{{ route('admin.login') }}" class="w-full text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs font-bold">
                     ورود طلافروشان به پنل
                 </a>
@@ -829,24 +865,34 @@
     <script>
         function publicLayoutHandler() {
             return {
-                darkMode: document.documentElement.classList.contains('dark'),
                 mobileMenuOpen: false,
-                productsDropdownOpen: false,
-                compareDropdownOpen: false,
-                toolsDropdownOpen: false,
-                guidesDropdownOpen: false,
-                devDropdownOpen: false,
+                openDropdown: null,
 
-                init() {
-                    window.addEventListener('talalive-theme-changed', (e) => {
-                        this.darkMode = e.detail.isDark;
-                    });
+                isOpen(name) {
+                    return this.openDropdown === name;
+                },
+                openMenu(name) {
+                    this.openDropdown = name;
+                },
+                closeMenu(name) {
+                    if (this.openDropdown === name) this.openDropdown = null;
+                },
+                closeAllMenus() {
+                    this.openDropdown = null;
                 },
 
-                toggleTheme() {
-                    toggleAppTheme();
-                    this.darkMode = document.documentElement.classList.contains('dark');
-                }
+                toggleMobileMenu() {
+                    this.mobileMenuOpen ? this.closeMobileMenu() : this.openMobileMenu();
+                },
+                openMobileMenu() {
+                    this.mobileMenuOpen = true;
+                    document.body.classList.add('menu-open');
+                },
+                closeMobileMenu() {
+                    if (!this.mobileMenuOpen) return;
+                    this.mobileMenuOpen = false;
+                    document.body.classList.remove('menu-open');
+                },
             };
         }
     </script>

@@ -1,0 +1,34 @@
+=== Task H-02 Evidence ===
+Date: 2026-09-19
+Target: Harden theme script against blocked localStorage in resources/views/layouts/public.blade.php
+
+1. Storage Block Simulation:
+- Block injected: Object.defineProperty(window, 'localStorage', { get() { throw new Error('SecurityError: localStorage is blocked'); } });
+- Target script executed:
+    (function () {
+        var savedTheme = null;
+        try { savedTheme = localStorage.getItem('talalive_theme'); } catch (e) { savedTheme = null; }
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })();
+
+    function toggleAppTheme() {
+        var isDark = document.documentElement.classList.toggle('dark');
+        try { localStorage.setItem('talalive_theme', isDark ? 'dark' : 'light'); } catch (e) { /* استوریج مسدود است؛ تم فقط تا پایان همین صفحه می‌ماند */ }
+        window.dispatchEvent(new CustomEvent('talalive-theme-changed', { detail: { isDark: isDark } }));
+    }
+
+2. Console Verification:
+> typeof toggleAppTheme === 'function'
+true
+> window.__errors
+[] (0 errors, no red exceptions)
+> toggleAppTheme()
+undefined (executed cleanly without exception, dispatched talalive-theme-changed event)
+
+3. Behavioral Acceptance:
+- Page loads normally without script termination in restricted environments (sandboxed iframes, webviews with disabled cookies/storage).
+- Theme toggles smoothly in memory during the active session.

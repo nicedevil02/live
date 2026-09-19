@@ -1,0 +1,17 @@
+=== Task H-06 Evidence ===
+Date: 2026-09-19
+Target: Refactor mobile drawer (scroll lock, dvh height, Escape listener, click-outside, auto-close on nav click)
+
+1. Modifications Summary:
+- Hamburger button: @click="toggleMobileMenu()"
+- Mobile drawer container:
+    - Added @click.outside="closeMobileMenu()"
+    - Added @keydown.escape.window="closeMobileMenu()"
+    - Changed max-h-[85vh] to max-h-[85dvh]
+- All 5 navigation groups and auth buttons trigger closeMobileMenu() on click.
+
+2. Behavioral Acceptance Results (375px viewport):
+[PASS] (a) Body scroll lock: When mobileMenuOpen is true, document.body gets class 'menu-open' (overflow: hidden). Background body cannot be scrolled while mobile drawer scrolls smoothly within max-h-[85dvh].
+[PASS] (b) Escape handler: Pressing Escape dispatches closeMobileMenu(); mobileMenuOpen becomes false and document.body.classList.contains('menu-open') returns false.
+[PASS] (c) Navigation link click: Clicking 'تعرفه‌ها و اشتراک' calls closeMobileMenu() releasing the scroll lock and navigates to route('public.pricing').
+[PASS] (d) Scroll restoration: After drawer closes, 'menu-open' is removed from document.body, restoring standard page scrolling.

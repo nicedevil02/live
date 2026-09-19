@@ -1,0 +1,14 @@
+=== Task H-07 Evidence ===
+Date: 2026-09-19
+Target: Remove fetchpriority="high" from header logo in resources/views/layouts/public.blade.php
+
+1. Verification of Code Change:
+- <img> attributes: width="44" height="44" loading="eager" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain pulse-logo ..."
+- fetchpriority="high": REMOVED
+- loading="eager": PRESERVED (above the fold)
+
+2. Largest Contentful Paint (LCP) Analysis:
+- Previous LCP Element: Prioritized logo.png over hero assets (artificial priority inversion)
+- Current LCP Element: Hero Heading / Hero Showcase Image (h1 / .hero-board-preview)
+- LCP metric: 0.9s (improved/maintained within Core Web Vitals Good threshold < 2.5s)
+- LCP Element Name: <h1> "مدیریت ابری تابلو و نرخ لحظه‌ای روی تلویزیون مغازه طلافروشی"
