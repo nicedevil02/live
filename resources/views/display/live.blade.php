@@ -176,27 +176,48 @@
         @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(5%, -5%); } }
         @keyframes float3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-3%, -3%); } }
         /* انیمیشن پرمیوم پرتو نوری مایع آینه‌ای (Liquid Gold Specular Beam) - ۱۰۰٪ شتاب‌یافته 3D */
+        .gold-beam-shimmer {
+            position: absolute;
+            top: -120%;
+            bottom: -120%;
+            left: 0;
+            width: 45%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(251, 191, 36, 0.0) 15%,
+                rgba(254, 240, 138, 0.20) 38%,
+                rgba(255, 255, 255, 0.75) 50%,
+                rgba(254, 240, 138, 0.20) 62%,
+                rgba(251, 191, 36, 0.0) 85%,
+                transparent 100%
+            );
+            transform: translate3d(-200%, 0, 0) rotate(28deg);
+            transform-origin: center center;
+            will-change: transform;
+            backface-visibility: hidden;
+            pointer-events: none;
+        }
+
         @keyframes gold-beam-sweep {
             0% {
-                transform: translate3d(-160%, 0, 0) rotate(25deg);
+                transform: translate3d(-200%, 0, 0) rotate(28deg);
                 opacity: 0;
             }
-            10% {
+            3% {
                 opacity: 1;
             }
-            35% {
-                transform: translate3d(220%, 0, 0) rotate(25deg);
+            24% {
+                transform: translate3d(380%, 0, 0) rotate(28deg);
                 opacity: 1;
             }
-            36%, 100% {
-                transform: translate3d(220%, 0, 0) rotate(25deg);
+            27%, 100% {
+                transform: translate3d(380%, 0, 0) rotate(28deg);
                 opacity: 0;
             }
         }
         .animate-gold-beam {
-            animation: gold-beam-sweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-            will-change: transform;
-            backface-visibility: hidden;
+            animation: gold-beam-sweep 6s cubic-bezier(0.25, 1, 0.5, 1) infinite;
         }
 
         /* انیمیشن تنفس نوری کادر طلای ۱۸ عیار با شتاب‌دهنده سخت‌افزاری 3D Compositor (بدون فشار به پردازنده) */
@@ -1882,9 +1903,8 @@
 
                                 <template x-if="item.symbol === 'gold18'">
                                     <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem] z-0">
-                                        {{-- Silky Liquid Gold Light Beam (پرتو متحرک آینه‌ای لوکس) --}}
-                                        <div class="absolute -inset-y-12 -left-1/2 w-[55%] animate-gold-beam pointer-events-none"
-                                             style="background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.0) 35%, rgba(254,240,138,0.50) 48%, rgba(255,255,255,0.80) 52%, rgba(254,240,138,0.50) 56%, rgba(255,255,255,0.0) 70%, transparent 85%);"></div>
+                                        {{-- Silky Liquid Gold Specular Shimmer (پرتو متحرک آینه‌ای لوکس طلای ۱۸ عیار) --}}
+                                        <div class="gold-beam-shimmer animate-gold-beam"></div>
                                     </div>
                                 </template>
 
