@@ -8,8 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="TalaLive">
     <meta name="robots" content="{{ ($isExpired ?? false) ? 'noindex, follow' : 'index, follow, max-image-preview:large' }}">
-    <title>{{ $pageTitle ?? ("قیمت لحظه‌ای طلا و سکه — " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران') . " | طلالایو") }}</title>
-    <meta name="description" content="{{ $metaDescription ?? ("مشاهده آنلاین قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در " . ($galleryDisplayName ?? 'گالری طلا') . " " . ($cityName ?? '') . ". نرخ‌های بروزرسانی شده متصل به شبکه ابری طلالایو.") }}">
+    <title>{{ $pageTitle ?? ("قیمت لحظه‌ای طلا و سکه — " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityFullDisplay ?? $cityName ?? 'ایران') . " | طلالایو") }}</title>
+    <meta name="description" content="{{ $metaDescription ?? ("مشاهده آنلاین قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در " . ($galleryDisplayName ?? 'گالری طلا') . " " . ($cityFullDisplay ?? $cityName ?? '') . ". نرخ‌های بروزرسانی شده متصل به شبکه ابری طلالایو.") }}">
     <link rel="canonical" href="{{ url('/' . ($username ?? '')) }}">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
 
@@ -23,7 +23,7 @@
         "url": "{{ url('/' . ($username ?? '')) }}",
         "image": "https://talalive.ir/images/og-cover.png",
         "logo": "https://talalive.ir/images/logo.png",
-        "description": "{{ $galleryIntro ?? ("تابلوی آنلاین اعلام قیمت طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در شهر " . ($cityName ?? 'ایران')) }}",
+        "description": "{{ $galleryIntro ?? ("تابلوی آنلاین اعلام قیمت طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در شهر " . ($cityFullDisplay ?? $cityName ?? 'ایران')) }}",
         @if(!empty($phone))
         "telephone": "{{ $phone }}",
         @endif
@@ -32,14 +32,14 @@
         "paymentAccepted": "Cash, Credit Card",
         "address": {
             "@@type": "PostalAddress",
-            "addressLocality": "{{ $cityName ?? 'تهران' }}",
+            "addressLocality": "{{ $cityFullDisplay ?? $cityName ?? 'تهران' }}",
             "addressCountry": "IR"@if(!empty($galleryAddress)),
             "streetAddress": "{{ $galleryAddress }}"
             @endif
         },
         "areaServed": {
             "@@type": "City",
-            "name": "{{ $cityName ?? 'تهران' }}"
+            "name": "{{ $cityFullDisplay ?? $cityName ?? 'تهران' }}"
         },
         "parentOrganization": {
             "@@type": "Organization",
@@ -1422,8 +1422,10 @@
                     <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
                         class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
-                         class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
-                         ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
+                         class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5">
+                         <span>✦</span>
+                         <span>نرخ‌گذاری لحظه‌ای طلا و ارز — {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
+                         <span>✦</span>
                     </div>
                     {{-- دکمه صفحه اصلی طلالایو --}}
                     <div class="mt-1.5 flex items-center justify-center">
@@ -1437,9 +1439,9 @@
 
                     {{-- سئوی محلی گوگل و متن معرفی (نامرئی بصری - مخصوص موتورهای جستجو) --}}
                     <div class="sr-only">
-                        <p>{{ $galleryIntro ?? ("تابلوی اعلام قیمت لحظه‌ای طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران')) }}</p>
+                        <p>{{ $galleryIntro ?? ("تابلوی اعلام قیمت لحظه‌ای طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityFullDisplay ?? $cityName ?? 'ایران')) }}</p>
                         <nav aria-label="راهنمای دسترسی">
-                            <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}">طلافروشی‌های {{ $cityName ?? 'تهران' }}</a>
+                            <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}">طلافروشی‌های {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</a>
                         </nav>
                     </div>
                 </div>
@@ -1733,7 +1735,7 @@
                     <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}" 
                        class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 hover:border-amber-400/40 transition-all hover:scale-105"
                        :class="isLightTheme ? 'text-slate-800 bg-black/5 hover:bg-black/10' : 'text-slate-200 bg-white/5 hover:bg-white/10'">
-                        <span>مراکز طلای {{ $cityName ?? 'تهران' }}</span>
+                        <span>مراکز طلای {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
                         <span>←</span>
                     </a>
                 </div>

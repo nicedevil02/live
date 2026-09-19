@@ -49,12 +49,25 @@ class PublicDisplayController extends Controller
 
         $cityName = null;
         $citySlug = null;
+        $provinceName = null;
+        $cityFullDisplay = null;
         $galleryAddress = null;
 
-        // اولویت اول: شهر ثبت‌شده در حساب کاربری طلافروشی
-        if (!empty($user->city_slug) && !empty($user->city_name)) {
-            $cityName = $user->city_name;
-            $citySlug = $user->city_slug;
+        // اولویت اول: شهر ثبت‌شده در حساب کاربری طلافروشی یا تنظیمات نمایش
+        $resolvedCitySlug = $user->city_slug ?: ($user->displaySetting?->city_slug ?? null);
+        if (!empty($resolvedCitySlug)) {
+            $citySlug = $resolvedCitySlug;
+            $citiesConfig = config('cities', []);
+            if (isset($citiesConfig[$citySlug])) {
+                $cityName = $citiesConfig[$citySlug]['name'];
+                $provinceName = $citiesConfig[$citySlug]['province'] ?? null;
+            } elseif ($citySlug === 'iran') {
+                $cityName = 'ایران';
+                $provinceName = 'ایران';
+            } else {
+                $cityName = $user->city_name ?: 'تهران';
+                $provinceName = $cityName;
+            }
         }
 
         // اولویت دوم: تطبیق با گالری‌های کانفیگ شهرها
@@ -65,6 +78,7 @@ class PublicDisplayController extends Controller
                         if (isset($g['username']) && $g['username'] === $user->username) {
                             $cityName = $c['name'];
                             $citySlug = $slug;
+                            $provinceName = $c['province'] ?? null;
                             $galleryAddress = $g['address'] ?? null;
                             break 2;
                         }
@@ -76,11 +90,19 @@ class PublicDisplayController extends Controller
         if (!$cityName) {
             $cityName = 'تهران';
             $citySlug = 'tehran';
+            $provinceName = 'تهران';
         }
 
-        $pageTitle = "قیمت لحظه‌ای طلا و سکه — {$galleryDisplayName} در {$cityName} | طلالایو";
-        $metaDescription = "مشاهده قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در {$galleryDisplayName} {$cityName}. تابلوی آنلاین ویترین طلافروشی متصل به شبکه هوشمند ابری طلالایو.";
-        $galleryIntro = "تابلوی اعلام قیمت لحظه‌ای طلا، مسکوکات و ارز {$galleryDisplayName} واقع در {$cityName}. نرخ‌ها به صورت خودکار و برخط مطابق آخرین نوسانات بازار طلا و اتحادیه به‌روزرسانی می‌شوند.";
+        // اگر شهر دارای استان مجزا باشد (مثلاً ملایر -> استان همدان)، نمایش به صورت «همدان (ملایر)»
+        if (!empty($provinceName) && $provinceName !== $cityName && $citySlug !== 'iran') {
+            $cityFullDisplay = "{$provinceName} ({$cityName})";
+        } else {
+            $cityFullDisplay = $cityName;
+        }
+
+        $pageTitle = "قیمت لحظه‌ای طلا و سکه — {$galleryDisplayName} در {$cityFullDisplay} | طلالایو";
+        $metaDescription = "مشاهده قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در {$galleryDisplayName} {$cityFullDisplay}. تابلوی آنلاین ویترین طلافروشی متصل به شبکه هوشمند ابری طلالایو.";
+        $galleryIntro = "تابلوی اعلام قیمت لحظه‌ای طلا، مسکوکات و ارز {$galleryDisplayName} واقع در {$cityFullDisplay}. نرخ‌ها به صورت خودکار و برخط مطابق آخرین نوسانات بازار طلا و اتحادیه به‌روزرسانی می‌شوند.";
         $phone = $user->displaySetting?->phone ?? '';
 
         return view('display.live', [
@@ -91,6 +113,8 @@ class PublicDisplayController extends Controller
             'galleryDisplayName' => $galleryDisplayName,
             'cityName'           => $cityName,
             'citySlug'           => $citySlug,
+            'provinceName'       => $provinceName,
+            'cityFullDisplay'    => $cityFullDisplay,
             'galleryAddress'     => $galleryAddress,
             'galleryIntro'       => $galleryIntro,
             'pageTitle'          => $pageTitle,

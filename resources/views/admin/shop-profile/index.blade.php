@@ -75,13 +75,15 @@
                         @foreach($groupedCities as $province => $cities)
                             <optgroup label="استان {{ $province }}">
                                 @foreach($cities as $slug => $c)
-                                    <option value="{{ $slug }}">{{ $c['name'] }}</option>
+                                    <option value="{{ $slug }}">
+                                        {{ $province !== $c['name'] ? ($province . ' (' . $c['name'] . ')') : $c['name'] }}
+                                    </option>
                                 @endforeach
                             </optgroup>
                         @endforeach
                         <option value="other">سایر شهرهای ایران</option>
                     </select>
-                    <p class="text-[11px] text-slate-400">این شهر در فوتر تابلو («مراکز طلای این شهر») و لینک‌های سئوی محلی گوگل نمایش داده می‌شود.</p>
+                    <p class="text-[11px] text-slate-400">این شهر در هدر و فوتر تابلو (مثلاً «همدان (ملایر)») و لینک‌های سئوی محلی گوگل نمایش داده می‌شود.</p>
                 </div>
 
                 {{-- شماره تلفن --}}
@@ -184,7 +186,7 @@ function shopProfileManager() {
         toast: { show: false, message: '', type: 'success' },
         form: {
             shop_name: @json($settings->shop_name ?? $user->name ?? ''),
-            city: @json($user->city_slug ?? 'tehran'),
+            city: @json(!empty($user->city_slug) ? $user->city_slug : ($settings->city_slug ?? 'tehran')),
             phone: @json($settings->phone ?? $user->phone ?? ''),
             instagram: @json($settings->instagram ?? ''),
             rubika: @json($settings->rubika ?? ''),
@@ -217,6 +219,9 @@ function shopProfileManager() {
                 }
 
                 const data = await res.json();
+                if (data.user && data.user.city_slug) {
+                    this.form.city = data.user.city_slug;
+                }
                 this.showToast(data.message || 'اطلاعات فروشگاه با موفقیت ذخیره شد.', 'success');
             } catch (err) {
                 this.showToast(err.message, 'error');

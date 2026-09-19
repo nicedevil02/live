@@ -45,7 +45,9 @@ class DisplaySettingController extends Controller
 
     public function update(Request $request)
     {
-        $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()]);
+        $this->ensureCityColumnsExist();
+        $user = auth()->user();
+        $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id]);
 
         $validated = $request->validate([
             'theme_mode'          => 'required|string',
@@ -54,6 +56,7 @@ class DisplaySettingController extends Controller
             'show_labor'          => 'sometimes|boolean',
             'show_profit'         => 'sometimes|boolean',
             'shop_name'           => 'nullable|string|max:255',
+            'city'                => 'nullable|string|max:50',
             'phone'               => 'nullable|string|max:20',
             'instagram'           => 'nullable|string|max:255',
             'rubika'              => 'nullable|string|max:255',
@@ -61,6 +64,23 @@ class DisplaySettingController extends Controller
             'qr_label'            => 'nullable|string|max:255',
             'qr_desc'             => 'nullable|string|max:255',
         ]);
+
+        if ($request->has('city')) {
+            $cityInput = trim((string) $request->input('city', ''));
+            $citiesConfig = config('cities', []);
+            if (isset($citiesConfig[$cityInput])) {
+                $user->city_slug = $cityInput;
+                $user->city_name = $citiesConfig[$cityInput]['name'];
+            } elseif ($cityInput === 'other' || $cityInput === 'iran') {
+                $user->city_slug = 'iran';
+                $user->city_name = 'ایران';
+            }
+        }
+
+        if (!empty($validated['shop_name'])) {
+            $user->name = $validated['shop_name'];
+        }
+        $user->save();
 
         // تبدیل مقادیر نال شده به رشته‌های خالی یا پیش‌فرض جهت هماهنگی با قیدهای پایگاه‌داده (NOT NULL)
         $validated['shop_name'] = $validated['shop_name'] ?? 'گالری طلای جدید';
@@ -92,11 +112,39 @@ class DisplaySettingController extends Controller
     }
 
     /**
+     * اطمینان از وجود ستون‌های شهر در دیتابیس بدون نیاز به دستور دستی
+     */
+    private function ensureCityColumnsExist(): void
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'city_slug')) {
+                \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                    $table->string('city_slug', 50)->nullable()->after('display_token');
+                    $table->string('city_name', 100)->nullable()->after('city_slug');
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureCityColumnsExist users error: ' . $e->getMessage());
+        }
+
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'city_slug')) {
+                \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) {
+                    $table->string('city_slug', 50)->nullable()->after('shop_name');
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureCityColumnsExist display_settings error: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * نمایش صفحه اختصاصی اطلاعات فروشگاه و تنظیم کد QR
      */
     public function shopProfile()
     {
-        $user = auth()->user();
+        $this->ensureCityColumnsExist();
+        $user = auth()->user()->fresh();
         $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id], [
             'theme_mode'          => 'dark-glass',
             'slider_interval_sec' => 8,
@@ -128,6 +176,7 @@ class DisplaySettingController extends Controller
      */
     public function updateShopProfile(Request $request)
     {
+        $this->ensureCityColumnsExist();
         $user = auth()->user();
         $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id]);
 
@@ -142,22 +191,34 @@ class DisplaySettingController extends Controller
             'qr_desc'   => 'nullable|string|max:255',
         ]);
 
-        // به‌روزرسانی شهر و نام گالری کاربر
-        $cityInput = $request->input('city', $user->city_slug ?: 'tehran');
-        $citiesConfig = config('cities', []);
-        if (isset($citiesConfig[$cityInput])) {
-            $user->city_slug = $cityInput;
-            $user->city_name = $citiesConfig[$cityInput]['name'];
-        } elseif ($cityInput === 'other') {
-            $user->city_slug = 'iran';
-            $user->city_name = 'ایران';
+        // به‌روزرسانی دقیق شهر و نام گالری کاربر
+        $cityInput = trim((string) $request->input('city', ''));
+        if (empty($cityInput)) {
+            $cityInput = !empty($user->city_slug) ? $user->city_slug : 'tehran';
         }
 
+        $citiesConfig = config('cities', []);
+        if (isset($citiesConfig[$cityInput])) {
+            $citySlug = $cityInput;
+            $cityName = $citiesConfig[$cityInput]['name'];
+        } elseif ($cityInput === 'other' || $cityInput === 'iran') {
+            $citySlug = 'iran';
+            $cityName = 'ایران';
+        } else {
+            $citySlug = 'tehran';
+            $cityName = 'تهران';
+        }
+
+        $user->city_slug = $citySlug;
+        $user->city_name = $cityName;
         $user->name = $validated['shop_name'];
         $user->save();
 
         // به‌روزرسانی تنظیمات نمایش
         $settings->shop_name = $validated['shop_name'];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'city_slug')) {
+            $settings->city_slug = $citySlug;
+        }
         $settings->phone = $validated['phone'] ?? '';
         $settings->instagram = $validated['instagram'] ?? '';
         $settings->rubika = $validated['rubika'] ?? '';
@@ -170,7 +231,7 @@ class DisplaySettingController extends Controller
         return response()->json([
             'message'  => 'اطلاعات فروشگاه و کد QR با موفقیت ذخیره شد.',
             'settings' => $settings,
-            'user'     => $user,
+            'user'     => $user->fresh(),
         ]);
     }
 

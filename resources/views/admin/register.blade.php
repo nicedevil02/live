@@ -169,7 +169,7 @@
                                 <optgroup label="استان {{ $province }}">
                                     @foreach($cities as $slug => $c)
                                         <option value="{{ $slug }}" {{ old('city', 'tehran') === $slug ? 'selected' : '' }}>
-                                            {{ $c['name'] }}
+                                            {{ $province !== $c['name'] ? ($province . ' (' . $c['name'] . ')') : $c['name'] }}
                                         </option>
                                     @endforeach
                                 </optgroup>
