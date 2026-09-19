@@ -1085,35 +1085,35 @@
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
         <div id="tv-stage-viewport" class="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
-            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between overflow-hidden select-none will-change-transform">
+            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between gap-3.5 overflow-hidden select-none will-change-transform">
 
             {{-- Header --}}
-            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
+            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-2.5 h-[126px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
 
                 {{-- سمت راست: QR کد و اطلاعات --}}
                 <div class="order-1 flex w-[38%] items-center gap-5 text-right">
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
-                    <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
+                    <div class="flex flex-col gap-1.5 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
                             <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
-                                 class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
-                                <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                                 class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
+                                <svg class="w-4.5 h-4.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
                             </div>
                         </template>
                         
                         <template x-if="settings.instagram">
                             <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
-                                 class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
-                                <svg class="w-5 h-5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                 class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
+                                <svg class="w-4.5 h-4.5 text-pink-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.instagram"></span>
                             </div>
                         </template>
  
                         <template x-if="settings.rubika">
                             <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
-                                 class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
-                                <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" width="20" height="20" loading="lazy" decoding="async" alt="روبیکا" class="w-5 h-5 object-contain shrink-0">
+                                 class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl border text-sm xl:text-base font-bold transition-all hover:scale-[1.02] w-full" dir="ltr">
+                                <img src="/images/logos/rubika.png" x-on:error="$event.target.src = '/icons/icon-72x72.png'" width="18" height="18" loading="lazy" decoding="async" alt="روبیکا" class="w-4.5 h-4.5 object-contain shrink-0">
                                 <span :class="theme.textPrimary" class="tracking-wide truncate" x-text="settings.rubika"></span>
                             </div>
                         </template>
@@ -1121,19 +1121,19 @@
 
                     {{-- QR Code (فریم لوکس با خط اسکن لیزری ملایم) --}}
                     <div class="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] shrink-0">
-                        <div class="relative bg-white p-2 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/30 shrink-0 overflow-hidden group">
+                        <div class="relative bg-white p-1.5 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/30 shrink-0 overflow-hidden group">
                             <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(settings.qr_link || (window.location.origin + '/' + (snapshotData.username || '')))" 
                                  alt="کد QR اختصاصی تابلوی طلافروشی {{ $galleryDisplayName ?? 'طلالایو' }}" 
-                                 width="112" height="112"
+                                 width="100" height="100"
                                  loading="lazy" decoding="async"
-                                 class="w-24 h-24 xl:w-28 xl:h-28 object-contain rounded-lg">
+                                 class="w-20 h-20 xl:w-24 xl:h-24 object-contain rounded-lg">
                             {{-- خط اسکن لیزری امبینت --}}
                             <div class="pointer-events-none absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_rgba(251,191,36,0.85)] animate-laser-sweep"></div>
                         </div>
                         <div class="flex flex-col justify-center max-w-[150px] pr-1">
                             <span :class="theme.textPrimary" class="text-sm xl:text-base font-black leading-tight drop-shadow-sm" 
                                   x-text="settings.qr_link ? (settings.qr_label || 'اسکن کنید') : (settings.qr_label || 'همراه ما باشید')"></span>
-                            <span :class="theme.textSecondary" class="text-[11px] xl:text-xs mt-1.5 leading-normal opacity-85 font-bold"
+                            <span :class="theme.textSecondary" class="text-[11px] xl:text-xs mt-1 leading-normal opacity-85 font-bold"
                                   x-text="settings.qr_desc ? settings.qr_desc : (settings.qr_link ? 'عضویت در شبکه‌های اجتماعی' : 'اسکن جهت مشاهده در موبایل')"></span>
                         </div>
                     </div>
@@ -1142,16 +1142,16 @@
                 {{-- نام فروشگاه (وسط) --}}
                 <div class="order-2 flex w-[28%] flex-col items-center justify-center text-center">
                     <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
-                        class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
+                        class="max-w-full break-words text-2xl xl:text-3xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
-                         class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
+                         class="mt-0.5 px-2.5 py-0.5 rounded-full text-[9.5px] font-black tracking-wider uppercase">
                          ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
                     </div>
                     {{-- متن معرفی کوتاه و ناوبری برگشتی --}}
-                    <p class="text-[11px] text-slate-300/85 mt-1 max-w-sm mx-auto leading-relaxed line-clamp-2">
+                    <p class="text-[10.5px] text-slate-300/85 mt-0.5 max-w-sm mx-auto leading-relaxed line-clamp-1">
                         {{ $galleryIntro ?? ("تابلوی اعلام قیمت لحظه‌ای طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران')) }}
                     </p>
-                    <nav aria-label="راهنمای دسترسی" class="mt-1 flex items-center justify-center gap-2 text-[10px] font-bold">
+                    <nav aria-label="راهنمای دسترسی" class="mt-0.5 flex items-center justify-center gap-2 text-[9.5px] font-bold">
                         <a href="{{ url('/') }}" class="text-amber-400 hover:text-amber-300 transition-colors">صفحه اصلی طلالایو</a>
                         <span class="text-slate-400 opacity-60">•</span>
                         <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}" class="text-amber-400 hover:text-amber-300 transition-colors">طلافروشی‌های {{ $cityName ?? 'تهران' }}</a>
@@ -1161,7 +1161,7 @@
                 {{-- تاریخ و ساعت (سمت چپ) --}}
                 <div class="order-3 flex w-[38%] flex-row items-center justify-end gap-5 text-left">
                     {{-- کنترل‌ها و دکمه‌های وضعیت (HUD هوشمند با Auto-Hide) --}}
-                    <div class="flex flex-col gap-2 items-end justify-center min-h-[58px]">
+                    <div class="flex flex-col gap-1.5 items-end justify-center min-h-[50px]">
                         {{-- وضعیت اتصال: اگر ارتباط مختل شد همیشه نشان داده می‌شود، در حالت آنلاین با HUD هماهنگ است --}}
                         <div x-show="showControls || connectionState !== 'online'"
                              x-transition:enter="transition ease-out duration-300"
@@ -1170,7 +1170,7 @@
                              x-transition:leave="transition ease-in duration-500"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 -translate-y-1">
-                            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] font-semibold shrink-0 shadow-sm" 
+                            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[0.68rem] font-semibold shrink-0 shadow-sm" 
                                   :class="connectionState === 'online' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/20 text-rose-500 border border-rose-500/30 animate-pulse'">
                                 <span class="w-1.5 h-1.5 rounded-full" :class="connectionState === 'online' ? 'bg-emerald-500 dark:bg-emerald-400 animate-pulse' : 'bg-rose-500'"></span>
                                 <span x-text="connectionState === 'online' ? 'وضعیت: برخط' : (connectionState === 'offline' ? 'اتصال قطع است' : 'حالت پشتیبان')"></span>
@@ -1203,12 +1203,12 @@
                     </div>
 
                     {{-- خط عمودی جداکننده --}}
-                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-16"></div>
+                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-14"></div>
 
                     {{-- ساعت و تاریخ --}}
                     <div class="flex flex-col items-center justify-center text-center">
-                        <p :class="theme.textPrimary" class="text-6xl xl:text-7xl font-black tabular-nums tracking-tight leading-none" x-text="timeText"></p>
-                        <p :class="theme.textSecondary" class="text-base xl:text-lg font-bold mt-1.5 opacity-80" x-text="weekDay + ' ' + dateText"></p>
+                        <p :class="theme.textPrimary" class="text-5xl xl:text-6xl font-black tabular-nums tracking-tight leading-none" x-text="timeText"></p>
+                        <p :class="theme.textSecondary" class="text-sm xl:text-base font-bold mt-1 opacity-80" x-text="weekDay + ' ' + dateText"></p>
                     </div>
                 </div>
 
@@ -1217,19 +1217,19 @@
             {{-- Main Content --}}
             <div class="flex flex-1 flex-row gap-3 min-h-0">
                 {{-- Product Slider --}}
-                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
+                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[2.5rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
                                  x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[20s] ease-linear group-hover:scale-105">
                             <!-- نشان پیشنهاد ویژه -->
                             <div x-show="Boolean(activeProduct.is_special)" class="absolute top-5 left-5 z-20 select-none pointer-events-none">
-                                <div class="relative flex items-center gap-3 rounded-full border border-red-200/35 bg-gradient-to-br from-red-500/20 via-rose-500/14 to-white/10 px-4 py-3 backdrop-blur-xl shadow-[0_18px_40px_rgba(0,0,0,0.28),0_0_28px_rgba(239,68,68,0.18)] ring-1 ring-inset ring-white/10">
-                                    <span class="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-500 via-rose-500 to-red-700 shadow-[0_0_18px_rgba(239,68,68,0.45)] ring-1 ring-white/20 animate-[pulse_1.8s_ease-in-out_infinite]">
+                                <div class="relative flex items-center gap-3 rounded-full border border-red-200/35 bg-gradient-to-br from-red-500/20 via-rose-500/14 to-white/10 px-4 py-2.5 backdrop-blur-xl shadow-[0_18px_40px_rgba(0,0,0,0.28),0_0_28px_rgba(239,68,68,0.18)] ring-1 ring-inset ring-white/10">
+                                    <span class="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-red-500 via-rose-500 to-red-700 shadow-[0_0_18px_rgba(239,68,68,0.45)] ring-1 ring-white/20 animate-[pulse_1.8s_ease-in-out_infinite]">
                                         <span class="h-2.5 w-2.5 rounded-full bg-white/90 animate-ping"></span>
                                     </span>
                                     <div class="flex flex-col pl-3 pr-2">
-                                        <span class="text-xl font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
+                                        <span class="text-lg font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
                                             پیشنهاد ویژه
                                         </span>
                                     </div>
@@ -1240,28 +1240,28 @@
                                 <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/24 px-4 py-3 shadow-[0_16px_40px_rgba(0,0,0,0.30)] backdrop-blur-2xl">
                                     <div class="flex flex-row items-end justify-between gap-3">
                                         <div class="min-w-0">
-                                            <p class="break-words text-4xl font-black leading-tight text-white drop-shadow-md" x-text="activeProduct.title"></p>
-                                            <div class="mt-2 flex items-center gap-2">
+                                            <p class="break-words text-3xl font-black leading-tight text-white drop-shadow-md" x-text="activeProduct.title"></p>
+                                            <div class="mt-1.5 flex items-center gap-2">
                                                 <template x-if="settings.show_weight">
-                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3.5 py-1.5 text-sm font-bold text-white/90 backdrop-blur-xl">
+                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs font-bold text-white/90 backdrop-blur-xl">
                                                         وزن: <span x-text="activeProduct.weight_gram"></span> گرم
                                                     </span>
                                                 </template>
                                                 <template x-if="settings.show_profit">
-                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3.5 py-1.5 text-sm font-bold text-white/90 backdrop-blur-xl">
+                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs font-bold text-white/90 backdrop-blur-xl">
                                                         سود: <span x-text="activeProductProfitPercent"></span>%
                                                     </span>
                                                 </template>
                                             </div>
                                         </div>
-                                        <div class="shrink-0 champagne-showcase rounded-2xl px-5 py-3 text-right">
-                                            <div class="flex items-center justify-between gap-2 mb-1">
-                                                <span class="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300/90 drop-shadow-sm">مبلغ نهایی ویترین</span>
+                                        <div class="shrink-0 champagne-showcase rounded-2xl px-4 py-2.5 text-right">
+                                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                                <span class="text-[9.5px] font-black uppercase tracking-[0.25em] text-amber-300/90 drop-shadow-sm">مبلغ نهایی ویترین</span>
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
                                             </div>
                                             <template x-if="activeProductFinalPrice > 0">
                                                 <div class="flex items-baseline gap-1.5">
-                                                    <span class="text-3xl xl:text-4xl font-black tabular-nums tracking-tight text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.5)]" x-text="formatNumber(activeProductFinalPrice)"></span>
+                                                    <span class="text-2xl xl:text-3xl font-black tabular-nums tracking-tight text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.5)]" x-text="formatNumber(activeProductFinalPrice)"></span>
                                                     <span class="text-xs font-black text-amber-200/80 whitespace-nowrap">تومان</span>
                                                 </div>
                                             </template>
@@ -1289,8 +1289,9 @@
                 {{-- Price Grid With Unified Glass Stage --}}
                 <div class="relative flex-1 min-h-0 animate-fadeInUp" style="animation-delay: 150ms;">
                     {{-- Unified Single-Pass Glass Backdrop (۱ پاس محاسباتی بلور برای کل ۱۶ کارت به جای ۱۶ پاس مجزا) --}}
-                    <div class="price-grid-backdrop absolute -inset-1 rounded-[2.25rem] pointer-events-none z-0"></div>
-                    <div class="price-grid relative z-10 grid grid-cols-12 gap-3 h-full auto-rows-fr grid-rows-[1.5fr_1fr_1fr]">
+                    <div class="price-grid-backdrop absolute inset-0 rounded-[2.25rem] pointer-events-none z-0"></div>
+                    <div class="price-grid relative z-10 grid grid-cols-12 gap-2.5 h-full auto-rows-fr"
+                         :class="orderedMetrics.length > 11 ? 'grid-rows-[1.25fr_1fr_1fr_1fr]' : 'grid-rows-[1.35fr_1fr_1fr]'">
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
                                  item.symbol === 'gold18'
@@ -1304,12 +1305,12 @@
                                              ? 'neu-hero-gold-pearl'
                                              : 'neu-hero-gold-imperial'))))
                                  : theme.card + ' ' + theme.cardHover,
-                                 index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
+                                 index < 3 ? 'col-span-4 px-4 xl:px-5 pb-3.5 pt-3' : 'col-span-3 px-3 xl:px-3.5 pb-2.5 pt-2.5'
                                  ]"
-                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-[transform,box-shadow,border-color] duration-300 h-full">
+                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.5rem] transition-[transform,box-shadow,border-color] duration-300 h-full">
 
                                 <template x-if="item.symbol === 'gold18'">
-                                    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem] z-0">
+                                    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.5rem] z-0">
                                         {{-- Silky Liquid Gold Light Beam (پرتو متحرک آینه‌ای لوکس) --}}
                                         <div class="absolute -inset-y-12 -left-1/2 w-[55%] animate-gold-beam pointer-events-none"
                                              style="background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.0) 35%, rgba(254,240,138,0.50) 48%, rgba(255,255,255,0.80) 52%, rgba(254,240,138,0.50) 56%, rgba(255,255,255,0.0) 70%, transparent 85%);"></div>
@@ -1317,34 +1318,34 @@
                                 </template>
 
                                 {{-- هدر کارت: عنوان نماد و فلش روند اپلی همراه با ستاره ظریف طلایی --}}
-                                <div class="relative flex justify-between items-center gap-3 z-10">
+                                <div class="relative flex justify-between items-center gap-2 z-10">
                                     <div class="flex items-center gap-1.5 min-w-0">
                                         <template x-if="item.symbol === 'gold18'">
                                             <span class="text-amber-500 animate-sparkle text-sm xl:text-base select-none leading-none">✦</span>
                                         </template>
-                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
+                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-xl xl:text-2xl' : 'text-base xl:text-lg']"
                                            class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
                                     </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
-                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
-                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                                                     <polyline points="17 6 23 6 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent < 0">
-                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
-                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                                                     <polyline points="17 18 23 18 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent == 0">
-                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
-                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1 rounded-lg bg-white/5 border border-white/10 opacity-40">
+                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                                 </svg>
                                             </div>
@@ -1355,23 +1356,23 @@
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
                                     item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor,
-                                    index < 3 ? 'py-3' : 'py-1.5'
+                                    index < 3 ? 'py-2' : 'py-1'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex items-baseline justify-center whitespace-nowrap w-full gap-1.5">
                                          <span :class="[
-                                             index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl',
+                                             index < 3 ? 'text-3xl xl:text-4xl leading-none' : 'text-xl xl:text-2xl',
                                              item.symbol === 'gold18' 
                                                  ? (isLightTheme ? 'text-amber-950 drop-shadow-[0_2px_10px_rgba(217,119,6,0.35)]' : 'text-amber-200 drop-shadow-[0_2px_14px_rgba(251,191,36,0.55)]') 
                                                  : theme.priceGlow
                                          ]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md" x-html="item.displayHtml"></span>
-                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'imperial-onyx' ? 'neu-inset-onyx' : (themeKey === 'imperial-pearl' ? 'neu-inset-pearl' : (themeKey === 'bing-daily' ? 'text-slate-900 bg-white/45 border border-white/60 backdrop-blur-md shadow-xs' : (isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10')))]" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
+                                         <span :class="[index < 3 ? 'text-xs xl:text-sm' : 'text-[10px] xl:text-[11px]', themeKey === 'imperial-onyx' ? 'neu-inset-onyx' : (themeKey === 'imperial-pearl' ? 'neu-inset-pearl' : (themeKey === 'bing-daily' ? 'text-slate-900 bg-white/45 border border-white/60 backdrop-blur-md shadow-xs' : (isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10')))]" class="font-bold px-1.5 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
-                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
+                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-1.5 pt-2' : 'mt-1 pt-1.5', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
-                                    <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
+                                    <div class="flex items-center gap-1.5 font-black tabular-nums text-[11px] xl:text-xs px-2 py-0.5 rounded-full border shadow-sm" :class="[
                                         themeKey === 'imperial-onyx'
                                             ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
                                             : (themeKey === 'imperial-pearl'
@@ -1388,17 +1389,17 @@
                                     {{-- وضعیت زنده با میکرو-پالس اپلی --}}
                                     <div class="flex items-center">
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
+                                            <span class="inline-flex items-center gap-1 text-[10px] rounded-full px-2 py-0.5 font-bold border shadow-sm"
                                                   :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
+                                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm"
                                                   :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
-                                                <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
-                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
+                                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
+                                                <span class="text-[9.5px] opacity-80">لحظه‌ای</span>
                                             </span>
                                         </template>
                                     </div>
@@ -1410,7 +1411,7 @@
             </div>
 
             {{-- Premium Glassmorphic Footer --}}
-            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
+            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between shrink-0 h-12 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
                 
                 {{-- Background decorative glows inside the footer --}}
                 <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.15),transparent_50%)]"></div>
