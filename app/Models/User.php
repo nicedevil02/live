@@ -127,6 +127,22 @@ class User extends Authenticatable
         return $formatted;
     }
 
+    /**
+     * سال شمسی (جلالی) پویا بر اساس تاریخ یا زمان جاری
+     */
+    public static function jalaliYear(?\DateTimeInterface $date = null, bool $toPersianDigits = true): string
+    {
+        $date = $date ?: new \DateTime();
+        $formatted = self::toJalali($date, false);
+        $year = substr($formatted, 0, 4);
+        if ($toPersianDigits) {
+            $en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            $fa = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return str_replace($en, $fa, $year);
+        }
+        return $year;
+    }
+
     public function getShamsiExpiresAtAttribute(): string
     {
         return self::toJalali($this->expires_at);

@@ -372,6 +372,11 @@
         </div>
     </header>
 
+    {{-- نوار نرخ زنده لحظه‌ای (H-20) --}}
+    @unless($isTv ?? false)
+        @include('partials.rate-ticker')
+    @endunless
+
     {{-- محتوای اصلی صفحه --}}
     <main id="main-content" tabindex="-1" class="flex-grow focus:outline-none">
         @yield('content')
@@ -508,7 +513,7 @@
         {{-- حق کپی‌رایت و مالکیت معنوی --}}
         <div class="max-w-7xl mx-auto border-t border-slate-900 mt-6 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right text-[11px] text-slate-500">
             <div>
-                تمامی حقوق مادی و معنوی برای سامانه ابری تابلوی طلافروشی طلالایو (TalaLive.ir) محفوظ است &copy; ۱۴۰۵.
+                تمامی حقوق مادی و معنوی برای سامانه ابری تابلوی طلافروشی طلالایو (TalaLive.ir) محفوظ است &copy; {{ \App\Models\User::jalaliYear() }}.
             </div>
             <div class="flex items-center gap-4 text-slate-400">
                 <span>پشتیبانی فنی: <a href="tel:09187009064" class="hover:text-amber-400 font-mono" dir="ltr">0918 700 9064</a></span>
