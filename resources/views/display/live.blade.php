@@ -822,13 +822,10 @@
             -webkit-backdrop-filter: none !important;
         }
 
-        /* مخفی‌سازی کامل افکت‌های حرکتی و نوری تزیینی */
+        /* مخفی‌سازی کامل افکت‌های حرکتی و نوری تزیینی (اسلایدر فعال می‌ماند) */
         .eco-mode .animate-gold-beam,
         .eco-mode .ambient-orb-container,
-        .eco-mode .animate-laser-sweep,
-        .eco-mode .animate-sparkle,
-        .eco-mode .animate-ping,
-        .eco-mode .animate-slideSwap {
+        .eco-mode .animate-laser-sweep {
             display: none !important;
         }
 
