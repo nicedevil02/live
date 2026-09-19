@@ -359,7 +359,72 @@
             backface-visibility: hidden;
         }
 
-        /* Neumorphic + Apple HIG Soft Physics Engine (8 Luxury Themes) */
+        /* Neumorphic + Apple HIG Soft Physics Engine (All Luxury Themes) */
+        
+        /* Dedicated Hardware-Accelerated Canvas Backgrounds */
+        .theme-bg-dark-glass {
+            background-color: #030712 !important;
+            background-image: 
+                radial-gradient(ellipse 75% 65% at 85% 15%, rgba(49, 46, 129, 0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 65% 55% at 15% 85%, rgba(15, 23, 42, 0.70) 0%, transparent 70%),
+                linear-gradient(145deg, #0f172a 0%, #070b14 50%, #020617 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .theme-bg-gold-royal {
+            background-color: #0a0400 !important;
+            background-image: 
+                radial-gradient(ellipse 75% 65% at 50% 12%, rgba(217, 119, 6, 0.22) 0%, transparent 65%),
+                radial-gradient(ellipse 60% 50% at 15% 85%, rgba(180, 83, 9, 0.18) 0%, transparent 65%),
+                linear-gradient(145deg, #1c0b02 0%, #0d0501 50%, #050200 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .theme-bg-blue-ocean {
+            background-color: #010712 !important;
+            background-image: 
+                radial-gradient(ellipse 75% 65% at 50% 12%, rgba(6, 182, 212, 0.22) 0%, transparent 65%),
+                radial-gradient(ellipse 65% 55% at 85% 85%, rgba(14, 165, 233, 0.18) 0%, transparent 65%),
+                linear-gradient(145deg, #06192e 0%, #030d1a 50%, #00040a 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .theme-bg-purple-haze {
+            background-color: #07010e !important;
+            background-image: 
+                radial-gradient(ellipse 75% 65% at 50% 12%, rgba(192, 38, 211, 0.22) 0%, transparent 65%),
+                radial-gradient(ellipse 65% 55% at 15% 85%, rgba(147, 51, 234, 0.18) 0%, transparent 65%),
+                linear-gradient(145deg, #1b072c 0%, #0e0317 50%, #04010a 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .theme-bg-emerald-night {
+            background-color: #000a06 !important;
+            background-image: 
+                radial-gradient(ellipse 75% 65% at 50% 12%, rgba(16, 185, 129, 0.22) 0%, transparent 65%),
+                radial-gradient(ellipse 65% 55% at 85% 85%, rgba(5, 150, 105, 0.18) 0%, transparent 65%),
+                linear-gradient(145deg, #02261b 0%, #01140e 50%, #000604 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .theme-bg-rose-dark {
+            background-color: #0c0004 !important;
+            background-image: 
+                radial-gradient(ellipse 75% 65% at 50% 12%, rgba(244, 63, 94, 0.22) 0%, transparent 65%),
+                radial-gradient(ellipse 65% 55% at 15% 85%, rgba(225, 29, 72, 0.18) 0%, transparent 65%),
+                linear-gradient(145deg, #2b020d 0%, #150006 50%, #060002 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        .theme-bg-pure-black {
+            background-color: #000000 !important;
+            background-image: none !important;
+        }
+
+        .theme-bg-bing {
+            background-color: #020617 !important;
+        }
+
         /* Royal Champagne & Silk Mesh (Light Theme Canvas - Zero CPU, 100% GPU) */
         .theme-light-champagne-silk {
             background-color: #fbfbfd !important;
@@ -859,6 +924,127 @@
             border-color: rgba(255, 255, 255, 0.25) !important;
         }
 
+        /* 18K Gold Hero Card Variants for Each Theme */
+        .neu-hero-blue-ocean {
+            position: relative;
+            background: linear-gradient(145deg, rgba(6, 40, 75, 0.85) 0%, rgba(2, 18, 38, 0.94) 100%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            border: 1.5px solid rgba(34, 211, 238, 0.65) !important;
+            box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(6, 182, 212, 0.40), 0 0 16px rgba(34, 211, 238, 0.20) !important;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-blue-ocean::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(165, 243, 252, 0.90);
+            box-shadow: 0 0 24px rgba(6, 182, 212, 0.40), inset 0 0 12px rgba(6, 182, 212, 0.20);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
+        }
+
+        .neu-hero-purple-haze {
+            position: relative;
+            background: linear-gradient(145deg, rgba(55, 12, 85, 0.85) 0%, rgba(22, 5, 36, 0.94) 100%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            border: 1.5px solid rgba(217, 70, 239, 0.65) !important;
+            box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(192, 38, 211, 0.40), 0 0 16px rgba(217, 70, 239, 0.20) !important;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-purple-haze::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(245, 208, 254, 0.90);
+            box-shadow: 0 0 24px rgba(217, 70, 239, 0.40), inset 0 0 12px rgba(217, 70, 239, 0.20);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
+        }
+
+        .neu-hero-emerald-night {
+            position: relative;
+            background: linear-gradient(145deg, rgba(4, 55, 40, 0.85) 0%, rgba(1, 24, 17, 0.94) 100%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            border: 1.5px solid rgba(52, 211, 153, 0.65) !important;
+            box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(16, 185, 129, 0.40), 0 0 16px rgba(52, 211, 153, 0.20) !important;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-emerald-night::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(167, 243, 208, 0.90);
+            box-shadow: 0 0 24px rgba(16, 185, 129, 0.40), inset 0 0 12px rgba(16, 185, 129, 0.20);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
+        }
+
+        .neu-hero-rose-dark {
+            position: relative;
+            background: linear-gradient(145deg, rgba(75, 4, 25, 0.85) 0%, rgba(30, 1, 9, 0.94) 100%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            border: 1.5px solid rgba(251, 113, 133, 0.65) !important;
+            box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(244, 63, 94, 0.40), 0 0 16px rgba(251, 113, 133, 0.20) !important;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-rose-dark::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(254, 205, 211, 0.90);
+            box-shadow: 0 0 24px rgba(244, 63, 94, 0.40), inset 0 0 12px rgba(244, 63, 94, 0.20);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
+        }
+
+        .neu-hero-pure-black {
+            position: relative;
+            background: linear-gradient(145deg, rgba(20, 20, 23, 0.95) 0%, rgba(5, 5, 6, 0.98) 100%) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.65) !important;
+            box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.25), 0 10px 28px -4px rgba(0, 0, 0, 0.9), 0 0 16px rgba(251, 191, 36, 0.15) !important;
+            transform: translate3d(0, 0, 0) !important;
+            backface-visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-pure-black::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(254, 240, 138, 0.85);
+            box-shadow: 0 0 24px rgba(251, 191, 36, 0.35), inset 0 0 12px rgba(251, 191, 36, 0.15);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
+        }
+
         /* Apple Premium Slider Overlays & Glass Cards (Adaptive for Light/Dark) */
         .slider-scrim-bottom-dark {
             position: absolute !important;
@@ -1175,6 +1361,85 @@
             background: radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.55) 0%, rgba(110, 231, 183, 0.30) 32%, rgba(209, 250, 229, 0.12) 60%, transparent 80%) !important;
         }
 
+        /* Palette: Gold Royal */
+        .theme-gold-royal .orb-1, .theme-gold-royal .orb-2, .theme-gold-royal .orb-3,
+        .theme-gold-royal .orb-4, .theme-gold-royal .orb-5, .theme-gold-royal .orb-6,
+        .theme-gold-royal .orb-7, .theme-gold-royal .orb-8, .theme-gold-royal .orb-9,
+        .theme-gold-royal .orb-10, .theme-gold-royal .orb-11, .theme-gold-royal .orb-12 { opacity: 0.65 !important; }
+        .theme-gold-royal .orb-1, .theme-gold-royal .orb-6 { background: radial-gradient(circle, rgba(251,191,36,0.65) 0%, rgba(217,119,6,0.30) 40%, transparent 75%) !important; }
+        .theme-gold-royal .orb-2, .theme-gold-royal .orb-7 { background: radial-gradient(circle, rgba(245,158,11,0.60) 0%, rgba(180,83,9,0.25) 40%, transparent 75%) !important; }
+        .theme-gold-royal .orb-3, .theme-gold-royal .orb-8 { background: radial-gradient(circle, rgba(253,224,71,0.65) 0%, rgba(245,158,11,0.30) 40%, transparent 75%) !important; }
+        .theme-gold-royal .orb-4, .theme-gold-royal .orb-9 { background: radial-gradient(circle, rgba(217,119,6,0.55) 0%, rgba(146,64,14,0.25) 40%, transparent 75%) !important; }
+        .theme-gold-royal .orb-5, .theme-gold-royal .orb-10 { background: radial-gradient(circle, rgba(252,211,77,0.60) 0%, rgba(217,119,6,0.25) 40%, transparent 75%) !important; }
+        .theme-gold-royal .orb-11, .theme-gold-royal .orb-12 { background: radial-gradient(circle, rgba(245,158,11,0.55) 0%, rgba(180,83,9,0.25) 40%, transparent 75%) !important; }
+
+        /* Palette: Blue Ocean */
+        .theme-blue-ocean .orb-1, .theme-blue-ocean .orb-2, .theme-blue-ocean .orb-3,
+        .theme-blue-ocean .orb-4, .theme-blue-ocean .orb-5, .theme-blue-ocean .orb-6,
+        .theme-blue-ocean .orb-7, .theme-blue-ocean .orb-8, .theme-blue-ocean .orb-9,
+        .theme-blue-ocean .orb-10, .theme-blue-ocean .orb-11, .theme-blue-ocean .orb-12 { opacity: 0.65 !important; }
+        .theme-blue-ocean .orb-1, .theme-blue-ocean .orb-6 { background: radial-gradient(circle, rgba(6,182,212,0.70) 0%, rgba(2,132,199,0.35) 40%, transparent 75%) !important; }
+        .theme-blue-ocean .orb-2, .theme-blue-ocean .orb-7 { background: radial-gradient(circle, rgba(14,165,233,0.65) 0%, rgba(3,105,161,0.30) 40%, transparent 75%) !important; }
+        .theme-blue-ocean .orb-3, .theme-blue-ocean .orb-8 { background: radial-gradient(circle, rgba(34,211,238,0.70) 0%, rgba(6,182,212,0.35) 40%, transparent 75%) !important; }
+        .theme-blue-ocean .orb-4, .theme-blue-ocean .orb-9 { background: radial-gradient(circle, rgba(56,189,248,0.60) 0%, rgba(14,165,233,0.25) 40%, transparent 75%) !important; }
+        .theme-blue-ocean .orb-5, .theme-blue-ocean .orb-10 { background: radial-gradient(circle, rgba(2,132,199,0.60) 0%, rgba(30,58,138,0.30) 40%, transparent 75%) !important; }
+        .theme-blue-ocean .orb-11, .theme-blue-ocean .orb-12 { background: radial-gradient(circle, rgba(6,182,212,0.60) 0%, rgba(14,165,233,0.25) 40%, transparent 75%) !important; }
+
+        /* Palette: Purple Haze */
+        .theme-purple-haze .orb-1, .theme-purple-haze .orb-2, .theme-purple-haze .orb-3,
+        .theme-purple-haze .orb-4, .theme-purple-haze .orb-5, .theme-purple-haze .orb-6,
+        .theme-purple-haze .orb-7, .theme-purple-haze .orb-8, .theme-purple-haze .orb-9,
+        .theme-purple-haze .orb-10, .theme-purple-haze .orb-11, .theme-purple-haze .orb-12 { opacity: 0.65 !important; }
+        .theme-purple-haze .orb-1, .theme-purple-haze .orb-6 { background: radial-gradient(circle, rgba(192,38,211,0.70) 0%, rgba(147,51,234,0.35) 40%, transparent 75%) !important; }
+        .theme-purple-haze .orb-2, .theme-purple-haze .orb-7 { background: radial-gradient(circle, rgba(168,85,247,0.65) 0%, rgba(126,34,206,0.30) 40%, transparent 75%) !important; }
+        .theme-purple-haze .orb-3, .theme-purple-haze .orb-8 { background: radial-gradient(circle, rgba(217,70,239,0.70) 0%, rgba(192,38,211,0.35) 40%, transparent 75%) !important; }
+        .theme-purple-haze .orb-4, .theme-purple-haze .orb-9 { background: radial-gradient(circle, rgba(147,51,234,0.60) 0%, rgba(107,33,168,0.25) 40%, transparent 75%) !important; }
+        .theme-purple-haze .orb-5, .theme-purple-haze .orb-10 { background: radial-gradient(circle, rgba(232,121,249,0.60) 0%, rgba(168,85,247,0.25) 40%, transparent 75%) !important; }
+        .theme-purple-haze .orb-11, .theme-purple-haze .orb-12 { background: radial-gradient(circle, rgba(192,38,211,0.60) 0%, rgba(147,51,234,0.25) 40%, transparent 75%) !important; }
+
+        /* Palette: Emerald Night */
+        .theme-emerald-night .orb-1, .theme-emerald-night .orb-2, .theme-emerald-night .orb-3,
+        .theme-emerald-night .orb-4, .theme-emerald-night .orb-5, .theme-emerald-night .orb-6,
+        .theme-emerald-night .orb-7, .theme-emerald-night .orb-8, .theme-emerald-night .orb-9,
+        .theme-emerald-night .orb-10, .theme-emerald-night .orb-11, .theme-emerald-night .orb-12 { opacity: 0.65 !important; }
+        .theme-emerald-night .orb-1, .theme-emerald-night .orb-6 { background: radial-gradient(circle, rgba(16,185,129,0.70) 0%, rgba(5,150,105,0.35) 40%, transparent 75%) !important; }
+        .theme-emerald-night .orb-2, .theme-emerald-night .orb-7 { background: radial-gradient(circle, rgba(52,211,153,0.65) 0%, rgba(4,120,87,0.30) 40%, transparent 75%) !important; }
+        .theme-emerald-night .orb-3, .theme-emerald-night .orb-8 { background: radial-gradient(circle, rgba(5,150,105,0.70) 0%, rgba(6,95,70,0.35) 40%, transparent 75%) !important; }
+        .theme-emerald-night .orb-4, .theme-emerald-night .orb-9 { background: radial-gradient(circle, rgba(110,231,183,0.60) 0%, rgba(16,185,129,0.25) 40%, transparent 75%) !important; }
+        .theme-emerald-night .orb-5, .theme-emerald-night .orb-10 { background: radial-gradient(circle, rgba(4,120,87,0.60) 0%, rgba(2,44,34,0.30) 40%, transparent 75%) !important; }
+        .theme-emerald-night .orb-11, .theme-emerald-night .orb-12 { background: radial-gradient(circle, rgba(16,185,129,0.60) 0%, rgba(5,150,105,0.25) 40%, transparent 75%) !important; }
+
+        /* Palette: Rose Dark */
+        .theme-rose-dark .orb-1, .theme-rose-dark .orb-2, .theme-rose-dark .orb-3,
+        .theme-rose-dark .orb-4, .theme-rose-dark .orb-5, .theme-rose-dark .orb-6,
+        .theme-rose-dark .orb-7, .theme-rose-dark .orb-8, .theme-rose-dark .orb-9,
+        .theme-rose-dark .orb-10, .theme-rose-dark .orb-11, .theme-rose-dark .orb-12 { opacity: 0.65 !important; }
+        .theme-rose-dark .orb-1, .theme-rose-dark .orb-6 { background: radial-gradient(circle, rgba(244,63,94,0.70) 0%, rgba(225,29,72,0.35) 40%, transparent 75%) !important; }
+        .theme-rose-dark .orb-2, .theme-rose-dark .orb-7 { background: radial-gradient(circle, rgba(251,113,133,0.65) 0%, rgba(190,18,60,0.30) 40%, transparent 75%) !important; }
+        .theme-rose-dark .orb-3, .theme-rose-dark .orb-8 { background: radial-gradient(circle, rgba(225,29,72,0.70) 0%, rgba(159,18,57,0.35) 40%, transparent 75%) !important; }
+        .theme-rose-dark .orb-4, .theme-rose-dark .orb-9 { background: radial-gradient(circle, rgba(253,164,175,0.60) 0%, rgba(244,63,94,0.25) 40%, transparent 75%) !important; }
+        .theme-rose-dark .orb-5, .theme-rose-dark .orb-10 { background: radial-gradient(circle, rgba(190,18,60,0.60) 0%, rgba(136,19,55,0.30) 40%, transparent 75%) !important; }
+        .theme-rose-dark .orb-11, .theme-rose-dark .orb-12 { background: radial-gradient(circle, rgba(244,63,94,0.60) 0%, rgba(225,29,72,0.25) 40%, transparent 75%) !important; }
+
+        /* Palette: Imperial Onyx */
+        .theme-imperial-onyx .orb-1, .theme-imperial-onyx .orb-2, .theme-imperial-onyx .orb-3,
+        .theme-imperial-onyx .orb-4, .theme-imperial-onyx .orb-5, .theme-imperial-onyx .orb-6,
+        .theme-imperial-onyx .orb-7, .theme-imperial-onyx .orb-8, .theme-imperial-onyx .orb-9,
+        .theme-imperial-onyx .orb-10, .theme-imperial-onyx .orb-11, .theme-imperial-onyx .orb-12 { opacity: 0.60 !important; }
+        .theme-imperial-onyx .orb-1, .theme-imperial-onyx .orb-6 { background: radial-gradient(circle, rgba(251,191,36,0.60) 0%, rgba(217,119,6,0.25) 40%, transparent 75%) !important; }
+        .theme-imperial-onyx .orb-2, .theme-imperial-onyx .orb-7 { background: radial-gradient(circle, rgba(245,158,11,0.55) 0%, rgba(180,83,9,0.20) 40%, transparent 75%) !important; }
+        .theme-imperial-onyx .orb-3, .theme-imperial-onyx .orb-8 { background: radial-gradient(circle, rgba(254,240,138,0.65) 0%, rgba(251,191,36,0.25) 40%, transparent 75%) !important; }
+        .theme-imperial-onyx .orb-4, .theme-imperial-onyx .orb-9 { background: radial-gradient(circle, rgba(217,119,6,0.50) 0%, rgba(146,64,14,0.20) 40%, transparent 75%) !important; }
+        .theme-imperial-onyx .orb-5, .theme-imperial-onyx .orb-10 { background: radial-gradient(circle, rgba(252,211,77,0.55) 0%, rgba(217,119,6,0.20) 40%, transparent 75%) !important; }
+        .theme-imperial-onyx .orb-11, .theme-imperial-onyx .orb-12 { background: radial-gradient(circle, rgba(245,158,11,0.50) 0%, rgba(180,83,9,0.20) 40%, transparent 75%) !important; }
+
+        /* Hide orbs completely for Bing themes and pure-black */
+        .theme-bing-daily .ambient-orb,
+        .theme-bing-studio .ambient-orb,
+        .theme-pure-black .ambient-orb {
+            display: none !important;
+        }
+
         /* =========================================================================
            حالت سبک / روان (Eco / Lite Mode Engine)
            توقف کامل تمام انیمیشن‌ها، فیلترهای بلور و پردازش‌های سنگین گرافیکی
@@ -1225,8 +1490,11 @@
         .eco-mode .neu-card-pure-black,
         .eco-mode .neu-card-gold-royal,
         .eco-mode .neu-card-blue-ocean,
+        .eco-mode .neu-card-purple-haze,
         .eco-mode .neu-card-emerald-night,
         .eco-mode .neu-card-rose-dark,
+        .eco-mode .neu-card-bing-obsidian,
+        .eco-mode .neu-card-bing-studio,
         .eco-mode .neu-card-imperial-onyx {
             background: #0b1329 !important;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
@@ -1255,7 +1523,7 @@
 
         /* لغو فیلترهای بلور مجزای ۱۶ کارت درون استیج (استفاده از بلور یکپارچه پس‌زمینه) */
         .price-grid [class*="neu-card"],
-        .price-grid [class*="neu-hero-gold"] {
+        .price-grid [class*="neu-hero"] {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
@@ -1268,7 +1536,7 @@
     </style>
 </head>
 <body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen" @keydown.window="handleKeydown($event)">
-    <main x-show="!isLoading" :class="[theme.bg, ecoMode ? 'eco-mode' : '']" class="fixed inset-0 w-screen h-screen overflow-hidden transition-colors duration-1000 select-none">
+    <main x-show="!isLoading" :class="[theme.bg, 'theme-' + themeKey, ecoMode ? 'eco-mode' : '']" class="fixed inset-0 w-screen h-screen overflow-hidden transition-colors duration-1000 select-none">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -1346,7 +1614,7 @@
         </template>
 
         {{-- Apple Premium Ambient Floating Orbs Engine (۱۲ گوی نورانی، تفکیک‌شده، متحرک و سبک اپل) --}}
-        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="!ecoMode && themeKey !== 'pure-black'">
+        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="!ecoMode && !isBingTheme && themeKey !== 'pure-black'">
             <div class="ambient-orb orb-1"></div>
             <div class="ambient-orb orb-2"></div>
             <div class="ambient-orb orb-3"></div>
@@ -1594,17 +1862,7 @@
                     <div class="price-grid relative z-10 grid grid-cols-12 gap-3 h-full auto-rows-fr grid-rows-[1.5fr_1fr_1fr]">
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
-                                 item.symbol === 'gold18'
-                                 ? (themeKey === 'bing-daily'
-                                    ? 'neu-hero-gold-obsidian'
-                                    : (themeKey === 'bing-studio'
-                                       ? 'neu-hero-gold-studio'
-                                       : (themeKey === 'bing-ceramic'
-                                          ? 'neu-hero-gold-ceramic'
-                                          : (themeKey === 'imperial-pearl' || isLightTheme
-                                             ? 'neu-hero-gold-pearl'
-                                             : 'neu-hero-gold-imperial'))))
-                                 : theme.card + ' ' + theme.cardHover,
+                                 item.symbol === 'gold18' ? (theme.heroCard || 'neu-hero-gold-imperial') : (theme.card + ' ' + theme.cardHover),
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
                                  class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-[transform,box-shadow,border-color] duration-300 h-full">
@@ -1680,9 +1938,11 @@
                                             ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
                                             : (themeKey === 'imperial-pearl'
                                                 ? (item.change_percent > 0 ? 'neu-pill-convex-light-up' : (item.change_percent < 0 ? 'neu-pill-convex-light-down' : 'neu-pill-convex-light-flat'))
-                                                : (themeKey === 'bing-daily'
-                                                    ? (item.change_percent > 0 ? 'bg-emerald-500/25 text-emerald-950 border-emerald-400/50 shadow-xs' : (item.change_percent < 0 ? 'bg-rose-500/25 text-rose-950 border-rose-400/50 shadow-xs' : 'bg-white/30 text-slate-800 border-white/40 shadow-xs'))
-                                                    : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10')))),
+                                                : (isBingTheme
+                                                    ? (item.change_percent > 0 ? 'bg-emerald-500/25 text-emerald-300 border-emerald-400/50 shadow-xs' : (item.change_percent < 0 ? 'bg-rose-500/25 text-rose-300 border-rose-400/50 shadow-xs' : 'bg-white/20 text-white/90 border-white/30 shadow-xs'))
+                                                    : (isLightTheme
+                                                        ? (item.change_percent > 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : (item.change_percent < 0 ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-100 text-slate-700 border-slate-200'))
+                                                        : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10'))))),
                                     ]" dir="ltr">
                                         <span x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
                                         <span class="opacity-30">|</span>
@@ -1805,10 +2065,11 @@
     <script>
         const THEMES = {
             'dark-glass': { 
-                bg: 'bg-[radial-gradient(ellipse_at_top_right,#111827_0%,#0f172a_40%,#020617_100%)]', 
+                bg: 'theme-bg-dark-glass', 
                 headerBg: 'neu-card-dark-glass', 
                 card: 'neu-card-dark-glass', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-imperial',
                 accent: 'text-amber-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1824,6 +2085,7 @@
                 headerBg: 'neu-card-light-modern', 
                 card: 'neu-card-light-modern', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-pearl',
                 accent: 'text-amber-700', 
                 textPrimary: 'text-slate-900', 
                 textSecondary: 'text-slate-800/80', 
@@ -1835,10 +2097,11 @@
                 orbColors: [] 
             },
             'bing-daily': { 
-                bg: 'bg-slate-950', 
+                bg: 'theme-bg-bing', 
                 headerBg: 'neu-card-bing-obsidian', 
                 card: 'neu-card-bing-obsidian', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-obsidian',
                 accent: 'text-amber-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1850,10 +2113,11 @@
                 orbColors: [] 
             },
             'bing-studio': { 
-                bg: 'bg-slate-950', 
+                bg: 'theme-bg-bing', 
                 headerBg: 'neu-card-bing-studio', 
                 card: 'neu-card-bing-studio', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-studio',
                 accent: 'text-indigo-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1865,10 +2129,11 @@
                 orbColors: [] 
             },
             'bing-ceramic': { 
-                bg: 'bg-slate-950', 
+                bg: 'theme-bg-bing', 
                 headerBg: 'neu-card-bing-ceramic', 
                 card: 'neu-card-bing-ceramic', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-ceramic',
                 accent: 'text-amber-700', 
                 textPrimary: 'text-slate-900', 
                 textSecondary: 'text-slate-800/85', 
@@ -1884,6 +2149,7 @@
                 headerBg: 'neu-card-imperial-onyx', 
                 card: 'neu-card-imperial-onyx', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-imperial',
                 accent: 'text-amber-400', 
                 textPrimary: 'text-amber-100', 
                 textSecondary: 'text-amber-200/85', 
@@ -1904,6 +2170,7 @@
                 headerBg: 'neu-card-imperial-pearl', 
                 card: 'neu-card-imperial-pearl', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-pearl',
                 accent: 'text-amber-600', 
                 textPrimary: 'text-slate-900', 
                 textSecondary: 'text-slate-700', 
@@ -1920,10 +2187,11 @@
                 ] 
             },
             'gold-royal': { 
-                bg: 'bg-[radial-gradient(ellipse_at_top,#2b1502_0%,#140800_50%,#050200_100%)]', 
+                bg: 'theme-bg-gold-royal', 
                 headerBg: 'neu-card-gold-royal', 
                 card: 'neu-card-gold-royal', 
                 cardHover: '', 
+                heroCard: 'neu-hero-gold-imperial',
                 accent: 'text-amber-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1935,10 +2203,11 @@
                 orbColors: ['bg-amber-500/15 blur-[100px]', 'bg-orange-600/15 blur-[120px]', 'bg-yellow-500/10 blur-[80px]'] 
             },
             'blue-ocean': { 
-                bg: 'bg-[radial-gradient(ellipse_at_top,#0a192f_0%,#020c1b_60%,#00030a_100%)]', 
+                bg: 'theme-bg-blue-ocean', 
                 headerBg: 'neu-card-blue-ocean', 
                 card: 'neu-card-blue-ocean', 
                 cardHover: '', 
+                heroCard: 'neu-hero-blue-ocean',
                 accent: 'text-cyan-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1950,10 +2219,11 @@
                 orbColors: ['bg-cyan-500/15 blur-[100px]', 'bg-blue-600/15 blur-[120px]', 'bg-indigo-600/10 blur-[80px]'] 
             },
             'purple-haze': { 
-                bg: 'bg-[radial-gradient(ellipse_at_top,#1e0b36_0%,#0f051d_50%,#04010a_100%)]', 
+                bg: 'theme-bg-purple-haze', 
                 headerBg: 'neu-card-purple-haze', 
                 card: 'neu-card-purple-haze', 
                 cardHover: '', 
+                heroCard: 'neu-hero-purple-haze',
                 accent: 'text-fuchsia-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1965,10 +2235,11 @@
                 orbColors: ['bg-fuchsia-600/15 blur-[100px]', 'bg-violet-600/15 blur-[120px]', 'bg-purple-800/10 blur-[80px]'] 
             },
             'emerald-night': { 
-                bg: 'bg-[radial-gradient(ellipse_at_top,#022c22_0%,#011c15_50%,#000504_100%)]', 
+                bg: 'theme-bg-emerald-night', 
                 headerBg: 'neu-card-emerald-night', 
                 card: 'neu-card-emerald-night', 
                 cardHover: '', 
+                heroCard: 'neu-hero-emerald-night',
                 accent: 'text-emerald-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1980,10 +2251,11 @@
                 orbColors: ['bg-emerald-500/15 blur-[100px]', 'bg-teal-600/15 blur-[120px]', 'bg-green-600/10 blur-[80px]'] 
             },
             'rose-dark': { 
-                bg: 'bg-[radial-gradient(ellipse_at_top,#3f0212_0%,#1c0007_50%,#050002_100%)]', 
+                bg: 'theme-bg-rose-dark', 
                 headerBg: 'neu-card-rose-dark', 
                 card: 'neu-card-rose-dark', 
                 cardHover: '', 
+                heroCard: 'neu-hero-rose-dark',
                 accent: 'text-rose-400', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
@@ -1995,10 +2267,11 @@
                 orbColors: ['bg-rose-500/15 blur-[100px]', 'bg-pink-600/15 blur-[120px]', 'bg-red-600/10 blur-[80px]'] 
             },
             'pure-black': { 
-                bg: 'bg-black', 
+                bg: 'theme-bg-pure-black', 
                 headerBg: 'neu-card-pure-black', 
                 card: 'neu-card-pure-black', 
                 cardHover: '', 
+                heroCard: 'neu-hero-pure-black',
                 accent: 'text-zinc-300', 
                 textPrimary: 'text-white', 
                 textSecondary: 'text-white/75', 
