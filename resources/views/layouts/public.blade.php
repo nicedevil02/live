@@ -218,10 +218,28 @@
         .dark .dark\:bg-slate-950\/95 {
             background-color: rgb(2 6 23 / 0.95);
         }
+        /* کلاس‌های ترنزیشن فیزیک اپل مورفینگ گلس برای جمع‌شدن ردیف دوم در اسکرول به پایین */
+        .header-row2-hidden {
+            margin-top: -4rem !important; /* -64px برای موبایل */
+            opacity: 0 !important;
+            transform: translateY(-8px) scaleY(0.96) !important;
+            pointer-events: none !important;
+        }
+        @media (min-width: 640px) {
+            .header-row2-hidden {
+                margin-top: -5rem !important; /* -80px برای تبلت و دسکتاپ */
+            }
+        }
+        .header-row2-visible {
+            margin-top: 0 !important;
+            opacity: 1 !important;
+            transform: translateY(0) scaleY(1) !important;
+            pointer-events: auto !important;
+        }
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()">
+<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()" @scroll.window.passive="onScroll()">
 
     {{-- پرش به محتوای اصلی (Skip Link) --}}
     <a href="#main-content"
@@ -229,12 +247,12 @@
         پرش به محتوای اصلی
     </a>
 
-    {{-- نوار ناوبری شیشه‌ای بالایی مدرن دو ردیفه (Sticky Modern 2-Row Header) --}}
+    {{-- نوار ناوبری شیشه‌ای بالایی مدرن دو ردیفه با فیزیک اپل مورفینگ گلس (Apple Morphing Glass 2-Row Header) --}}
     <header class="sticky top-0 z-50 w-full box-border transition-all duration-300 shadow-sm dark:shadow-none">
         
         {{-- ردیف ۱: نوار ترکیبی بالای هدر (نرخ زنده + ابزارهای کاربردی) --}}
         @unless($isTv ?? false)
-        <div class="h-9 border-b border-slate-200/70 dark:border-slate-800/70 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md overflow-hidden text-xs select-none">
+        <div class="relative z-20 h-9 border-b border-slate-200/70 dark:border-white/10 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-xl overflow-hidden text-xs select-none transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-2 sm:gap-4">
                 
                 {{-- سمت راست / مرکز: نوار نرخ زنده لحظه‌ای بازار --}}
@@ -242,34 +260,36 @@
                     @include('partials.rate-ticker')
                 </div>
 
-                {{-- سمت چپ: ابزارهای کاربردی (تلفن، دانلود اپ، ورود، تم) --}}
+                {{-- سمت چپ: ابزارهای کاربردی (تلفن، دانلود اپ، اتصال دستگاه، تم) --}}
                 <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 text-slate-600 dark:text-slate-300">
                     
-                    {{-- شماره تماس پشتیبانی --}}
+                    {{-- شماره تماس پشتیبانی با جداسازی قطعی LTR برای جلوگیری از وارونگی ارقام --}}
                     <a href="tel:09187009064"
-                       aria-label="تماس تلفنی با پشتیبانی"
-                       class="hidden xl:inline-flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800/70 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-bold text-[11px]"
+                       aria-label="تماس تلفنی با پشتیبانی طلالایو"
+                       dir="ltr"
+                       class="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800/70 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-bold text-[11px]"
                        title="تماس تلفنی با پشتیبانی: ۰۹۱۸۷۰۰۹۰۶۴">
                         <svg aria-hidden="true" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>
-                        <span class="hidden 2xl:inline dir-ltr font-mono text-[11px]">0918 700 9064</span>
+                        <bdi dir="ltr" class="font-mono text-[11px] tabular-nums tracking-wide">0918 700 9064</bdi>
                     </a>
 
                     {{-- دانلود اپ تلویزیون --}}
                     <a href="{{ route('public.app') }}" 
-                       class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold transition-all whitespace-nowrap">
+                       class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/60 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-all whitespace-nowrap">
                         <svg aria-hidden="true" class="w-3 h-3 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
                         <span>دانلود اپ تلویزیون</span>
                     </a>
 
-                    {{-- ورود طلافروشان --}}
-                    <a href="{{ route('admin.login') }}"
-                       class="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800/70 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 font-bold text-[11px] transition-colors whitespace-nowrap">
-                        <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                        <span>ورود طلافروشان</span>
+                    {{-- اتصال دستگاه (جابجا شده از ردیف ۲ به ردیف ۱ طبق درخواست کاربر) --}}
+                    <a href="{{ route('display.tv') }}"
+                       class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] font-bold transition-all whitespace-nowrap"
+                       title="اتصال تلویزیون مغازه به سامانه طلالایو">
+                        <span class="text-xs" aria-hidden="true">📺</span>
+                        <span>اتصال دستگاه</span>
                     </a>
 
                     {{-- دکمه تغییر تم تاریک / روشن --}}
@@ -291,8 +311,10 @@
         </div>
         @endunless
 
-        {{-- ردیف ۲: نوار اصلی برندینگ و ناوبری (Main Navigation Bar) --}}
-        <div class="h-16 sm:h-20 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80">
+        {{-- ردیف ۲: نوار اصلی برندینگ و ناوبری (Main Navigation Bar - قابلیت محوشدن هوشمند در اسکرول به پایین و بازگشت سریع) --}}
+        <div class="relative z-10 h-16 sm:h-20 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden will-change-transform header-row2-visible"
+             :class="isScrolledDown ? 'header-row2-hidden' : 'header-row2-visible'"
+             @focusin="isScrolledDown = false">
             <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-3 xl:gap-6">
                 
                 {{-- لوگو و نام برند --}}
@@ -312,8 +334,8 @@
                     </div>
                 </a>
 
-                {{-- نوار ناوبری کپسولی مدرن و مگامنو (Desktop Navigation) --}}
-                <nav aria-label="ناوبری اصلی" class="hidden xl:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-600 dark:text-slate-300">
+                {{-- نوار ناوبری کپسولی مدرن و مگامنو (Desktop Navigation - Apple Liquid Glass Capsule) --}}
+                <nav aria-label="ناوبری اصلی" class="hidden xl:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 backdrop-blur-md text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm">
                     <a href="/" class="px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->is('/') ? ' aria-current="page"' : '' !!}>
                         صفحه اصلی
                     </a>
@@ -327,14 +349,15 @@
 
                 {{-- دکمه‌های اقدام اصلی (Conversion CTAs) --}}
                 <div class="flex items-center gap-2 shrink-0">
-                    {{-- دکمه اتصال دستگاه --}}
-                    <a href="{{ route('display.tv') }}" class="hidden lg:inline-flex items-center gap-1.5 px-3 h-11 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-white/90 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap">
-                        <span class="text-sm" aria-hidden="true">📺</span>
-                        <span>اتصال دستگاه</span>
+                    {{-- دکمه ورود طلافروشان (جابجا شده از ردیف ۱ به ردیف ۲ طبق درخواست کاربر) --}}
+                    <a href="{{ route('admin.login') }}"
+                       class="hidden sm:inline-flex items-center gap-1.5 px-3.5 h-10 sm:h-11 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 font-bold text-xs transition-all shadow-sm whitespace-nowrap">
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                        <span>ورود طلافروشان</span>
                     </a>
 
                     {{-- دکمه ثبت‌نام گالری طلا --}}
-                    <a href="{{ route('admin.register') }}" class="inline-flex items-center justify-center gap-1 px-3.5 sm:px-4 h-11 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition-all shadow-md shadow-amber-500/20 hover:scale-[1.02] cursor-pointer whitespace-nowrap shrink-0">
+                    <a href="{{ route('admin.register') }}" class="inline-flex items-center justify-center gap-1 px-3.5 sm:px-4 h-10 sm:h-11 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black transition-all shadow-md shadow-amber-500/20 hover:scale-[1.02] cursor-pointer whitespace-nowrap shrink-0">
                         <span>ثبت‌نام<span class="hidden sm:inline"> گالری طلا</span></span>
                     </a>
 
@@ -344,7 +367,7 @@
                             aria-label="منوی اصلی"
                             aria-controls="mobile-menu"
                             :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
-                            class="xl:hidden w-11 h-11 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer shrink-0">
+                            class="xl:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center border border-slate-200 dark:border-white/10 bg-slate-100/90 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer shrink-0">
                         <svg aria-hidden="true" x-show="!mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                         <svg aria-hidden="true" x-show="mobileMenuOpen" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
@@ -533,7 +556,7 @@
                 تمامی حقوق مادی و معنوی برای سامانه ابری تابلوی طلافروشی طلالایو (TalaLive.ir) محفوظ است &copy; {{ \App\Models\User::jalaliYear() }}.
             </div>
             <div class="flex items-center gap-4 text-slate-400">
-                <span>پشتیبانی فنی: <a href="tel:09187009064" class="hover:text-amber-400 font-mono" dir="ltr">0918 700 9064</a></span>
+                <span>پشتیبانی فنی: <a href="tel:09187009064" class="hover:text-amber-400 font-mono tracking-wide" dir="ltr"><bdi dir="ltr">0918 700 9064</bdi></a></span>
             </div>
         </div>
     </footer>
@@ -545,6 +568,50 @@
             return {
                 mobileMenuOpen: false,
                 openDropdown: null,
+                isScrolledDown: false,
+                lastScrollY: 0,
+                scrollThreshold: 8,
+                topThreshold: 45,
+
+                init() {
+                    this.lastScrollY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+                    window.addEventListener('scroll', () => this.onScroll(), { passive: true });
+                },
+
+                onScroll() {
+                    const currentY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+
+                    // اگر منوی موبایل باز است، هدر پنهان نشود
+                    if (this.mobileMenuOpen) {
+                        this.isScrolledDown = false;
+                        this.lastScrollY = currentY;
+                        return;
+                    }
+
+                    // در بالای صفحه همواره ردیف دوم نمایش داده شود
+                    if (currentY <= this.topThreshold) {
+                        this.isScrolledDown = false;
+                        this.lastScrollY = currentY;
+                        return;
+                    }
+
+                    const delta = currentY - this.lastScrollY;
+
+                    // فیلتر کردن لرزش‌های زیر حد آستانه
+                    if (Math.abs(delta) < this.scrollThreshold) {
+                        return;
+                    }
+
+                    if (delta > 0 && currentY > 70) {
+                        // اسکرول به پایین: جمع شدن ردیف دوم هدر
+                        this.isScrolledDown = true;
+                    } else if (delta < 0) {
+                        // اسکرول به بالا: بازگشت سریع (Quick-Return) ردیف دوم هدر
+                        this.isScrolledDown = false;
+                    }
+
+                    this.lastScrollY = currentY;
+                },
 
                 isOpen(name) {
                     return this.openDropdown === name;
@@ -564,6 +631,7 @@
                 },
                 openMobileMenu() {
                     this.mobileMenuOpen = true;
+                    this.isScrolledDown = false;
                     document.body.classList.add('menu-open');
                 },
                 closeMobileMenu() {
