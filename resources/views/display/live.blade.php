@@ -157,55 +157,23 @@
             backface-visibility: hidden;
         }
 
-        /* انیمیشن تنفس نوری کادر طلای ۱۸ عیار در تم روشن */
-        @keyframes gold-card-pulse-light {
-            0%, 100% {
-                border-color: rgba(217, 119, 6, 0.55);
-                box-shadow: 
-                    inset 0 2px 2px 0 rgba(255, 255, 255, 1),
-                    inset 0 -1.5px 2px 0 rgba(217, 119, 6, 0.18),
-                    -4px -4px 14px rgba(255, 255, 255, 0.95),
-                    0 8px 24px -2px rgba(245, 158, 11, 0.16),
-                    0 0 16px rgba(251, 191, 36, 0.15);
-            }
-            50% {
-                border-color: rgba(217, 119, 6, 0.95);
-                box-shadow: 
-                    inset 0 2.5px 2px 0 rgba(255, 255, 255, 1),
-                    inset 0 -1.5px 2px 0 rgba(217, 119, 6, 0.28),
-                    -4px -4px 14px rgba(255, 255, 255, 0.95),
-                    0 12px 30px -2px rgba(245, 158, 11, 0.32),
-                    0 0 28px rgba(251, 191, 36, 0.35);
-            }
+        /* انیمیشن تنفس نوری کادر طلای ۱۸ عیار با شتاب‌دهنده سخت‌افزاری 3D Compositor (بدون فشار به پردازنده) */
+        @keyframes gold-glow-pulse {
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 0.95; }
         }
 
-        /* انیمیشن تنفس نوری کادر طلای ۱۸ عیار در تم تیره */
-        @keyframes gold-card-pulse-dark {
-            0%, 100% {
-                border-color: rgba(251, 191, 36, 0.70);
-                box-shadow: 
-                    inset 0 2px 2px 0 rgba(255, 255, 255, 0.50),
-                    inset 0 -1.5px 2px 0 rgba(180, 83, 9, 0.40),
-                    0 10px 28px -4px rgba(217, 119, 6, 0.45),
-                    0 0 22px rgba(251, 191, 36, 0.25);
-            }
-            50% {
-                border-color: rgba(254, 240, 138, 0.98);
-                box-shadow: 
-                    inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.75),
-                    inset 0 -2px 3px 0 rgba(180, 83, 9, 0.55),
-                    0 16px 38px -4px rgba(217, 119, 6, 0.70),
-                    0 0 40px rgba(251, 191, 36, 0.50);
-            }
-        }
-
-        /* چشمک ملایم ستاره درخشان طلایی هدر */
+        /* چشمک ملایم ستاره درخشان طلایی هدر (100% GPU Compositor با text-shadow استاتیک) */
         @keyframes sparkle-twinkle {
             0%, 100% { opacity: 0.35; transform: scale(0.85) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.2) rotate(45deg); filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.9)); }
+            50% { opacity: 1; transform: scale(1.2) rotate(45deg); }
         }
         .animate-sparkle {
+            display: inline-block;
             animation: sparkle-twinkle 3s ease-in-out infinite;
+            text-shadow: 0 0 6px rgba(251, 191, 36, 0.85);
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         .animate-fadeInUp { animation: fadeInUp 0.6s ease-out; }
@@ -285,15 +253,17 @@
         .glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.45), 0 0 20px rgba(16, 185, 129, 0.2); }
         .glow-rose { text-shadow: 0 0 10px rgba(244, 63, 94, 0.45), 0 0 20px rgba(244, 63, 94, 0.2); }
 
-        /* Ambient QR Laser Sweep */
+        /* Ambient QR Laser Sweep (100% GPU Composited with translate3d) */
         @keyframes laser-sweep {
-            0% { transform: translateY(-100%); opacity: 0; }
+            0% { transform: translate3d(0, -100%, 0); opacity: 0; }
             15% { opacity: 0.85; }
             85% { opacity: 0.85; }
-            100% { transform: translateY(220%); opacity: 0; }
+            100% { transform: translate3d(0, 220%, 0); opacity: 0; }
         }
         .animate-laser-sweep {
             animation: laser-sweep 3.5s ease-in-out infinite;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         /* Neumorphic + Apple HIG Soft Physics Engine (8 Luxury Themes) */
@@ -311,11 +281,12 @@
 
         .neu-card-light-modern {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.72) 0%, rgba(248, 250, 252, 0.50) 100%) !important;
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 0 rgba(255, 255, 255, 0.4), -5px -5px 14px rgba(255, 255, 255, 0.9), 5px 8px 20px rgba(148, 163, 184, 0.22) !important;
             border: 1px solid rgba(255, 255, 255, 0.88) !important;
             transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-light-modern:hover {
             transform: translateY(-2px) scale(1.008) translateZ(0);
@@ -335,8 +306,8 @@
 
         .neu-card-imperial-onyx {
             background: linear-gradient(145deg, rgba(22, 28, 42, 0.52) 0%, rgba(10, 14, 23, 0.68) 100%) !important;
-            backdrop-filter: blur(28px) saturate(190%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1px solid rgba(251, 191, 36, 0.38) !important;
             box-shadow: 
                 inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.22),
@@ -344,6 +315,7 @@
                 0 16px 40px -8px rgba(0, 0, 0, 0.88),
                 0 0 20px -2px rgba(245, 158, 11, 0.10) !important;
             transform: scale(1) translateZ(0);
+            backface-visibility: hidden;
             transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-card-imperial-onyx:hover {
@@ -356,13 +328,31 @@
         }
 
         .neu-hero-gold-imperial {
+            position: relative;
             background: linear-gradient(145deg, rgba(69, 26, 3, 0.88) 0%, rgba(30, 11, 2, 0.94) 50%, rgba(15, 5, 1, 0.98) 100%) !important;
-            backdrop-filter: blur(28px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.75) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.70) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 0.40),
+                inset 0 -1.5px 2px 0 rgba(180, 83, 9, 0.35),
+                0 10px 28px -4px rgba(217, 119, 6, 0.45),
+                0 0 16px rgba(251, 191, 36, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
-            animation: gold-card-pulse-dark 4s ease-in-out infinite;
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-imperial::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(254, 240, 138, 0.95);
+            box-shadow: 0 0 28px rgba(251, 191, 36, 0.45), inset 0 0 14px rgba(251, 191, 36, 0.25);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
         }
         .neu-hero-gold-imperial:hover {
             transform: translateY(-3px) translateZ(0) !important;
@@ -383,8 +373,8 @@
 
         .neu-card-imperial-pearl {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.72) 100%) !important;
-            backdrop-filter: blur(28px) saturate(160%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+            backdrop-filter: blur(12px) saturate(135%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(135%) !important;
             border: 1.5px solid rgba(217, 119, 6, 0.35) !important;
             box-shadow: 
                 inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
@@ -393,6 +383,7 @@
                 8px 16px 32px rgba(148, 163, 184, 0.22),
                 0 0 16px rgba(245, 158, 11, 0.08) !important;
             transform: scale(1) translateZ(0);
+            backface-visibility: hidden;
             transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-card-imperial-pearl:hover {
@@ -406,13 +397,32 @@
         }
 
         .neu-hero-gold-pearl {
+            position: relative;
             background: linear-gradient(145deg, rgba(255, 253, 245, 0.97) 0%, rgba(254, 243, 199, 0.72) 50%, rgba(253, 230, 138, 0.50) 100%) !important;
-            backdrop-filter: blur(28px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(217, 119, 6, 0.65) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                inset 0 -1.5px 2px 0 rgba(217, 119, 6, 0.18),
+                -4px -4px 14px rgba(255, 255, 255, 0.95),
+                0 8px 24px -2px rgba(245, 158, 11, 0.20),
+                0 0 16px rgba(251, 191, 36, 0.15) !important;
             transform: translate3d(0, 0, 0) !important;
-            animation: gold-card-pulse-light 4s ease-in-out infinite;
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-pearl::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(217, 119, 6, 0.90);
+            box-shadow: 0 0 24px rgba(251, 191, 36, 0.35), inset 0 0 12px rgba(251, 191, 36, 0.20);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
         }
         .neu-hero-gold-pearl:hover {
             transform: translateY(-3px) translateZ(0) !important;
@@ -489,8 +499,8 @@
         /* 1. Apple Vision Pro / Dark Obsidian Glass (پیشنهاد اول - شیشه دودی ابسیدین با لبه طلایی ۲۴ عیار و اسکیل) */
         .neu-card-bing-obsidian {
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.70) 0%, rgba(2, 6, 23, 0.86) 100%) !important;
-            backdrop-filter: blur(28px) saturate(170%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1px solid rgba(251, 191, 36, 0.30) !important;
             box-shadow: 
                 inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.18),
@@ -498,6 +508,7 @@
                 0 14px 36px -4px rgba(0, 0, 0, 0.75),
                 0 4px 14px 0 rgba(0, 0, 0, 0.35) !important;
             transform: scale(1) translateZ(0);
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-card-bing-obsidian:hover {
@@ -510,13 +521,30 @@
         }
 
         .neu-hero-gold-obsidian {
+            position: relative;
             background: linear-gradient(145deg, rgba(50, 18, 1, 0.88) 0%, rgba(20, 8, 0, 0.95) 100%) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.75) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.70) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 0.40),
+                0 10px 28px -4px rgba(217, 119, 6, 0.45),
+                0 0 16px rgba(251, 191, 36, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
-            animation: gold-card-pulse-dark 4s ease-in-out infinite;
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-obsidian::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(254, 240, 138, 0.95);
+            box-shadow: 0 0 28px rgba(251, 191, 36, 0.45), inset 0 0 14px rgba(251, 191, 36, 0.25);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
         }
         .neu-hero-gold-obsidian:hover {
             transform: translateY(-3px) translateZ(0) !important;
@@ -526,13 +554,14 @@
         /* 2. Apple Studio Unified Canvas (پیشنهاد دوم - استیج شیشه‌ای مات و یکدست) */
         .neu-card-bing-studio {
             background: linear-gradient(135deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.82) 100%) !important;
-            backdrop-filter: blur(22px) !important;
-            -webkit-backdrop-filter: blur(22px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             border: 1px solid rgba(255, 255, 255, 0.18) !important;
             box-shadow: 
                 inset 0 1px 1px 0 rgba(255, 255, 255, 0.16),
                 0 10px 28px -4px rgba(0, 0, 0, 0.55) !important;
             transform: scale(1) translateZ(0);
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-card-bing-studio:hover {
@@ -544,13 +573,30 @@
         }
 
         .neu-hero-gold-studio {
+            position: relative;
             background: linear-gradient(145deg, rgba(69, 26, 3, 0.80) 0%, rgba(20, 8, 0, 0.94) 100%) !important;
-            backdrop-filter: blur(22px) !important;
-            -webkit-backdrop-filter: blur(22px) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.75) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1.5px solid rgba(251, 191, 36, 0.70) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 0.35),
+                0 10px 28px -4px rgba(217, 119, 6, 0.40),
+                0 0 16px rgba(251, 191, 36, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
-            animation: gold-card-pulse-dark 4s ease-in-out infinite;
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-studio::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(254, 240, 138, 0.95);
+            box-shadow: 0 0 28px rgba(251, 191, 36, 0.45), inset 0 0 14px rgba(251, 191, 36, 0.25);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
         }
         .neu-hero-gold-studio:hover {
             transform: translateY(-3px) translateZ(0) !important;
@@ -560,8 +606,8 @@
         /* 3. Apple Ceramic Porcelain (پیشنهاد سوم - سرامیک پرسلین سفید با وقار و کنتراست شفاف) */
         .neu-card-bing-ceramic {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.90) 0%, rgba(248, 250, 252, 0.84) 100%) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             border: 1px solid rgba(255, 255, 255, 0.95) !important;
             box-shadow: 
                 inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
@@ -570,6 +616,7 @@
                 0 14px 34px -4px rgba(15, 23, 42, 0.18),
                 0 4px 10px 0 rgba(0, 0, 0, 0.06) !important;
             transform: scale(1) translateZ(0);
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
         }
         .neu-card-bing-ceramic:hover {
@@ -583,13 +630,31 @@
         }
 
         .neu-hero-gold-ceramic {
+            position: relative;
             background: linear-gradient(145deg, rgba(255, 253, 245, 0.97) 0%, rgba(254, 243, 199, 0.72) 50%, rgba(253, 230, 138, 0.50) 100%) !important;
-            backdrop-filter: blur(24px) !important;
-            -webkit-backdrop-filter: blur(24px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             border: 1.5px solid rgba(217, 119, 6, 0.65) !important;
+            box-shadow: 
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+                -4px -4px 14px rgba(255, 255, 255, 0.95),
+                0 8px 24px -2px rgba(245, 158, 11, 0.20),
+                0 0 16px rgba(251, 191, 36, 0.15) !important;
             transform: translate3d(0, 0, 0) !important;
-            animation: gold-card-pulse-light 4s ease-in-out infinite;
+            backface-visibility: hidden;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .neu-hero-gold-ceramic::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            border: 1.5px solid rgba(217, 119, 6, 0.90);
+            box-shadow: 0 0 24px rgba(251, 191, 36, 0.35), inset 0 0 12px rgba(251, 191, 36, 0.20);
+            animation: gold-glow-pulse 4s ease-in-out infinite;
+            will-change: opacity;
+            z-index: 2;
         }
         .neu-hero-gold-ceramic:hover {
             transform: translateY(-3px) translateZ(0) !important;
@@ -598,91 +663,105 @@
 
         .neu-card-dark-glass {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.48), rgba(15, 23, 42, 0.65)) !important;
-            backdrop-filter: blur(28px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), -4px -4px 14px rgba(255, 255, 255, 0.04), 8px 12px 28px rgba(0, 0, 0, 0.65) !important;
             border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-dark-glass:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22), -5px -5px 18px rgba(255, 255, 255, 0.07), 10px 16px 34px rgba(0, 0, 0, 0.75) !important;
             border-color: rgba(99, 102, 241, 0.4) !important;
         }
 
         .neu-card-gold-royal {
             background: linear-gradient(145deg, rgba(69, 26, 3, 0.55), rgba(20, 8, 0, 0.8)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.22), -4px -4px 14px rgba(245, 158, 11, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(245, 158, 11, 0.22) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-gold-royal:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.3), -6px -6px 20px rgba(245, 158, 11, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
             border-color: rgba(245, 158, 11, 0.45) !important;
         }
 
         .neu-card-blue-ocean {
             background: linear-gradient(145deg, rgba(10, 25, 47, 0.55), rgba(2, 12, 27, 0.82)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(34, 211, 238, 0.18), -4px -4px 14px rgba(6, 182, 212, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(6, 182, 212, 0.2) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-blue-ocean:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(34, 211, 238, 0.26), -6px -6px 20px rgba(6, 182, 212, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
             border-color: rgba(6, 182, 212, 0.45) !important;
         }
 
         .neu-card-purple-haze {
             background: linear-gradient(145deg, rgba(30, 11, 54, 0.55), rgba(15, 5, 29, 0.82)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(232, 121, 249, 0.18), -4px -4px 14px rgba(217, 70, 239, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(217, 70, 239, 0.2) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-purple-haze:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(232, 121, 249, 0.26), -6px -6px 20px rgba(217, 70, 239, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
             border-color: rgba(217, 70, 239, 0.45) !important;
         }
 
         .neu-card-emerald-night {
             background: linear-gradient(145deg, rgba(2, 44, 34, 0.55), rgba(1, 28, 21, 0.82)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.18), -4px -4px 14px rgba(16, 185, 129, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(16, 185, 129, 0.2) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-emerald-night:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.26), -6px -6px 20px rgba(16, 185, 129, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
             border-color: rgba(16, 185, 129, 0.45) !important;
         }
 
         .neu-card-rose-dark {
             background: linear-gradient(145deg, rgba(63, 2, 18, 0.55), rgba(28, 0, 7, 0.82)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(251, 113, 133, 0.18), -4px -4px 14px rgba(244, 63, 94, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(244, 63, 94, 0.2) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-rose-dark:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(251, 113, 133, 0.26), -6px -6px 20px rgba(244, 63, 94, 0.14), 10px 16px 34px rgba(0, 0, 0, 0.85) !important;
             border-color: rgba(244, 63, 94, 0.45) !important;
         }
 
         .neu-card-pure-black {
             background: linear-gradient(145deg, rgba(24, 24, 27, 0.75), rgba(9, 9, 11, 0.92)) !important;
-            backdrop-filter: blur(28px) !important;
-            -webkit-backdrop-filter: blur(28px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), -3px -3px 10px rgba(255, 255, 255, 0.03), 6px 8px 24px rgba(0, 0, 0, 0.95) !important;
             border: 1px solid rgba(255, 255, 255, 0.11) !important;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         .neu-card-pure-black:hover {
-            transform: translateY(-2px) scale(1.008);
+            transform: translateY(-2px) scale(1.008) translateZ(0);
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), -4px -4px 14px rgba(255, 255, 255, 0.06), 8px 12px 28px rgba(0, 0, 0, 1) !important;
             border-color: rgba(255, 255, 255, 0.25) !important;
         }
@@ -690,10 +769,12 @@
         /* Frosted Glass Champagne Showcase */
         .champagne-showcase {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.22) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(180, 83, 9, 0.25) 100%);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(251, 191, 36, 0.38);
             box-shadow: 0 16px 40px -10px rgba(217, 119, 6, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         /* =========================================================================
@@ -712,6 +793,7 @@
             pointer-events: none;
             z-index: 1;
             contain: strict;
+            transform: translateZ(0);
         }
 
         .ambient-orb {
@@ -721,6 +803,8 @@
             will-change: transform;
             backface-visibility: hidden;
             transform: translate3d(0, 0, 0);
+            filter: none !important;
+            -webkit-filter: none !important;
         }
 
         /* ۱. گوی فیروزه‌ای و یاقوت کبود اپل (Apple Electric Cyan & Sapphire) - شمال غربی / بالا چپ */
@@ -729,9 +813,7 @@
             left: 3%;
             width: clamp(270px, 28vw, 380px);
             height: clamp(270px, 28vw, 380px);
-            background: radial-gradient(circle at 45% 45%, #06b6d4 0%, #0284c7 42%, rgba(2, 132, 199, 0.28) 68%, transparent 78%) !important;
-            filter: blur(20px) !important;
-            -webkit-filter: blur(20px) !important;
+            background: radial-gradient(circle at 48% 48%, rgba(6, 182, 212, 0.85) 0%, rgba(2, 132, 199, 0.60) 28%, rgba(2, 132, 199, 0.25) 55%, rgba(2, 132, 199, 0.05) 72%, transparent 84%) !important;
             opacity: 0.88;
             animation: orb-drift-tl 9s ease-in-out infinite;
         }
@@ -742,9 +824,7 @@
             right: 3%;
             width: clamp(260px, 27vw, 370px);
             height: clamp(260px, 27vw, 370px);
-            background: radial-gradient(circle at 50% 50%, #f43f5e 0%, #c026d3 42%, rgba(192, 38, 211, 0.28) 68%, transparent 78%) !important;
-            filter: blur(20px) !important;
-            -webkit-filter: blur(20px) !important;
+            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.85) 0%, rgba(192, 38, 211, 0.60) 28%, rgba(192, 38, 211, 0.25) 55%, rgba(192, 38, 211, 0.05) 72%, transparent 84%) !important;
             opacity: 0.88;
             animation: orb-drift-br 11s ease-in-out infinite;
         }
@@ -755,9 +835,7 @@
             right: 4%;
             width: clamp(250px, 25vw, 350px);
             height: clamp(250px, 25vw, 350px);
-            background: radial-gradient(circle at 45% 45%, #fde047 0%, #f59e0b 40%, rgba(217, 119, 6, 0.30) 68%, transparent 78%) !important;
-            filter: blur(18px) !important;
-            -webkit-filter: blur(18px) !important;
+            background: radial-gradient(circle at 48% 48%, rgba(253, 224, 71, 0.90) 0%, rgba(245, 158, 11, 0.65) 28%, rgba(217, 119, 6, 0.26) 55%, rgba(217, 119, 6, 0.05) 72%, transparent 84%) !important;
             opacity: 0.88;
             animation: orb-drift-tr 8s ease-in-out infinite;
         }
@@ -768,9 +846,7 @@
             left: 4%;
             width: clamp(255px, 26vw, 360px);
             height: clamp(255px, 26vw, 360px);
-            background: radial-gradient(circle at 50% 50%, #34d399 0%, #059669 42%, rgba(5, 150, 105, 0.28) 68%, transparent 78%) !important;
-            filter: blur(20px) !important;
-            -webkit-filter: blur(20px) !important;
+            background: radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.85) 0%, rgba(5, 150, 105, 0.60) 28%, rgba(5, 150, 105, 0.25) 55%, rgba(5, 150, 105, 0.05) 72%, transparent 84%) !important;
             opacity: 0.88;
             animation: orb-drift-bl 10s ease-in-out infinite;
         }
@@ -780,24 +856,25 @@
         .theme-light-modern .orb-1,
         .theme-bing-ceramic .orb-1 {
             opacity: 0.58 !important;
-            background: radial-gradient(circle at 45% 45%, rgba(14, 165, 233, 0.65) 0%, rgba(56, 189, 248, 0.35) 45%, rgba(186, 230, 253, 0.15) 65%, transparent 78%) !important;
+            background: radial-gradient(circle at 48% 48%, rgba(14, 165, 233, 0.65) 0%, rgba(56, 189, 248, 0.38) 30%, rgba(186, 230, 253, 0.16) 55%, rgba(186, 230, 253, 0.04) 72%, transparent 84%) !important;
         }
         .theme-imperial-pearl .orb-2,
         .theme-light-modern .orb-2,
         .theme-bing-ceramic .orb-2 {
             opacity: 0.58 !important;
-            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.55) 0%, rgba(217, 70, 239, 0.32) 45%, rgba(251, 207, 232, 0.15) 65%, transparent 78%) !important;
+            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.55) 0%, rgba(217, 70, 239, 0.32) 30%, rgba(251, 207, 232, 0.16) 55%, rgba(251, 207, 232, 0.04) 72%, transparent 84%) !important;
         }
         .theme-imperial-pearl .orb-3,
         .theme-light-modern .orb-3,
         .theme-bing-ceramic .orb-3 {
             opacity: 0.62 !important;
-            background: radial-gradient(circle at 45% 45%, rgba(245, 158, 11, 0.65) 0%, rgba(251, 191, 36, 0.35) 45%, rgba(254, 243, 199, 0.15) 65%, transparent 78%) !important;
+            background: radial-gradient(circle at 48% 48%, rgba(245, 158, 11, 0.65) 0%, rgba(251, 191, 36, 0.38) 30%, rgba(254, 243, 199, 0.16) 55%, rgba(254, 243, 199, 0.04) 72%, transparent 84%) !important;
         }
         .theme-imperial-pearl .orb-4,
         .theme-light-modern .orb-4,
         .theme-bing-ceramic .orb-4 {
             opacity: 0.58 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.60) 0%, rgba(52, 211, 153, 0.35) 30%, rgba(167, 243, 208, 0.16) 55%, rgba(167, 243, 208, 0.04) 72%, transparent 84%) !important;
         }
 
         /* =========================================================================
@@ -825,7 +902,8 @@
         /* مخفی‌سازی کامل افکت‌های حرکتی و نوری تزیینی (اسلایدر فعال می‌ماند) */
         .eco-mode .animate-gold-beam,
         .eco-mode .ambient-orb-container,
-        .eco-mode .animate-laser-sweep {
+        .eco-mode .animate-laser-sweep,
+        .eco-mode [class*="neu-hero"]::after {
             display: none !important;
         }
 
@@ -1169,7 +1247,7 @@
                                     <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem] z-0">
                                         {{-- Silky Liquid Gold Light Beam (پرتو متحرک آینه‌ای لوکس) --}}
                                         <div class="absolute -inset-y-12 -left-1/2 w-[55%] animate-gold-beam pointer-events-none"
-                                             style="background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.0) 35%, rgba(254,240,138,0.50) 48%, rgba(255,255,255,0.80) 52%, rgba(254,240,138,0.50) 56%, rgba(255,255,255,0.0) 70%, transparent 85%); filter: blur(2px);"></div>
+                                             style="background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.0) 35%, rgba(254,240,138,0.50) 48%, rgba(255,255,255,0.80) 52%, rgba(254,240,138,0.50) 56%, rgba(255,255,255,0.0) 70%, transparent 85%);"></div>
                                     </div>
                                 </template>
 
