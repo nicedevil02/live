@@ -22,8 +22,10 @@
 
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     @vite('resources/css/app.css')
+    <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
 
     <style>
+        [x-cloak] { display: none !important; }
         body { font-family: Vazirmatn, ui-sans-serif, system-ui, sans-serif; }
         /* جلوگیری از پس‌زمینه زرد رنگ خودکار مرورگر کروم برای فیلدهای اتوفیل */
         input:-webkit-autofill,
@@ -153,29 +155,138 @@
                            placeholder="مثال: گالری طلای کیمیا" value="{{ old('name') }}" autocomplete="off">
                 </div>
 
-                {{-- شهر گالری طلافروشی --}}
-                <div class="space-y-1.5">
-                    <label for="citySelect" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
-                        ۴. شهر گالری یا طلافروشی شما
-                    </label>
+                {{-- شهر گالری طلافروشی با قابلیت جستجوی زنده و دسته‌بندی استانی --}}
+                @php
+                    $rawCities = \App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig();
+                    $provincesData = [];
+                    foreach ($rawCities as $s => $c) {
+                        $prov = $c['province'] ?? 'ایران';
+                        if (!isset($provincesData[$prov])) {
+                            $provincesData[$prov] = [];
+                        }
+                        $provincesData[$prov][] = [
+                            'slug' => $s,
+                            'name' => $c['name'],
+                            'is_capital' => !empty($c['is_capital']),
+                        ];
+                    }
+                @endphp
+
+                <div class="space-y-1.5" x-data="cityPicker('{{ old('city', 'tehran') }}', @js($provincesData))">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                            ۴. شهر گالری یا طلافروشی شما
+                        </label>
+                        <span class="text-[11px] font-normal text-slate-400">جستجو و انتخاب از ۳۱ استان</span>
+                    </div>
+
+                    {{-- فیلد مخفی جهت ارسال صحیح فرم به سرور --}}
+                    <input type="hidden" name="city" id="cityInput" :value="selected">
+
+                    {{-- Dropdown Trigger Button --}}
                     <div class="relative w-full">
-                        <select name="city" id="citySelect" required
-                                class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all cursor-pointer">
-                            <option value="" disabled {{ old('city') ? '' : 'selected' }}>شهر خود را انتخاب کنید...</option>
-                            @php
-                                $groupedCities = collect(\App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig())->groupBy('province');
-                            @endphp
-                            @foreach($groupedCities as $province => $cities)
-                                <optgroup label="استان {{ $province }}">
-                                    @foreach($cities as $slug => $c)
-                                        <option value="{{ $slug }}" {{ old('city', 'tehran') === $slug ? 'selected' : '' }}>
-                                            {{ $c['name'] }}
-                                        </option>
-                                    @endforeach
-                                </optgroup>
-                            @endforeach
-                            <option value="other" {{ old('city') === 'other' ? 'selected' : '' }}>سایر شهرهای ایران</option>
-                        </select>
+                        <button type="button" @click="toggleDropdown()" 
+                                class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all flex items-center justify-between gap-2 cursor-pointer shadow-xs hover:border-slate-400 dark:hover:border-slate-600">
+                            <div class="flex items-center gap-2.5 truncate">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+                                <span class="text-slate-900 dark:text-white font-bold" x-text="selectedLabel"></span>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium" x-text="selectedProvinceNameOnly"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-300" :class="open ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                        </button>
+
+                        {{-- Dropdown Popover --}}
+                        <div x-show="open" 
+                             x-cloak
+                             @click.outside="open = false"
+                             @keydown.escape.window="open = false"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-2 scale-98"
+                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave-end="opacity-0 translate-y-2 scale-98"
+                             class="absolute right-0 left-0 top-full mt-2 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
+                            
+                            {{-- Search Input (Sticky at top) --}}
+                            <div class="p-3 bg-slate-50/90 dark:bg-slate-950/80 border-b border-slate-100 dark:border-slate-800 sticky top-0 z-20">
+                                <div class="relative">
+                                    <input type="text" 
+                                           x-ref="searchInput"
+                                           x-model="search" 
+                                           placeholder="🔍 جستجوی شهر یا استان (مثال: ملایر، کاشان، تبریز)..." 
+                                           class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pr-9 pl-8 py-2.5 text-xs sm:text-sm font-bold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition-all">
+                                    <svg class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    <button type="button" x-show="search" @click="clearSearch()" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                                <div class="flex items-center justify-between mt-2 px-1 text-[11px] text-slate-400">
+                                    <span x-show="!search">برای مشاهده شهرها، روی نام استان کلیک کنید</span>
+                                    <span x-show="search" x-text="totalMatchesCount + ' شهر مطابق با جستجو پیدا شد'"></span>
+                                    <span class="font-mono text-[10px]" x-text="Object.keys(provinces).length + ' استان'"></span>
+                                </div>
+                            </div>
+
+                            {{-- Accordion List of Provinces and Cities --}}
+                            <div class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60 custom-scrollbar">
+                                
+                                <template x-for="prov in filteredProvinces" :key="prov.name">
+                                    <div class="group/prov">
+                                        {{-- Province Header (Click to toggle expansion) --}}
+                                        <button type="button" 
+                                                @click="toggleProvince(prov.name)"
+                                                class="w-full px-4 py-2.5 flex items-center justify-between text-right bg-slate-50/70 hover:bg-slate-100/90 dark:bg-slate-800/30 dark:hover:bg-slate-800/70 transition-colors select-none">
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-3.5 h-3.5 text-amber-500 transition-transform duration-200" :class="isProvinceExpanded(prov) ? 'rotate-90' : 'rotate-0'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                                                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200" x-text="'استان ' + prov.name"></span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300" x-text="prov.matchCount + ' شهر'"></span>
+                                            </div>
+                                        </button>
+
+                                        {{-- Cities in this Province --}}
+                                        <div x-show="isProvinceExpanded(prov)" 
+                                             class="bg-white dark:bg-slate-900/60 py-1 grid grid-cols-1 sm:grid-cols-2 gap-0.5 border-t border-slate-100/50 dark:border-slate-800/40">
+                                            <template x-for="c in prov.cities" :key="c.slug">
+                                                <button type="button" 
+                                                        @click="selectCity(c.slug)"
+                                                        :class="selected === c.slug 
+                                                            ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 font-black border-r-4 border-amber-500' 
+                                                            : 'text-slate-700 dark:text-slate-300 hover:bg-amber-500/10 hover:text-amber-600 dark:hover:text-amber-400 font-medium'"
+                                                        class="px-5 py-2 text-right text-xs sm:text-sm flex items-center justify-between transition-colors">
+                                                    <span x-text="c.name"></span>
+                                                    <template x-if="c.is_capital">
+                                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">مرکز استان</span>
+                                                    </template>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                {{-- Empty state if no cities match --}}
+                                <div x-show="filteredProvinces.length === 0" class="p-6 text-center text-slate-400 space-y-2">
+                                    <p class="text-sm font-bold">هیچ شهری مطابق با «<span class="text-amber-500" x-text="search"></span>» پیدا نشد.</p>
+                                    <p class="text-xs">می‌توانید گزینه «سایر شهرهای ایران» را انتخاب فرمایید.</p>
+                                </div>
+
+                                {{-- Option for Other Cities --}}
+                                <div class="p-2 bg-slate-50 dark:bg-slate-950/50">
+                                    <button type="button" 
+                                            @click="selectCity('other')"
+                                            :class="selected === 'other' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 font-black border-r-4 border-amber-500' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold'"
+                                            class="w-full px-4 py-2 rounded-xl text-right text-xs sm:text-sm flex items-center justify-between transition-colors">
+                                        <span>سایر شهرهای ایران (ثبت عمومی)</span>
+                                        <span class="text-[10px] text-slate-400">سراسر کشور</span>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <p class="text-[11px] text-slate-400">جهت تنظیم تابلوی نرخ و ثبت در صفحه طلافروشی‌های شهر شما در گوگل (سئوی محلی)</p>
                 </div>
@@ -239,6 +350,150 @@
 
     {{-- اسکریپت جاوااسکریپت بومی و ۱۰۰٪ مستقل (بدون وابستگی به CDN خارجی) --}}
     <script>
+        function cityPicker(initialSlug, provincesData) {
+            return {
+                open: false,
+                search: '',
+                selected: initialSlug || 'tehran',
+                provinces: provincesData || {},
+                expandedProvinces: {},
+
+                init() {
+                    this.autoExpandSelectedProvince();
+                    this.$watch('selected', () => {
+                        this.autoExpandSelectedProvince();
+                    });
+                },
+
+                autoExpandSelectedProvince() {
+                    for (const [prov, cities] of Object.entries(this.provinces)) {
+                        if (cities.some(c => c.slug === this.selected)) {
+                            this.expandedProvinces[prov] = true;
+                            break;
+                        }
+                    }
+                },
+
+                normalize(str) {
+                    if (!str) return '';
+                    return String(str)
+                        .replace(/[\u064B-\u065F\u0670]/g, '')
+                        .replace(/[يى]/g, 'ی')
+                        .replace(/[ك]/g, 'ک')
+                        .replace(/[آأإ]/g, 'ا')
+                        .replace(/[\u200c\u200b]/g, '')
+                        .replace(/\s+/g, ' ')
+                        .trim()
+                        .toLowerCase();
+                },
+
+                get selectedLabel() {
+                    if (this.selected === 'other') return 'سایر شهرهای ایران';
+                    for (const [prov, cities] of Object.entries(this.provinces)) {
+                        const match = cities.find(c => c.slug === this.selected);
+                        if (match) {
+                            if (match.name === prov || match.is_capital) {
+                                return `${match.name} (مرکز استان)`;
+                            }
+                            return `${match.name} (استان ${prov})`;
+                        }
+                    }
+                    return 'شهر خود را انتخاب کنید...';
+                },
+
+                get selectedCityNameOnly() {
+                    if (this.selected === 'other') return 'سایر شهرها';
+                    for (const [prov, cities] of Object.entries(this.provinces)) {
+                        const match = cities.find(c => c.slug === this.selected);
+                        if (match) return match.name;
+                    }
+                    return 'انتخاب شهر';
+                },
+
+                get selectedProvinceNameOnly() {
+                    if (this.selected === 'other') return 'ایران';
+                    for (const [prov, cities] of Object.entries(this.provinces)) {
+                        const match = cities.find(c => c.slug === this.selected);
+                        if (match) return prov;
+                    }
+                    return '';
+                },
+
+                get filteredProvinces() {
+                    const q = this.normalize(this.search);
+                    if (!q) {
+                        return Object.entries(this.provinces).map(([name, cities]) => ({
+                            name,
+                            cities,
+                            matchCount: cities.length,
+                            isExpanded: !!this.expandedProvinces[name]
+                        }));
+                    }
+
+                    const results = [];
+                    for (const [name, cities] of Object.entries(this.provinces)) {
+                        const normProv = this.normalize(name);
+                        const provMatches = normProv.includes(q);
+
+                        let matchedCities = cities;
+                        if (!provMatches) {
+                            matchedCities = cities.filter(c => this.normalize(c.name).includes(q) || this.normalize(c.slug).includes(q));
+                        }
+
+                        if (matchedCities.length > 0) {
+                            results.push({
+                                name,
+                                cities: matchedCities,
+                                matchCount: matchedCities.length,
+                                isExpanded: true
+                            });
+                        }
+                    }
+                    return results;
+                },
+
+                get totalMatchesCount() {
+                    return this.filteredProvinces.reduce((acc, p) => acc + p.cities.length, 0);
+                },
+
+                toggleProvince(provName) {
+                    this.expandedProvinces[provName] = !this.expandedProvinces[provName];
+                },
+
+                isProvinceExpanded(prov) {
+                    if (this.search.trim()) return true;
+                    return !!this.expandedProvinces[prov.name];
+                },
+
+                selectCity(slug) {
+                    this.selected = slug;
+                    this.open = false;
+                    this.search = '';
+                    this.autoExpandSelectedProvince();
+                    this.$dispatch('city-selected', { slug });
+                },
+
+                toggleDropdown() {
+                    this.open = !this.open;
+                    if (this.open) {
+                        this.search = '';
+                        this.autoExpandSelectedProvince();
+                        this.$nextTick(() => {
+                            const el = this.$refs.searchInput;
+                            if (el) el.focus();
+                        });
+                    }
+                },
+
+                clearSearch() {
+                    this.search = '';
+                    if (this.$refs.searchInput) {
+                        this.$refs.searchInput.focus();
+                    }
+                }
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.getElementById('shopNameInput');
             const phoneInput = document.getElementById('phoneInput');
