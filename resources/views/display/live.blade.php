@@ -140,7 +140,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            contain: layout size;
         }
         #tv-stage-canvas {
             position: absolute;
@@ -150,8 +149,6 @@
             height: 1080px;
             transform-origin: center center;
             will-change: transform;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
             transform: translate(-50%, -50%) scale(1);
         }
     </style>
@@ -2413,7 +2410,7 @@
                     // برای خرید طلای ۱۸، اگر طلای ۱۸ عیار کهنه باشد
                     if (/خرید.*(18|۱۸)/.test(item.label || '')) {
                         const g18 = this.orderedMetrics.find(m => m.symbol === 'gold18');
-                        if (g18 && (g18.is_stale || this.isItemStale(g18))) return true;
+                        if (g18 && g18.is_stale) return true;
                     }
                     return Boolean(item.is_stale);
                 },
@@ -2591,18 +2588,21 @@
                 applyStageScale() {
                     const canvas = document.getElementById('tv-stage-canvas');
                     if (!canvas) return;
-                    const vw = window.innerWidth || document.documentElement.clientWidth || 1920;
-                    const vh = window.innerHeight || document.documentElement.clientHeight || 1080;
+                    const vw = (window.innerWidth && window.innerWidth > 0) ? window.innerWidth : (document.documentElement.clientWidth || 1920);
+                    const vh = (window.innerHeight && window.innerHeight > 0) ? window.innerHeight : (document.documentElement.clientHeight || 1080);
                     
                     // کسر حاشیه امن سخت‌افزاری تلویزیون جهت جلوگیری از اووراسکن لبه‌ها
-                    const overscan = Math.max(0, Math.min(0.08, this.overscanMargin || 0));
+                    const rawOverscan = Number(this.overscanMargin);
+                    const overscan = Math.max(0, Math.min(0.08, (!isNaN(rawOverscan) ? rawOverscan : 0)));
                     const availW = Math.max(320, vw * (1 - overscan * 2));
                     const availH = Math.max(240, vh * (1 - overscan * 2));
                     
                     const scaleX = availW / 1920;
                     const scaleY = availH / 1080;
                     const baseScale = Math.min(scaleX, scaleY);
-                    const finalScale = Math.max(0.2, baseScale * (this.zoomLevel || 1.0));
+                    const rawZoom = Number(this.zoomLevel);
+                    const validZoom = (!isNaN(rawZoom) && rawZoom > 0.1) ? rawZoom : 1.0;
+                    const finalScale = (!isNaN(baseScale) && baseScale > 0.05) ? Math.max(0.2, baseScale * validZoom) : 1.0;
                     
                     canvas.style.transform = `translate(-50%, -50%) scale(${finalScale})`;
                 },
