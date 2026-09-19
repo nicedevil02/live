@@ -157,7 +157,21 @@
     </style>
     <style>
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.05); } 20% { opacity: 1; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.03) translate3d(0,0,0); } 100% { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
+        @keyframes ken-burns {
+            0% { transform: scale(1) translate3d(0, 0, 0); }
+            50% { transform: scale(1.04) translate3d(-0.8%, -0.8%, 0); }
+            100% { transform: scale(1) translate3d(0, 0, 0); }
+        }
+        .animate-ken-burns {
+            animation: ken-burns 22s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+        @keyframes story-progress-anim {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
         @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-5%, 5%); } }
         @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(5%, -5%); } }
         @keyframes float3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-3%, -3%); } }
@@ -1387,53 +1401,98 @@
 
             {{-- Main Content --}}
             <div class="flex flex-1 flex-row gap-3 min-h-0">
-                {{-- Product Slider --}}
-                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
+                {{-- Product Slider (Apple-Grade VisionOS Showcase Slider) --}}
+                <section :class="[
+                    theme.card, 
+                    isLightTheme ? 'border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.12)]' : 'border-white/15 shadow-[0_25px_60px_rgba(0,0,0,0.45)]'
+                ]" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border ring-1 ring-white/10 shrink-0 transition-transform duration-500 hover:scale-[1.01]">
+                    
+                    {{-- ۱. نوار پیشرفت استوری تایمر اسلایدها (Apple Story Progress Timeline) --}}
+                    <div class="absolute top-0 inset-x-0 z-30 flex items-center gap-1.5 px-6 pt-5 pointer-events-none select-none" x-show="products.length > 1">
+                        <template x-for="(prod, i) in products" :key="i">
+                            <div class="h-1.5 flex-1 rounded-full overflow-hidden bg-white/20 backdrop-blur-md shadow-xs relative">
+                                <div class="h-full rounded-full transition-all"
+                                     :class="{
+                                         'bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]': i <= activeIndex,
+                                         'w-full': i < activeIndex,
+                                         'w-0': i > activeIndex
+                                     }"
+                                     :style="i === activeIndex ? ('animation: story-progress-anim ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;') : ''"></div>
+                            </div>
+                        </template>
+                    </div>
+
+                    {{-- ۲. نشان ویژه و لاکچری (Apple Dynamic Island Glow Badge) --}}
+                    <template x-if="activeProduct && Boolean(activeProduct.is_special)">
+                        <div class="absolute top-10 left-6 z-20 select-none pointer-events-none animate-fadeInUp">
+                            <div class="relative flex items-center gap-2 rounded-full border border-rose-400/40 bg-slate-950/75 px-4 py-2 backdrop-blur-2xl shadow-[0_10px_28px_rgba(244,63,94,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)] ring-1 ring-inset ring-rose-400/25">
+                                <span class="relative flex h-3 w-3 items-center justify-center">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.9)]"></span>
+                                </span>
+                                <span class="text-xs xl:text-sm font-black tracking-wide text-rose-100 drop-shadow-sm flex items-center gap-1">
+                                    <span>پیشنهاد ویژه ویترین</span>
+                                    <span class="text-amber-300 text-xs animate-sparkle">✦</span>
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+
+                    {{-- ۳. بدنه تصویر و ترنزیشن سینمایی Ken Burns --}}
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
-                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-[20s] ease-linear group-hover:scale-105">
-                            <!-- نشان پیشنهاد ویژه -->
-                            <div x-show="Boolean(activeProduct.is_special)" class="absolute top-5 left-5 z-20 select-none pointer-events-none">
-                                <div class="relative flex items-center gap-3 rounded-full border border-red-200/35 bg-gradient-to-br from-red-500/20 via-rose-500/14 to-white/10 px-4 py-3 backdrop-blur-xl shadow-[0_18px_40px_rgba(0,0,0,0.28),0_0_28px_rgba(239,68,68,0.18)] ring-1 ring-inset ring-white/10">
-                                    <span class="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-500 via-rose-500 to-red-700 shadow-[0_0_18px_rgba(239,68,68,0.45)] ring-1 ring-white/20 animate-[pulse_1.8s_ease-in-out_infinite]">
-                                        <span class="h-2.5 w-2.5 rounded-full bg-white/90 animate-ping"></span>
-                                    </span>
-                                    <div class="flex flex-col pl-3 pr-2">
-                                        <span class="text-xl font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
-                                            پیشنهاد ویژه
-                                        </span>
+                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" 
+                                 :alt="activeProduct.title" 
+                                 class="absolute inset-0 w-full h-full object-cover opacity-100 animate-ken-burns">
+
+                            {{-- گرادینت ملایم زیرنویس برای کنتراست عمیق --}}
+                            <div class="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none"></div>
+
+                            {{-- ۴. جزیره شیشه‌ای شناور ویترین (VisionOS Spatial Floating Glass Island) --}}
+                            <div class="absolute bottom-5 right-5 left-5 z-20">
+                                <div :class="isLightTheme 
+                                        ? 'bg-white/85 border-white/90 text-slate-900 shadow-[0_24px_50px_rgba(0,0,0,0.18),inset_0_1px_2px_rgba(255,255,255,1)]' 
+                                        : 'bg-slate-950/70 border-white/20 text-white shadow-[0_24px_60px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.25)]'"
+                                     class="rounded-[2.25rem] border px-5 py-4 backdrop-blur-3xl transition-all duration-300">
+                                    
+                                    {{-- عنوان محصول --}}
+                                    <div class="flex items-center justify-between gap-3 mb-3">
+                                        <p class="break-words text-3xl xl:text-4xl font-black leading-tight tracking-tight drop-shadow-md truncate" 
+                                           :class="isLightTheme ? 'text-slate-950' : 'text-white'" 
+                                           x-text="activeProduct.title"></p>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
-                            <div class="absolute bottom-4 right-4 left-4">
-                                <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/24 px-4 py-3 shadow-[0_16px_40px_rgba(0,0,0,0.30)] backdrop-blur-2xl">
-                                    <div class="flex flex-row items-end justify-between gap-3">
-                                        <div class="min-w-0">
-                                            <p class="break-words text-4xl font-black leading-tight text-white drop-shadow-md" x-text="activeProduct.title"></p>
-                                            <div class="mt-2 flex items-center gap-2">
-                                                <template x-if="settings.show_weight">
-                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3.5 py-1.5 text-sm font-bold text-white/90 backdrop-blur-xl">
-                                                        وزن: <span x-text="activeProduct.weight_gram"></span> گرم
-                                                    </span>
-                                                </template>
-                                                <template x-if="settings.show_profit">
-                                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/8 px-3.5 py-1.5 text-sm font-bold text-white/90 backdrop-blur-xl">
-                                                        سود: <span x-text="activeProductProfitPercent"></span>%
-                                                    </span>
-                                                </template>
-                                            </div>
+
+                                    {{-- ردیف متریک‌ها و قیمت ویترین --}}
+                                    <div class="flex items-center justify-between gap-3 pt-2 border-t" :class="isLightTheme ? 'border-black/5' : 'border-white/10'">
+                                        {{-- بج‌های متادیتا به سبک Apple Fitness / Metric Pills --}}
+                                        <div class="flex flex-wrap items-center gap-2 min-w-0">
+                                            <template x-if="settings.show_weight">
+                                                <div :class="isLightTheme ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-white/10 border-white/15 text-white/90'"
+                                                     class="inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs xl:text-sm font-black backdrop-blur-md shadow-xs">
+                                                    <svg class="w-3.5 h-3.5 text-amber-500 shrink-0 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18m-9-9h18M6 8l-3 4h6l-3-4zm12 0l-3 4h6l-3-4z"/></svg>
+                                                    <span>وزن: <span class="tabular-nums" x-text="activeProduct.weight_gram"></span> گرم</span>
+                                                </div>
+                                            </template>
+                                            <template x-if="settings.show_profit">
+                                                <div :class="isLightTheme ? 'bg-amber-500/15 border-amber-500/30 text-amber-950' : 'bg-amber-400/15 border-amber-400/30 text-amber-200'"
+                                                     class="inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs xl:text-sm font-black backdrop-blur-md shadow-xs">
+                                                    <svg class="w-3.5 h-3.5 text-amber-500 shrink-0 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                                                    <span>سود: <span class="tabular-nums" x-text="activeProductProfitPercent"></span>%</span>
+                                                </div>
+                                            </template>
                                         </div>
-                                        <div class="shrink-0 champagne-showcase rounded-2xl px-5 py-3 text-right">
-                                            <div class="flex items-center justify-between gap-2 mb-1">
-                                                <span class="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300/90 drop-shadow-sm">مبلغ نهایی ویترین</span>
+
+                                        {{-- باکس لوکس مبلغ نهایی ویترین --}}
+                                        <div class="shrink-0 champagne-showcase rounded-2xl px-5 py-2.5 text-right flex flex-col justify-center border border-amber-400/40 shadow-[0_12px_32px_rgba(217,119,6,0.35)]">
+                                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-amber-300/90 drop-shadow-sm">مبلغ نهایی ویترین</span>
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
                                             </div>
                                             <template x-if="activeProductFinalPrice > 0">
                                                 <div class="flex items-baseline gap-1.5">
-                                                    <span class="text-3xl xl:text-4xl font-black tabular-nums tracking-tight text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.5)]" x-text="formatNumber(activeProductFinalPrice)"></span>
-                                                    <span class="text-xs font-black text-amber-200/80 whitespace-nowrap">تومان</span>
+                                                    <span class="text-3xl xl:text-4xl font-black tabular-nums tracking-tight text-white drop-shadow-[0_2px_14px_rgba(251,191,36,0.65)]" x-text="formatNumber(activeProductFinalPrice)"></span>
+                                                    <span class="text-xs font-black text-amber-200/85 whitespace-nowrap">تومان</span>
                                                 </div>
                                             </template>
                                             <template x-if="activeProductFinalPrice <= 0">
@@ -1441,20 +1500,17 @@
                                             </template>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                     </template>
+
                     <template x-if="!activeProduct">
                         <div class="flex w-full h-full items-center justify-center text-white/5">
                             <span class="text-[10rem]">💎</span>
                         </div>
                     </template>
-                    <div class="absolute top-6 right-6 flex gap-2" x-show="products.length > 1">
-                        <template x-for="(dot, i) in products" :key="i">
-                            <div class="h-1.5 rounded-full transition-all duration-300" :class="i === activeIndex ? 'w-10 bg-white' : 'w-3 bg-white/30'"></div>
-                        </template>
-                    </div>
                 </section>
 
                 {{-- Price Grid With Unified Glass Stage --}}
