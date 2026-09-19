@@ -41,15 +41,18 @@ object TvPrefs {
             .apply()
     }
 
-    fun saveHeartbeat(ctx: Context, boardUrl: String?, baseUrlsJson: String?, latestVersion: Int, minVersion: Int, apkUrl: String?) {
+    fun saveHeartbeat(ctx: Context, boardUrl: String?, baseUrlsJson: String?, latestVersion: Int, minVersion: Int, apkUrl: String?, serverRenderMode: String? = null) {
         val editor = get(ctx).edit()
         if (!boardUrl.isNullOrBlank()) editor.putString("board_url", boardUrl)
         if (!baseUrlsJson.isNullOrBlank()) editor.putString("base_urls", baseUrlsJson)
         if (latestVersion > 0) editor.putInt("latest_version_code", latestVersion)
         if (minVersion > 0) editor.putInt("min_version_code", minVersion)
         if (!apkUrl.isNullOrBlank()) editor.putString("apk_url", apkUrl)
+        if (!serverRenderMode.isNullOrBlank()) editor.putString("server_render_mode", serverRenderMode)
         editor.apply()
     }
+
+    fun getServerRenderMode(ctx: Context): String? = get(ctx).getString("server_render_mode", null)
 
     fun getOverscanPercent(ctx: Context): Int = get(ctx).getInt("overscan_percent", 0)
 

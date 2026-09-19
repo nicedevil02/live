@@ -9,4 +9,5 @@ return [
         'https://www.talalive.ir',
     ],
     'heartbeat_interval_seconds' => (int) env('TV_HEARTBEAT_INTERVAL', 30),
+    'render_mode'                => env('TV_RENDER_MODE', 'native'), // native | web | auto
 ];

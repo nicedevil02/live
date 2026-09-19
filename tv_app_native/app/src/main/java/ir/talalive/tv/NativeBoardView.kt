@@ -1,5 +1,7 @@
 package ir.talalive.tv
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Color
@@ -7,10 +9,9 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import java.text.SimpleDateFormat
@@ -22,11 +23,22 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
     private val handler = Handler(Looper.getMainLooper())
     private var currentModel: BoardModel? = null
 
-    // UI Elements
+    // Header UI
     private val tvShopName: TextView
+    private val tvPhone: TextView
     private val tvStatusBadge: TextView
     private val tvClock: TextView
+
+    // Body UI
+    private val bodyContainer: LinearLayout
     private val cardsContainer: LinearLayout
+    private val slideshowContainer: LinearLayout
+    private val ivProduct: ImageView
+    private val tvProductTitle: TextView
+    private val tvProductDetails: TextView
+    private val tvSlideCounter: TextView
+
+    // Footer UI
     private val tvFooterUpdate: TextView
     private val tvFooterDomain: TextView
 
@@ -36,6 +48,10 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
     private val itemsPerPage = 8
     private var isOfflineLong = false
 
+    // Slideshow
+    private var currentProductIndex = 0
+    private var currentProducts: List<ProductItem> = emptyList()
+
     private val pageSwapRunnable = object : Runnable {
         override fun run() {
             if (pageCount > 1) {
@@ -43,6 +59,17 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
                 renderRowsPage()
             }
             handler.postDelayed(this, 10_000L)
+        }
+    }
+
+    private val slideSwapRunnable = object : Runnable {
+        override fun run() {
+            if (currentProducts.size > 1) {
+                currentProductIndex = (currentProductIndex + 1) % currentProducts.size
+                renderProductSlide()
+                val interval = (currentModel?.sliderIntervalSec ?: 8).coerceIn(3, 60) * 1000L
+                handler.postDelayed(this, interval)
+            }
         }
     }
 
@@ -58,13 +85,19 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         val padV = Scale.px(context, 0.025f).toInt()
         setPadding(padH, padV, padH, padV)
 
-        // 1. Header (Shop Name + Status Badge + Clock)
+        // 1. Header (Shop Name + Phone + Status Badge + Clock)
         val headerLayout = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-                bottomMargin = Scale.px(context, 0.02f).toInt()
+                bottomMargin = Scale.px(context, 0.018f).toInt()
             }
+            layoutParams = lp
+        }
+
+        val titleContainer = LinearLayout(context).apply {
+            orientation = VERTICAL
+            val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
             layoutParams = lp
         }
 
@@ -72,10 +105,19 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
             text = "طلالایو TV"
             setTextColor(Color.parseColor("#F59E0B")) // Gold
             typeface = Fonts.bold(context)
-            Scale.applyTextSize(this, 0.046f)
-            val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
-            layoutParams = lp
+            Scale.applyTextSize(this, 0.044f)
         }
+
+        tvPhone = TextView(context).apply {
+            text = ""
+            setTextColor(Color.parseColor("#94A3B8"))
+            typeface = Fonts.regular(context)
+            Scale.applyTextSize(this, 0.020f)
+            visibility = View.GONE
+        }
+
+        titleContainer.addView(tvShopName)
+        titleContainer.addView(tvPhone)
 
         tvStatusBadge = TextView(context).apply {
             text = "به‌روز"
@@ -104,19 +146,86 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
             layoutParams = lp
         }
 
-        headerLayout.addView(tvShopName)
+        headerLayout.addView(titleContainer)
         headerLayout.addView(tvStatusBadge)
         headerLayout.addView(tvClock)
         addView(headerLayout)
 
-        // 2. Cards Grid Container (fills the middle space)
-        cardsContainer = LinearLayout(context).apply {
+        // 2. Body Container (Cards Grid + Optional Product Slideshow)
+        bodyContainer = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER
             val lp = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
             layoutParams = lp
         }
-        addView(cardsContainer)
+
+        cardsContainer = LinearLayout(context).apply {
+            orientation = HORIZONTAL
+            gravity = Gravity.CENTER
+            val lp = LayoutParams(0, LayoutParams.MATCH_PARENT, 1.4f)
+            layoutParams = lp
+        }
+        bodyContainer.addView(cardsContainer)
+
+        slideshowContainer = LinearLayout(context).apply {
+            orientation = VERTICAL
+            gravity = Gravity.CENTER
+            background = makeCardDrawable()
+            val pad = Scale.px(context, 0.016f).toInt()
+            setPadding(pad, pad, pad, pad)
+            val lp = LayoutParams(0, LayoutParams.MATCH_PARENT, 0.85f).apply {
+                leftMargin = Scale.px(context, 0.014f).toInt()
+            }
+            layoutParams = lp
+            visibility = View.GONE
+        }
+
+        ivProduct = ImageView(context).apply {
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            val lp = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
+            layoutParams = lp
+        }
+
+        tvProductTitle = TextView(context).apply {
+            setTextColor(Color.parseColor("#F59E0B"))
+            typeface = Fonts.bold(context)
+            Scale.applyTextSize(this, 0.030f)
+            gravity = Gravity.CENTER
+            val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                topMargin = Scale.px(context, 0.010f).toInt()
+            }
+            layoutParams = lp
+        }
+
+        tvProductDetails = TextView(context).apply {
+            setTextColor(Color.parseColor("#E2E8F0"))
+            typeface = Fonts.regular(context)
+            Scale.applyTextSize(this, 0.022f)
+            gravity = Gravity.CENTER
+            val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                topMargin = Scale.px(context, 0.005f).toInt()
+            }
+            layoutParams = lp
+        }
+
+        tvSlideCounter = TextView(context).apply {
+            setTextColor(Color.parseColor("#64748B"))
+            typeface = Fonts.regular(context)
+            Scale.applyTextSize(this, 0.018f)
+            gravity = Gravity.CENTER
+            val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                topMargin = Scale.px(context, 0.005f).toInt()
+            }
+            layoutParams = lp
+        }
+
+        slideshowContainer.addView(ivProduct)
+        slideshowContainer.addView(tvProductTitle)
+        slideshowContainer.addView(tvProductDetails)
+        slideshowContainer.addView(tvSlideCounter)
+        bodyContainer.addView(slideshowContainer)
+
+        addView(bodyContainer)
 
         // 3. Footer (Last Updated + Domain)
         val footerLayout = LinearLayout(context).apply {
@@ -156,16 +265,30 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         super.onAttachedToWindow()
         handler.removeCallbacks(pageSwapRunnable)
         handler.postDelayed(pageSwapRunnable, 10_000L)
+
+        handler.removeCallbacks(slideSwapRunnable)
+        if (currentProducts.size > 1) {
+            val interval = (currentModel?.sliderIntervalSec ?: 8).coerceIn(3, 60) * 1000L
+            handler.postDelayed(slideSwapRunnable, interval)
+        }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacks(pageSwapRunnable)
+        handler.removeCallbacks(slideSwapRunnable)
     }
 
     fun updateData(model: BoardModel) {
         currentModel = model
         tvShopName.text = model.shopName
+
+        if (model.phone.isNotBlank()) {
+            tvPhone.text = PersianText.toPersianDigits("تلفن: ${model.phone}")
+            tvPhone.visibility = View.VISIBLE
+        } else {
+            tvPhone.visibility = View.GONE
+        }
 
         // Update Stale Status
         updateStatusBadge(model)
@@ -177,6 +300,22 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
             "---"
         }
         tvFooterUpdate.text = PersianText.toPersianDigits("آخرین دریافت مظنه: $updateTime")
+
+        // Handle Products Slideshow
+        if (model.products.isNotEmpty()) {
+            currentProducts = model.products
+            slideshowContainer.visibility = View.VISIBLE
+            renderProductSlide()
+            handler.removeCallbacks(slideSwapRunnable)
+            if (currentProducts.size > 1) {
+                val interval = model.sliderIntervalSec.coerceIn(3, 60) * 1000L
+                handler.postDelayed(slideSwapRunnable, interval)
+            }
+        } else {
+            currentProducts = emptyList()
+            slideshowContainer.visibility = View.GONE
+            handler.removeCallbacks(slideSwapRunnable)
+        }
 
         // Calculate pages
         val totalRows = model.rows.size
@@ -193,6 +332,58 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
     fun setOfflineStatus(offlineLong: Boolean) {
         isOfflineLong = offlineLong
         currentModel?.let { updateStatusBadge(it) }
+    }
+
+    private fun renderProductSlide() {
+        if (currentProducts.isEmpty()) {
+            slideshowContainer.visibility = View.GONE
+            return
+        }
+        if (currentProductIndex >= currentProducts.size) currentProductIndex = 0
+        val p = currentProducts[currentProductIndex]
+
+        ObjectAnimator.ofFloat(slideshowContainer, "alpha", 1f, 0.25f).apply {
+            duration = 180
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    tvProductTitle.text = p.title
+
+                    val sb = StringBuilder()
+                    if (!p.weightGram.isNullOrBlank()) {
+                        sb.append("وزن: ").append(PersianText.toPersianDigits(p.weightGram)).append(" گرم")
+                    }
+                    if (!p.finalPrice.isNullOrBlank()) {
+                        if (sb.isNotEmpty()) sb.append("  |  ")
+                        sb.append("مظنه: ").append(PersianText.toPersianDigits(PersianText.groupThousands(p.finalPrice))).append(" تومان")
+                    }
+                    tvProductDetails.text = sb.toString()
+                    tvSlideCounter.text = PersianText.toPersianDigits("${currentProductIndex + 1} از ${currentProducts.size}")
+
+                    val firstUrl = p.imageUrls.firstOrNull() ?: ""
+                    if (firstUrl.isNotBlank()) {
+                        val base = Config.baseUrls(context)[0]
+                        val fullUrl = when {
+                            firstUrl.startsWith("http") -> firstUrl
+                            firstUrl.startsWith("/") -> base + firstUrl
+                            else -> "$base/$firstUrl"
+                        }
+                        ImageCache.loadBitmap(context, fullUrl) { bmp ->
+                            post {
+                                ivProduct.setImageBitmap(bmp)
+                            }
+                        }
+                    } else {
+                        ivProduct.setImageDrawable(null)
+                    }
+
+                    ObjectAnimator.ofFloat(slideshowContainer, "alpha", 0.25f, 1f).apply {
+                        duration = 220
+                        start()
+                    }
+                }
+            })
+            start()
+        }
     }
 
     private fun updateStatusBadge(model: BoardModel) {
@@ -252,7 +443,7 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
 
         val half = (pageRows.size + 1) / 2
         for (i in pageRows.indices) {
-            val rowView = buildRowView(pageRows[i])
+            val rowView = buildCardView(pageRows[i])
             if (i < half) {
                 col1.addView(rowView)
             } else {
@@ -264,34 +455,36 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         cardsContainer.addView(col2)
     }
 
-    private fun buildRowView(item: PriceRow): View {
+    private fun buildCardView(item: PriceRow): View {
         val card = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
+            background = makeCardDrawable()
+
+            val pH = Scale.px(context, 0.024f).toInt()
+            val pV = Scale.px(context, 0.014f).toInt()
+            setPadding(pH, pV, pH, pV)
+
             val lp = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f).apply {
-                bottomMargin = Scale.px(context, 0.008f).toInt()
+                val m = Scale.px(context, 0.008f).toInt()
+                setMargins(0, m, 0, m)
             }
             layoutParams = lp
-
-            val cardPadH = Scale.px(context, 0.018f).toInt()
-            val cardPadV = Scale.px(context, 0.008f).toInt()
-            setPadding(cardPadH, cardPadV, cardPadH, cardPadV)
-            background = makeCardDrawable()
         }
 
-        // 1. Right Column: Title
+        // Title (Right column in RTL)
         val tvTitle = TextView(context).apply {
             text = item.title
             setTextColor(Color.parseColor("#E2E8F0"))
             typeface = Fonts.bold(context)
-            Scale.applyTextSize(this, 0.032f)
+            Scale.applyTextSize(this, 0.028f)
             val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.1f)
             layoutParams = lp
         }
 
-        // 2. Middle Column: Price
+        // Price (Center)
         val tvPrice = TextView(context).apply {
-            text = PersianText.formatPrice(item.price)
+            text = PersianText.toPersianDigits(PersianText.groupThousands(item.price))
             setTextColor(Color.parseColor("#F59E0B")) // Gold
             typeface = Fonts.bold(context)
             Scale.applyTextSize(this, 0.038f)
@@ -300,23 +493,26 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
             layoutParams = lp
         }
 
-        // 3. Left Column: Direction Arrow + Change Text
+        // Change & Direction (Left column in RTL)
         val changeLayout = LinearLayout(context).apply {
             orientation = HORIZONTAL
-            gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
-            val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.8f)
+            gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
+            val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.9f)
             layoutParams = lp
         }
 
         val tvArrow = TextView(context).apply {
-            val (arrow, color) = when (item.changeDirection) {
-                1 -> Pair("▲", "#22C55E")   // Up (Green)
-                -1 -> Pair("▼", "#EF4444")  // Down (Red)
-                else -> Pair("—", "#64748B") // Flat (Gray)
+            text = when (item.changeDirection) {
+                1 -> "▲"
+                -1 -> "▼"
+                else -> "●"
             }
-            text = arrow
+            val color = when (item.changeDirection) {
+                1 -> "#22C55E" // Green
+                -1 -> "#EF4444" // Red
+                else -> "#64748B" // Slate
+            }
             setTextColor(Color.parseColor(color))
-            typeface = Fonts.bold(context)
             Scale.applyTextSize(this, 0.026f)
             val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                 leftMargin = Scale.px(context, 0.006f).toInt()

@@ -99,14 +99,38 @@ class BoardActivity : Activity() {
 
     private val tickWatchdogRunnable = object : Runnable {
         override fun run() {
-            if (isBoardReady && lastTickTime > 0) {
+            if (currentRenderMode == RenderMode.WEB && isBoardReady && lastTickTime > 0) {
                 val elapsed = System.currentTimeMillis() - lastTickTime
                 if (elapsed > 300_000L) { // 5 دقیقه
                     Log.w(tag, "No price tick in 5 minutes. Recreating webview.")
                     recreateWebView()
                 }
             }
-            handler.postDelayed(this, 60_000L)
+            if (currentRenderMode == RenderMode.WEB) {
+                handler.postDelayed(this, 60_000L)
+            }
+        }
+    }
+
+    private var pixelShiftStep = 0
+    private val pixelShiftOffsets = arrayOf(
+        Pair(0f, 0f),
+        Pair(1f, 1f),
+        Pair(2f, 0f),
+        Pair(1f, 2f),
+        Pair(0f, 1f),
+        Pair(2f, 2f)
+    )
+    private val burnInRunnable = object : Runnable {
+        override fun run() {
+            if (currentRenderMode == RenderMode.NATIVE && nativeBoardView != null && !isDestroyedActivity) {
+                val offset = pixelShiftOffsets[pixelShiftStep % pixelShiftOffsets.size]
+                pixelShiftStep++
+                nativeBoardView?.translationX = offset.first
+                nativeBoardView?.translationY = offset.second
+                Log.d("TalaTV.BurnIn", "pixel shift applied: dx=${offset.first}, dy=${offset.second}")
+            }
+            handler.postDelayed(this, 15 * 60 * 1000L)
         }
     }
 
@@ -150,23 +174,37 @@ class BoardActivity : Activity() {
         buildViews()
 
         val probe = WebViewProbe.probe(this)
-        val shouldForceNative = TvPrefs.isForcedNative(this) || !probe.available || (probe.majorVersion in 1..69)
-        if (shouldForceNative) {
+        val serverMode = TvPrefs.getServerRenderMode(this)?.lowercase() ?: "native"
+        val forcedNative = TvPrefs.isForcedNative(this)
+
+        val chooseNative = when {
+            forcedNative -> true
+            serverMode == "web" -> false
+            serverMode == "auto" -> (!probe.available || probe.majorVersion in 1..69)
+            else -> true // default or "native"
+        }
+
+        if (chooseNative) {
             val reason = when {
-                TvPrefs.isForcedNative(this) -> "pref_forced_native"
-                !probe.available -> "webview_probe_unavailable"
-                else -> "webview_outdated_v${probe.majorVersion}"
+                forcedNative -> "pref_forced_native"
+                serverMode == "auto" && !probe.available -> "webview_probe_unavailable"
+                serverMode == "auto" && probe.majorVersion in 1..69 -> "webview_outdated_v${probe.majorVersion}"
+                else -> "server_default_native"
             }
-            Log.i(tag, "Startup selecting NATIVE board mode ($reason)")
+            Log.i(tag, "Startup selecting NATIVE board mode ($reason, serverMode=$serverMode)")
             switchToNativeBoard(reason)
         } else {
+            Log.i(tag, "Startup selecting WEB board mode (serverMode=$serverMode)")
             initAndLoadWebView()
         }
 
         setupNetworkMonitoring()
         scheduleDailyReload()
-        handler.postDelayed(tickWatchdogRunnable, 60_000L)
+        if (currentRenderMode == RenderMode.WEB) {
+            handler.postDelayed(tickWatchdogRunnable, 60_000L)
+        }
         handler.post(heartbeatRunnable)
+        handler.postDelayed(burnInRunnable, 15 * 60 * 1000L)
     }
 
     override fun onNewIntent(newIntent: Intent?) {
@@ -916,8 +954,23 @@ class BoardActivity : Activity() {
                                 hb.baseUrlsJson,
                                 hb.latestVersionCode,
                                 hb.minVersionCode,
-                                hb.apkUrl
+                                hb.apkUrl,
+                                hb.renderMode
                             )
+
+                            val serverMode = hb.renderMode?.lowercase()
+                            if (!serverMode.isNullOrBlank() && !TvPrefs.isForcedNative(this)) {
+                                if (serverMode == "web" && currentRenderMode == RenderMode.NATIVE) {
+                                    val probe = WebViewProbe.probe(this)
+                                    if (probe.available && probe.majorVersion >= 70) {
+                                        Log.i(tag, "Server changed render mode to WEB via heartbeat. Switching.")
+                                        switchToWebBoard()
+                                    }
+                                } else if (serverMode == "native" && currentRenderMode == RenderMode.WEB) {
+                                    Log.i(tag, "Server changed render mode to NATIVE via heartbeat. Switching.")
+                                    switchToNativeBoard("server_heartbeat_native")
+                                }
+                            }
 
                             val curVer = UpdateManager.getCurrentVersionCode(this)
                             val latestVer = hb.latestVersionCode

@@ -39,7 +39,8 @@ object Api {
         val latestVersionCode: Int,
         val minVersionCode: Int,
         val apkUrl: String?,
-        val intervalSeconds: Int
+        val intervalSeconds: Int,
+        val renderMode: String? = null
     )
 
     private fun openConnection(urlStr: String, method: String): HttpURLConnection {
@@ -155,6 +156,7 @@ object Api {
                     val minVer = json.optInt("min_version_code", 0)
                     val apkUrl = optNullableString(json, "apk_url")
                     val interval = json.optInt("heartbeat_interval_seconds", 900)
+                    val serverRenderMode = optNullableString(json, "render_mode")
 
                     return HeartbeatResult(
                         revoked = revoked,
@@ -163,7 +165,8 @@ object Api {
                         latestVersionCode = latestVer,
                         minVersionCode = minVer,
                         apkUrl = apkUrl,
-                        intervalSeconds = interval
+                        intervalSeconds = interval,
+                        renderMode = serverRenderMode
                     )
                 }
             } catch (e: Exception) {

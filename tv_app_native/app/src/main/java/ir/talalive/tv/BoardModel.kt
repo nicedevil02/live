@@ -17,6 +17,9 @@ data class PriceRow(
 data class ProductItem(
     val id: String,
     val title: String,
+    val weightGram: String?,
+    val finalPrice: String?,
+    val laborFee: String?,
     val imageUrls: List<String>
 )
 
@@ -154,7 +157,10 @@ data class BoardModel(
                             }
                         }
                         if (imgList.isNotEmpty()) {
-                            products.add(ProductItem(pId, pTitle, imgList))
+                            val pWeight = pObj.optString("weight_gram", "").trim().ifEmpty { null }
+                            val pFinal = cleanNumericValue(pObj.opt("final_price")).let { if (it == "0") null else it }
+                            val pLabor = pObj.optString("labor_fee", "").trim().ifEmpty { null }
+                            products.add(ProductItem(pId, pTitle, pWeight, pFinal, pLabor, imgList))
                         }
                     }
                 }
