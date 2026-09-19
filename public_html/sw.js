@@ -1,5 +1,5 @@
 // bump cache name to force clients to update when deployed
-const CACHE_NAME = 'gold-app-v4';
+const CACHE_NAME = 'gold-app-v5';
 const APP_SHELL = [
   '/',
   '/manifest.json',
