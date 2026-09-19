@@ -1886,14 +1886,30 @@
                                     </div>
                                 </template>
 
-                                {{-- هدر کارت: عنوان نماد و فلش روند اپلی همراه با ستاره ظریف طلایی --}}
-                                <div class="relative flex justify-between items-center gap-3 z-10">
-                                    <div class="flex items-center gap-1.5 min-w-0">
+                                {{-- هدر کارت: عنوان نماد، نشانگر زنده و فلش روند اپلی همراه با ستاره ظریف طلایی --}}
+                                <div class="relative flex justify-between items-center gap-2.5 z-10">
+                                    <div class="flex items-center gap-2 min-w-0">
                                         <template x-if="item.symbol === 'gold18'">
                                             <span class="text-amber-500 animate-sparkle text-sm xl:text-base select-none leading-none">✦</span>
                                         </template>
                                         <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
                                            class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
+
+                                        {{-- نشانگر وضعیت زنده (لحظه‌ای / قدیمی) بعد از عنوان کارت --}}
+                                        <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
+                                            <span class="inline-flex items-center gap-1 text-[10px] xl:text-[11px] rounded-full px-2 py-0.5 font-bold border shadow-sm shrink-0"
+                                                  :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                <span>قدیمی</span>
+                                            </span>
+                                        </template>
+                                        <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
+                                            <span class="inline-flex items-center gap-1.5 text-[10px] xl:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-sm shrink-0"
+                                                  :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
+                                                <span class="inline-block h-1.5 w-1.5 xl:h-2 xl:w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
+                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
+                                            </span>
+                                        </template>
                                     </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
@@ -1934,14 +1950,10 @@
                                                   ? (isLightTheme ? 'text-amber-950 drop-shadow-[0_2px_10px_rgba(217,119,6,0.35)]' : 'text-amber-200 drop-shadow-[0_2px_14px_rgba(251,191,36,0.55)]') 
                                                   : theme.priceGlow
                                           ]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md text-center" x-html="item.displayHtml"></span>
-                                         <span :class="[
-                                             index < 3 ? 'text-xs xl:text-sm mt-0.5' : 'text-[10px] xl:text-[11px] mt-0',
-                                             themeKey === 'imperial-onyx' ? 'text-amber-300/75' : (themeKey === 'imperial-pearl' ? 'text-amber-900/75' : (isLightTheme ? 'text-slate-500' : 'text-white/60'))
-                                         ]" class="font-bold tracking-wider select-none" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
-                                {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
+                                {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و کپسول واحد پول (تومان / دلار) --}}
                                 <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
                                     <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
@@ -1960,22 +1972,16 @@
                                         <span x-text="(item.symbol === 'ounce' || item.symbol === 'bitcoin') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value)"></span>
                                     </div>
 
-                                    {{-- وضعیت زنده با میکرو-پالس اپلی --}}
+                                    {{-- کپسول واحد پول (تومان / دلار) به جای نشانگر لحظه‌ای --}}
                                     <div class="flex items-center">
-                                        <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
-                                                  :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                                <span>قدیمی</span>
-                                            </span>
-                                        </template>
-                                        <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
-                                                  :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
-                                                <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
-                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
-                                            </span>
-                                        </template>
+                                        <span :class="[
+                                            themeKey === 'imperial-onyx' 
+                                                ? 'neu-inset-onyx text-amber-300/90 border-amber-500/30' 
+                                                : (themeKey === 'imperial-pearl' 
+                                                    ? 'neu-inset-pearl text-amber-900/90 border-amber-600/30' 
+                                                    : (isLightTheme ? 'bg-slate-100 text-slate-700 border border-slate-200' : 'bg-white/10 text-white/80 border border-white/15')),
+                                            index < 3 ? 'text-xs xl:text-sm px-2.5 py-0.5' : 'text-[10px] xl:text-[11px] px-2 py-0.5'
+                                        ]" class="font-bold rounded-full select-none shadow-xs tracking-wider" x-text="item.unit"></span>
                                     </div>
                                 </div>
                             </div>
