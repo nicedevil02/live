@@ -111,7 +111,7 @@ class PairingActivity : Activity() {
             text = getString(R.string.app_name)
             setTextColor(Color.parseColor("#F59E0B"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 36f)
-            typeface = Typeface.DEFAULT_BOLD
+            typeface = Fonts.bold(this@PairingActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(8))
         }
@@ -122,6 +122,7 @@ class PairingActivity : Activity() {
             text = getString(R.string.pairing_desc)
             setTextColor(Color.parseColor("#94A3B8"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            typeface = Fonts.regular(this@PairingActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(24))
         }
@@ -166,6 +167,7 @@ class PairingActivity : Activity() {
             text = getString(R.string.pairing_waiting)
             setTextColor(Color.parseColor("#64748B"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            typeface = Fonts.regular(this@PairingActivity)
         }
         statusLayout.addView(progressBar)
         statusLayout.addView(tvStatus)
@@ -176,6 +178,7 @@ class PairingActivity : Activity() {
             text = getString(R.string.pairing_or_scan)
             setTextColor(Color.parseColor("#64748B"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            typeface = Fonts.regular(this@PairingActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(12))
             visibility = View.GONE
@@ -204,6 +207,7 @@ class PairingActivity : Activity() {
             text = "TalaLive TV v$appVer · WebView: $chromeVer"
             setTextColor(Color.parseColor("#475569"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            typeface = Fonts.regular(this@PairingActivity)
             gravity = Gravity.CENTER
             setPadding(0, dp(8), 0, 0)
         }

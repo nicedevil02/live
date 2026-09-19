@@ -19,6 +19,8 @@
     <string name="menu_reload">بارگذاری مجدد تابلو</string>
     <string name="menu_device_info">مشخصات دستگاه</string>
     <string name="menu_disconnect">قطع اتصال این دستگاه</string>
+    <string name="menu_overscan">تنظیم حاشیهٔ تصویر (Overscan)</string>
+    <string name="overscan_dialog_title">تنظیم حاشیهٔ امن تصویر</string>
     <string name="disconnect_confirm_title">تأیید قطع اتصال تابلو</string>
     <string name="disconnect_confirm_desc">با قطع اتصال، این دستگاه از پنل خارج شده و برای اتصال مجدد باید کد جدید بگیرید.</string>
     <string name="btn_disconnect_confirm">قطع اتصال قطعی</string>
@@ -31,4 +33,6 @@
     <string name="update_ready_notice">نسخهٔ جدید آماده است — روی دکمهٔ زیر بزنید و سپس در پنجره سیستم «نصب» را انتخاب کنید.</string>
     <string name="update_btn_install">نصب نسخهٔ جدید</string>
     <string name="update_failed">خطا در دریافت یا اعتبارسنجی فایل به‌روزرسانی</string>
+    <string name="webview_missing_title">موتور نمایش روی این دستگاه در دسترس نیست</string>
+    <string name="webview_missing_desc">بستهٔ «Android System WebView» روی این تلویزیون نصب یا فعال نیست. تابلو به‌زودی در حالت مستقل نمایش داده می‌شود.</string>
 </resources>

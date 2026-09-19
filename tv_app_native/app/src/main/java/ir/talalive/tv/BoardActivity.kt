@@ -68,8 +68,10 @@ class BoardActivity : Activity() {
     private val readyWatchdogRunnable = Runnable {
         if (!isBoardReady) {
             Log.w(tag, "Board ready timeout (25s) elapsed without onBoardReady call")
+            val probe = WebViewProbe.probe(this@BoardActivity)
+            val verStr = probe.versionName ?: if (probe.majorVersion > 0) "${probe.majorVersion}" else "Unknown"
             showDiagnostic(
-                getString(R.string.webview_outdated_title, getChromeVersion()),
+                getString(R.string.webview_outdated_title, verStr),
                 getString(R.string.webview_outdated_desc),
                 getString(R.string.btn_try_anyway)
             ) {
@@ -149,7 +151,7 @@ class BoardActivity : Activity() {
                 }
             } else if (newIntent?.hasExtra("test_min_chrome") == true) {
                 val minChrome = newIntent.getIntExtra("test_min_chrome", 80)
-                val cur = getChromeVersionInt()
+                val cur = WebViewProbe.probe(this).majorVersion
                 if (cur < minChrome) {
                     showDiagnostic(
                         getString(R.string.webview_outdated_title, cur.toString()),
@@ -218,12 +220,20 @@ class BoardActivity : Activity() {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
+        applyOverscan()
 
         buildOfflineOverlay()
         buildDiagnosticOverlay()
         buildUpdateOverlay()
 
         setContentView(rootContainer)
+    }
+
+    private fun applyOverscan() {
+        val pct = TvPrefs.getOverscanPercent(this)
+        val w = resources.displayMetrics.widthPixels * pct / 100
+        val h = resources.displayMetrics.heightPixels * pct / 100
+        rootContainer.setPadding(w, h, w, h)
     }
 
     private fun buildUpdateOverlay() {
@@ -242,7 +252,7 @@ class BoardActivity : Activity() {
             text = getString(R.string.update_mandatory_title)
             setTextColor(Color.parseColor("#EAB308"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
-            typeface = Typeface.DEFAULT_BOLD
+            typeface = Fonts.bold(this@BoardActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(16))
         }
@@ -251,6 +261,7 @@ class BoardActivity : Activity() {
             text = ""
             setTextColor(Color.parseColor("#E2E8F0"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            typeface = Fonts.regular(this@BoardActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(24))
         }
@@ -260,7 +271,7 @@ class BoardActivity : Activity() {
             setBackgroundColor(Color.parseColor("#CA8A04"))
             setTextColor(Color.BLACK)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-            typeface = Typeface.DEFAULT_BOLD
+            typeface = Fonts.bold(this@BoardActivity)
             setPadding(dp(32), dp(12), dp(32), dp(12))
             isFocusable = true
             visibility = View.GONE
@@ -288,7 +299,7 @@ class BoardActivity : Activity() {
             text = getString(R.string.offline_title)
             setTextColor(Color.parseColor("#EF4444"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 32f)
-            typeface = Typeface.DEFAULT_BOLD
+            typeface = Fonts.bold(this@BoardActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(16))
         }
@@ -298,6 +309,7 @@ class BoardActivity : Activity() {
             text = getString(R.string.offline_last_rate, TvPrefs.getLastRateTime(this@BoardActivity))
             setTextColor(Color.parseColor("#FDE68A"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+            typeface = Fonts.regular(this@BoardActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(12))
         }
@@ -307,6 +319,7 @@ class BoardActivity : Activity() {
             text = getString(R.string.offline_retry_countdown, 5)
             setTextColor(Color.parseColor("#94A3B8"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+            typeface = Fonts.regular(this@BoardActivity)
             gravity = Gravity.CENTER
         }
         offlineOverlay.addView(tvOfflineCountdown)
@@ -330,7 +343,7 @@ class BoardActivity : Activity() {
         tvDiagTitle = TextView(this).apply {
             setTextColor(Color.parseColor("#F59E0B"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
-            typeface = Typeface.DEFAULT_BOLD
+            typeface = Fonts.bold(this@BoardActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(16))
         }
@@ -339,6 +352,7 @@ class BoardActivity : Activity() {
         tvDiagDesc = TextView(this).apply {
             setTextColor(Color.parseColor("#E2E8F0"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            typeface = Fonts.regular(this@BoardActivity)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(24))
         }
@@ -348,7 +362,7 @@ class BoardActivity : Activity() {
             setBackgroundColor(Color.parseColor("#F59E0B"))
             setTextColor(Color.parseColor("#020617"))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            typeface = Typeface.DEFAULT_BOLD
+            typeface = Fonts.bold(this@BoardActivity)
             setPadding(dp(32), dp(12), dp(32), dp(12))
             isFocusable = true
         }
@@ -360,46 +374,63 @@ class BoardActivity : Activity() {
     private fun initAndLoadWebView() {
         destroyCurrentWebView()
 
-        val wv = WebView(this).apply {
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-            setBackgroundColor(Color.parseColor("#020617"))
-            isVerticalScrollBarEnabled = false
-            isHorizontalScrollBarEnabled = false
+        try {
+            val wv = WebView(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+                setBackgroundColor(Color.parseColor("#020617"))
+                isVerticalScrollBarEnabled = false
+                isHorizontalScrollBarEnabled = false
 
-            settings.apply {
-                javaScriptEnabled = true
-                domStorageEnabled = true
-                databaseEnabled = true
-                allowFileAccess = true
-                allowContentAccess = true
-                loadsImagesAutomatically = true
-                mediaPlaybackRequiresUserGesture = false
-                cacheMode = WebSettings.LOAD_DEFAULT
-                useWideViewPort = true
-                loadWithOverviewMode = true
-                setSupportZoom(false)
-                builtInZoomControls = false
-                displayZoomControls = false
-                textZoom = 100
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                settings.apply {
+                    javaScriptEnabled = true
+                    domStorageEnabled = true
+                    databaseEnabled = true
+                    allowFileAccess = true
+                    allowContentAccess = true
+                    loadsImagesAutomatically = true
+                    mediaPlaybackRequiresUserGesture = false
+                    cacheMode = WebSettings.LOAD_DEFAULT
+                    useWideViewPort = true
+                    loadWithOverviewMode = true
+                    setSupportZoom(false)
+                    builtInZoomControls = false
+                    displayZoomControls = false
+                    textZoom = 100
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                    }
+                    userAgentString = "Mozilla/5.0 (Linux; Android 10; SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TalaLiveTV/1.0"
                 }
-                userAgentString = "Mozilla/5.0 (Linux; Android 10; SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TalaLiveTV/1.0"
+
+                val crashCount = TvPrefs.getRenderCrashCount(this@BoardActivity)
+                val layer = if (crashCount >= 2) {
+                    Log.w(this@BoardActivity.tag, "Falling back to software layer due to repeated render crashes ($crashCount)")
+                    View.LAYER_TYPE_SOFTWARE
+                } else {
+                    View.LAYER_TYPE_HARDWARE
+                }
+                setLayerType(layer, null)
+
+                webViewClient = TalaWebViewClient(this@BoardActivity)
+                addJavascriptInterface(TalaTvBridge(this@BoardActivity), "TalaTV")
             }
 
-            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            webView = wv
+            rootContainer.addView(wv, 0)
 
-            webViewClient = TalaWebViewClient(this@BoardActivity)
-            addJavascriptInterface(TalaTvBridge(this@BoardActivity), "TalaTV")
+            loadBoardUrl()
+        } catch (t: Throwable) {
+            Log.e(tag, "WebView creation failed", t)
+            webView = null
+            showDiagnostic(
+                getString(R.string.webview_missing_title),
+                getString(R.string.webview_missing_desc),
+                getString(R.string.menu_reload)
+            ) { recreateWebView() }
         }
-
-        webView = wv
-        rootContainer.addView(wv, 0)
-
-        loadBoardUrl()
     }
 
     private fun loadBoardUrl() {
@@ -429,8 +460,12 @@ class BoardActivity : Activity() {
         webView = null
     }
 
-    fun recreateWebView() {
+    fun recreateWebView(fromRenderCrash: Boolean = false) {
         runOnUiThread {
+            if (fromRenderCrash) {
+                TvPrefs.incrementRenderCrashCount(this)
+                Log.w(tag, "Render crash detected. render_crash_count=${TvPrefs.getRenderCrashCount(this)}")
+            }
             Log.i(tag, "Recreating WebView instance")
             hideOfflineOverlay()
             hideDiagnostic()
@@ -447,6 +482,7 @@ class BoardActivity : Activity() {
     fun markBoardReady() {
         Log.i(tag, "TalaTV.onBoardReady signal received! Board successfully rendered.")
         isBoardReady = true
+        TvPrefs.resetRenderCrashCount(this)
         handler.removeCallbacks(readyWatchdogRunnable)
         hideOfflineOverlay()
         hideDiagnostic()
@@ -557,17 +593,6 @@ class BoardActivity : Activity() {
         }
     }
 
-    private fun getChromeVersion(): String {
-        val ua = try { WebSettings.getDefaultUserAgent(this) } catch (e: Exception) { "" }
-        val p = Pattern.compile("Chrome/([0-9]+)")
-        val m = p.matcher(ua)
-        return if (m.find()) m.group(1) ?: "Unknown" else "Unknown"
-    }
-
-    private fun getChromeVersionInt(): Int {
-        val v = getChromeVersion()
-        return v.toIntOrNull() ?: 0
-    }
 
     private fun setupNetworkMonitoring() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -647,7 +672,8 @@ class BoardActivity : Activity() {
         }
         val verCode = UpdateManager.getCurrentVersionCode(this)
         val androidRel = Build.VERSION.RELEASE ?: "Unknown"
-        val webViewVer = getChromeVersion()
+        val probe = WebViewProbe.probe(this)
+        val webViewVer = probe.versionName ?: if (probe.majorVersion > 0) "${probe.majorVersion}" else "Unknown"
 
         executor.execute {
             val hb = Api.heartbeat(this, token, verCode, androidRel, webViewVer)
@@ -815,7 +841,8 @@ class BoardActivity : Activity() {
         val items = arrayOf(
             getString(R.string.menu_reload),
             getString(R.string.menu_device_info),
-            getString(R.string.menu_disconnect)
+            getString(R.string.menu_disconnect),
+            getString(R.string.menu_overscan)
         )
 
         AlertDialog.Builder(this)
@@ -825,8 +852,28 @@ class BoardActivity : Activity() {
                     0 -> recreateWebView()
                     1 -> showDeviceInfoDialog()
                     2 -> confirmDisconnect()
+                    3 -> showOverscanDialog()
                 }
             }
+            .setNegativeButton("بستن", null)
+            .show()
+    }
+
+    private fun showOverscanDialog() {
+        val percentages = intArrayOf(0, 3, 5, 7)
+        val labels = arrayOf("۰٪ (بدون حاشیه)", "۳٪ (حاشیه کم)", "۵٪ (پیش‌فرض پیشنهادی)", "۷٪ (حاشیه زیاد)")
+        val current = TvPrefs.getOverscanPercent(this)
+        val selectedIdx = percentages.indexOf(current).let { if (it >= 0) it else 0 }
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.overscan_dialog_title))
+            .setSingleChoiceItems(labels, selectedIdx) { dialog, which ->
+                val chosen = percentages[which]
+                TvPrefs.setOverscanPercent(this, chosen)
+                applyOverscan()
+                dialog.dismiss()
+            }
+            .setNegativeButton("انصراف", null)
             .show()
     }
 
@@ -840,7 +887,13 @@ class BoardActivity : Activity() {
             @Suppress("DEPRECATION")
             pInfo?.versionCode ?: 1
         }
-        val wvVer = getChromeVersion()
+        val probe = WebViewProbe.probe(this)
+        val wvVer = if (probe.available) {
+            if (probe.packageName != null) "${probe.versionName ?: probe.majorVersion} (${probe.packageName})"
+            else "${probe.versionName ?: probe.majorVersion}"
+        } else {
+            "غیرفعال / در دسترس نیست"
+        }
         val lastRate = TvPrefs.getLastRateTime(this)
 
         val info = getString(R.string.device_info_format, username, appVer, appCode, wvVer, lastRate)

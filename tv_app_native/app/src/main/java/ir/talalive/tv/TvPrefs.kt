@@ -50,4 +50,21 @@ object TvPrefs {
         if (!apkUrl.isNullOrBlank()) editor.putString("apk_url", apkUrl)
         editor.apply()
     }
+
+    fun getOverscanPercent(ctx: Context): Int = get(ctx).getInt("overscan_percent", 0)
+
+    fun setOverscanPercent(ctx: Context, value: Int) {
+        get(ctx).edit().putInt("overscan_percent", value.coerceIn(0, 10)).apply()
+    }
+
+    fun getRenderCrashCount(ctx: Context): Int = get(ctx).getInt("render_crash_count", 0)
+
+    fun incrementRenderCrashCount(ctx: Context) {
+        val next = getRenderCrashCount(ctx) + 1
+        get(ctx).edit().putInt("render_crash_count", next).apply()
+    }
+
+    fun resetRenderCrashCount(ctx: Context) {
+        get(ctx).edit().remove("render_crash_count").apply()
+    }
 }

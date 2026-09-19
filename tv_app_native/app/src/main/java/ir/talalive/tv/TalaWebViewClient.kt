@@ -30,9 +30,9 @@ class TalaWebViewClient(private val host: BoardActivity) : WebViewClient() {
     }
 
     override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
-        val failingUrl = error.url ?: view.url ?: ""
-        Log.w(tag, "SSL notice on $failingUrl (${error.primaryError}). Auto-proceeding for universal TV compatibility.")
-        handler.proceed()
+        Log.w(tag, "SSL error ${error.primaryError} on ${error.url ?: view.url}")
+        handler.cancel()
+        host.showSslDiagnostic(error)
     }
 
     override fun onPageFinished(view: WebView, url: String) {
@@ -43,7 +43,7 @@ class TalaWebViewClient(private val host: BoardActivity) : WebViewClient() {
     @TargetApi(Build.VERSION_CODES.O)
     override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
         Log.e(tag, "Render process gone: didCrash=${detail.didCrash()}")
-        host.recreateWebView()
+        host.recreateWebView(fromRenderCrash = true)
         return true
     }
 }
