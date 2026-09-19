@@ -96,7 +96,7 @@ if (function_exists('shell_exec')) {
 
 // Fallback: If git pull did not run and no zip was extracted, download latest live.blade.php directly from GitHub
 if (!$shellAllowed && !$zipExtracted) {
-    $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php';
+    $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php?t=' . time();
     $ctx = stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: Mozilla/5.0\r\n"]]);
     $newBlade = @file_get_contents($rawUrl, false, $ctx);
     if ($newBlade && strlen($newBlade) > 10000) {
