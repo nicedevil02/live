@@ -181,25 +181,175 @@
 @endsection
 
 @section('content')
-    {{-- بررسی اولیه در کلاینت برای ریدایرکت سریع در صورت جفت شدن قبلی تلویزیون --}}
+    {{-- کانتینر پویا جهت نمایش اعلان دستگاه متصل / تایمر انتقال هوشمند تلویزیون --}}
+    <div id="paired-device-root" class="relative z-50"></div>
+
+    {{-- مدیریت هوشمند اتصال تلویزیون و تابلوی جفت‌شده --}}
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('reset') === '1' || urlParams.get('disconnect') === '1') {
-            localStorage.removeItem('display_username');
-            localStorage.removeItem('display_token');
-        } else {
-            const savedUsername = localStorage.getItem('display_username');
-            const savedToken = localStorage.getItem('display_token');
-            if (savedUsername && savedToken) {
-                window.location.href = '/' + savedUsername + '?key=' + savedToken;
-            } else {
-                // اگر دستگاه یک تلویزیون هوشمند باشد، برای راه‌اندازی راحت‌تر به /tv هدایت شود
-                const isTv = /SmartTV|Tizen|Web0S|NetCast|HbbTV|CrKey|Android TV/i.test(navigator.userAgent);
-                if (isTv && window.location.pathname === '/') {
-                    window.location.href = '/tv';
+        (function() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const isReset = urlParams.get('reset') === '1' || urlParams.get('disconnect') === '1';
+                const isHomeParam = urlParams.get('home') === '1' || urlParams.get('skip_redirect') === '1';
+
+                if (isReset) {
+                    localStorage.removeItem('display_username');
+                    localStorage.removeItem('display_token');
+                    document.cookie = "display_token=; path=/; max-age=0;";
+                    try { sessionStorage.removeItem('skip_redirect'); } catch(e) {}
+                    return;
                 }
+
+                if (isHomeParam) {
+                    try { sessionStorage.setItem('skip_redirect', '1'); } catch(e) {}
+                }
+
+                const savedUsername = localStorage.getItem('display_username');
+                const savedToken = localStorage.getItem('display_token');
+                const isTv = /SmartTV|Tizen|Web0S|NetCast|HbbTV|CrKey|Android TV|BRAVIA|Hisense/i.test(navigator.userAgent);
+                const skipRedirect = (function() {
+                    try { return sessionStorage.getItem('skip_redirect') === '1'; } catch(e) { return false; }
+                })();
+
+                if (!savedUsername || !savedToken) {
+                    // اگر تلویزیون است و هنوز جفت نشده، برای راه‌اندازی به صفحه /tv هدایت شود
+                    if (isTv && window.location.pathname === '/' && !isHomeParam && !skipRedirect) {
+                        window.location.href = '/tv';
+                    }
+                    return;
+                }
+
+                const targetBoardUrl = '/' + encodeURIComponent(savedUsername) + '?key=' + encodeURIComponent(savedToken);
+                const safeShopName = savedUsername.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                // ۱. سناریوی تلویزیون بدون اسکیپ: شمارش معکوس ۳ ثانیه‌ای با امکان انصراف و ماندن در سایت
+                if (isTv && !skipRedirect && !isHomeParam) {
+                    let secondsLeft = 3;
+                    let countdownTimer = null;
+
+                    const mountTvCountdown = function() {
+                        const root = document.getElementById('paired-device-root');
+                        if (!root) return;
+
+                        root.innerHTML = `
+                            <div id="tv-countdown-banner" class="fixed top-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-[100] max-w-2xl w-full mx-auto p-4 sm:p-5 rounded-2xl bg-slate-900/95 text-white border border-amber-400/40 shadow-2xl backdrop-blur-2xl animate-fadeInUp font-sans" dir="rtl">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-xl shrink-0">
+                                            📺
+                                        </div>
+                                        <div>
+                                            <div class="font-black text-sm text-amber-300 flex items-center gap-2">
+                                                <span>انتقال خودکار به تابلوی طلای ${safeShopName}</span>
+                                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                            </div>
+                                            <p class="text-xs text-slate-300 mt-0.5">
+                                                تا <span id="tv-countdown-num" class="font-black text-amber-400 font-mono text-sm px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/30">${secondsLeft}</span> ثانیه دیگر به تابلوی زنده هدایت می‌شوید...
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
+                                        <button type="button" id="tv-cancel-redirect-btn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 hover:border-slate-600 transition-all cursor-pointer">
+                                            انصراف و مشاهده سایت
+                                        </button>
+                                        <a href="${targetBoardUrl}" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 transition-all">
+                                            ورود فوری ←
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        const cancelBtn = document.getElementById('tv-cancel-redirect-btn');
+                        if (cancelBtn) {
+                            cancelBtn.focus();
+                            cancelBtn.addEventListener('click', function() {
+                                if (countdownTimer) clearInterval(countdownTimer);
+                                try { sessionStorage.setItem('skip_redirect', '1'); } catch(e) {}
+                                const banner = document.getElementById('tv-countdown-banner');
+                                if (banner) {
+                                    banner.style.transition = 'opacity 0.3s, transform 0.3s';
+                                    banner.style.opacity = '0';
+                                    banner.style.transform = 'translateY(-20px)';
+                                    setTimeout(() => banner.remove(), 300);
+                                }
+                                mountDesktopPill();
+                            });
+                        }
+
+                        countdownTimer = setInterval(function() {
+                            secondsLeft--;
+                            const numElem = document.getElementById('tv-countdown-num');
+                            if (numElem) numElem.textContent = secondsLeft;
+                            if (secondsLeft <= 0) {
+                                clearInterval(countdownTimer);
+                                window.location.href = targetBoardUrl;
+                            }
+                        }, 1000);
+                    };
+
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', mountTvCountdown);
+                    } else {
+                        mountTvCountdown();
+                    }
+                    return;
+                }
+
+                // ۲. سناریوی کامپیوتر، موبایل یا تلویزیون در حالت مشاهده سایت: نمایش نوار شیک دسترسی سریع به تابلو
+                const mountDesktopPill = function() {
+                    const root = document.getElementById('paired-device-root');
+                    if (!root) return;
+
+                    root.innerHTML = `
+                        <div id="paired-quick-bar" class="relative z-40 bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-amber-600/15 border-b border-amber-500/30 backdrop-blur-xl text-slate-900 dark:text-amber-200 px-4 py-2.5 transition-all" dir="rtl">
+                            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+                                <div class="flex items-center gap-2.5 font-bold">
+                                    <span class="flex h-2.5 w-2.5 relative">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                    </span>
+                                    <span>دستگاه به تابلوی طلا متصل است:</span>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-900 dark:text-amber-300 font-black border border-amber-500/30 font-mono">${safeShopName}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <a href="${targetBoardUrl}" class="inline-flex items-center gap-1 px-3.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-black shadow-sm transition-all hover:scale-105">
+                                        <span>📺 ورود به تابلوی فعال</span>
+                                        <span>←</span>
+                                    </a>
+                                    <button type="button" id="paired-disconnect-btn" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-600 dark:text-slate-300 font-bold transition-all border border-slate-300 dark:border-slate-700 cursor-pointer" title="قطع اتصال این دستگاه">
+                                        قطع اتصال
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const disBtn = document.getElementById('paired-disconnect-btn');
+                    if (disBtn) {
+                        disBtn.addEventListener('click', function() {
+                            if (confirm('آیا می‌خواهید اتصال این دستگاه به تابلوی طلا قطع شود؟')) {
+                                localStorage.removeItem('display_username');
+                                localStorage.removeItem('display_token');
+                                document.cookie = "display_token=; path=/; max-age=0;";
+                                try { sessionStorage.removeItem('skip_redirect'); } catch(e) {}
+                                const bar = document.getElementById('paired-quick-bar');
+                                if (bar) bar.remove();
+                            }
+                        });
+                    }
+                };
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', mountDesktopPill);
+                } else {
+                    mountDesktopPill();
+                }
+
+            } catch (err) {
+                console.warn('Paired device handler error:', err);
             }
-        }
+        })();
     </script>
 
 

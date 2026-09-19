@@ -2014,9 +2014,11 @@
 
                 {{-- سمت راست: کپسول تبلیغ و راه‌اندازی اختصاصی TalaLive و لینک برگشتی به شهر --}}
                 <div class="flex items-center gap-3 h-full z-10">
-                    <a href="{{ url('/') }}" 
+                    <a href="{{ url('/?home=1') }}" 
+                       @click="try { sessionStorage.setItem('skip_redirect', '1'); } catch(e) {}"
                        class="group flex items-center gap-2.5 px-4 py-1.5 rounded-full border transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer"
-                       :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'">
+                       :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'"
+                       title="مشاهده صفحه اصلی سامانه طلالایو">
                         <span class="flex h-2.5 w-2.5 relative">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
@@ -2041,8 +2043,18 @@
                     <span :class="isLightTheme ? 'text-slate-500' : 'text-slate-400'" class="font-normal font-mono">By <span class="font-bold text-slate-400 dark:text-slate-300">Bahman Dev</span></span>
                 </div>
 
-                {{-- سمت چپ: دکمه حالت سبک/روان + وضعیت اتصال و بروزرسانی لحظه‌ای --}}
-                <div class="flex items-center gap-3 z-10 font-bold text-xs" :class="theme.textSecondary">
+                {{-- سمت چپ: دکمه خروج + دکمه حالت سبک/روان + وضعیت اتصال و بروزرسانی لحظه‌ای --}}
+                <div class="flex items-center gap-2.5 z-10 font-bold text-xs" :class="theme.textSecondary">
+                    {{-- دکمه قطع اتصال و خروج از تابلو --}}
+                    <button @click="disconnectBoard()" 
+                            type="button"
+                            class="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm select-none"
+                            :class="isLightTheme ? 'bg-black/5 hover:bg-rose-500 hover:text-white text-slate-700 border-black/10' : 'bg-white/5 hover:bg-rose-500/80 hover:text-white text-slate-300 border-white/10'"
+                            title="قطع اتصال این تلویزیون و خروج از تابلو">
+                        <span class="text-xs transition-transform duration-200 group-hover:scale-110">🔌</span>
+                        <span>خروج</span>
+                    </button>
+
                     {{-- دکمه حالت سبک / روان (Eco / Smooth Mode Toggle) --}}
                     <button @click="toggleEcoMode()" 
                             type="button"
@@ -2052,14 +2064,14 @@
                                 : (isLightTheme ? 'bg-black/5 hover:bg-black/10 text-slate-700 border-black/10' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10')"
                             :title="ecoMode ? 'غیرفعال‌سازی حالت سبک و بازگشت به جلوه‌های بصری' : 'فعال‌سازی حالت سبک / روان جهت کاهش مصرف منابع سیستم'">
                         <span class="text-sm transition-transform duration-200" :class="ecoMode ? 'scale-110' : 'opacity-70'">⚡</span>
-                        <span>حالت سبک / روان</span>
+                        <span>حالت سبک</span>
                         <span class="w-2 h-2 rounded-full transition-colors duration-200" 
                               :class="ecoMode ? 'bg-emerald-400 ring-2 ring-emerald-300/50' : 'bg-slate-400/50'"></span>
                     </button>
 
-                    <span class="flex items-center gap-2 bg-black/15 dark:bg-white/10 border border-white/10 rounded-full px-4 py-1.5 shadow-sm">
+                    <span class="flex items-center gap-2 bg-black/15 dark:bg-white/10 border border-white/10 rounded-full px-3.5 py-1.5 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500" :class="ecoMode ? '' : 'animate-[pulse_1.5s_infinite]'"></span>
-                        <span dir="ltr" class="font-mono" x-text="errorMessage || 'بروزرسانی: ' + (snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---')"></span>
+                        <span dir="ltr" class="font-mono text-[11px]" x-text="errorMessage || (snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---')"></span>
                     </span>
                 </div>
 
@@ -2609,6 +2621,18 @@
                     } catch (e) {}
                     this.applyStageScale();
                     this.showHudFeedback('تنظیمات مقیاس بازنشانی شد');
+                },
+
+                disconnectBoard() {
+                    if (confirm('آیا می‌خواهید اتصال این دستگاه به تابلوی طلا قطع شود و به صفحه جفت‌سازی برگردید؟')) {
+                        try {
+                            localStorage.removeItem('display_username');
+                            localStorage.removeItem('display_token');
+                            document.cookie = 'display_token=; path=/; max-age=0;';
+                            sessionStorage.removeItem('skip_redirect');
+                        } catch (e) {}
+                        window.location.href = '/tv?reset=1';
+                    }
                 },
 
                 handleKeydown(e) {

@@ -260,17 +260,25 @@
 
     {{-- بررسی اولیه در کلاینت برای ریدایرکت سریع در صورت جفت شدن قبلی تلویزیون یا پاکسازی اتصال با پارامتر reset --}}
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('reset') === '1' || urlParams.get('disconnect') === '1') {
-            localStorage.removeItem('display_username');
-            localStorage.removeItem('display_token');
-        } else {
-            const savedUsername = localStorage.getItem('display_username');
-            const savedToken = localStorage.getItem('display_token');
-            if (savedUsername && savedToken) {
-                window.location.href = '/' + savedUsername + '?key=' + savedToken;
+        (function() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('reset') === '1' || urlParams.get('disconnect') === '1') {
+                    localStorage.removeItem('display_username');
+                    localStorage.removeItem('display_token');
+                    document.cookie = "display_token=; path=/; max-age=0;";
+                    try { sessionStorage.removeItem('skip_redirect'); } catch(e) {}
+                } else {
+                    const savedUsername = localStorage.getItem('display_username');
+                    const savedToken = localStorage.getItem('display_token');
+                    if (savedUsername && savedToken) {
+                        window.location.href = '/' + encodeURIComponent(savedUsername) + '?key=' + encodeURIComponent(savedToken);
+                    }
+                }
+            } catch(e) {
+                console.warn('Pairing check error:', e);
             }
-        }
+        })();
     </script>
 
     {{-- نوار ناوبری شیشه‌ای بالایی مدرن با پشتیبانی از تم تاریک و روشن (Sticky Modern Header) --}}
