@@ -144,6 +144,9 @@
            SMART TV & LEGACY WEBVIEW COMPATIBILITY LAYER (کرومیوم قدیمی تا اندروید ۱۴)
            تضمین رندر صددرصدی ابعاد، موقعیت‌ها و چیدمان بدون وابستگی صرف به لود تلویند
            ========================================================================= */
+        [x-cloak] { display: none !important; }
+        [style*="display: none"], [style*="display:none"] { display: none !important; }
+
         .fixed { position: fixed !important; }
         .absolute { position: absolute !important; }
         .relative { position: relative !important; }
@@ -162,12 +165,12 @@
         .z-0 { z-index: 0 !important; }
         .z-10 { z-index: 10 !important; }
         .z-50 { z-index: 50 !important; }
-        .flex { display: -webkit-box !important; display: -webkit-flex !important; display: flex !important; }
-        .flex-col { -webkit-box-orient: vertical !important; -webkit-box-direction: normal !important; -webkit-flex-direction: column !important; flex-direction: column !important; }
-        .flex-row { -webkit-box-orient: horizontal !important; -webkit-box-direction: normal !important; -webkit-flex-direction: row !important; flex-direction: row !important; }
-        .items-center { -webkit-box-align: center !important; -webkit-align-items: center !important; align-items: center !important; }
-        .justify-between { -webkit-box-pack: justify !important; -webkit-justify-content: space-between !important; justify-content: space-between !important; }
-        .justify-center { -webkit-box-pack: center !important; -webkit-justify-content: center !important; justify-content: center !important; }
+        .flex { display: -webkit-box; display: -webkit-flex; display: flex; }
+        .flex-col { -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; flex-direction: column; }
+        .flex-row { -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; flex-direction: row; }
+        .items-center { -webkit-box-align: center; -webkit-align-items: center; align-items: center; }
+        .justify-between { -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; }
+        .justify-center { -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; }
 
         .display-shell {
             position: relative !important;
@@ -882,7 +885,7 @@
     </style>
 </head>
 <body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
-    <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
+    <main :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -1341,16 +1344,6 @@
         </div>
     </main>
 
-    {{-- Loading Screen --}}
-    <div x-show="isLoading" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950 animate-fadeIn">
-        <div class="relative mb-8">
-            <div class="w-24 h-24 rounded-full border-[3px] border-slate-700"></div>
-            <div class="w-24 h-24 rounded-full border-[3px] border-transparent border-t-amber-400 absolute inset-0 animate-spin"></div>
-            <span class="absolute inset-0 flex items-center justify-center text-3xl">✦</span>
-        </div>
-        <h2 class="text-2xl font-black text-amber-400 mb-2">Live Gold</h2>
-        <p class="text-slate-400 animate-pulse">در حال بارگذاری قیمت‌ها...</p>
-    </div>
 
     <script>
         const THEMES = {
