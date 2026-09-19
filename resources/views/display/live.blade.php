@@ -334,11 +334,11 @@
         .market-tile-label { line-height: 1.12; }
         .market-price-number { line-height: 0.95; white-space: nowrap; }
         .tv-price-featured {
-            font-size: 3.4rem !important;
+            font-size: 3.85rem !important;
             line-height: 1 !important;
         }
         .tv-price-regular {
-            font-size: 2.15rem !important;
+            font-size: 2.5rem !important;
             line-height: 1.05 !important;
         }
         @media (min-width: 1280px) and (max-height: 760px) {
@@ -1638,10 +1638,10 @@
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
         <div id="tv-stage-viewport" class="absolute inset-0 z-10 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
-            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] max-h-[1080px] p-4.5 xl:p-5 flex flex-col justify-between gap-2 xl:gap-2.5 overflow-hidden select-none will-change-transform box-border">
+            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between gap-2 overflow-hidden select-none will-change-transform">
 
             {{-- Header --}}
-            <header :class="theme.headerBg" class="display-header rounded-[1.75rem] xl:rounded-[2rem] px-6 xl:px-8 py-2.5 xl:py-3 h-[116px] xl:h-[122px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
+            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
 
                 {{-- سمت راست: QR کد و اطلاعات --}}
                 <div class="order-1 flex w-[38%] items-center gap-5 text-right">
@@ -1673,20 +1673,20 @@
                     </div>
 
                     {{-- QR Code (فریم لوکس با خط اسکن لیزری ملایم) --}}
-                    <div class="flex items-center gap-3.5 transition-all duration-300 hover:scale-[1.02] shrink-0">
-                        <div class="relative bg-white p-1.5 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/30 shrink-0 overflow-hidden group">
+                    <div class="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] shrink-0">
+                        <div class="relative bg-white p-2 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/30 shrink-0 overflow-hidden group">
                             <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(settings.qr_link || (window.location.origin + '/' + (snapshotData.username || '')))" 
                                  alt="کد QR اختصاصی تابلوی طلافروشی {{ $galleryDisplayName ?? 'طلالایو' }}" 
-                                 width="96" height="96"
+                                 width="112" height="112"
                                  loading="lazy" decoding="async"
-                                 class="w-18 h-18 xl:w-22 xl:h-22 object-contain rounded-lg">
+                                 class="w-24 h-24 xl:w-28 xl:h-28 object-contain rounded-lg">
                             {{-- خط اسکن لیزری امبینت --}}
                             <div class="pointer-events-none absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_rgba(251,191,36,0.85)] animate-laser-sweep"></div>
                         </div>
-                        <div class="flex flex-col justify-center max-w-[140px] pr-1">
-                            <span :class="theme.textPrimary" class="text-xs xl:text-sm font-black leading-tight drop-shadow-sm" 
+                        <div class="flex flex-col justify-center max-w-[150px] pr-1">
+                            <span :class="theme.textPrimary" class="text-sm xl:text-base font-black leading-tight drop-shadow-sm" 
                                   x-text="settings.qr_link ? (settings.qr_label || 'اسکن کنید') : (settings.qr_label || 'همراه ما باشید')"></span>
-                            <span :class="theme.textSecondary" class="text-[10px] xl:text-[11px] mt-1 leading-normal opacity-85 font-bold"
+                            <span :class="theme.textSecondary" class="text-[11px] xl:text-xs mt-1.5 leading-normal opacity-85 font-bold"
                                   x-text="settings.qr_desc ? settings.qr_desc : (settings.qr_link ? 'عضویت در شبکه‌های اجتماعی' : 'اسکن جهت مشاهده در موبایل')"></span>
                         </div>
                     </div>
@@ -1695,7 +1695,7 @@
                 {{-- نام فروشگاه (وسط) --}}
                 <div class="order-2 flex w-[28%] flex-col items-center justify-center text-center">
                     <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
-                        class="max-w-full break-words text-2xl xl:text-3xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
+                        class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
                          class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5">
                          <span>✦</span>
@@ -1703,10 +1703,10 @@
                          <span>✦</span>
                     </div>
                     {{-- دکمه صفحه اصلی طلالایو --}}
-                    <div class="mt-1 flex items-center justify-center">
+                    <div class="mt-1.5 flex items-center justify-center">
                         <a href="{{ url('/') }}" target="_blank" 
                            :class="isLightTheme ? 'bg-amber-500/15 text-amber-900 border-amber-500/30 hover:bg-amber-500/25' : 'bg-white/10 text-amber-300 border-white/10 hover:bg-white/15'"
-                           class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-bold border transition-all shadow-xs">
+                           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold border transition-all shadow-xs">
                             <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                             <span>صفحه اصلی طلالایو</span>
                         </a>
@@ -1722,9 +1722,9 @@
                 </div>
 
                 {{-- تاریخ و ساعت (سمت چپ) --}}
-                <div class="order-3 flex w-[38%] flex-row items-center justify-end gap-4 xl:gap-5 text-left">
+                <div class="order-3 flex w-[38%] flex-row items-center justify-end gap-5 text-left">
                     {{-- کنترل‌ها و دکمه‌های وضعیت (HUD هوشمند با Auto-Hide) --}}
-                    <div class="flex flex-col gap-1.5 items-end justify-center min-h-[50px]">
+                    <div class="flex flex-col gap-2 items-end justify-center min-h-[58px]">
                         {{-- وضعیت اتصال: اگر ارتباط مختل شد همیشه نشان داده می‌شود، در حالت آنلاین با HUD هماهنگ است --}}
                         <div x-show="showControls || connectionState !== 'online'"
                              x-transition:enter="transition ease-out duration-300"
@@ -1733,7 +1733,7 @@
                              x-transition:leave="transition ease-in duration-500"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 -translate-y-1">
-                            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[0.68rem] font-semibold shrink-0 shadow-sm" 
+                            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] font-semibold shrink-0 shadow-sm" 
                                   :class="connectionState === 'online' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/20 text-rose-500 border border-rose-500/30 animate-pulse'">
                                 <span class="w-1.5 h-1.5 rounded-full" :class="connectionState === 'online' ? 'bg-emerald-500 dark:bg-emerald-400 animate-pulse' : 'bg-rose-500'"></span>
                                 <span x-text="connectionState === 'online' ? 'وضعیت: برخط' : (connectionState === 'offline' ? 'اتصال قطع است' : 'حالت پشتیبان')"></span>
@@ -1748,17 +1748,17 @@
                              x-transition:leave="transition ease-in duration-500"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 -translate-y-1"
-                             class="flex items-center gap-1.5" dir="ltr">
+                             class="flex items-center gap-2" dir="ltr">
                             <div class="flex items-center gap-1 bg-black/15 dark:bg-white/10 backdrop-blur-md border border-white/10 rounded-xl px-1.5 py-0.5 shadow-sm" dir="ltr">
-                                <button @click.stop="zoomOut(); triggerControls()" class="p-0.5 rounded-lg cursor-pointer transition-colors hover:bg-black/10 dark:hover:bg-white/15" title="کوچک‌نمایی">
+                                <button @click.stop="zoomOut(); triggerControls()" class="p-1 rounded-lg cursor-pointer transition-colors hover:bg-black/10 dark:hover:bg-white/15" title="کوچک‌نمایی">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path></svg>
                                 </button>
-                                <span :class="theme.textPrimary" class="text-[10px] font-black font-mono w-7 text-center select-none" x-text="Math.round(zoomLevel * 100) + '%'"></span>
-                                <button @click.stop="zoomIn(); triggerControls()" class="p-0.5 rounded-lg cursor-pointer transition-colors hover:bg-black/10 dark:hover:bg-white/15" title="بزرگ‌نمایی">
+                                <span :class="theme.textPrimary" class="text-[10px] font-black font-mono w-8 text-center select-none" x-text="Math.round(zoomLevel * 100) + '%'"></span>
+                                <button @click.stop="zoomIn(); triggerControls()" class="p-1 rounded-lg cursor-pointer transition-colors hover:bg-black/10 dark:hover:bg-white/15" title="بزرگ‌نمایی">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
                                 </button>
                             </div>
-                            <button @click.stop="toggleFullscreen(); triggerControls()" class="p-1 rounded-xl cursor-pointer bg-black/15 dark:bg-white/10 backdrop-blur-md border border-white/10 transition-all hover:scale-105 shadow-sm" title="تمام‌صفحه">
+                            <button @click.stop="toggleFullscreen(); triggerControls()" class="p-1.5 rounded-xl cursor-pointer bg-black/15 dark:bg-white/10 backdrop-blur-md border border-white/10 transition-all hover:scale-105 shadow-sm" title="تمام‌صفحه">
                                 <svg x-show="!isFullscreen" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                                 <svg x-show="isFullscreen" style="display: none;" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 14h4v4m0-4l-5 5m15-5h-4v4m0-4l5 5M4 10h4V6m0 4l-5-5m15 5h-4V6m0 4l5-5"></path></svg>
                             </button>
@@ -1766,33 +1766,33 @@
                     </div>
 
                     {{-- خط عمودی جداکننده --}}
-                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-14"></div>
+                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-16"></div>
 
                     {{-- ساعت و تاریخ --}}
                     <div class="flex flex-col items-center justify-center text-center">
-                        <p :class="theme.textPrimary" class="text-5xl xl:text-6xl font-black tabular-nums tracking-tight leading-none" x-text="timeText"></p>
-                        <p :class="theme.textSecondary" class="text-xs xl:text-sm font-bold mt-1 opacity-80" x-text="weekDay + ' ' + dateText"></p>
+                        <p :class="theme.textPrimary" class="text-6xl xl:text-7xl font-black tabular-nums tracking-tight leading-none" x-text="timeText"></p>
+                        <p :class="theme.textSecondary" class="text-base xl:text-lg font-bold mt-1.5 opacity-80" x-text="weekDay + ' ' + dateText"></p>
                     </div>
                 </div>
 
             </header>
 
             {{-- Main Content --}}
-            <div class="flex flex-1 flex-row gap-2.5 xl:gap-3 min-h-0 h-full overflow-hidden">
+            <div class="flex flex-1 flex-row gap-3 min-h-0">
                 {{-- Product Slider --}}
-                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[2rem] xl:rounded-[2.5rem] w-[35%] h-full min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
+                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
                                  x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-[20s] ease-linear group-hover:scale-105">
                             <!-- نشان لوکس و همیشگی پیشنهاد شگفت‌انگیز در بالای اسلایدر -->
-                            <div class="absolute top-4 left-4 z-20 select-none pointer-events-none">
-                                <div class="relative flex items-center gap-2 rounded-full slider-top-badge px-3.5 py-2">
-                                    <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-white/20 shadow-inner">
+                            <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
+                                <div class="relative flex items-center gap-2.5 rounded-full slider-top-badge px-4 py-2.5">
+                                    <span class="relative flex h-7 w-7 items-center justify-center rounded-full bg-white/20 shadow-inner">
                                         <span class="h-2 w-2 rounded-full bg-white animate-ping"></span>
                                         <span class="h-2 w-2 rounded-full bg-white"></span>
                                     </span>
-                                    <span class="text-sm xl:text-base font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+                                    <span class="text-base xl:text-lg font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
                                         پیشنهاد شگفت‌انگیز
                                     </span>
                                 </div>
@@ -1855,65 +1855,62 @@
                             <span class="text-[10rem]">💎</span>
                         </div>
                     </template>
-                    <div class="absolute top-5 right-5 flex gap-2 z-20" x-show="products.length > 1">
+                    <div class="absolute top-6 right-6 flex gap-2 z-20" x-show="products.length > 1">
                         <template x-for="(dot, i) in products" :key="i">
                             <div class="h-1.5 rounded-full transition-all duration-300" 
-                                 :class="isLightTheme ? (i === activeIndex ? 'w-8 bg-slate-800' : 'w-2.5 bg-slate-400/40') : (i === activeIndex ? 'w-8 bg-white' : 'w-2.5 bg-white/30')"></div>
+                                 :class="isLightTheme ? (i === activeIndex ? 'w-10 bg-slate-800' : 'w-3 bg-slate-400/40') : (i === activeIndex ? 'w-10 bg-white' : 'w-3 bg-white/30')"></div>
                         </template>
                     </div>
                 </section>
 
                 {{-- Price Grid With Unified Glass Stage --}}
-                <div class="relative flex-1 min-h-0 h-full overflow-hidden animate-fadeInUp" style="animation-delay: 150ms;">
+                <div class="relative flex-1 min-h-0 animate-fadeInUp" style="animation-delay: 150ms;">
                     {{-- Unified Single-Pass Glass Backdrop (۱ پاس محاسباتی بلور برای کل ۱۶ کارت به جای ۱۶ پاس مجزا) --}}
-                    <div class="price-grid-backdrop absolute -inset-1 rounded-[2rem] pointer-events-none z-0"></div>
-                    <div class="price-grid relative z-10 grid grid-cols-12 gap-2 xl:gap-2.5 h-full overflow-hidden"
-                         :style="orderedMetrics.length > 11 ? 'grid-template-rows: 1.3fr 1fr 1fr 1fr;' : (orderedMetrics.length > 7 ? 'grid-template-rows: 1.4fr 1fr 1fr;' : 'grid-template-rows: 1.4fr 1fr;')">
+                    <div class="price-grid-backdrop absolute -inset-1 rounded-[2.25rem] pointer-events-none z-0"></div>
+                    <div class="price-grid relative z-10 grid grid-cols-12 gap-3 h-full auto-rows-fr grid-rows-[1.5fr_1fr_1fr]">
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
                                  item.symbol === 'gold18' ? (theme.heroCard || 'neu-hero-gold-imperial') : (theme.card + ' ' + theme.cardHover),
-                                 index < 3 
-                                     ? 'col-span-4 px-3.5 xl:px-4.5 py-2 xl:py-2.5' 
-                                     : (orderedMetrics.length > 11 ? 'col-span-3 px-2.5 xl:px-3 py-1 xl:py-1.5' : 'col-span-3 px-3 xl:px-3.5 py-1.5 xl:py-2')
+                                 index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
-                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.25rem] xl:rounded-[1.5rem] transition-[transform,box-shadow,border-color] duration-300 h-full">
+                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-[transform,box-shadow,border-color] duration-300 h-full">
 
                                 <template x-if="item.symbol === 'gold18'">
-                                    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.25rem] xl:rounded-[1.5rem] z-0">
+                                    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem] z-0">
                                         {{-- Silky Liquid Gold Specular Shimmer (پرتو متحرک آینه‌ای لوکس طلای ۱۸ عیار) --}}
                                         <div class="gold-beam-shimmer animate-gold-beam"></div>
                                     </div>
                                 </template>
 
                                 {{-- هدر کارت: عنوان نماد و فلش روند اپلی همراه با ستاره ظریف طلایی --}}
-                                <div class="relative flex justify-between items-center gap-2 z-10 shrink-0">
+                                <div class="relative flex justify-between items-center gap-3 z-10">
                                     <div class="flex items-center gap-1.5 min-w-0">
                                         <template x-if="item.symbol === 'gold18'">
-                                            <span class="text-amber-500 animate-sparkle text-xs xl:text-sm select-none leading-none">✦</span>
+                                            <span class="text-amber-500 animate-sparkle text-sm xl:text-base select-none leading-none">✦</span>
                                         </template>
-                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-xl xl:text-2xl' : 'text-base xl:text-lg']"
-                                           class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.15;" x-text="item.label"></p>
+                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
+                                           class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
                                     </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
-                                            <div class="flex items-center justify-center p-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
-                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                                                     <polyline points="17 6 23 6 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent < 0">
-                                            <div class="flex items-center justify-center p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.3)]">
-                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                                                     <polyline points="17 18 23 18 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent == 0">
-                                            <div class="flex items-center justify-center p-1 rounded-lg bg-white/5 border border-white/10 opacity-40">
-                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                                 </svg>
                                             </div>
@@ -1923,8 +1920,9 @@
 
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
-                                    item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor
-                                ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center my-auto">
+                                    item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor,
+                                    index < 3 ? 'pt-6 pb-0 translate-y-5' : 'pt-2.5 pb-0 translate-y-2'
+                                ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex flex-col items-center justify-center whitespace-nowrap w-full">
                                           <span :class="[
                                               index < 3 ? 'tv-price-featured' : 'tv-price-regular',
@@ -1933,16 +1931,16 @@
                                                   : theme.priceGlow
                                           ]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md text-center" x-html="item.displayHtml"></span>
                                          <span :class="[
-                                             index < 3 ? 'text-[11px] xl:text-xs mt-0.5' : 'text-[9px] xl:text-[10px] mt-0',
+                                             index < 3 ? 'text-xs xl:text-sm mt-0.5' : 'text-[10px] xl:text-[11px] mt-0',
                                              themeKey === 'imperial-onyx' ? 'text-amber-300/75' : (themeKey === 'imperial-pearl' ? 'text-amber-900/75' : (isLightTheme ? 'text-slate-500' : 'text-white/60'))
                                          ]" class="font-bold tracking-wider select-none" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
-                                <div class="relative flex justify-between items-center border-t shrink-0" :class="[index < 3 ? 'mt-1 pt-1.5' : 'mt-0.5 pt-1', isLightTheme ? 'border-black/5' : 'border-white/10']">
+                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
-                                    <div class="flex items-center gap-1.5 font-black tabular-nums text-[11px] xl:text-xs px-2 py-0.5 rounded-full border shadow-sm" :class="[
+                                    <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
                                         themeKey === 'imperial-onyx'
                                             ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
                                             : (themeKey === 'imperial-pearl'
@@ -1961,17 +1959,17 @@
                                     {{-- وضعیت زنده با میکرو-پالس اپلی --}}
                                     <div class="flex items-center">
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[10px] rounded-full px-2 py-0.5 font-bold border shadow-sm"
+                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
                                                   :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm"
+                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
                                                   :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
-                                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
-                                                <span class="text-[9px] opacity-80">لحظه‌ای</span>
+                                                <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
+                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
                                             </span>
                                         </template>
                                     </div>
@@ -1983,7 +1981,7 @@
             </div>
 
             {{-- Premium Glassmorphic Footer --}}
-            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.5rem] xl:rounded-[1.75rem] border flex items-center justify-between shrink-0 h-12 xl:h-13 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-5 xl:px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
+            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
                 
                 {{-- Background decorative glows inside the footer --}}
                 <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.15),transparent_50%)]"></div>
@@ -2536,17 +2534,11 @@
                 },
 
                 toggleFullscreen() {
-                    const docEl = document.documentElement;
-                    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-                    if (!isFullscreen) {
-                        const rfs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-                        if (rfs) {
-                            rfs.call(docEl).catch(err => console.log('Fullscreen error:', err));
-                        }
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen().catch(err => console.log(err));
                     } else {
-                        const efs = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-                        if (efs) {
-                            efs.call(document).catch(err => console.log('Exit fullscreen error:', err));
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
                         }
                     }
                 },
@@ -2554,8 +2546,8 @@
                 applyStageScale() {
                     const canvas = document.getElementById('tv-stage-canvas');
                     if (!canvas) return;
-                    const vw = window.innerWidth || document.documentElement.clientWidth || screen.width || 1920;
-                    const vh = window.innerHeight || document.documentElement.clientHeight || screen.height || 1080;
+                    const vw = window.innerWidth || document.documentElement.clientWidth || 1920;
+                    const vh = window.innerHeight || document.documentElement.clientHeight || 1080;
                     
                     // کسر حاشیه امن سخت‌افزاری تلویزیون جهت جلوگیری از اووراسکن لبه‌ها
                     const overscan = Math.max(0, Math.min(0.08, this.overscanMargin || 0));
@@ -2697,26 +2689,17 @@
                     window.addEventListener('touchstart', () => this.triggerControls(), { passive: true });
                     window.addEventListener('keydown', () => this.triggerControls(), { passive: true });
 
-                    const multiPassScale = () => {
-                        this.applyStageScale();
-                        setTimeout(() => this.applyStageScale(), 100);
-                        setTimeout(() => this.applyStageScale(), 350);
-                        setTimeout(() => this.applyStageScale(), 750);
-                    };
-
-                    const handleFullscreenUpdate = () => {
-                        this.isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-                        multiPassScale();
-                    };
-
-                    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
-                        document.addEventListener(evt, handleFullscreenUpdate, { passive: true });
+                    document.addEventListener('fullscreenchange', () => {
+                        this.isFullscreen = !!document.fullscreenElement;
+                        setTimeout(() => this.applyStageScale(), 150);
                     });
                     
                     // فعال‌سازی موتور مقیاس‌پذیری خودکار بوم برای انواع تلویزیون
-                    multiPassScale();
-                    window.addEventListener('resize', multiPassScale, { passive: true });
-                    window.addEventListener('orientationchange', multiPassScale, { passive: true });
+                    this.applyStageScale();
+                    window.addEventListener('resize', () => this.applyStageScale(), { passive: true });
+                    window.addEventListener('orientationchange', () => {
+                        setTimeout(() => this.applyStageScale(), 200);
+                    });
                     this.$watch('zoomLevel', () => this.applyStageScale());
                     this.$watch('overscanMargin', () => this.applyStageScale());
 
