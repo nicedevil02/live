@@ -1910,7 +1910,7 @@
                                            class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
 
                                         {{-- نشانگر وضعیت زنده (لحظه‌ای / قدیمی) بعد از عنوان کارت --}}
-                                        <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
+                                        <template x-if="isItemStale(item)">
                                             <span class="inline-flex items-center rounded-full font-bold border shadow-sm shrink-0"
                                                   :class="[
                                                       isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30',
@@ -1920,7 +1920,7 @@
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
-                                        <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
+                                        <template x-if="!isItemStale(item)">
                                             <span class="inline-flex items-center rounded-full shadow-sm shrink-0 font-bold"
                                                   :class="[
                                                       themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20')),
@@ -2403,6 +2403,19 @@
                     const feed = this.snapshotData?.priceFeed || [];
                     const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
                     return feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
+                },
+                isItemStale(item) {
+                    if (!item) return false;
+                    // اگر ارتباط با سرور قطع باشد یا در حالت پشتیبان قرار گیرد، داده‌ها قطعاً لحظه‌ای نیستند
+                    if (this.connectionState !== 'online') return true;
+                    // اگر اسنپ‌شات کلی تابلو کهنه شده باشد
+                    if (this.snapshotData?.isStale) return true;
+                    // برای خرید طلای ۱۸، اگر طلای ۱۸ عیار کهنه باشد
+                    if (/خرید.*(18|۱۸)/.test(item.label || '')) {
+                        const g18 = this.orderedMetrics.find(m => m.symbol === 'gold18');
+                        if (g18 && (g18.is_stale || this.isItemStale(g18))) return true;
+                    }
+                    return Boolean(item.is_stale);
                 },
                                 get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic' || this.themeKey === 'imperial-pearl'; },
                 get isBingTheme() { return this.themeKey === 'bing-daily' || this.themeKey === 'bing-studio' || this.themeKey === 'bing-ceramic'; },
