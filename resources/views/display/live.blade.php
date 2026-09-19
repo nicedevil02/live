@@ -2827,10 +2827,13 @@
     <script>
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const isJustPaired = urlParams.get('paired') === '1' || sessionStorage.getItem('tv_just_paired') === '1';
+            const isJustPaired = urlParams.get('paired') === '1' || 
+                                 sessionStorage.getItem('tv_just_paired') === '1' ||
+                                 !localStorage.getItem('tv_pwa_welcome_shown');
             
             if (isJustPaired) {
                 sessionStorage.removeItem('tv_just_paired');
+                localStorage.setItem('tv_pwa_welcome_shown', '1');
                 // پاک کردن پارامتر paired از آدرس بدون رفرش
                 try {
                     urlParams.delete('paired');
