@@ -132,12 +132,13 @@ if ($shellAllowed) {
         /bin/cp -Rf " . escapeshellarg($sourceDir . '/resources') . " " . escapeshellarg($targetDir . '/') . " 2>&1
         /bin/cp -Rf " . escapeshellarg($sourceDir . '/routes') . " " . escapeshellarg($targetDir . '/') . " 2>&1
         /bin/cp -Rf " . escapeshellarg($sourceDir . '/public_html/.') . " " . escapeshellarg($targetDir . '/public_html/') . " 2>&1
+        /bin/cp -Rf " . escapeshellarg($sourceDir . '/public_html/.') . " " . escapeshellarg($targetDir . '/public/') . " 2>&1
         /bin/cp -f " . escapeshellarg($sourceDir . '/artisan') . " " . escapeshellarg($targetDir . '/') . " 2>&1
         /bin/cp -f " . escapeshellarg($sourceDir . '/composer.json') . " " . escapeshellarg($targetDir . '/') . " 2>&1
         /bin/cp -f " . escapeshellarg($sourceDir . '/package.json') . " " . escapeshellarg($targetDir . '/') . " 2>&1
     ";
     @shell_exec($cpCmd);
-    $log[] = 'Synchronized core directories and public_html via /bin/cp -Rf';
+    $log[] = 'Synchronized core directories, public_html and public via /bin/cp -Rf';
 }
 
 // 6. PHP Recursive synchronization (MD5-aware fallback & verification)
@@ -186,6 +187,7 @@ foreach ($dirsToSync as $dir) {
     syncDirectory("$sourceDir/$dir", "$targetDir/$dir", $copiedFiles, $copiedDirs);
 }
 syncDirectory("$sourceDir/public_html", "$targetDir/public_html", $copiedFiles, $copiedDirs);
+syncDirectory("$sourceDir/public_html", "$targetDir/public", $copiedFiles, $copiedDirs);
 
 $filesToSync = ['artisan', 'composer.json', 'package.json'];
 foreach ($filesToSync as $file) {

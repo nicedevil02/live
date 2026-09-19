@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // این خط برای کارکرد صحیح پوشه public_html ضروری است
         // Host keeps assets in public_html; local development uses Laravel's public directory.
-        if ($this->app->environment('production') || filter_var(env('USE_PUBLIC_HTML', false), FILTER_VALIDATE_BOOL)) {
+        if (is_dir(base_path('public_html')) && ($this->app->environment('production') || filter_var(env('USE_PUBLIC_HTML', true), FILTER_VALIDATE_BOOL))) {
             $this->app->usePublicPath(base_path('public_html'));
         }
     }
