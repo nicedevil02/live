@@ -211,38 +211,57 @@
         .animate-float3 { animation: float3 18s ease-in-out infinite; }
 
         /* =========================================================================
-           4-QUADRANT SEPARATED FLOATING ORBS KEYFRAMES (حرکت تفکیک‌شده در ۴ گوشه با شتاب 3D)
-           کاملاً ایزوله در لایه VRAM بدون ری‌پینت و بدون داغ کردن پردازنده تلویزیون
+           8-ZONE HARDWARE-ACCELERATED FLOATING AMBIENT ORBS ENGINE
+           کاملاً ایزوله در لایه GPU Compositor با translate3d بدون ری‌پینت و بدون داغ کردن پردازنده
            ========================================================================= */
-        @keyframes orb-drift-tl {
-            0% { transform: translate3d(0, 0, 0) scale(1); }
-            32% { transform: translate3d(45px, 35px, 0) scale(1.08); }
-            68% { transform: translate3d(-25px, 48px, 0) scale(0.94); }
-            100% { transform: translate3d(0, 0, 0) scale(1); }
+        @keyframes orb-float-1 {
+            0% { transform: translate3d(0, 0, 0); }
+            33% { transform: translate3d(75px, 55px, 0); }
+            66% { transform: translate3d(-30px, 80px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
         }
-        @keyframes orb-drift-br {
-            0% { transform: translate3d(0, 0, 0) scale(1); }
-            35% { transform: translate3d(-42px, -38px, 0) scale(1.09); }
-            72% { transform: translate3d(28px, -24px, 0) scale(0.93); }
-            100% { transform: translate3d(0, 0, 0) scale(1); }
+        @keyframes orb-float-2 {
+            0% { transform: translate3d(0, 0, 0); }
+            35% { transform: translate3d(65px, -70px, 0); }
+            70% { transform: translate3d(-40px, -45px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
         }
-        @keyframes orb-drift-tr {
-            0% { transform: translate3d(0, 0, 0) scale(1); }
-            30% { transform: translate3d(-38px, 32px, 0) scale(1.07); }
-            65% { transform: translate3d(25px, 40px, 0) scale(0.95); }
-            100% { transform: translate3d(0, 0, 0) scale(1); }
+        @keyframes orb-float-3 {
+            0% { transform: translate3d(0, 0, 0); }
+            30% { transform: translate3d(-70px, 60px, 0); }
+            65% { transform: translate3d(50px, 75px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
         }
-        @keyframes orb-drift-bl {
-            0% { transform: translate3d(0, 0, 0) scale(1); }
-            35% { transform: translate3d(38px, -32px, 0) scale(1.08); }
-            70% { transform: translate3d(-30px, -18px, 0) scale(0.94); }
-            100% { transform: translate3d(0, 0, 0) scale(1); }
+        @keyframes orb-float-4 {
+            0% { transform: translate3d(0, 0, 0); }
+            35% { transform: translate3d(60px, -60px, 0); }
+            70% { transform: translate3d(-50px, -35px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
         }
-
-        .animate-orb-tl { animation: orb-drift-tl 9s ease-in-out infinite; will-change: transform; backface-visibility: hidden; }
-        .animate-orb-br { animation: orb-drift-br 11s ease-in-out infinite; will-change: transform; backface-visibility: hidden; }
-        .animate-orb-tr { animation: orb-drift-tr 8s ease-in-out infinite; will-change: transform; backface-visibility: hidden; }
-        .animate-orb-bl { animation: orb-drift-bl 10s ease-in-out infinite; will-change: transform; backface-visibility: hidden; }
+        @keyframes orb-float-5 {
+            0% { transform: translate3d(0, 0, 0); }
+            33% { transform: translate3d(-55px, -65px, 0); }
+            66% { transform: translate3d(65px, 40px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+        @keyframes orb-float-6 {
+            0% { transform: translate3d(0, 0, 0); }
+            35% { transform: translate3d(65px, 70px, 0); }
+            70% { transform: translate3d(-45px, 50px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+        @keyframes orb-float-7 {
+            0% { transform: translate3d(0, 0, 0); }
+            38% { transform: translate3d(-60px, -60px, 0); }
+            72% { transform: translate3d(45px, -40px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+        @keyframes orb-float-8 {
+            0% { transform: translate3d(0, 0, 0); }
+            30% { transform: translate3d(70px, -45px, 0); }
+            68% { transform: translate3d(-40px, 65px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
         @keyframes ticker-rtl {
             0% { transform: translateX(-100vw); }
             100% { transform: translateX(100%); }
@@ -843,74 +862,126 @@
             -webkit-filter: none !important;
         }
 
-        /* ۱. گوی فیروزه‌ای و یاقوت کبود اپل (Apple Electric Cyan & Sapphire) - شمال غربی / بالا چپ */
+        /* ۱. گوی فیروزه‌ای و یاقوت کبود اپل (Apple Electric Cyan & Sapphire) - بالا چپ */
         .orb-1 {
-            top: -4%;
-            left: 2%;
-            width: clamp(270px, 28vw, 380px);
-            height: clamp(270px, 28vw, 380px);
-            background: radial-gradient(circle at 48% 48%, rgba(6, 182, 212, 0.85) 0%, rgba(2, 132, 199, 0.60) 28%, rgba(2, 132, 199, 0.25) 55%, rgba(2, 132, 199, 0.05) 72%, transparent 84%) !important;
-            opacity: 0.88;
-            animation: orb-drift-tl 9s ease-in-out infinite;
-        }
-
-        /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Sunset Orchid) - مرکز-چپ پایین (خارج از اسلایدر) */
-        .orb-2 {
-            bottom: -2%;
-            left: 36%;
-            width: clamp(260px, 27vw, 370px);
-            height: clamp(260px, 27vw, 370px);
-            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.85) 0%, rgba(192, 38, 211, 0.60) 28%, rgba(192, 38, 211, 0.25) 55%, rgba(192, 38, 211, 0.05) 72%, transparent 84%) !important;
-            opacity: 0.88;
-            animation: orb-drift-br 11s ease-in-out infinite;
-        }
-
-        /* ۳. گوی طلای خالص ۲۴ عیار و کهربایی اپل (Apple 24K Liquid Gold & Amber) - مرکز-چپ بالا (روی کارت‌های طلایی و خارج از اسلایدر) */
-        .orb-3 {
             top: 2%;
-            left: 32%;
-            width: clamp(250px, 25vw, 350px);
-            height: clamp(250px, 25vw, 350px);
-            background: radial-gradient(circle at 48% 48%, rgba(253, 224, 71, 0.90) 0%, rgba(245, 158, 11, 0.65) 28%, rgba(217, 119, 6, 0.26) 55%, rgba(217, 119, 6, 0.05) 72%, transparent 84%) !important;
-            opacity: 0.88;
-            animation: orb-drift-tr 8s ease-in-out infinite;
+            left: 2%;
+            width: clamp(120px, 12vw, 175px);
+            height: clamp(120px, 12vw, 175px);
+            background: radial-gradient(circle at 48% 48%, rgba(6, 182, 212, 0.85) 0%, rgba(2, 132, 199, 0.55) 30%, rgba(2, 132, 199, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.90;
+            animation: orb-float-1 8s ease-in-out infinite;
         }
 
-        /* ۴. گوی شفق زمردین و نعنایی اپل (Apple Aurora Emerald & Mint) - جنوب غربی / پایین چپ */
+        /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Orchid) - پایین چپ */
+        .orb-2 {
+            bottom: 4%;
+            left: 5%;
+            width: clamp(115px, 11vw, 165px);
+            height: clamp(115px, 11vw, 165px);
+            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.85) 0%, rgba(192, 38, 211, 0.55) 30%, rgba(192, 38, 211, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.90;
+            animation: orb-float-2 10s ease-in-out infinite;
+        }
+
+        /* ۳. گوی طلای خالص ۲۴ عیار و کهربایی اپل (Apple 24K Liquid Gold & Amber) - مرکز-چپ بالا */
+        .orb-3 {
+            top: 8%;
+            left: 33%;
+            width: clamp(125px, 13vw, 180px);
+            height: clamp(125px, 13vw, 180px);
+            background: radial-gradient(circle at 48% 48%, rgba(253, 224, 71, 0.90) 0%, rgba(245, 158, 11, 0.60) 30%, rgba(217, 119, 6, 0.22) 58%, transparent 78%) !important;
+            opacity: 0.90;
+            animation: orb-float-3 9s ease-in-out infinite;
+        }
+
+        /* ۴. گوی شفق زمردین و نعنایی اپل (Apple Aurora Emerald & Mint) - مرکز-چپ پایین */
         .orb-4 {
-            bottom: 2%;
-            left: 3%;
-            width: clamp(255px, 26vw, 360px);
-            height: clamp(255px, 26vw, 360px);
-            background: radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.85) 0%, rgba(5, 150, 105, 0.60) 28%, rgba(5, 150, 105, 0.25) 55%, rgba(5, 150, 105, 0.05) 72%, transparent 84%) !important;
-            opacity: 0.88;
-            animation: orb-drift-bl 10s ease-in-out infinite;
+            bottom: 8%;
+            left: 31%;
+            width: clamp(120px, 12vw, 170px);
+            height: clamp(120px, 12vw, 170px);
+            background: radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.85) 0%, rgba(5, 150, 105, 0.55) 30%, rgba(5, 150, 105, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.90;
+            animation: orb-float-4 11s ease-in-out infinite;
         }
 
-        /* پالت تم روشن شاهنشاهی و روشن مدرن (Light Mode Apple Palette - شاداب، پاستلی و با کنتراست مطبوع) */
-        .theme-imperial-pearl .orb-1,
-        .theme-light-modern .orb-1,
-        .theme-bing-ceramic .orb-1 {
-            opacity: 0.58 !important;
-            background: radial-gradient(circle at 48% 48%, rgba(14, 165, 233, 0.65) 0%, rgba(56, 189, 248, 0.38) 30%, rgba(186, 230, 253, 0.16) 55%, rgba(186, 230, 253, 0.04) 72%, transparent 84%) !important;
+        /* ۵. گوی سرمه‌ای یاقوتی و کبالت (Sapphire Deep Blue & Cobalt) - میانه چپ */
+        .orb-5 {
+            top: 42%;
+            left: 8%;
+            width: clamp(110px, 11vw, 160px);
+            height: clamp(110px, 11vw, 160px);
+            background: radial-gradient(circle at 48% 48%, rgba(59, 130, 246, 0.85) 0%, rgba(37, 99, 235, 0.55) 30%, rgba(29, 78, 216, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.88;
+            animation: orb-float-5 12s ease-in-out infinite;
         }
-        .theme-imperial-pearl .orb-2,
-        .theme-light-modern .orb-2,
-        .theme-bing-ceramic .orb-2 {
-            opacity: 0.58 !important;
-            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.55) 0%, rgba(217, 70, 239, 0.32) 30%, rgba(251, 207, 232, 0.16) 55%, rgba(251, 207, 232, 0.04) 72%, transparent 84%) !important;
+
+        /* ۶. گوی طلای شامپاینی و آفتابی (Champagne Spark & Warm Gold) - بالا مرکز */
+        .orb-6 {
+            top: 4%;
+            left: 48%;
+            width: clamp(120px, 12vw, 175px);
+            height: clamp(120px, 12vw, 175px);
+            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.88) 0%, rgba(217, 119, 6, 0.55) 30%, rgba(180, 83, 9, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.90;
+            animation: orb-float-6 8.5s ease-in-out infinite;
         }
-        .theme-imperial-pearl .orb-3,
-        .theme-light-modern .orb-3,
-        .theme-bing-ceramic .orb-3 {
-            opacity: 0.62 !important;
-            background: radial-gradient(circle at 48% 48%, rgba(245, 158, 11, 0.65) 0%, rgba(251, 191, 36, 0.38) 30%, rgba(254, 243, 199, 0.16) 55%, rgba(254, 243, 199, 0.04) 72%, transparent 84%) !important;
+
+        /* ۷. گوی مرجانی نئون و رزگلد (Coral Neon & Rose Gold) - پایین مرکز */
+        .orb-7 {
+            bottom: 4%;
+            left: 45%;
+            width: clamp(115px, 11vw, 165px);
+            height: clamp(115px, 11vw, 165px);
+            background: radial-gradient(circle at 48% 48%, rgba(251, 113, 133, 0.85) 0%, rgba(225, 29, 72, 0.55) 30%, rgba(190, 18, 60, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.88;
+            animation: orb-float-7 9.5s ease-in-out infinite;
         }
-        .theme-imperial-pearl .orb-4,
-        .theme-light-modern .orb-4,
-        .theme-bing-ceramic .orb-4 {
-            opacity: 0.58 !important;
-            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.60) 0%, rgba(52, 211, 153, 0.35) 30%, rgba(167, 243, 208, 0.16) 55%, rgba(167, 243, 208, 0.04) 72%, transparent 84%) !important;
+
+        /* ۸. گوی بنفش کیهانی و اسطوخودوس (Cosmic Violet & Lavender) - میانه کارت‌ها */
+        .orb-8 {
+            top: 48%;
+            left: 25%;
+            width: clamp(110px, 11vw, 160px);
+            height: clamp(110px, 11vw, 160px);
+            background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.85) 0%, rgba(147, 51, 234, 0.55) 30%, rgba(126, 34, 206, 0.20) 58%, transparent 78%) !important;
+            opacity: 0.88;
+            animation: orb-float-8 13s ease-in-out infinite;
+        }
+
+        /* پالت تم روشن شاهنشاهی و روشن مدرن (Light Mode Apple Palette) */
+        .theme-imperial-pearl .orb-1, .theme-light-modern .orb-1, .theme-bing-ceramic .orb-1 {
+            opacity: 0.55 !important;
+            background: radial-gradient(circle at 48% 48%, rgba(14, 165, 233, 0.65) 0%, rgba(56, 189, 248, 0.35) 30%, rgba(186, 230, 253, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-2, .theme-light-modern .orb-2, .theme-bing-ceramic .orb-2 {
+            opacity: 0.55 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.55) 0%, rgba(217, 70, 239, 0.30) 30%, rgba(251, 207, 232, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-3, .theme-light-modern .orb-3, .theme-bing-ceramic .orb-3 {
+            opacity: 0.60 !important;
+            background: radial-gradient(circle at 48% 48%, rgba(245, 158, 11, 0.65) 0%, rgba(251, 191, 36, 0.35) 30%, rgba(254, 243, 199, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-4, .theme-light-modern .orb-4, .theme-bing-ceramic .orb-4 {
+            opacity: 0.55 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.60) 0%, rgba(52, 211, 153, 0.32) 30%, rgba(167, 243, 208, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-5, .theme-light-modern .orb-5, .theme-bing-ceramic .orb-5 {
+            opacity: 0.55 !important;
+            background: radial-gradient(circle at 48% 48%, rgba(59, 130, 246, 0.60) 0%, rgba(96, 165, 250, 0.32) 30%, rgba(191, 219, 254, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-6, .theme-light-modern .orb-6, .theme-bing-ceramic .orb-6 {
+            opacity: 0.60 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.62) 0%, rgba(252, 211, 77, 0.32) 30%, rgba(254, 243, 199, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-7, .theme-light-modern .orb-7, .theme-bing-ceramic .orb-7 {
+            opacity: 0.55 !important;
+            background: radial-gradient(circle at 48% 48%, rgba(244, 63, 94, 0.55) 0%, rgba(251, 113, 133, 0.30) 30%, rgba(254, 205, 211, 0.12) 58%, transparent 78%) !important;
+        }
+        .theme-imperial-pearl .orb-8, .theme-light-modern .orb-8, .theme-bing-ceramic .orb-8 {
+            opacity: 0.55 !important;
+            background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.55) 0%, rgba(192, 132, 252, 0.30) 30%, rgba(243, 232, 255, 0.12) 58%, transparent 78%) !important;
         }
 
         /* =========================================================================
@@ -1083,12 +1154,16 @@
             </div>
         </template>
 
-        {{-- Apple Premium Ambient Floating Orbs Engine (۴ گوی نورانی، تفکیک‌شده و سبک اپل در ۴ گوشه نمایشگر) --}}
+        {{-- Apple Premium Ambient Floating Orbs Engine (۸ گوی نورانی، تفکیک‌شده، متحرک و سبک اپل) --}}
         <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="!ecoMode && themeKey !== 'pure-black'">
             <div class="ambient-orb orb-1"></div>
             <div class="ambient-orb orb-2"></div>
             <div class="ambient-orb orb-3"></div>
             <div class="ambient-orb orb-4"></div>
+            <div class="ambient-orb orb-5"></div>
+            <div class="ambient-orb orb-6"></div>
+            <div class="ambient-orb orb-7"></div>
+            <div class="ambient-orb orb-8"></div>
         </div>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
@@ -1363,7 +1438,7 @@
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
                                     item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor,
-                                    index < 3 ? 'pt-3.5 pb-1' : 'pt-2 pb-0.5'
+                                    index < 3 ? 'pt-5 pb-0.5 translate-y-3.5' : 'pt-2 pb-0.5'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex flex-col items-center justify-center whitespace-nowrap w-full">
                                           <span :class="[
