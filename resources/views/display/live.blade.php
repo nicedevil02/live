@@ -798,12 +798,71 @@
         .theme-light-modern .orb-4,
         .theme-bing-ceramic .orb-4 {
             opacity: 0.58 !important;
-            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.60) 0%, rgba(52, 211, 153, 0.30) 45%, rgba(209, 250, 229, 0.15) 65%, transparent 78%) !important;
+        }
+
+        /* =========================================================================
+           حالت سبک / روان (Eco / Lite Mode Engine)
+           توقف کامل تمام انیمیشن‌ها، فیلترهای بلور و پردازش‌های سنگین گرافیکی
+           جهت کارکرد روان و بی‌نقص روی سیستم‌ها و تلویزیون‌های ضعیف
+           ========================================================================= */
+        .eco-mode *,
+        .eco-mode *::before,
+        .eco-mode *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        /* غیرفعال‌سازی فیلتر بلور پس‌زمینه در تمام بخش‌ها برای رفع فشار GPU */
+        .eco-mode [class*="backdrop-blur"],
+        .eco-mode [class*="neu-card"],
+        .eco-mode header,
+        .eco-mode footer,
+        .eco-mode section {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* مخفی‌سازی کامل افکت‌های حرکتی و نوری تزیینی */
+        .eco-mode .animate-gold-beam,
+        .eco-mode .ambient-orb-container,
+        .eco-mode .animate-laser-sweep,
+        .eco-mode .animate-sparkle,
+        .eco-mode .animate-ping,
+        .eco-mode .animate-slideSwap {
+            display: none !important;
+        }
+
+        /* لغو درخشش و سایه‌های چندلایه متن و کارت‌ها */
+        .eco-mode [class*="glow-"],
+        .eco-mode [class*="drop-shadow"] {
+            text-shadow: none !important;
+            filter: none !important;
+        }
+
+        /* پس‌زمینه خوانا و بهینه برای کارت‌ها بدون مصرف GPU */
+        .eco-mode .neu-card-light-modern,
+        .eco-mode .neu-card-bing-ceramic,
+        .eco-mode .neu-card-imperial-pearl {
+            background: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+            border-color: rgba(226, 232, 240, 0.9) !important;
+        }
+
+        .eco-mode .neu-card-dark-glass,
+        .eco-mode .neu-card-pure-black,
+        .eco-mode .neu-card-gold-royal,
+        .eco-mode .neu-card-blue-ocean,
+        .eco-mode .neu-card-emerald-night,
+        .eco-mode .neu-card-rose-dark,
+        .eco-mode .neu-card-imperial-onyx {
+            background: #0b1329 !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
         }
     </style>
 </head>
-<body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
-    <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
+<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
+    <main x-show="!isLoading" :class="[theme.bg, ecoMode ? 'eco-mode' : '']" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -881,7 +940,7 @@
         </template>
 
         {{-- Apple Premium Ambient Floating Orbs Engine (۴ گوی نورانی، تفکیک‌شده و سبک اپل در ۴ گوشه نمایشگر) --}}
-        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="themeKey !== 'pure-black'">
+        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="!ecoMode && themeKey !== 'pure-black'">
             <div class="ambient-orb orb-1"></div>
             <div class="ambient-orb orb-2"></div>
             <div class="ambient-orb orb-3"></div>
@@ -1248,10 +1307,24 @@
                     <span :class="isLightTheme ? 'text-slate-500' : 'text-slate-400'" class="font-normal font-mono">By <span class="font-bold text-slate-400 dark:text-slate-300">Bahman Dev</span></span>
                 </div>
 
-                {{-- سمت چپ: وضعیت اتصال و بروزرسانی لحظه‌ای --}}
+                {{-- سمت چپ: دکمه حالت سبک/روان + وضعیت اتصال و بروزرسانی لحظه‌ای --}}
                 <div class="flex items-center gap-3 z-10 font-bold text-xs" :class="theme.textSecondary">
+                    {{-- دکمه حالت سبک / روان (Eco / Smooth Mode Toggle) --}}
+                    <button @click="toggleEcoMode()" 
+                            type="button"
+                            class="group flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm select-none"
+                            :class="ecoMode 
+                                ? (isLightTheme ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-400/30' : 'bg-emerald-500/25 text-emerald-300 border-emerald-400/60 shadow-[0_0_12px_rgba(16,185,129,0.35)]') 
+                                : (isLightTheme ? 'bg-black/5 hover:bg-black/10 text-slate-700 border-black/10' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10')"
+                            :title="ecoMode ? 'غیرفعال‌سازی حالت سبک و بازگشت به جلوه‌های بصری' : 'فعال‌سازی حالت سبک / روان جهت کاهش مصرف منابع سیستم'">
+                        <span class="text-sm transition-transform duration-200" :class="ecoMode ? 'scale-110' : 'opacity-70'">⚡</span>
+                        <span>حالت سبک / روان</span>
+                        <span class="w-2 h-2 rounded-full transition-colors duration-200" 
+                              :class="ecoMode ? 'bg-emerald-400 ring-2 ring-emerald-300/50' : 'bg-slate-400/50'"></span>
+                    </button>
+
                     <span class="flex items-center gap-2 bg-black/15 dark:bg-white/10 border border-white/10 rounded-full px-4 py-1.5 shadow-sm">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-[pulse_1.5s_infinite]"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-500" :class="ecoMode ? '' : 'animate-[pulse_1.5s_infinite]'"></span>
                         <span dir="ltr" class="font-mono" x-text="errorMessage || 'بروزرسانی: ' + (snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---')"></span>
                     </span>
                 </div>
@@ -1515,6 +1588,20 @@
                 zoomLevel: parseFloat(localStorage.getItem('display_zoom') || '{{ ($isTv ?? false) ? "1.15" : "1" }}'),
                 showControls: false,
                 controlsTimer: null,
+                ecoMode: (function() {
+                    try {
+                        return localStorage.getItem('display_eco_mode') === 'true';
+                    } catch (e) {
+                        return false;
+                    }
+                })(),
+
+                toggleEcoMode() {
+                    this.ecoMode = !this.ecoMode;
+                    try {
+                        localStorage.setItem('display_eco_mode', this.ecoMode ? 'true' : 'false');
+                    } catch (e) {}
+                },
 
                 triggerControls() {
                     this.showControls = true;
