@@ -78,7 +78,15 @@
             <div class="space-y-4">
                 <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-black">شروع کاربری</span>
                 <h3 class="text-xl font-black text-slate-900 dark:text-white">۱۴ روز تست رایگان</h3>
-                <div class="text-3xl font-black text-slate-900 dark:text-white">رایگان <span class="text-xs text-slate-400 font-normal">/ بدون تعهد</span></div>
+                <div class="space-y-1">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-3xl sm:text-4xl font-black text-emerald-500">رایگان</span>
+                        <span class="text-xs text-slate-400 font-normal">/ بدون تعهد و هزینه</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        بدون نیاز به ثبت اطلاعات کارت بانکی
+                    </div>
+                </div>
                 <p class="text-slate-500 text-xs leading-relaxed">برای آشنایی با سامانه و اتصال آزمایشی به تلویزیون مغازه.</p>
                 <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-400 pt-4 border-t border-slate-100 dark:border-slate-800">
                     <li class="flex items-center gap-2">✅ دسترسی کامل به تمامی تم‌های لوکس</li>
@@ -94,13 +102,28 @@
 
         {{-- پلن سالانه VIP (برجسته) --}}
         <div class="rounded-3xl bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-slate-900/40 border-2 border-amber-500 p-8 space-y-6 relative flex flex-col justify-between shadow-2xl shadow-amber-500/10 transform md:-translate-y-4">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-xs shadow-md">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-xs shadow-md whitespace-nowrap">
                 محبوب‌ترین انتخاب گالری‌ها (تخفیف ویژه)
             </div>
             <div class="space-y-4 pt-2">
                 <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-black">یک‌ساله طلایی</span>
                 <h3 class="text-xl font-black text-slate-900 dark:text-white">اشتراک سالانه VIP</h3>
-                <div class="text-3xl font-black text-amber-500">منصفانه و اقتصادی <span class="text-xs text-slate-400 font-normal">/ سالانه</span></div>
+                <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-400 dark:text-slate-500 line-through">۸,۲۸۰,۰۰۰ تومان</span>
+                        <span class="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500 dark:text-rose-400 font-black text-[10px] border border-rose-500/20">
+                            بیش از ۵۰٪ تخفیف
+                        </span>
+                    </div>
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-3xl sm:text-4xl font-black text-amber-500">۳,۹۹۰,۰۰۰</span>
+                        <span class="text-sm font-bold text-slate-700 dark:text-slate-300">تومان</span>
+                        <span class="text-xs text-slate-400 font-normal">/ سالانه</span>
+                    </div>
+                    <div class="text-[11px] text-amber-600 dark:text-amber-400 font-bold">
+                        (معادل ماهانه فقط ۳۳۲ هزار تومان - بیشترین صرفه اقتصادی)
+                    </div>
+                </div>
                 <p class="text-slate-500 text-xs leading-relaxed">کامل‌ترین پکیج برای طلافروشان حرفه‌ای با ویترین محصولات و فرمول‌های پیشرفته.</p>
                 <ul class="space-y-3 text-xs text-slate-700 dark:text-slate-300 pt-4 border-t border-slate-200 dark:border-slate-800">
                     <li class="flex items-center gap-2 font-bold text-amber-500">✨ ویترین دیجیتال نامحدود عکس محصولات</li>
@@ -120,7 +143,22 @@
             <div class="space-y-4">
                 <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-black">انعطاف‌پذیر</span>
                 <h3 class="text-xl font-black text-slate-900 dark:text-white">اشتراک ۳ ماهه (فصلی)</h3>
-                <div class="text-3xl font-black text-slate-900 dark:text-white">دوره‌ای <span class="text-xs text-slate-400 font-normal">/ هر ۳ ماه</span></div>
+                <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-400 dark:text-slate-500 line-through">۲,۰۷۰,۰۰۰ تومان</span>
+                        <span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 font-black text-[10px] border border-amber-500/20">
+                            ۱۵٪ تخفیف
+                        </span>
+                    </div>
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">۱,۷۹۰,۰۰۰</span>
+                        <span class="text-sm font-bold text-slate-700 dark:text-slate-300">تومان</span>
+                        <span class="text-xs text-slate-400 font-normal">/ هر ۳ ماه</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        (معادل ماهانه ۵۹۶ هزار تومان)
+                    </div>
+                </div>
                 <p class="text-slate-500 text-xs leading-relaxed">تمدید فصلی بدون تعهد بلندمدت با قابلیت ارتقا به سالانه.</p>
                 <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-400 pt-4 border-t border-slate-100 dark:border-slate-800">
                     <li class="flex items-center gap-2">✅ تمام تم‌های ۸ گانه شیشه‌ای و کلاسیک</li>
@@ -132,6 +170,23 @@
             <a href="{{ route('admin.register') }}" class="w-full py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs text-center transition-all cursor-pointer">
                 انتخاب پلن فصلی
             </a>
+        </div>
+    </div>
+
+    {{-- سایر پلن‌ها (۱ ماهه و ۶ ماهه) --}}
+    <div class="mt-8 max-w-4xl mx-auto p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex flex-wrap items-center justify-center gap-3 sm:gap-6 shadow-sm">
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <span>پلن ۱ ماهه استاندارد: <strong class="text-slate-900 dark:text-white">۶۹۰,۰۰۰ تومان</strong></span>
+        </div>
+        <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span>پلن ۶ ماهه طلایی: <strong class="text-slate-900 dark:text-white">۲,۸۹۰,۰۰۰ تومان</strong> <span class="text-[10px] text-amber-600 dark:text-amber-400 font-bold">(۳۰٪ تخفیف)</span></span>
+        </div>
+        <div class="hidden sm:block text-slate-300 dark:text-slate-700">|</div>
+        <div class="text-[11px] text-slate-500">
+            امکان انتخاب کلیه دوره‌ها پس از ورود به پنل
         </div>
     </div>
 

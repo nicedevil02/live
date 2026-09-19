@@ -218,11 +218,34 @@
         .dark .dark\:bg-slate-950\/95 {
             background-color: rgb(2 6 23 / 0.95);
         }
+        /* متریال شیشه مایع و ماتریس اپل (Apple HIG Liquid Frosted Glass) */
+        .apple-glass-capsule {
+            background: rgba(255, 255, 255, 0.72) !important;
+            backdrop-filter: blur(24px) saturate(190%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(102%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08),
+                        0 4px 12px -2px rgba(15, 23, 42, 0.04),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.95),
+                        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.03) !important;
+        }
+        .dark .apple-glass-capsule {
+            background: rgba(15, 23, 42, 0.74) !important;
+            backdrop-filter: blur(24px) saturate(190%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(102%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.6),
+                        0 4px 12px -2px rgba(0, 0, 0, 0.35),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3) !important;
+        }
         /* کلاس‌های ترنزیشن فیزیک اپل مورفینگ گلس برای جمع‌شدن ردیف دوم در اسکرول به پایین */
         .header-row2-hidden {
             max-height: 0 !important;
+            height: 0 !important;
+            min-height: 0 !important;
             opacity: 0 !important;
-            transform: translateY(-6px) scaleY(0.96) !important;
+            transform: translateY(-8px) scaleY(0.96) !important;
             overflow: hidden !important;
             pointer-events: none !important;
             padding-top: 0 !important;
@@ -231,7 +254,7 @@
             margin-bottom: 0 !important;
         }
         .header-row2-visible {
-            max-height: 5rem !important; /* 80px */
+            max-height: 5.5rem !important; /* 88px */
             opacity: 1 !important;
             transform: translateY(0) scaleY(1) !important;
             overflow: visible !important;
@@ -240,7 +263,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()" @scroll.window.passive="onScroll()">
+<body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()">
 
     {{-- پرش به محتوای اصلی (Skip Link) --}}
     <a href="#main-content"
@@ -248,14 +271,14 @@
         پرش به محتوای اصلی
     </a>
 
-    {{-- نوار ناوبری کپسولی شناور اپل مورفینگ گلس (Apple HIG Floating Glass Capsule Header) --}}
-    <header class="sticky top-1.5 sm:top-3 z-50 w-full px-2 sm:px-4 lg:px-6 pointer-events-none transition-all duration-300">
-        <div class="max-w-7xl mx-auto pointer-events-auto rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-slate-950/90 backdrop-blur-2xl shadow-xl shadow-slate-950/5 dark:shadow-black/40 transition-all duration-300 overflow-visible"
-             :class="isScrolledDown ? 'shadow-md ring-1 ring-slate-900/5 dark:ring-white/10' : 'shadow-xl'">
+    {{-- نوار ناوبری کپسولی شناور شیشه‌ای اپل (Apple HIG Liquid Glass Capsule Header) --}}
+    <header class="fixed top-1.5 sm:top-3 inset-x-0 z-50 w-full px-2 sm:px-4 lg:px-6 pointer-events-none transition-all duration-300">
+        <div class="max-w-7xl mx-auto pointer-events-auto rounded-2xl sm:rounded-3xl apple-glass-capsule transition-all duration-300 overflow-visible"
+             :class="isScrolledDown ? 'shadow-lg ring-1 ring-slate-900/5 dark:ring-white/10' : 'shadow-xl'">
             
             {{-- ردیف ۱: نوار ترکیبی بالای هدر (نرخ زنده + ابزارهای کاربردی) --}}
             @unless($isTv ?? false)
-            <div class="relative z-20 h-9 px-3 sm:px-5 flex items-center justify-between gap-2 sm:gap-4 border-slate-200/60 dark:border-white/10 bg-slate-50/70 dark:bg-slate-900/50 backdrop-blur-xl text-xs select-none transition-all duration-300"
+            <div class="relative z-20 h-9 px-3 sm:px-5 flex items-center justify-between gap-2 sm:gap-4 border-slate-200/50 dark:border-white/10 bg-transparent text-xs select-none transition-all duration-300"
                  :class="isScrolledDown ? 'rounded-2xl sm:rounded-3xl border-b-0' : 'rounded-t-2xl sm:rounded-t-3xl border-b'">
                 
                 {{-- سمت راست / مرکز: نوار نرخ زنده لحظه‌ای بازار --}}
@@ -300,7 +323,7 @@
                             type="button"
                             id="themeToggleBtn"
                             aria-label="تغییر تم تاریک و روشن"
-                            class="w-7 h-7 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all shadow-sm cursor-pointer shrink-0"
+                            class="w-7 h-7 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all shadow-sm cursor-pointer shrink-0"
                             title="تغییر تم تاریک / روشن">
                         <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-400 theme-sun-icon transition-transform duration-300 rotate-0 hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -314,14 +337,14 @@
             @endunless
 
             {{-- ردیف ۲: نوار اصلی برندینگ و ناوبری (Main Navigation Bar) --}}
-            <div class="relative z-10 h-16 sm:h-20 px-3 sm:px-5 flex items-center justify-between gap-3 xl:gap-6 rounded-b-2xl sm:rounded-b-3xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform will-change-[max-height,opacity]"
+            <div class="relative z-10 h-16 sm:h-20 px-3 sm:px-5 flex items-center justify-between gap-3 xl:gap-6 rounded-b-2xl sm:rounded-b-3xl bg-transparent transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform will-change-[max-height,opacity]"
                  :class="isScrolledDown ? 'header-row2-hidden' : 'header-row2-visible'"
                  @focusin="isScrolledDown = false">
                 
                 {{-- لوگو و نام برند --}}
                 <a href="/" class="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0">
                     <div class="relative shrink-0">
-                        <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
+                        <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white/90 dark:bg-slate-900/80 p-1 border border-slate-200/80 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
                         <span class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-amber-500"></span>
@@ -336,7 +359,7 @@
                 </a>
 
                 {{-- نوار ناوبری کپسولی مدرن و مگامنو (Desktop Navigation - Apple Liquid Glass Capsule) --}}
-                <nav aria-label="ناوبری اصلی" class="hidden xl:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 backdrop-blur-md text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm overflow-visible">
+                <nav aria-label="ناوبری اصلی" class="hidden xl:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-white/10 backdrop-blur-md text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm overflow-visible">
                     <a href="/" class="px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->is('/') ? ' aria-current="page"' : '' !!}>
                         صفحه اصلی
                     </a>
@@ -352,7 +375,7 @@
                 <div class="flex items-center gap-2 shrink-0">
                     {{-- دکمه ورود طلافروشان --}}
                     <a href="{{ route('admin.login') }}"
-                       class="hidden sm:inline-flex items-center gap-1.5 px-3.5 h-10 sm:h-11 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 font-bold text-xs transition-all shadow-sm whitespace-nowrap">
+                       class="hidden sm:inline-flex items-center gap-1.5 px-3.5 h-10 sm:h-11 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-slate-900/70 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 font-bold text-xs transition-all shadow-sm whitespace-nowrap">
                         <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                         <span>ورود طلافروشان</span>
                     </a>
@@ -387,7 +410,7 @@
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 -translate-y-4"
-                 class="xl:hidden rounded-b-2xl sm:rounded-b-3xl border-t border-slate-200/80 dark:border-white/10 bg-white/98 dark:bg-slate-950/98 backdrop-blur-2xl px-5 py-6 space-y-6 shadow-2xl max-h-[80dvh] overflow-y-auto">
+                 class="xl:hidden rounded-b-2xl sm:rounded-b-3xl border-t border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl px-5 py-6 space-y-6 shadow-2xl max-h-[80dvh] overflow-y-auto">
                 
                 {{-- سامانه‌ها و تابلوهای تخصصی --}}
                 @include('partials.nav-mobile')
@@ -417,6 +440,9 @@
             </div>
         </div>
     </header>
+
+    {{-- اسپیسر نامرئی با ارتفاع کاملاً ثابت برای حفظ موقعیت دقیق سند و جلوگیری از هرگونه لرزش اسکرول --}}
+    <div class="h-[108px] sm:h-[130px] pointer-events-none shrink-0" aria-hidden="true"></div>
 
     {{-- محتوای اصلی صفحه --}}
     <main id="main-content" tabindex="-1" class="flex-grow focus:outline-none">
@@ -571,8 +597,10 @@
                 openDropdown: null,
                 isScrolledDown: false,
                 lastScrollY: 0,
-                scrollThreshold: 8,
-                topThreshold: 45,
+                scrollThreshold: 12,
+                topThreshold: 60,
+                collapseThreshold: 110,
+                ticking: false,
 
                 init() {
                     this.lastScrollY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
@@ -580,39 +608,52 @@
                 },
 
                 onScroll() {
-                    const currentY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+                    if (this.ticking) return;
+                    this.ticking = true;
 
-                    // اگر منوی موبایل باز است، هدر پنهان نشود
-                    if (this.mobileMenuOpen) {
-                        this.isScrolledDown = false;
+                    requestAnimationFrame(() => {
+                        const currentY = Math.max(0, window.pageYOffset || document.documentElement.scrollTop || 0);
+
+                        // اگر منوی موبایل باز است، هدر به هیچ وجه پنهان نشود
+                        if (this.mobileMenuOpen) {
+                            if (this.isScrolledDown) this.isScrolledDown = false;
+                            this.lastScrollY = currentY;
+                            this.ticking = false;
+                            return;
+                        }
+
+                        // در بالای صفحه همواره ردیف دوم هدر به صورت کامل نمایش داده شود
+                        if (currentY <= this.topThreshold) {
+                            if (this.isScrolledDown) this.isScrolledDown = false;
+                            this.lastScrollY = currentY;
+                            this.ticking = false;
+                            return;
+                        }
+
+                        const delta = currentY - this.lastScrollY;
+
+                        // فیلتر کردن لرزش‌های ریز زیر حد آستانه (میکرو-نویز تاچ‌پد و ماوس)
+                        if (Math.abs(delta) < this.scrollThreshold) {
+                            this.ticking = false;
+                            return;
+                        }
+
+                        if (delta > 0 && currentY > this.collapseThreshold) {
+                            // اسکرول عمدی به پایین: بستن هرگونه منوی باز و جمع شدن ردیف دوم
+                            if (!this.isScrolledDown) {
+                                this.closeAllMenus();
+                                this.isScrolledDown = true;
+                            }
+                        } else if (delta < -14) {
+                            // اسکرول عمدی به بالا: بازگشت سریع (Quick-Return) ردیف دوم
+                            if (this.isScrolledDown) {
+                                this.isScrolledDown = false;
+                            }
+                        }
+
                         this.lastScrollY = currentY;
-                        return;
-                    }
-
-                    // در بالای صفحه همواره ردیف دوم نمایش داده شود
-                    if (currentY <= this.topThreshold) {
-                        this.isScrolledDown = false;
-                        this.lastScrollY = currentY;
-                        return;
-                    }
-
-                    const delta = currentY - this.lastScrollY;
-
-                    // فیلتر کردن لرزش‌های زیر حد آستانه
-                    if (Math.abs(delta) < this.scrollThreshold) {
-                        return;
-                    }
-
-                    if (delta > 0 && currentY > 70) {
-                        // اسکرول به پایین: بستن هرگونه منوی باز و جمع شدن ردیف دوم هدر
-                        this.closeAllMenus();
-                        this.isScrolledDown = true;
-                    } else if (delta < 0) {
-                        // اسکرول به بالا: بازگشت سریع (Quick-Return) ردیف دوم هدر
-                        this.isScrolledDown = false;
-                    }
-
-                    this.lastScrollY = currentY;
+                        this.ticking = false;
+                    });
                 },
 
                 isOpen(name) {
