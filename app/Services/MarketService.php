@@ -40,15 +40,6 @@ class MarketService
 
     protected function getLastFetchTime(): ?Carbon
     {
-        $dbMax = MarketCache::max('fetched_at');
-        if ($dbMax) {
-            try {
-                return Carbon::parse($dbMax);
-            } catch (\Exception $e) {
-                // fallback to cache
-            }
-        }
-
         $lastFetchRaw = Cache::get('market_last_fetch_at');
         if (!$lastFetchRaw) return null;
         try {
@@ -122,7 +113,7 @@ class MarketService
 
         try {
             $start = microtime(true);
-            $response = Http::retry(2, 1000)->withOptions(['verify' => false])->timeout(8)->get($url);
+            $response = Http::retry(3, 2000)->withOptions(['verify' => config('services.market.verify_ssl', true)])->timeout($this->timeout)->get($url);
             $latency = (int) round((microtime(true) - $start) * 1000);
 
             if (!$response->successful()) {
@@ -337,7 +328,7 @@ class MarketService
             $url = $baleConfig ? $baleConfig->base_url : 'https://ble.ir/s/talanerkh';
 
             $start = microtime(true);
-            $response = Http::retry(2, 1000)->withOptions(['verify' => false])->timeout(8)->get($url);
+            $response = Http::retry(3, 2000)->withOptions(['verify' => false])->timeout($this->timeout)->get($url);
             $latency = (int) round((microtime(true) - $start) * 1000);
 
             if (!$response->successful()) {

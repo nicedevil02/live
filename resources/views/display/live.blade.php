@@ -48,30 +48,7 @@
         }
     }
     </script>
-    @php
-        $cssFile = 'assets/app-C7UfOh_H.css';
-        $manifestCandidates = [
-            public_path('build/manifest.json'),
-            base_path('public_html/build/manifest.json'),
-            base_path('public/build/manifest.json'),
-        ];
-        foreach ($manifestCandidates as $manifestPath) {
-            if (file_exists($manifestPath)) {
-                $manifestData = json_decode(@file_get_contents($manifestPath), true);
-                if (!empty($manifestData['resources/css/app.css']['file'])) {
-                    $cssFile = $manifestData['resources/css/app.css']['file'];
-                    break;
-                }
-            }
-        }
-        $cssAssetUrl = asset('build/' . $cssFile);
-        $cssVersion = '2.1';
-        $fullCssPath = public_path('build/' . $cssFile);
-        if (file_exists($fullCssPath)) {
-            $cssVersion = filemtime($fullCssPath);
-        }
-    @endphp
-    <link rel="stylesheet" href="{{ $cssAssetUrl }}?v={{ $cssVersion }}">
+    @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     {{-- Polyfills برای اجرای روان روی انواع وب‌ویوهای قدیمی تلویزیون بدون نیاز به آپدیت --}}
     <script>
@@ -130,76 +107,17 @@
                 };
             }
             window.addEventListener('error', function(e) {
-                var msg = e ? (e.message || e.toString()) : 'unknown';
-                console.warn('TalaLive handled legacy browser event:', msg);
-                if (window.TalaTV && window.TalaTV.onJsError) {
-                    try { window.TalaTV.onJsError(msg); } catch(err) {}
-                }
+                console.warn('TalaLive handled legacy browser event:', e ? e.message : 'unknown');
             });
         })();
     </script>
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
-    <style>
-        /* =========================================================================
-           SMART TV & LEGACY WEBVIEW COMPATIBILITY LAYER (کرومیوم قدیمی تا اندروید ۱۴)
-           تضمین رندر صددرصدی ابعاد، موقعیت‌ها و چیدمان بدون وابستگی صرف به لود تلویند
-           ========================================================================= */
-        [x-cloak] { display: none !important; }
-        [style*="display: none"], [style*="display:none"] { display: none !important; }
-
-        .fixed { position: fixed !important; }
-        .absolute { position: absolute !important; }
-        .relative { position: relative !important; }
-        .inset-0, [class*="inset-0"] { top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; }
-        .inset-x-0, [class*="inset-x-0"] { right: 0 !important; left: 0 !important; }
-        .top-0 { top: 0 !important; }
-        .bottom-0 { bottom: 0 !important; }
-        .left-0 { left: 0 !important; }
-        .right-0 { right: 0 !important; }
-        .w-full { width: 100% !important; }
-        .h-full { height: 100% !important; }
-        .min-h-\[100dvh\], .min-h-screen, .h-screen { min-height: 100vh !important; height: 100vh !important; }
-        .pointer-events-none { pointer-events: none !important; }
-        .overflow-hidden { overflow: hidden !important; }
-        .select-none { -webkit-user-select: none !important; user-select: none !important; }
-        .z-0 { z-index: 0 !important; }
-        .z-10 { z-index: 10 !important; }
-        .z-50 { z-index: 50 !important; }
-        .flex { display: -webkit-box; display: -webkit-flex; display: flex; }
-        .flex-col { -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; flex-direction: column; }
-        .flex-row { -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; flex-direction: row; }
-        .items-center { -webkit-box-align: center; -webkit-align-items: center; align-items: center; }
-        .justify-between { -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; }
-        .justify-center { -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; }
-
-        .display-shell {
-            position: relative !important;
-            z-index: 10 !important;
-            display: -webkit-box !important;
-            display: -webkit-flex !important;
-            display: flex !important;
-            -webkit-box-orient: vertical !important;
-            -webkit-flex-direction: column !important;
-            flex-direction: column !important;
-            width: 100% !important;
-            height: 100vh !important;
-            max-height: 100vh !important;
-            box-sizing: border-box !important;
-            overflow: hidden !important;
-        }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fadeInUp {
-            animation: fadeInUp 0.6s ease-out both !important;
-            -webkit-animation: fadeInUp 0.6s ease-out both !important;
-        }
-    </style>
     @if($isTv ?? false)
     <style>
         html, body { cursor: none !important; overflow: hidden !important; }
         * { -webkit-user-select: none !important; user-select: none !important; }
         ::-webkit-scrollbar { display: none !important; }
-        :root { --tv-overscan: 2vmin; }
+        :root { --tv-overscan: 2.5vmin; }
         body { padding: var(--tv-overscan) !important; box-sizing: border-box; }
         /* حذف هایلایت فوکوس مرورگر روی تلویزیون */
         *:focus { outline: none !important; }
@@ -290,7 +208,7 @@
             animation: sparkle-twinkle 3s ease-in-out infinite;
         }
 
-        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out both !important; -webkit-animation: fadeInUp 0.6s ease-out both !important; }
+        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out; }
         .animate-slideSwap { animation: slideSwap 0.5s ease-out; }
         .animate-float1 { animation: float1 20s ease-in-out infinite; }
         .animate-float2 { animation: float2 25s ease-in-out infinite; }
@@ -885,7 +803,7 @@
     </style>
 </head>
 <body :class="isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white'" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
-    <main :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
+    <main x-show="!isLoading" :class="theme.bg" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -910,14 +828,13 @@
              x-transition:leave="transition ease-in duration-300"
              x-transition:leave-start="translate-y-0 opacity-100"
              x-transition:leave-end="-translate-y-full opacity-0"
-             class="fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-600/95 text-white font-bold text-xs text-center backdrop-blur-md shadow-md flex items-center justify-center gap-2"
-             style="position: fixed; top: 0; left: 0; right: 0; width: 100%; z-index: 50;">
+             class="fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-600/95 text-white font-bold text-xs text-center backdrop-blur-md shadow-md flex items-center justify-center gap-2">
             <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-200 animate-ping"></span>
             <span>نرخ‌ها در حال به‌روزرسانی — آخرین دریافت: <strong x-text="staleTimeText"></strong></span>
         </div>
 
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
-        <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
+        <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
             <img :src="bingWallpaperUrl" 
                  alt="تصویر پس‌زمینه روز تابلوی طلالایو" 
                  width="1920" height="1080"
@@ -926,19 +843,19 @@
                  x-on:error="$el.src = '/images/bing/today.jpg'">
 
             {{-- 1. Scrim ابسیدین لوکس: لایه مخملین سینمایی برای مهار اشعه زننده و حفظ زیبایی تصویر --}}
-            <div x-show="themeKey === 'bing-daily'" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/65 to-slate-950/50 backdrop-blur-[1px] backdrop-contrast-[1.10]" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;"></div>
+            <div x-show="themeKey === 'bing-daily'" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/65 to-slate-950/50 backdrop-blur-[1px] backdrop-contrast-[1.10]"></div>
 
             {{-- 2. Scrim استودیو: لایه ملایم نیمه‌تاریک --}}
-            <div x-show="themeKey === 'bing-studio'" class="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px]" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;"></div>
+            <div x-show="themeKey === 'bing-studio'" class="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px]"></div>
 
             {{-- 3. Scrim پرسلین سرامیک: لایه روشن طبیعی --}}
-            <div x-show="themeKey === 'bing-ceramic'" class="absolute inset-0 bg-slate-950/20 backdrop-contrast-[1.05]" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;"></div>
+            <div x-show="themeKey === 'bing-ceramic'" class="absolute inset-0 bg-slate-950/20 backdrop-contrast-[1.05]"></div>
         </div>
 
         {{-- Luxury Silk Wave Vector (اختصاصی تم روشن - کاملاً استاتیک و بدون هیچ‌گونه بار پردازنده) --}}
         <template x-if="themeKey === 'light-modern'">
-            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
-                <svg class="w-full h-full object-cover opacity-70" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+                <svg class="w-full h-full object-cover opacity-70" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
                     <path d="M-100 180 C300 80, 650 420, 1050 220 C1350 80, 1500 320, 1600 280" stroke="rgba(217,119,6,0.18)" stroke-width="1.8"/>
                     <path d="M-100 220 C350 120, 700 460, 1100 260 C1380 120, 1520 360, 1600 320" stroke="rgba(217,119,6,0.14)" stroke-width="1.5"/>
                     <path d="M-100 260 C400 160, 750 500, 1150 300 C1410 160, 1540 400, 1600 360" stroke="rgba(217,119,6,0.10)" stroke-width="1.2"/>
@@ -951,8 +868,8 @@
 
         {{-- Imperial Royal Gold Silk Mesh (تارهای طلای شاهنشاهی ۲۴ عیار - ۱۰۰٪ استاتیک و بدون بار پردازنده) --}}
         <template x-if="themeKey === 'imperial-onyx' || themeKey === 'imperial-pearl'">
-            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none opacity-60" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
-                <svg class="w-full h-full object-cover" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none opacity-60">
+                <svg class="w-full h-full object-cover" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
                     <path d="M-100 200 C350 100, 700 450, 1100 240 C1380 90, 1520 340, 1600 300" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.24)' : 'rgba(217,119,6,0.20)'" stroke-width="2"/>
                     <path d="M-100 240 C400 140, 750 490, 1150 280 C1420 130, 1550 380, 1600 340" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.18)' : 'rgba(217,119,6,0.15)'" stroke-width="1.6"/>
                     <path d="M-100 280 C450 180, 800 530, 1200 320 C1460 170, 1580 420, 1600 380" :stroke="themeKey === 'imperial-onyx' ? 'rgba(251,191,36,0.12)' : 'rgba(217,119,6,0.10)'" stroke-width="1.2"/>
@@ -964,7 +881,7 @@
         </template>
 
         {{-- Apple Premium Ambient Floating Orbs Engine (۴ گوی نورانی، تفکیک‌شده و سبک اپل در ۴ گوشه نمایشگر) --}}
-        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="themeKey !== 'pure-black'" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
+        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="themeKey !== 'pure-black'">
             <div class="ambient-orb orb-1"></div>
             <div class="ambient-orb orb-2"></div>
             <div class="ambient-orb orb-3"></div>
@@ -984,7 +901,7 @@
                             <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 hover:bg-white border-amber-300/50 text-amber-950 shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,1),-3px_-3px_8px_rgba(255,255,255,0.9),3px_6px_14px_rgba(148,163,184,0.2)] hover:scale-[1.02]' : 'bg-white/80 border-white shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.25)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 hover:bg-amber-900/50 border border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.3),0_4px_14px_rgba(0,0,0,0.7)] hover:scale-[1.02]' : (isBingTheme ? 'bg-white/10 hover:bg-white/20 border-white/15 backdrop-blur-xl shadow-[-2px_-2px_6px_rgba(255,255,255,0.04),3px_4px_12px_rgba(0,0,0,0.6)]' : 'bg-black/20 border-white/10 shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),3px_4px_10px_rgba(0,0,0,0.5)]'))" 
                                  class="flex items-center gap-3 px-4 py-2 rounded-2xl border text-sm xl:text-base font-black transition-all hover:scale-[1.02] w-full" dir="ltr">
                                 <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 01-7.108-7.108c-.157-.44.009-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
-                                <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="(settings.phone || '').toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
+                                <span :class="theme.textPrimary" class="tracking-wide select-all" x-text="settings.phone.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])"></span>
                             </div>
                         </template>
                         
@@ -1028,7 +945,7 @@
                 {{-- نام فروشگاه (وسط) --}}
                 <div class="order-2 flex w-[28%] flex-col items-center justify-center text-center">
                     <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
-                        class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name || '{{ $galleryDisplayName ?? 'گالری طلا' }}'">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
+                        class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
                          class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
                          ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
@@ -1344,6 +1261,16 @@
         </div>
     </main>
 
+    {{-- Loading Screen --}}
+    <div x-show="isLoading" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950 animate-fadeIn">
+        <div class="relative mb-8">
+            <div class="w-24 h-24 rounded-full border-[3px] border-slate-700"></div>
+            <div class="w-24 h-24 rounded-full border-[3px] border-transparent border-t-amber-400 absolute inset-0 animate-spin"></div>
+            <span class="absolute inset-0 flex items-center justify-center text-3xl">✦</span>
+        </div>
+        <h2 class="text-2xl font-black text-amber-400 mb-2">Live Gold</h2>
+        <p class="text-slate-400 animate-pulse">در حال بارگذاری قیمت‌ها...</p>
+    </div>
 
     <script>
         const THEMES = {
@@ -1603,12 +1530,8 @@
                 get orderedMetrics() {
                     const items = this.snapshotData?.displayItems || [];
                     const feed = this.snapshotData?.priceFeed || [];
-                    const enabledKeys = items.filter(i => (i.enabled == 1 || i.enabled === true || i.enabled === '1') && i.key !== 'exchange_gold').sort((a,b) => (Number(a.order) || 0) - (Number(b.order) || 0)).map(i => i.key);
-                    if (enabledKeys.length > 0) {
-                        const filtered = feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
-                        if (filtered.length > 0) return filtered;
-                    }
-                    return feed;
+                    const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
+                    return feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
                 },
                                 get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic' || this.themeKey === 'imperial-pearl'; },
                 get isBingTheme() { return this.themeKey === 'bing-daily' || this.themeKey === 'bing-studio' || this.themeKey === 'bing-ceramic'; },

@@ -145,21 +145,11 @@ class PublicDisplayController extends Controller
     {
         $settings = DisplaySetting::where('user_id', $user->id)->firstOrFail();
         $items    = DisplayItem::where('user_id', $user->id)->orderBy('order')->get();
+        $products = ProductSlide::where('user_id', $user->id)->with('images')->where('is_visible', true)->latest()->get();
+        $priceFeed = $this->marketService->getPriceFeed($user);
+
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
         $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
-
-        // خودترمیمی هوشمند: اگر داده‌های بازار بیش از ۳ دقیقه قدیمی باشند یا در دیتابیس موجود نباشند
-        if ($ageSeconds === null || $ageSeconds > 180) {
-            try {
-                $this->marketService->refreshIfStale(120);
-                $lastFetch = \App\Models\MarketCache::max('fetched_at');
-                $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
-            } catch (\Throwable $e) {
-                \Log::warning('Self-healing market refresh error: ' . $e->getMessage());
-            }
-        }
-
-        $priceFeed = $this->marketService->getPriceFeed($user);
 
         $bingWallpaper = null;
         if (str_starts_with($settings->theme_mode ?? '', 'bing-')) {
@@ -354,14 +344,7 @@ class PublicDisplayController extends Controller
             $activationCode = DB::table('tv_sessions')->where('session_code', $session_code)->value('activation_code');
             $this->attachDevice($user, $session_code, $activationCode);
         } catch (\Throwable $e) {
-            \Log::error('pairDevice attachDevice failed: ' . $e->getMessage(), ['exception' => $e]);
-            if ($request->wantsJson() || $request->ajax() || $request->isJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'خطا در ثبت و اتصال تلویزیون: ' . $e->getMessage()
-                ], 500);
-            }
-            abort(500, 'خطا در برقراری اتصال تلویزیون: ' . $e->getMessage());
+            \Log::warning('pairDevice attachDevice error: ' . $e->getMessage());
         }
 
         if ($request->wantsJson() || $request->ajax() || $request->isJson()) {
@@ -674,21 +657,6 @@ class PublicDisplayController extends Controller
             'min_version_code'           => (int) ($tvConfig['min_version_code'] ?? 1),
             'apk_url'                    => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
             'heartbeat_interval_seconds' => (int) ($tvConfig['heartbeat_interval_seconds'] ?? 30),
-        ]);
-    }
-
-    /**
-     * تولید و بازگرداندن تصویر QR Code اتصال اختصاصی برای تلویزیون
-     */
-    public function qrCode(string $code)
-    {
-        $cleanCode = self::normalizeDigits($code);
-        $url = url('/p/' . $cleanCode);
-        $png = \App\Services\QrService::generatePng($url, 250);
-
-        return response($png, 200, [
-            'Content-Type'  => 'image/png',
-            'Cache-Control' => 'public, max-age=3600',
         ]);
     }
 }

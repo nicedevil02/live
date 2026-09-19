@@ -336,15 +336,6 @@ if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/boo
 
         $tableStatus['tv_devices'] = \Illuminate\Support\Facades\Schema::hasTable('tv_devices');
         $tableStatus['tv_sessions'] = \Illuminate\Support\Facades\Schema::hasTable('tv_sessions');
-
-        // 10.5. Refresh market prices on deploy to immediately clear any stale rates
-        try {
-            $marketService = $app->make(\App\Services\MarketService::class);
-            $marketService->refreshIfStale(0);
-            $log[] = 'Market prices refreshed on deploy. Latest: ' . \App\Models\MarketCache::max('fetched_at');
-        } catch (\Throwable $mEx) {
-            $log[] = 'Deploy market refresh notice: ' . $mEx->getMessage();
-        }
     } catch (\Throwable $e) {
         $log[] = 'In-process bootstrap error: ' . $e->getMessage();
     }
