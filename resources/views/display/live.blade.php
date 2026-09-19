@@ -1911,17 +1911,23 @@
 
                                         {{-- نشانگر وضعیت زنده (لحظه‌ای / قدیمی) بعد از عنوان کارت --}}
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[10px] xl:text-[11px] rounded-full px-2 py-0.5 font-bold border shadow-sm shrink-0"
-                                                  :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            <span class="inline-flex items-center rounded-full font-bold border shadow-sm shrink-0"
+                                                  :class="[
+                                                      isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+                                                      index < 3 ? 'gap-1.5 text-xs xl:text-sm px-2.5 py-1' : 'gap-1 text-[10px] xl:text-[11px] px-2 py-0.5'
+                                                  ]">
+                                                <span :class="index < 3 ? 'w-2 h-2' : 'w-1.5 h-1.5'" class="rounded-full bg-amber-500 shrink-0"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1.5 text-[10px] xl:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-sm shrink-0"
-                                                  :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
-                                                <span class="inline-block h-1.5 w-1.5 xl:h-2 xl:w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
-                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
+                                            <span class="inline-flex items-center rounded-full shadow-sm shrink-0 font-bold"
+                                                  :class="[
+                                                      themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20')),
+                                                      index < 3 ? 'gap-2 text-xs xl:text-sm px-2.5 py-1' : 'gap-1.5 text-[10px] xl:text-[11px] px-2 py-0.5'
+                                                  ]">
+                                                <span :class="index < 3 ? 'h-2 w-2 xl:h-2.5 xl:w-2.5' : 'h-1.5 w-1.5 xl:h-2 xl:w-2'" class="inline-block rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
+                                                <span class="opacity-90">لحظه‌ای</span>
                                             </span>
                                         </template>
                                     </div>
@@ -1970,7 +1976,7 @@
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و کپسول واحد پول (تومان / دلار) --}}
                                 <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
-                                    <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
+                                    <div class="flex items-center font-black tabular-nums rounded-full border shadow-sm" :class="[
                                         themeKey === 'imperial-onyx'
                                             ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
                                             : (themeKey === 'imperial-pearl'
@@ -1980,6 +1986,7 @@
                                                     : (isLightTheme
                                                         ? (item.change_percent > 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : (item.change_percent < 0 ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-100 text-slate-700 border-slate-200'))
                                                         : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10'))))),
+                                        index < 3 ? 'gap-2.5 text-sm xl:text-base px-3.5 py-1.5' : 'gap-2 text-xs xl:text-sm px-2.5 py-1'
                                     ]" dir="ltr">
                                         <span x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
                                         <span class="opacity-30">|</span>
@@ -1993,9 +2000,11 @@
                                                 ? 'neu-unit-pill-dark' 
                                                 : (themeKey === 'imperial-pearl' 
                                                     ? 'neu-unit-pill-light' 
-                                                    : (isLightTheme ? 'bg-slate-100 text-slate-700 border-slate-200' : 'bg-white/10 text-white/80 border-white/15'))
-                                        ]" class="flex items-center justify-center font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm select-none tracking-wider" x-text="item.unit"></span>
+                                                    : (isLightTheme ? 'bg-slate-100 text-slate-700 border border-slate-200' : 'bg-white/10 text-white/80 border border-white/15')),
+                                            index < 3 ? 'text-sm xl:text-base px-3.5 py-1.5' : 'text-xs xl:text-sm px-2.5 py-1'
+                                        ]" class="flex items-center justify-center font-black tabular-nums rounded-full border shadow-sm select-none tracking-wider" x-text="item.unit"></span>
                                     </div>
+
                                 </div>
                             </div>
                         </template>
