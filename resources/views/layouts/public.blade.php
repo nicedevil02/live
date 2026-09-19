@@ -421,12 +421,18 @@
                      @mouseleave="closeMenu('guides')"
                      @click.outside="closeMenu('guides')"
                      @keydown.escape.window="closeMenu('guides')">
-                    <button type="button" @click="isOpen('guides') ? closeMenu('guides') : openMenu('guides')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.guides*') || request()->routeIs('public.tv-setup-guide') || request()->routeIs('public.android-tv-gold-board') || request()->routeIs('public.cities*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    <button type="button"
+                            @click="isOpen('guides') ? closeMenu('guides') : openMenu('guides')"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-guides"
+                            :aria-expanded="isOpen('guides') ? 'true' : 'false'"
+                            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.guides*') || request()->routeIs('public.tv-setup-guide') || request()->routeIs('public.android-tv-gold-board') || request()->routeIs('public.cities*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>آموزش و شهرها</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('guides') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="isOpen('guides')" 
+                    <div id="dropdown-guides"
+                         x-show="isOpen('guides')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -468,12 +474,18 @@
                      @mouseleave="closeMenu('dev')"
                      @click.outside="closeMenu('dev')"
                      @keydown.escape.window="closeMenu('dev')">
-                    <button type="button" @click="isOpen('dev') ? closeMenu('dev') : openMenu('dev')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.widget*') || request()->routeIs('public.api-docs')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    <button type="button"
+                            @click="isOpen('dev') ? closeMenu('dev') : openMenu('dev')"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-dev"
+                            :aria-expanded="isOpen('dev') ? 'true' : 'false'"
+                            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.widget*') || request()->routeIs('public.api-docs')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>API و ویجت</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('dev') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="isOpen('dev')" 
+                    <div id="dropdown-dev"
+                         x-show="isOpen('dev')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
