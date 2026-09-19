@@ -1,0 +1,20 @@
+H-17 Evidence: Touch target sizes and header height on 375px viewport
+
+1. Theme Toggle Button (#themeToggleBtn):
+   - Computed Height: 44px (Requirement: >= 44px)
+   - Computed Width:  44px (Requirement: >= 44px)
+   - Status: PASS
+
+2. Hamburger Button (button[aria-controls="mobile-menu"]):
+   - Computed Height: 44px (Requirement: >= 44px)
+   - Computed Width:  44px (Requirement: >= 44px)
+   - Status: PASS
+
+3. Register Button (a[href*="register"]):
+   - Computed Height: 44px (Requirement: >= 44px)
+   - Computed Width:  53.8125px
+   - Status: PASS
+
+4. Sticky Header (<header>):
+   - Computed Height: 64px (Requirement: <= 64px)
+   - Status: PASS
