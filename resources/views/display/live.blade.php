@@ -859,14 +859,24 @@
             border-color: rgba(255, 255, 255, 0.25) !important;
         }
 
-        /* Apple Premium Slider Overlays & Glass Cards */
-        .slider-scrim-bottom {
+        /* Apple Premium Slider Overlays & Glass Cards (Adaptive for Light/Dark) */
+        .slider-scrim-bottom-dark {
             position: absolute !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
             height: 14rem !important;
             background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.70) 50%, rgba(0, 0, 0, 0.25) 80%, transparent 100%) !important;
+            pointer-events: none !important;
+            z-index: 10 !important;
+        }
+        .slider-scrim-bottom-light {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 14rem !important;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.20) 80%, transparent 100%) !important;
             pointer-events: none !important;
             z-index: 10 !important;
         }
@@ -877,7 +887,7 @@
             right: 1.25rem !important;
             z-index: 20 !important;
         }
-        .slider-info-card {
+        .slider-info-card-dark {
             background: rgba(10, 15, 29, 0.82) !important;
             backdrop-filter: blur(24px) saturate(160%) !important;
             -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
@@ -886,7 +896,16 @@
             border-radius: 1.75rem !important;
             padding: 1rem 1.25rem !important;
         }
-        .slider-price-badge {
+        .slider-info-card-light {
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(24px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 20px 40px -10px rgba(100, 116, 139, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
+            border-radius: 1.75rem !important;
+            padding: 1rem 1.25rem !important;
+        }
+        .slider-price-badge-dark {
             background: linear-gradient(135deg, rgba(217, 119, 6, 0.45) 0%, rgba(180, 83, 9, 0.60) 100%), rgba(15, 23, 42, 0.92) !important;
             backdrop-filter: blur(16px) !important;
             -webkit-backdrop-filter: blur(16px) !important;
@@ -896,7 +915,17 @@
             padding: 0.75rem 1.25rem !important;
             text-align: right !important;
         }
-        .slider-meta-chip {
+        .slider-price-badge-light {
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.98) 0%, rgba(253, 230, 138, 0.92) 100%) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.65) !important;
+            box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
+            border-radius: 1.25rem !important;
+            padding: 0.75rem 1.25rem !important;
+            text-align: right !important;
+        }
+        .slider-meta-chip-dark {
             display: inline-flex !important;
             align-items: center !important;
             gap: 0.375rem !important;
@@ -910,6 +939,28 @@
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+        }
+        .slider-meta-chip-light {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.375rem !important;
+            border-radius: 9999px !important;
+            border: 1px solid rgba(203, 213, 225, 0.85) !important;
+            background: rgba(241, 245, 249, 0.92) !important;
+            padding: 0.35rem 0.85rem !important;
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            color: #334155 !important;
+            box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+        }
+        .slider-top-badge {
+            background: linear-gradient(135deg, rgba(225, 29, 72, 0.92) 0%, rgba(190, 18, 60, 0.95) 60%, rgba(180, 83, 9, 0.90) 100%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+            box-shadow: 0 14px 32px -4px rgba(225, 29, 72, 0.45), 0 0 20px rgba(244, 63, 94, 0.30), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
         }
 
         /* =========================================================================
@@ -1449,58 +1500,63 @@
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
                                  x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-[20s] ease-linear group-hover:scale-105">
-                            <!-- نشان پیشنهاد ویژه -->
-                            <div x-show="Boolean(activeProduct.is_special)" class="absolute top-5 left-5 z-20 select-none pointer-events-none">
-                                <div class="relative flex items-center gap-3 rounded-full border border-red-200/35 bg-gradient-to-br from-red-500/20 via-rose-500/14 to-white/10 px-4 py-3 backdrop-blur-xl shadow-[0_18px_40px_rgba(0,0,0,0.28),0_0_28px_rgba(239,68,68,0.18)] ring-1 ring-inset ring-white/10">
-                                    <span class="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-500 via-rose-500 to-red-700 shadow-[0_0_18px_rgba(239,68,68,0.45)] ring-1 ring-white/20 animate-[pulse_1.8s_ease-in-out_infinite]">
-                                        <span class="h-2.5 w-2.5 rounded-full bg-white/90 animate-ping"></span>
+                            <!-- نشان لوکس و همیشگی پیشنهاد شگفت‌انگیز در بالای اسلایدر -->
+                            <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
+                                <div class="relative flex items-center gap-2.5 rounded-full slider-top-badge px-4 py-2.5">
+                                    <span class="relative flex h-7 w-7 items-center justify-center rounded-full bg-white/20 shadow-inner">
+                                        <span class="h-2 w-2 rounded-full bg-white animate-ping"></span>
+                                        <span class="h-2 w-2 rounded-full bg-white"></span>
                                     </span>
-                                    <div class="flex flex-col pl-3 pr-2">
-                                        <span class="text-xl font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
-                                            پیشنهاد ویژه
-                                        </span>
-                                    </div>
+                                    <span class="text-base xl:text-lg font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+                                        پیشنهاد شگفت‌انگیز
+                                    </span>
                                 </div>
                             </div>
-                            <!-- گرادیان تاریک زیرین برای خوانایی ۱۰۰٪ متون و تصاویر با پس‌زمینه سفید یا روشن -->
-                            <div class="slider-scrim-bottom"></div>
                             
-                            <!-- داک شیشه‌ای اطلاعات محصول در پایین اسلایدر -->
+                            <!-- گرادیان محافظتی زیرین (تطبیقی با تم روشن و تاریک) -->
+                            <div :class="isLightTheme ? 'slider-scrim-bottom-light' : 'slider-scrim-bottom-dark'"></div>
+                            
+                            <!-- داک شیشه‌ای اطلاعات محصول در پایین اسلایدر (تطبیقی با تم روشن و تاریک) -->
                             <div class="slider-glass-dock">
-                                <div class="slider-info-card">
+                                <div :class="isLightTheme ? 'slider-info-card-light' : 'slider-info-card-dark'">
                                     <div class="flex flex-row items-end justify-between gap-3">
                                         <div class="min-w-0 flex-1">
-                                            <p class="break-words text-3xl xl:text-4xl font-black leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]" x-text="activeProduct.title"></p>
-                                            <div class="mt-2 flex items-center gap-2 flex-wrap">
+                                            <p :class="isLightTheme ? 'text-slate-900 drop-shadow-sm' : 'text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'" 
+                                               class="break-words text-3xl xl:text-4xl font-black leading-tight" 
+                                               x-text="activeProduct.title"></p>
+                                            <div class="mt-2.5 flex items-center gap-2 flex-wrap">
                                                 <template x-if="settings.show_weight">
-                                                    <span class="slider-meta-chip">
+                                                    <span :class="isLightTheme ? 'slider-meta-chip-light' : 'slider-meta-chip-dark'">
                                                         <span>وزن:</span>
-                                                        <span class="tabular-nums text-amber-300 font-black" x-text="activeProduct.weight_gram"></span>
+                                                        <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProduct.weight_gram"></span>
                                                         <span>گرم</span>
                                                     </span>
                                                 </template>
                                                 <template x-if="settings.show_profit">
-                                                    <span class="slider-meta-chip">
+                                                    <span :class="isLightTheme ? 'slider-meta-chip-light' : 'slider-meta-chip-dark'">
                                                         <span>سود:</span>
-                                                        <span class="tabular-nums text-amber-300 font-black" x-text="activeProductProfitPercent"></span>
+                                                        <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProductProfitPercent"></span>
                                                         <span>%</span>
                                                     </span>
                                                 </template>
                                             </div>
                                         </div>
-                                        <div class="shrink-0 slider-price-badge">
+                                        <div :class="isLightTheme ? 'slider-price-badge-light' : 'slider-price-badge-dark'" class="shrink-0">
                                             <div class="flex items-center justify-between gap-2 mb-1">
-                                                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-amber-300 drop-shadow-sm">مبلغ نهایی ویترین</span>
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                                                <span :class="isLightTheme ? 'text-amber-900 font-black' : 'text-amber-300 drop-shadow-sm font-black'" class="text-[10px] uppercase tracking-[0.2em]">مبلغ نهایی ویترین</span>
+                                                <span class="w-1.5 h-1.5 rounded-full" :class="isLightTheme ? 'bg-amber-600 animate-ping' : 'bg-amber-400 animate-ping'"></span>
                                             </div>
                                             <template x-if="activeProductFinalPrice > 0">
                                                 <div class="flex items-baseline gap-1.5">
-                                                    <span class="text-3xl xl:text-4xl font-black tabular-nums tracking-tight text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.6)]" x-text="formatNumber(activeProductFinalPrice)"></span>
-                                                    <span class="text-xs font-black text-amber-300 whitespace-nowrap">تومان</span>
+                                                    <span :class="isLightTheme ? 'text-amber-950 drop-shadow-sm' : 'text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.6)]'" 
+                                                          class="text-3xl xl:text-4xl font-black tabular-nums tracking-tight" 
+                                                          x-text="formatNumber(activeProductFinalPrice)"></span>
+                                                    <span :class="isLightTheme ? 'text-amber-800' : 'text-amber-300'" class="text-xs font-black whitespace-nowrap">تومان</span>
                                                 </div>
                                             </template>
                                             <template x-if="activeProductFinalPrice <= 0">
-                                                <span class="text-xs font-black text-amber-200 bg-amber-950/80 border border-amber-500/40 rounded-lg px-2.5 py-1 block">در حال استعلام نرخ...</span>
+                                                <span :class="isLightTheme ? 'text-amber-900 bg-amber-100 border border-amber-300' : 'text-amber-200 bg-amber-950/80 border border-amber-500/40'" 
+                                                      class="text-xs font-black rounded-lg px-2.5 py-1 block">در حال استعلام نرخ...</span>
                                             </template>
                                         </div>
                                     </div>
@@ -1515,7 +1571,8 @@
                     </template>
                     <div class="absolute top-6 right-6 flex gap-2 z-20" x-show="products.length > 1">
                         <template x-for="(dot, i) in products" :key="i">
-                            <div class="h-1.5 rounded-full transition-all duration-300" :class="i === activeIndex ? 'w-10 bg-white' : 'w-3 bg-white/30'"></div>
+                            <div class="h-1.5 rounded-full transition-all duration-300" 
+                                 :class="isLightTheme ? (i === activeIndex ? 'w-10 bg-slate-800' : 'w-3 bg-slate-400/40') : (i === activeIndex ? 'w-10 bg-white' : 'w-3 bg-white/30')"></div>
                         </template>
                     </div>
                 </section>
