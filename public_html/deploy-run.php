@@ -334,6 +334,11 @@ if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/boo
             $log[] = 'Migrate: ' . $artisanMigrateOutput;
         }
 
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        $log[] = 'Artisan view:clear: ' . trim(\Illuminate\Support\Facades\Artisan::output());
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        $log[] = 'Artisan cache:clear: ' . trim(\Illuminate\Support\Facades\Artisan::output());
+
         $tableStatus['tv_devices'] = \Illuminate\Support\Facades\Schema::hasTable('tv_devices');
         $tableStatus['tv_sessions'] = \Illuminate\Support\Facades\Schema::hasTable('tv_sessions');
     } catch (\Throwable $e) {
