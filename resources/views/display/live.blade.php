@@ -678,6 +678,20 @@
             box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 1), -2px -2px 6px rgba(255, 255, 255, 0.90), 0 2px 8px rgba(16, 185, 129, 0.15) !important;
         }
 
+        /* Neumorphic Currency Unit Badge (کپسول واحد پول) */
+        .neu-unit-pill-dark {
+            background: rgba(15, 23, 42, 0.60) !important;
+            border: 1px solid rgba(251, 191, 36, 0.30) !important;
+            color: #fde68a !important;
+            box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.10), 0 4px 8px rgba(0, 0, 0, 0.40) !important;
+        }
+        .neu-unit-pill-light {
+            background: rgba(241, 245, 249, 0.85) !important;
+            border: 1px solid rgba(217, 119, 6, 0.35) !important;
+            color: #78350f !important;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 1), 0 4px 8px rgba(148, 163, 184, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.90) !important;
+        }
+
         /* 1. Apple Vision Pro / Dark Obsidian Glass (پیشنهاد اول - شیشه دودی ابسیدین با لبه طلایی ۲۴ عیار و اسکیل) */
         .neu-card-bing-obsidian {
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.70) 0%, rgba(2, 6, 23, 0.86) 100%) !important;
@@ -1972,16 +1986,15 @@
                                         <span x-text="(item.symbol === 'ounce' || item.symbol === 'bitcoin') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value)"></span>
                                     </div>
 
-                                    {{-- کپسول واحد پول (تومان / دلار) به جای نشانگر لحظه‌ای --}}
+                                    {{-- کپسول واحد پول (تومان / دلار) با اندازه و استایل کاملاً هماهنگ با کپسول درصد --}}
                                     <div class="flex items-center">
                                         <span :class="[
                                             themeKey === 'imperial-onyx' 
-                                                ? 'neu-inset-onyx text-amber-300/90 border-amber-500/30' 
+                                                ? 'neu-unit-pill-dark' 
                                                 : (themeKey === 'imperial-pearl' 
-                                                    ? 'neu-inset-pearl text-amber-900/90 border-amber-600/30' 
-                                                    : (isLightTheme ? 'bg-slate-100 text-slate-700 border border-slate-200' : 'bg-white/10 text-white/80 border border-white/15')),
-                                            index < 3 ? 'text-xs xl:text-sm px-2.5 py-0.5' : 'text-[10px] xl:text-[11px] px-2 py-0.5'
-                                        ]" class="font-bold rounded-full select-none shadow-xs tracking-wider" x-text="item.unit"></span>
+                                                    ? 'neu-unit-pill-light' 
+                                                    : (isLightTheme ? 'bg-slate-100 text-slate-700 border-slate-200' : 'bg-white/10 text-white/80 border-white/15'))
+                                        ]" class="flex items-center justify-center font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm select-none tracking-wider" x-text="item.unit"></span>
                                     </div>
                                 </div>
                             </div>
