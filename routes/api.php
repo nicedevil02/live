@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicDisplayController;
 
+Route::get('/market/ticker', [PublicDisplayController::class, 'publicTicker'])->middleware('throttle:120,1')->name('api.market.ticker');
 Route::get('/display/snapshot/{username}', [PublicDisplayController::class, 'snapshot'])->middleware('throttle:120,1')->name('api.display.snapshot');
 Route::get('/display/health/{username}', [PublicDisplayController::class, 'health']);
 Route::get('/tv/check/{session_code}', [PublicDisplayController::class, 'checkPairingStatus']);

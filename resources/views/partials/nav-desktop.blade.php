@@ -23,7 +23,7 @@
             aria-haspopup="true"
             aria-controls="dropdown-products"
             :aria-expanded="isOpen('products') ? 'true' : 'false'"
-            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ $isProductsActive ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+            class="flex items-center gap-1 px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ $isProductsActive ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
         <span>{{ $productsGroup['label'] }}</span>
         <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('products') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
     </button>
@@ -108,7 +108,7 @@
             aria-haspopup="true"
             aria-controls="dropdown-tools"
             :aria-expanded="isOpen('tools') ? 'true' : 'false'"
-            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ $isToolsActive ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+            class="flex items-center gap-1 px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ $isToolsActive ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
         <span>{{ $toolsGroup['label'] }}</span>
         <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('tools') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
     </button>
@@ -161,7 +161,7 @@
             aria-haspopup="true"
             aria-controls="dropdown-guides"
             :aria-expanded="isOpen('guides') ? 'true' : 'false'"
-            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ $isGuidesActive ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+            class="flex items-center gap-1 px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ $isGuidesActive ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
         <span>{{ $guidesGroup['label'] }}</span>
         <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('guides') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
     </button>
@@ -189,6 +189,6 @@
 @endif
 
 {{-- تعرفه‌ها --}}
-<a href="{{ route('public.pricing') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->routeIs('public.pricing') ? ' aria-current="page"' : '' !!}>
+<a href="{{ route('public.pricing') }}" class="px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->routeIs('public.pricing') ? ' aria-current="page"' : '' !!}>
     تعرفه‌ها
 </a>

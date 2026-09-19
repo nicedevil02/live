@@ -92,9 +92,50 @@ class PublicDisplayController extends Controller
         ]);
     }
 
+    public function publicTicker()
+    {
+        try {
+            $lastFetch = \App\Models\MarketCache::max('fetched_at');
+            $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
+            $priceFeed = $this->marketService->getPriceFeed();
+
+            return response()->json([
+                'updatedAt'      => $lastFetch ? \Illuminate\Support\Carbon::parse($lastFetch)->toISOString() : now()->toISOString(),
+                'dataAgeSeconds' => $ageSeconds,
+                'isStale'        => $ageSeconds === null || $ageSeconds > 300,
+                'serverTime'     => now()->toIso8601String(),
+                'priceFeed'      => $priceFeed,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::warning('Public ticker error: ' . $e->getMessage());
+            return response()->json([
+                'updatedAt'      => now()->toISOString(),
+                'dataAgeSeconds' => 0,
+                'isStale'        => true,
+                'serverTime'     => now()->toIso8601String(),
+                'priceFeed'      => [],
+            ], 200);
+        }
+    }
+
     public function snapshot($username)
     {
-        $user = \App\Models\User::where('username', $username)->firstOrFail();
+        if ($username === 'admin') {
+            return $this->publicTicker();
+        }
+
+        try {
+            $user = \App\Models\User::where('username', $username)->first();
+        } catch (\Throwable $e) {
+            return $this->publicTicker();
+        }
+
+        if (!$user) {
+            if (request()->wantsJson()) {
+                return $this->publicTicker();
+            }
+            abort(404, 'کاربر مورد نظر یافت نشد.');
+        }
 
         if (!$user->is_approved && !$user->is_super_admin) {
             abort(403, 'حساب کاربری در انتظار تایید مدیریت است.');

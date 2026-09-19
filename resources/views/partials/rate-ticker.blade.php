@@ -1,22 +1,21 @@
-{{-- نوار نرخ زنده لحظه‌ای زیر هدر (H-20) --}}
+{{-- کامپوننت نوار نرخ زنده لحظه‌ای (H-20) --}}
 <div x-data="rateTicker()" 
      x-init="load()"
-     data-endpoint="{{ route('api.display.snapshot', ['username' => 'admin'], false) }}"
-     class="h-9 border-b border-slate-200/70 dark:border-slate-800/70 bg-white/90 dark:bg-slate-950/90 overflow-hidden select-none"
+     data-endpoint="{{ route('api.market.ticker', [], false) }}"
+     class="flex items-center gap-3 sm:gap-4 select-none min-w-0"
      aria-label="نوار نرخ زنده بازار طلا و ارز">
-    <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-9 flex items-center gap-4 overflow-x-auto snap-x scrollbar-none transition-opacity duration-300"
+    <div class="flex items-center gap-3 sm:gap-4 transition-opacity duration-300"
          :class="stale ? 'opacity-60 grayscale' : ''">
         <template x-if="!loaded">
-            <div class="flex items-center gap-4 w-full" aria-hidden="true">
-                <div class="h-3 w-28 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-3 w-28 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-3 w-28 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-3 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-2.5 w-16 rounded-full bg-slate-200 dark:bg-slate-800 mr-auto animate-pulse"></div>
+            <div class="flex items-center gap-3 w-full" aria-hidden="true">
+                <div class="h-2.5 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                <div class="h-2.5 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                <div class="h-2.5 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                <div class="h-2.5 w-20 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
             </div>
         </template>
         <template x-if="loaded">
-            <div class="flex items-center gap-4 text-[11px] sm:text-xs whitespace-nowrap w-full">
+            <div class="flex items-center gap-3 sm:gap-4 text-[11px] sm:text-xs whitespace-nowrap">
                 <template x-for="row in items" :key="row.key">
                     <span class="flex items-center gap-1.5 snap-start shrink-0">
                         <span class="text-slate-500 dark:text-slate-400 font-medium" x-text="row.label"></span>
@@ -26,7 +25,7 @@
                               x-text="row.dir === 'up' ? '▲' : (row.dir === 'down' ? '▼' : '–')"></span>
                     </span>
                 </template>
-                <span class="text-[10px] text-slate-400 mr-auto shrink-0 transition-colors"
+                <span class="text-[10px] text-slate-400 shrink-0 transition-colors"
                       :class="stale ? 'text-amber-500 dark:text-amber-400 font-bold' : 'text-slate-400'"
                       x-text="stale ? 'تأخیر در به‌روزرسانی' : updatedLabel"></span>
             </div>
