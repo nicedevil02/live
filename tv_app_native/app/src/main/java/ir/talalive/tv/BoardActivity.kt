@@ -20,8 +20,10 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
+import android.view.GestureDetector
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -175,22 +177,25 @@ class BoardActivity : Activity() {
         buildViews()
 
         val probe = WebViewProbe.probe(this)
-        val serverMode = TvPrefs.getServerRenderMode(this)?.lowercase() ?: "native"
+        val serverMode = TvPrefs.getServerRenderMode(this)?.lowercase() ?: "web"
         val forcedNative = TvPrefs.isForcedNative(this)
 
         val chooseNative = when {
             forcedNative -> true
-            serverMode == "web" -> false
+            serverMode == "native" -> true
             serverMode == "auto" -> (!probe.available || probe.majorVersion in 1..69)
-            else -> true // default or "native"
+            else -> (!probe.available || probe.majorVersion in 1..69) // default "web" unless webview unavailable
         }
 
         if (chooseNative) {
             val reason = when {
                 forcedNative -> "pref_forced_native"
+                serverMode == "native" -> "server_config_native"
                 serverMode == "auto" && !probe.available -> "webview_probe_unavailable"
                 serverMode == "auto" && probe.majorVersion in 1..69 -> "webview_outdated_v${probe.majorVersion}"
-                else -> "server_default_native"
+                !probe.available -> "webview_unavailable_fallback"
+                probe.majorVersion in 1..69 -> "webview_outdated_fallback_v${probe.majorVersion}"
+                else -> "native_fallback"
             }
             Log.i(tag, "Startup selecting NATIVE board mode ($reason, serverMode=$serverMode)")
             switchToNativeBoard(reason)
@@ -1053,6 +1058,22 @@ class BoardActivity : Activity() {
         }
     }
 
+    private val touchGestureDetector by lazy {
+        GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: MotionEvent) {
+                Log.i(tag, "Touch Long-Press detected! Showing TV menu.")
+                showTvMenu()
+            }
+        })
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev != null) {
+            touchGestureDetector.onTouchEvent(ev)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         // دکمه بازگشت (Back)
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -1066,8 +1087,8 @@ class BoardActivity : Activity() {
             return true
         }
 
-        // دکمه منو
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
+        // دکمه منو یا کلید افزایش صدا (جهت تست آسان روی گوشی)
+        if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             showTvMenu()
             return true
         }
