@@ -2800,5 +2800,78 @@
         }
         @endif
     </script>
+
+    {{-- اعلان تبریک و پیشنهاد ذخیره/نشانه‌گذاری پس از جفت‌سازی تلویزیون --}}
+    <div id="tv-paired-toast"
+         style="display: none;"
+         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] max-w-xl w-[90%] bg-slate-900/95 border-2 border-amber-400/80 rounded-2xl p-4 sm:p-5 shadow-2xl text-white backdrop-blur-2xl text-center select-none"
+         dir="rtl">
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <span class="text-3xl">📺</span>
+            <span class="text-lg font-black text-amber-400">اتصال تلویزیون با موفقیت انجام شد!</span>
+            <span class="text-2xl">✨</span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-3">
+            برای اجرای تمام‌صفحه و دسترسی همیشگی بدون تایپ مجدد آدرس، این صفحه را به <strong>علاقه‌مندی‌ها (Bookmark)</strong> یا <strong>صفحه اصلی (Add to Home)</strong> تلویزیون اضافه کنید.
+        </p>
+        <div class="flex items-center justify-center gap-3">
+            <button onclick="dismissTvPairedToast()" type="button" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-xl font-black text-xs shadow-lg cursor-pointer">
+                متوجه شدم (بستن)
+            </button>
+            <span class="text-[11px] text-slate-400 font-mono">
+                بستن خودکار در <span id="tv-toast-countdown" class="text-amber-400 font-bold">۸</span> ثانیه
+            </span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isJustPaired = urlParams.get('paired') === '1' || sessionStorage.getItem('tv_just_paired') === '1';
+            
+            if (isJustPaired) {
+                sessionStorage.removeItem('tv_just_paired');
+                // پاک کردن پارامتر paired از آدرس بدون رفرش
+                try {
+                    urlParams.delete('paired');
+                    const cleanUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                    window.history.replaceState({}, document.title, cleanUrl);
+                } catch(e) {}
+
+                const toast = document.getElementById('tv-paired-toast');
+                if (toast) {
+                    toast.style.display = 'block';
+                    let timeLeft = 8;
+                    const countdownEl = document.getElementById('tv-toast-countdown');
+                    const timer = setInterval(() => {
+                        timeLeft--;
+                        if (countdownEl) countdownEl.textContent = timeLeft;
+                        if (timeLeft <= 0) {
+                            clearInterval(timer);
+                            dismissTvPairedToast();
+                        }
+                    }, 1000);
+
+                    window.dismissTvPairedToast = function() {
+                        clearInterval(timer);
+                        if (toast) {
+                            toast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            toast.style.opacity = '0';
+                            toast.style.transform = 'translate(-50%, 20px)';
+                            setTimeout(() => { toast.remove(); }, 500);
+                        }
+                    };
+
+                    // بستن با کلیدهای ریموت کنترل (Enter / OK / Back / Esc)
+                    window.addEventListener('keydown', function handleToastKey(e) {
+                        if (['Enter', 'Escape', 'GoBack', 'Back'].includes(e.key) || e.keyCode === 13 || e.keyCode === 27 || e.keyCode === 10009 || e.keyCode === 8) {
+                            window.dismissTvPairedToast();
+                            window.removeEventListener('keydown', handleToastKey);
+                        }
+                    });
+                }
+            }
+        })();
+    </script>
 </body>
 </html>

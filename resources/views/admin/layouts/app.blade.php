@@ -23,6 +23,14 @@
         })();
     </script>
 
+    <!-- PWA Settings & Apple Mobile Web App -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="طلالایو">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
@@ -190,6 +198,125 @@
             renderLucideIcons();
         }
         window.addEventListener('alpine:initialized', renderLucideIcons);
+    </script>
+
+    {{-- اعلان هوشمند و زیبا برای نصب وب‌اپلیکیشن PWA ویژه پنل حساب کاربری --}}
+    <div x-data="pwaInstallHandler()"
+         x-show="showPrompt"
+         x-cloak
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="opacity-0 translate-y-8 scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-8 scale-95"
+         class="fixed bottom-5 left-5 right-5 sm:right-auto sm:max-w-md z-50 bg-white/95 dark:bg-slate-900/95 border-2 border-amber-500/40 dark:border-amber-500/50 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl">
+        
+        <div class="flex items-start gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 text-2xl shadow-lg shadow-amber-500/30 shrink-0">
+                📱
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                    <h4 class="text-sm font-black text-slate-900 dark:text-white">نصب وب‌اپلیکیشن طلالایو (PWA)</h4>
+                    <button @click="dismiss(1)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg transition-colors cursor-pointer" title="بستن">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                    برای دسترسی سریع‌تر، کارکرد روان‌تر و مدیریت آسان تابلوی طلا بدون نیاز به باز کردن مرورگر، اپلیکیشن طلالایو را به صفحه اصلی خود اضافه کنید.
+                </p>
+
+                {{-- راهنمای مخصوص iOS در مرورگر Safari --}}
+                <div x-show="isIos" class="mt-2.5 p-2 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-800 dark:text-amber-300 leading-normal">
+                    <span>در مرورگر Safari دکمه <strong>Share (⎋)</strong> را بزنید و گزینه <strong>«Add to Home Screen» (➕)</strong> را انتخاب فرمایید.</span>
+                </div>
+
+                <div class="flex items-center gap-2 mt-3.5">
+                    <button x-show="!isIos" @click="install()" type="button" class="flex-1 py-2 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>نصب مستقیم اپلیکیشن</span>
+                        <span>↓</span>
+                    </button>
+                    <button @click="dismiss(3)" type="button" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors cursor-pointer">
+                        <span>بعداً</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function pwaInstallHandler() {
+            return {
+                showPrompt: false,
+                deferredPrompt: null,
+                isIos: false,
+
+                init() {
+                    // اگر قبلاً در حالت PWA باز شده، نیازی به نمایش اعلان نیست
+                    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                                         window.navigator.standalone === true;
+                    if (isStandalone) {
+                        return;
+                    }
+
+                    // بررسی وضعیت رد موقت توسط کاربر
+                    const dismissedUntil = localStorage.getItem('talalive_pwa_dismissed_until');
+                    if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
+                        return;
+                    }
+
+                    // تشخیص سیستم‌عامل iOS
+                    const ua = window.navigator.userAgent.toLowerCase();
+                    this.isIos = /iphone|ipad|ipod/.test(ua) && !window.MSStream;
+
+                    // رویداد استاندارد مرورگرهای کروم و اج
+                    window.addEventListener('beforeinstallprompt', (e) => {
+                        e.preventDefault();
+                        this.deferredPrompt = e;
+                        this.showPrompt = true;
+                    });
+
+                    // نمایش با تاخیر ملایم برای ایجاد تجربه کاربری آرام
+                    setTimeout(() => {
+                        if (!this.showPrompt) {
+                            this.showPrompt = true;
+                        }
+                    }, 2000);
+                },
+
+                install() {
+                    if (this.deferredPrompt) {
+                        this.deferredPrompt.prompt();
+                        this.deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                this.showPrompt = false;
+                            }
+                            this.deferredPrompt = null;
+                        });
+                    } else {
+                        // در صورت عدم پشتیبانی پرامپت خودکار، انتقال به صفحه دانلود و راهنما
+                        window.location.href = '/app';
+                    }
+                },
+
+                dismiss(days = 3) {
+                    this.showPrompt = false;
+                    const expireTime = Date.now() + (days * 24 * 60 * 60 * 1000);
+                    localStorage.setItem('talalive_pwa_dismissed_until', expireTime.toString());
+                }
+            };
+        }
+
+        // ثبت Service Worker در پنل ادمین
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.warn('Admin PWA ServiceWorker registration failed:', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#020617">
 
+    <!-- PWA Settings & Apple Mobile Web App -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="طلالایو">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+
     {{-- اسکریپت اولیه تعیین تم: دیفالت روی حالت روشن است مگر اینکه کاربر قبلاً تم تاریک را انتخاب کرده باشد --}}
     <script>
         (function () {
@@ -683,6 +690,17 @@
                     document.body.classList.remove('menu-open');
                 },
             };
+        }
+    </script>
+
+    {{-- ثبت Service Worker برای PWA --}}
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.warn('PWA registration failed:', err);
+                });
+            });
         }
     </script>
 </body>
