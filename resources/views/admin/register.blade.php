@@ -162,10 +162,17 @@
                         <select name="city" id="citySelect" required
                                 class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all cursor-pointer">
                             <option value="" disabled {{ old('city') ? '' : 'selected' }}>شهر خود را انتخاب کنید...</option>
-                            @foreach(config('cities', []) as $slug => $c)
-                                <option value="{{ $slug }}" {{ old('city', 'tehran') === $slug ? 'selected' : '' }}>
-                                    {{ $c['name'] }} (استان {{ $c['province'] ?? $c['name'] }})
-                                </option>
+                            @php
+                                $groupedCities = collect(config('cities', []))->groupBy('province');
+                            @endphp
+                            @foreach($groupedCities as $province => $cities)
+                                <optgroup label="استان {{ $province }}">
+                                    @foreach($cities as $slug => $c)
+                                        <option value="{{ $slug }}" {{ old('city', 'tehran') === $slug ? 'selected' : '' }}>
+                                            {{ $c['name'] }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             @endforeach
                             <option value="other" {{ old('city') === 'other' ? 'selected' : '' }}>سایر شهرهای ایران</option>
                         </select>

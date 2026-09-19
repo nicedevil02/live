@@ -69,8 +69,15 @@
                     </label>
                     <select x-model="form.city"
                             class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-shadow cursor-pointer">
-                        @foreach(config('cities', []) as $slug => $c)
-                            <option value="{{ $slug }}">{{ $c['name'] }} (استان {{ $c['province'] ?? $c['name'] }})</option>
+                        @php
+                            $groupedCities = collect(config('cities', []))->groupBy('province');
+                        @endphp
+                        @foreach($groupedCities as $province => $cities)
+                            <optgroup label="استان {{ $province }}">
+                                @foreach($cities as $slug => $c)
+                                    <option value="{{ $slug }}">{{ $c['name'] }}</option>
+                                @endforeach
+                            </optgroup>
                         @endforeach
                         <option value="other">سایر شهرهای ایران</option>
                     </select>
