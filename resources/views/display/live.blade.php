@@ -256,11 +256,11 @@
         .market-tile-label { line-height: 1.12; }
         .market-price-number { line-height: 0.95; white-space: nowrap; }
         .tv-price-featured {
-            font-size: 3.25rem !important;
+            font-size: 3.85rem !important;
             line-height: 1 !important;
         }
         .tv-price-regular {
-            font-size: 2.15rem !important;
+            font-size: 2.5rem !important;
             line-height: 1.05 !important;
         }
         @media (min-width: 1280px) and (max-height: 760px) {
@@ -846,7 +846,7 @@
         /* ۱. گوی فیروزه‌ای و یاقوت کبود اپل (Apple Electric Cyan & Sapphire) - شمال غربی / بالا چپ */
         .orb-1 {
             top: -4%;
-            left: 3%;
+            left: 2%;
             width: clamp(270px, 28vw, 380px);
             height: clamp(270px, 28vw, 380px);
             background: radial-gradient(circle at 48% 48%, rgba(6, 182, 212, 0.85) 0%, rgba(2, 132, 199, 0.60) 28%, rgba(2, 132, 199, 0.25) 55%, rgba(2, 132, 199, 0.05) 72%, transparent 84%) !important;
@@ -854,10 +854,10 @@
             animation: orb-drift-tl 9s ease-in-out infinite;
         }
 
-        /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Sunset Orchid) - جنوب شرقی / پایین راست */
+        /* ۲. گوی ارکیده نئونی و سرخابی غروب اپل (Apple Neon Magenta & Sunset Orchid) - مرکز-چپ پایین (خارج از اسلایدر) */
         .orb-2 {
-            bottom: -4%;
-            right: 3%;
+            bottom: -2%;
+            left: 36%;
             width: clamp(260px, 27vw, 370px);
             height: clamp(260px, 27vw, 370px);
             background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.85) 0%, rgba(192, 38, 211, 0.60) 28%, rgba(192, 38, 211, 0.25) 55%, rgba(192, 38, 211, 0.05) 72%, transparent 84%) !important;
@@ -865,10 +865,10 @@
             animation: orb-drift-br 11s ease-in-out infinite;
         }
 
-        /* ۳. گوی طلای خالص ۲۴ عیار و کهربایی اپل (Apple 24K Liquid Gold & Amber) - شمال شرقی / بالا راست */
+        /* ۳. گوی طلای خالص ۲۴ عیار و کهربایی اپل (Apple 24K Liquid Gold & Amber) - مرکز-چپ بالا (روی کارت‌های طلایی و خارج از اسلایدر) */
         .orb-3 {
             top: 2%;
-            right: 4%;
+            left: 32%;
             width: clamp(250px, 25vw, 350px);
             height: clamp(250px, 25vw, 350px);
             background: radial-gradient(circle at 48% 48%, rgba(253, 224, 71, 0.90) 0%, rgba(245, 158, 11, 0.65) 28%, rgba(217, 119, 6, 0.26) 55%, rgba(217, 119, 6, 0.05) 72%, transparent 84%) !important;
@@ -879,7 +879,7 @@
         /* ۴. گوی شفق زمردین و نعنایی اپل (Apple Aurora Emerald & Mint) - جنوب غربی / پایین چپ */
         .orb-4 {
             bottom: 2%;
-            left: 4%;
+            left: 3%;
             width: clamp(255px, 26vw, 360px);
             height: clamp(255px, 26vw, 360px);
             background: radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.85) 0%, rgba(5, 150, 105, 0.60) 28%, rgba(5, 150, 105, 0.25) 55%, rgba(5, 150, 105, 0.05) 72%, transparent 84%) !important;
@@ -1229,7 +1229,7 @@
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
-                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[20s] ease-linear group-hover:scale-105">
+                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-[20s] ease-linear group-hover:scale-105">
                             <!-- نشان پیشنهاد ویژه -->
                             <div x-show="Boolean(activeProduct.is_special)" class="absolute top-5 left-5 z-20 select-none pointer-events-none">
                                 <div class="relative flex items-center gap-3 rounded-full border border-red-200/35 bg-gradient-to-br from-red-500/20 via-rose-500/14 to-white/10 px-4 py-3 backdrop-blur-xl shadow-[0_18px_40px_rgba(0,0,0,0.28),0_0_28px_rgba(239,68,68,0.18)] ring-1 ring-inset ring-white/10">
@@ -1243,7 +1243,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none"></div>
+                            <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
                             <div class="absolute bottom-4 right-4 left-4">
                                 <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/24 px-4 py-3 shadow-[0_16px_40px_rgba(0,0,0,0.30)] backdrop-blur-2xl">
                                     <div class="flex flex-row items-end justify-between gap-3">
@@ -1363,7 +1363,7 @@
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
                                     item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor,
-                                    index < 3 ? 'py-2.5' : 'py-1'
+                                    index < 3 ? 'pt-3.5 pb-1' : 'pt-2 pb-0.5'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex flex-col items-center justify-center whitespace-nowrap w-full">
                                           <span :class="[
