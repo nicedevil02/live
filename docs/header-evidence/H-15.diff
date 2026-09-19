@@ -1,0 +1,38 @@
+--- baseline_before_h15.html
++++ after_h15.html
+@@ -439,7 +439,7 @@
+ <a href="http://127.0.0.1:8000/digital-rate-board" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+ <span class="text-sm">🖥️</span>
+ <div>
+-<div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو دیجیتال طلا و ارز</div>
++<div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تابلو دیجیتال طلا و صرافی</div>
+ <div class="text-[10px] text-slate-400">مانیتور نرخ لحظه‌ای طلا و صرافی</div>
+ </div>
+ </a>
+@@ -473,7 +473,7 @@
+ </a>
+ <div class="pt-1 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-2">
+ <a href="http://127.0.0.1:8000/demo" class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline">پیش‌نمایش زنده</a>
+-<a href="http://127.0.0.1:8000/app" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">دانلود اپلیکیشن</a>
++<a href="http://127.0.0.1:8000/app" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">دانلود اپلیکیشن و PWA</a>
+ </div>
+ </div>
+ </div>
+@@ -514,7 +514,7 @@
+ <div class="text-[10px] text-slate-400">تخصصی بودن و پشتیبانی صنف طلا</div>
+ </a>
+ <a href="http://127.0.0.1:8000/compare/tablotala" class="block p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+-<div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">مقایسه با تابلوطلا</div>
++<div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">مقایسه با تابلوطلا دات‌کام</div>
+ <div class="text-[10px] text-slate-400">تحت وب در برابر نرم‌افزار نصبی</div>
+ </a>
+ </div>
+@@ -594,7 +594,7 @@
+ </a>
+ <a href="http://127.0.0.1:8000/tools/karat-converter" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
+ <span class="text-sm">🔄</span>
+-<div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل عیارهای طلا (۷۵۰، ۷۰۵...)</div>
++<div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل عیارهای طلا و نقره</div>
+ </a>
+ </div>
+ </div>

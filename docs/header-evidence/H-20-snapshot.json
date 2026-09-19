@@ -1,0 +1,86 @@
+{
+  "username": "admin",
+  "updatedAt": "2026-09-19T14:15:00.000Z",
+  "dataAgeSeconds": 42,
+  "isStale": false,
+  "serverTime": "2026-09-19T17:45:00+03:30",
+  "apiTime": "17:44",
+  "refreshIntervalSeconds": 60,
+  "displayItems": [
+    {
+      "key": "mesghal17",
+      "label": "مظنه مثقال ۱۷",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "key": "gold18",
+      "label": "طلای ۱۸ عیار",
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "key": "coin_emami",
+      "label": "سکه امامی",
+      "enabled": true,
+      "order": 3
+    },
+    {
+      "key": "usd",
+      "label": "دلار آزاد",
+      "enabled": true,
+      "order": 4
+    }
+  ],
+  "priceFeed": [
+    {
+      "symbol": "mesghal17",
+      "label": "مظنه مثقال",
+      "value": 15820000,
+      "unit": "تومان",
+      "change_value": 45000,
+      "change_percent": 0.28,
+      "direction": "up",
+      "is_stale": false,
+      "fetched_at": "2026-09-19T14:14:18.000Z"
+    },
+    {
+      "symbol": "gold18",
+      "label": "طلای ۱۸ عیار",
+      "value": 3652000,
+      "unit": "تومان",
+      "change_value": 10400,
+      "change_percent": 0.29,
+      "direction": "up",
+      "is_stale": false,
+      "fetched_at": "2026-09-19T14:14:18.000Z"
+    },
+    {
+      "symbol": "coin_emami",
+      "label": "سکه امامی",
+      "value": 43500000,
+      "unit": "تومان",
+      "change_value": -120000,
+      "change_percent": -0.27,
+      "direction": "down",
+      "is_stale": false,
+      "fetched_at": "2026-09-19T14:14:18.000Z"
+    },
+    {
+      "symbol": "usd",
+      "label": "دلار",
+      "value": 68500,
+      "unit": "تومان",
+      "change_value": 150,
+      "change_percent": 0.22,
+      "direction": "up",
+      "is_stale": false,
+      "fetched_at": "2026-09-19T14:14:18.000Z"
+    }
+  ],
+  "products": [],
+  "settings": {
+    "theme_mode": "dark",
+    "slider_interval_sec": 5
+  }
+}
