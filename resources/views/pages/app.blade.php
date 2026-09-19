@@ -91,16 +91,22 @@
                                 </div>
                             </a>
 
-                            <!-- ورود به پنل وب و PWA گوشی -->
-                            <a href="/admin/login" 
-                               class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white shadow-md text-right group">
-                                <span class="text-3xl group-hover:scale-110 transition-transform">⚡</span>
+                            <!-- دکمه نصب اپلیکیشن PWA و پنل وب -->
+                            <div id="pwa-app-card" 
+                                 onclick="handlePwaClick(event)"
+                                 class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white shadow-md text-right group cursor-pointer select-none">
+                                <span class="text-3xl group-hover:scale-110 transition-transform">📲</span>
                                 <div class="min-w-0 flex-1">
-                                    <span class="block text-[11px] text-slate-500 dark:text-slate-400 font-normal">نسخه بدون نیاز به نصب</span>
-                                    <span class="block text-base font-black text-amber-600 dark:text-amber-400 truncate">پنل وب و PWA موبایل</span>
+                                    <div class="flex items-center justify-between gap-1 mb-0.5">
+                                        <span class="block text-[11px] text-slate-500 dark:text-slate-400 font-medium">وب‌اپلیکیشن پیش‌رونده (PWA)</span>
+                                        <span id="pwa-status-badge" class="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/25">
+                                            نصب مستقیم
+                                        </span>
+                                    </div>
+                                    <span class="block text-base font-black text-amber-600 dark:text-amber-400 truncate">نصب PWA و پنل وب</span>
                                     <span class="block text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">سازگار با اندروید، آیفون و ویندوز</span>
                                 </div>
-                            </a>
+                            </div>
                         </div>
 
                         {{-- لینک‌های کمکی: اتصال سریع و دموی زنده --}}
@@ -668,4 +674,213 @@
   ]
 }
 </script>
+
+    {{-- مودال هوشمند و زیبای راهنمای نصب وب‌اپلیکیشن PWA --}}
+    <div id="pwa-install-modal" 
+         style="display: none; opacity: 0;" 
+         class="fixed inset-0 z-[99999] items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md transition-opacity duration-200">
+        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden p-5 sm:p-6 text-right">
+            
+            <!-- هدر مودال -->
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 text-xl shadow-md shadow-amber-500/30 shrink-0">
+                        📲
+                    </div>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">نصب وب‌اپلیکیشن طلالایو (PWA)</h3>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">نرم‌افزار مستقل، سبک و همیشه به‌روز</p>
+                    </div>
+                </div>
+                <button onclick="closePwaModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center text-lg transition-colors cursor-pointer" title="بستن">&times;</button>
+            </div>
+
+            <!-- محتوای وابسته به سیستم‌عامل -->
+            <div class="py-4 space-y-3.5">
+                
+                {{-- راهنمای مخصوص iOS در مرورگر Safari --}}
+                <div id="pwa-modal-ios-content" style="display: none;" class="space-y-3">
+                    <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 space-y-2 leading-relaxed">
+                        <div class="font-black flex items-center gap-1.5 text-xs sm:text-sm">
+                            <span>🍎</span>
+                            <span>راهنمای نصب روی آیفون و آیپد (سافاری):</span>
+                        </div>
+                        <ol class="list-decimal list-inside space-y-1.5 pr-1 font-medium text-[11px] sm:text-xs">
+                            <li>در نوار پایین مرورگر <strong>Safari</strong> دکمه اشتراک‌گذاری <strong>Share (⎋)</strong> را لمس کنید.</li>
+                            <li>منو را کمی به پایین اسکرول کرده و گزینه <strong>«Add to Home Screen» (افزودن به صفحه اصلی ➕)</strong> را انتخاب کنید.</li>
+                            <li>در گوشه بالا، روی دکمه <strong>«Add»</strong> بزنید تا آیکون طلالایو به صفحه اصلی گوشی اضافه شود.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                {{-- راهنمای عمومی / اندروید و دسکتاپ --}}
+                <div id="pwa-modal-general-content" class="space-y-3">
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        نرم‌افزار طلالایو بدون نیاز به دانلود فایل‌های حجیم از بازار یا گوگل‌پلی مستقیماً روی گوشی یا رایانه شما نصب شده و همواره آخرین نسخه را دریافت می‌کند.
+                    </p>
+
+                    <div id="pwa-native-install-section" style="display: none;">
+                        <button onclick="triggerPwaPromptFromModal()" type="button" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-[1.01]">
+                            <span>📲</span>
+                            <span>نصب مستقیم اپلیکیشن روی دستگاه</span>
+                        </button>
+                    </div>
+
+                    <div id="pwa-browser-manual-guide" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                        <div class="font-bold flex items-center gap-1.5 text-amber-600 dark:text-amber-400 text-xs">
+                            <span>💡</span>
+                            <span>نصب از طریق منوی مرورگر:</span>
+                        </div>
+                        <p class="text-[11px] leading-relaxed">
+                            در مرورگر کروم یا اج، روی <strong>آیکون نصب (⭳)</strong> در نوار آدرس یا از منوی سه‌نقطه گزینه <strong>«Install TalaLive»</strong> را انتخاب کنید.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- حالت اپلیکیشن نصب‌شده --}}
+                <div id="pwa-modal-installed-content" style="display: none;" class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-800 dark:text-emerald-300 space-y-1">
+                    <div class="font-black flex items-center gap-1.5 text-xs sm:text-sm">
+                        <span>✅</span>
+                        <span>اپلیکیشن طلالایو روی دستگاه شما نصب است!</span>
+                    </div>
+                    <p class="text-[11px]">می‌توانید مستقیماً وارد پنل مدیریت تابلوی طلا شوید.</p>
+                </div>
+            </div>
+
+            <!-- دکمه‌های فوتر مودال -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2.5">
+                <a href="/admin/login" class="flex-1 py-2.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-black text-xs border border-amber-500/30 text-center transition-colors">
+                    ورود به پنل وب (/admin)
+                </a>
+                <button onclick="closePwaModal()" type="button" class="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 font-bold text-xs transition-colors cursor-pointer">
+                    بستن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
+
+            function updatePwaUi() {
+                const badge = document.getElementById('pwa-status-badge');
+                if (isStandalone && badge) {
+                    badge.innerText = 'نصب شده';
+                    badge.className = 'text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25';
+                }
+                const promptEvent = window.__pwaDeferredPrompt;
+                const nativeSec = document.getElementById('pwa-native-install-section');
+                const manualSec = document.getElementById('pwa-browser-manual-guide');
+                if (nativeSec && promptEvent) {
+                    nativeSec.style.display = 'block';
+                    if (manualSec) manualSec.style.display = 'none';
+                }
+            }
+
+            window.addEventListener('load', updatePwaUi);
+            window.addEventListener('talalive-pwa-ready', updatePwaUi);
+
+            window.handlePwaClick = function(e) {
+                if (e) e.preventDefault();
+
+                // اگر از قبل در حالت PWA نصب شده باز است
+                if (isStandalone) {
+                    window.location.href = '/admin/login';
+                    return;
+                }
+
+                // اگر رویداد مستقیم نصب مرورگر موجود است، مستقیماً پرامپت شود
+                const promptEvent = window.__pwaDeferredPrompt;
+                if (promptEvent) {
+                    promptEvent.prompt();
+                    promptEvent.userChoice.then(function(choiceResult) {
+                        if (choiceResult.outcome === 'accepted') {
+                            const badge = document.getElementById('pwa-status-badge');
+                            if (badge) {
+                                badge.innerText = 'نصب شد';
+                                badge.className = 'text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25';
+                            }
+                        }
+                        window.__pwaDeferredPrompt = null;
+                    });
+                    return;
+                }
+
+                // در غیر این صورت، مودال هوشمند باز شود
+                openPwaModal();
+            };
+
+            window.openPwaModal = function() {
+                const modal = document.getElementById('pwa-install-modal');
+                if (!modal) return;
+
+                const iosContent = document.getElementById('pwa-modal-ios-content');
+                const generalContent = document.getElementById('pwa-modal-general-content');
+                const installedContent = document.getElementById('pwa-modal-installed-content');
+
+                if (isStandalone) {
+                    if (installedContent) installedContent.style.display = 'block';
+                    if (generalContent) generalContent.style.display = 'none';
+                    if (iosContent) iosContent.style.display = 'none';
+                } else if (isIos) {
+                    if (iosContent) iosContent.style.display = 'block';
+                    if (generalContent) generalContent.style.display = 'none';
+                    if (installedContent) installedContent.style.display = 'none';
+                } else {
+                    if (generalContent) generalContent.style.display = 'block';
+                    if (iosContent) iosContent.style.display = 'none';
+                    if (installedContent) installedContent.style.display = 'none';
+
+                    const promptEvent = window.__pwaDeferredPrompt;
+                    const nativeSec = document.getElementById('pwa-native-install-section');
+                    const manualSec = document.getElementById('pwa-browser-manual-guide');
+                    if (promptEvent) {
+                        if (nativeSec) nativeSec.style.display = 'block';
+                        if (manualSec) manualSec.style.display = 'none';
+                    } else {
+                        if (nativeSec) nativeSec.style.display = 'none';
+                        if (manualSec) manualSec.style.display = 'block';
+                    }
+                }
+
+                modal.style.display = 'flex';
+                setTimeout(function() { modal.style.opacity = '1'; }, 10);
+            };
+
+            window.closePwaModal = function() {
+                const modal = document.getElementById('pwa-install-modal');
+                if (!modal) return;
+                modal.style.opacity = '0';
+                setTimeout(function() { modal.style.display = 'none'; }, 200);
+            };
+
+            window.triggerPwaPromptFromModal = function() {
+                const promptEvent = window.__pwaDeferredPrompt;
+                if (promptEvent) {
+                    promptEvent.prompt();
+                    promptEvent.userChoice.then(function(choiceResult) {
+                        window.__pwaDeferredPrompt = null;
+                        closePwaModal();
+                    });
+                } else {
+                    window.location.href = '/admin/login';
+                }
+            };
+
+            // بستن با کلید Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closePwaModal();
+            });
+
+            // بستن با کلیک روی بک‌دراپ
+            const modal = document.getElementById('pwa-install-modal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) closePwaModal();
+                });
+            }
+        })();
+    </script>
 @endsection

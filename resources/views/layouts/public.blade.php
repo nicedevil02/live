@@ -12,6 +12,16 @@
     <meta name="apple-mobile-web-app-title" content="طلالایو">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
 
+    {{-- ضبط زودهنگام رویداد نصب PWA برای جلوگیری از دست رفتن رویداد در تمامی صفحات --}}
+    <script>
+        window.__pwaDeferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            window.__pwaDeferredPrompt = e;
+            window.dispatchEvent(new CustomEvent('talalive-pwa-ready'));
+        });
+    </script>
+
     {{-- اسکریپت اولیه تعیین تم: دیفالت روی حالت روشن است مگر اینکه کاربر قبلاً تم تاریک را انتخاب کرده باشد --}}
     <script>
         (function () {
