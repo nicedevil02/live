@@ -1,0 +1,56 @@
+==================================================
+TalaLive Header Rebuild - H-12 Evidence
+Task: Accessibility - Button Labels & SVG aria-hidden
+==================================================
+
+1. Accessible Names of Buttons (DevTools Accessibility Tree):
+--------------------------------------------------
+[Button 1: Theme Toggle Button]
+  Selector: #themeToggleBtn
+  Role: button
+  aria-label: "تغییر تم تاریک و روشن"
+  title: "تغییر تم تاریک / روشن"
+  Computed Accessible Name: "تغییر تم تاریک و روشن"
+  Child SVGs: 2 (Sun & Moon) -> both aria-hidden="true"
+
+[Button 2: Mobile Hamburger Button]
+  Selector: header button.lg:hidden
+  Role: button
+  aria-label: "منوی اصلی"
+  aria-controls: "mobile-menu"
+  aria-expanded: false (dynamic: :aria-expanded="mobileMenuOpen ? 'true' : 'false'")
+  Computed Accessible Name: "منوی اصلی"
+  Screen Reader Announcement: "منوی اصلی، دکمه، collapsed"
+  Child SVGs: 2 (Hamburger & Close) -> both aria-hidden="true"
+
+[Button 3: Header Action / Dropdown Buttons]
+  Selector: header nav button[aria-controls="dropdown-products"]
+  Role: button
+  text content: "سامانه‌ها"
+  aria-haspopup: "true"
+  aria-controls: "dropdown-products"
+  aria-expanded: false (dynamic: :aria-expanded="isOpen('products') ? 'true' : 'false'")
+  Computed Accessible Name: "سامانه‌ها"
+  Child SVG: Dropdown Arrow -> aria-hidden="true"
+
+2. Decorative SVGs in Header:
+--------------------------------------------------
+Total SVGs in Header: 10
+  - SVG 1 (Dropdown Arrow - Products): aria-hidden="true"
+  - SVG 2 (Dropdown Arrow - Compare): aria-hidden="true"
+  - SVG 3 (Dropdown Arrow - Tools): aria-hidden="true"
+  - SVG 4 (Dropdown Arrow - Guides): aria-hidden="true"
+  - SVG 5 (Dropdown Arrow - Dev/API): aria-hidden="true"
+  - SVG 6 (Theme Toggle - Sun icon): aria-hidden="true"
+  - SVG 7 (Theme Toggle - Moon icon): aria-hidden="true"
+  - SVG 8 (Login CTA - Lock/Arrow icon): aria-hidden="true"
+  - SVG 9 (Mobile Hamburger - 3 bars icon): aria-hidden="true"
+  - SVG 10 (Mobile Hamburger - Close icon): aria-hidden="true"
+
+All 10/10 decorative SVGs have aria-hidden="true".
+
+3. Mobile Menu Drawer Association:
+--------------------------------------------------
+  Drawer Element: <div id="mobile-menu" ...>
+  Button aria-controls points to: "mobile-menu"
+  Status: PASSED

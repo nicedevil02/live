@@ -201,10 +201,23 @@
             border-color: rgba(245, 158, 11, 0.45);
             box-shadow: 0 12px 35px -10px rgba(245, 158, 11, 0.15);
         }
+        header a:focus-visible,
+        header button:focus-visible,
+        footer a:focus-visible {
+            outline: 2px solid #f59e0b;
+            outline-offset: 2px;
+            border-radius: 0.75rem;
+        }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()">
+
+    {{-- پرش به محتوای اصلی (Skip Link) --}}
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-amber-500 focus:text-slate-950 focus:text-xs focus:font-black focus:shadow-lg">
+        پرش به محتوای اصلی
+    </a>
 
     {{-- نوار ناوبری شیشه‌ای بالایی مدرن (Sticky Modern Header) --}}
     <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/85 dark:bg-slate-950/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 shadow-sm dark:shadow-none">
@@ -228,8 +241,8 @@
             </a>
 
             {{-- نوار ناوبری کپسولی مدرن و جامع (Desktop Navigation) --}}
-            <nav class="hidden lg:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-600 dark:text-slate-300">
-                <a href="/" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+            <nav aria-label="ناوبری اصلی" class="hidden lg:flex items-center gap-0.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-xs font-bold text-slate-600 dark:text-slate-300">
+                <a href="/" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->is('/') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->is('/') ? ' aria-current="page"' : '' !!}>
                     صفحه اصلی
                 </a>
 
@@ -239,12 +252,18 @@
                      @mouseleave="closeMenu('products')"
                      @click.outside="closeMenu('products')"
                      @keydown.escape.window="closeMenu('products')">
-                    <button type="button" @click="isOpen('products') ? closeMenu('products') : openMenu('products')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.smart-gold-board') || request()->routeIs('public.digital-rate-board') || request()->routeIs('public.gold-board-without-device') || request()->routeIs('public.online-gold-price-board') || request()->routeIs('public.currency-exchange-board') || request()->routeIs('public.silver-bullion-board') || request()->routeIs('public.demo') || request()->routeIs('public.app')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    <button type="button"
+                            @click="isOpen('products') ? closeMenu('products') : openMenu('products')"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-products"
+                            :aria-expanded="isOpen('products') ? 'true' : 'false'"
+                            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.smart-gold-board') || request()->routeIs('public.digital-rate-board') || request()->routeIs('public.gold-board-without-device') || request()->routeIs('public.online-gold-price-board') || request()->routeIs('public.currency-exchange-board') || request()->routeIs('public.silver-bullion-board') || request()->routeIs('public.demo') || request()->routeIs('public.app')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>سامانه‌ها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('products') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('products') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="isOpen('products')" 
+                    <div id="dropdown-products"
+                         x-show="isOpen('products')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -315,12 +334,18 @@
                      @mouseleave="closeMenu('compare')"
                      @click.outside="closeMenu('compare')"
                      @keydown.escape.window="closeMenu('compare')">
-                    <button type="button" @click="isOpen('compare') ? closeMenu('compare') : openMenu('compare')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.led-vs-smart-board') || request()->routeIs('public.compare.*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    <button type="button"
+                            @click="isOpen('compare') ? closeMenu('compare') : openMenu('compare')"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-compare"
+                            :aria-expanded="isOpen('compare') ? 'true' : 'false'"
+                            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.led-vs-smart-board') || request()->routeIs('public.compare.*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>مقایسه‌ها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('compare') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('compare') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="isOpen('compare')" 
+                    <div id="dropdown-compare"
+                         x-show="isOpen('compare')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -358,12 +383,18 @@
                      @mouseleave="closeMenu('tools')"
                      @click.outside="closeMenu('tools')"
                      @keydown.escape.window="closeMenu('tools')">
-                    <button type="button" @click="isOpen('tools') ? closeMenu('tools') : openMenu('tools')" class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->is('tools/*') || request()->routeIs('public.gold-calculator')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                    <button type="button"
+                            @click="isOpen('tools') ? closeMenu('tools') : openMenu('tools')"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-tools"
+                            :aria-expanded="isOpen('tools') ? 'true' : 'false'"
+                            class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->is('tools/*') || request()->routeIs('public.gold-calculator')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>ابزارها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('tools') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('tools') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
-                    <div x-show="isOpen('tools')" 
+                    <div id="dropdown-tools"
+                         x-show="isOpen('tools')" 
                          x-cloak
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2 scale-95"
@@ -373,39 +404,60 @@
                          x-transition:leave-end="opacity-0 translate-y-2 scale-95"
                          class="absolute right-0 mt-2 w-72 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-2 z-50 space-y-1">
                         
-                        <a href="{{ route('public.gold-calculator') }}" class="flex items-center gap-2.5 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 group transition-all font-bold text-amber-700 dark:text-amber-300">
+                        <a href="{{ route('public.gold-calculator') }}" class="flex items-center gap-2.5 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 group transition-all">
                             <span class="text-sm">🧮</span>
-                            <div class="text-xs font-bold">هاب جامع ماشین‌حساب‌های طلا</div>
+                            <div>
+                                <div class="text-xs font-black text-amber-700 dark:text-amber-300">ماشین حساب جامع طلا</div>
+                                <div class="text-[10px] text-slate-400">محاسبه آنلاین قیمت طلا، سود و اجرت</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.gold-price') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">💰</span>
-                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه قیمت طلا با اجرت و سود</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه قیمت طلا</div>
+                                <div class="text-[10px] text-slate-400">فرمول خرید طلا از طلافروشی</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.wage-calculator') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">🔨</span>
-                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">ماشین‌حساب اجرت ساخت طلا</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه اجرت ساخت</div>
+                                <div class="text-[10px] text-slate-400">درصدی و تومانی</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.second-hand-gold') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">♻️</span>
-                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه طلای دست دوم و متفرقه</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">طلای بدون اجرت / مستعمل</div>
+                                <div class="text-[10px] text-slate-400">فرمول خرید طلای دست دوم</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.coin-bubble') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">🪙</span>
-                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه‌گر حباب انواع سکه</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">حباب سکه آنلاین</div>
+                                <div class="text-[10px] text-slate-400">امامی، بهار آزادی، نیم و ربع</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.mesghal') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">⚖️</span>
-                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل مظنه مثقال به گرم ۱۸ عیار</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">تبدیل مثقال به گرم ۱۸</div>
+                                <div class="text-[10px] text-slate-400">تبدیل مظنه به نرخ هر گرم</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.melted-gold') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
                             <span class="text-sm">🔥</span>
-                            <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه طلای آبشده و عیار انگ</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-400">محاسبه طلای آبشده</div>
+                                <div class="text-[10px] text-slate-400">تبدیل خط و انگ به گرم ۷۵۰</div>
+                            </div>
                         </a>
 
                         <a href="{{ route('public.tools.karat-converter') }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50 dark:hover:bg-slate-800/60 group transition-all">
@@ -428,7 +480,7 @@
                             :aria-expanded="isOpen('guides') ? 'true' : 'false'"
                             class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.guides*') || request()->routeIs('public.tv-setup-guide') || request()->routeIs('public.android-tv-gold-board') || request()->routeIs('public.cities*')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>آموزش و شهرها</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('guides') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('guides') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
                     <div id="dropdown-guides"
@@ -464,7 +516,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('public.pricing') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <a href="{{ route('public.pricing') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.pricing') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->routeIs('public.pricing') ? ' aria-current="page"' : '' !!}>
                     تعرفه‌ها
                 </a>
 
@@ -481,7 +533,7 @@
                             :aria-expanded="isOpen('dev') ? 'true' : 'false'"
                             class="flex items-center gap-1 px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all cursor-pointer {{ (request()->routeIs('public.widget*') || request()->routeIs('public.api-docs')) ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
                         <span>API و ویجت</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('dev') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg aria-hidden="true" class="w-3.5 h-3.5 transition-transform duration-200" :class="isOpen('dev') ? 'rotate-180 text-amber-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
                     <div id="dropdown-dev"
@@ -507,7 +559,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('public.contact') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.contact') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}">
+                <a href="{{ route('public.contact') }}" class="px-2.5 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-white dark:hover:bg-slate-800/70 transition-all {{ request()->routeIs('public.contact') ? 'text-amber-600 dark:text-amber-400 bg-white dark:bg-slate-800/70 shadow-sm' : '' }}"{!! request()->routeIs('public.contact') ? ' aria-current="page"' : '' !!}>
                     تماس
                 </a>
             </nav>
@@ -518,14 +570,15 @@
                 <button onclick="toggleAppTheme()" 
                         type="button"
                         id="themeToggleBtn"
+                        aria-label="تغییر تم تاریک و روشن"
                         class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-900/80 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all shadow-sm cursor-pointer shrink-0"
                         title="تغییر تم تاریک / روشن">
                     {{-- آیکون خورشید برای حالت شب --}}
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 theme-sun-icon transition-transform duration-300 rotate-0 hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 theme-sun-icon transition-transform duration-300 rotate-0 hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                     {{-- آیکون ماه برای حالت روز --}}
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-slate-200 theme-moon-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-slate-200 theme-moon-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
@@ -538,7 +591,7 @@
 
                 {{-- دکمه ورود --}}
                 <a href="{{ route('admin.login') }}" class="hidden sm:inline-flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-white/90 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap">
-                    <svg class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                    <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
                     <span>ورود<span class="hidden sm:inline"> طلافروشان</span></span>
                 </a>
 
@@ -550,15 +603,19 @@
                 {{-- دکمه همبرگری موبایل --}}
                 <button @click="toggleMobileMenu()" 
                         type="button" 
+                        aria-label="منوی اصلی"
+                        aria-controls="mobile-menu"
+                        :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
                         class="lg:hidden w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer shrink-0">
-                    <svg x-show="!mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    <svg x-show="mobileMenuOpen" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg aria-hidden="true" x-show="!mobileMenuOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg aria-hidden="true" x-show="mobileMenuOpen" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
         </div>
 
         {{-- منوی کشویی موبایل (Mobile Drawer) --}}
-        <div x-show="mobileMenuOpen" 
+        <div id="mobile-menu"
+             x-show="mobileMenuOpen" 
              x-cloak
              @click.outside="closeMobileMenu()"
              @keydown.escape.window="closeMobileMenu()"
@@ -573,7 +630,7 @@
             {{-- سامانه‌ها و تابلوهای تخصصی --}}
             <div>
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">سامانه‌ها و تابلوها</div>
-                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-bold text-slate-700 dark:text-slate-200">
+                <nav @click="closeMobileMenu()" aria-label="ناوبری موبایل" class="flex flex-col space-y-1 text-xs font-bold text-slate-700 dark:text-slate-200">
                     <a href="{{ route('public.smart-gold-board') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>💎</span>
                         <span>تابلوی هوشمند طلافروشی</span>
@@ -612,7 +669,7 @@
             {{-- مقایسه‌ها و تعرفه --}}
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">مقایسه راهکارها و قیمت</div>
-                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <nav @click="closeMobileMenu()" aria-label="مقایسه راهکارها و قیمت" class="flex flex-col space-y-1 text-xs font-semibold text-slate-700 dark:text-slate-300">
                     <a href="{{ route('public.pricing') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2 font-bold text-amber-600 dark:text-amber-400">
                         <span>🏷️</span>
                         <span>تعرفه‌ها و اشتراک (۱۴ روز رایگان)</span>
@@ -639,7 +696,7 @@
             {{-- ابزارهای آنلاین طلا --}}
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">ماشین‌حساب‌های تخصصی طلا</div>
-                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <nav @click="closeMobileMenu()" aria-label="ماشین‌حساب‌های تخصصی طلا" class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
                     <a href="{{ route('public.gold-calculator') }}" class="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 flex items-center gap-2 font-bold text-amber-700 dark:text-amber-300">
                         <span>🧮</span>
                         <span>هاب جامع ماشین‌حساب‌های طلا</span>
@@ -678,7 +735,7 @@
             {{-- دانشنامه، شهرها و توسعه‌دهندگان --}}
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                 <div class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2.5">آموزش، شهرها و API</div>
-                <nav @click="closeMobileMenu()" class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <nav @click="closeMobileMenu()" aria-label="آموزش، شهرها و API" class="flex flex-col space-y-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
                     <a href="{{ route('public.guides') }}" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 flex items-center gap-2">
                         <span>📚</span>
                         <span>دانشنامه و مقالات تخصصی طلا</span>
@@ -707,7 +764,7 @@
             </div>
 
             {{-- درباره و تماس --}}
-            <nav @click="closeMobileMenu()" class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <nav @click="closeMobileMenu()" aria-label="درباره و تماس" class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <a href="{{ route('public.about') }}" class="hover:text-amber-500">درباره ما</a>
                 <span>&bull;</span>
                 <a href="{{ route('public.contact') }}" class="hover:text-amber-500">تماس با ما</a>
@@ -729,7 +786,7 @@
     </header>
 
     {{-- محتوای اصلی صفحه --}}
-    <main class="flex-grow">
+    <main id="main-content" tabindex="-1" class="flex-grow focus:outline-none">
         @yield('content')
     </main>
 

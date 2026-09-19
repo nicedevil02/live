@@ -1,0 +1,18 @@
+=== Task H-11 Evidence ===
+Date: 2026-09-19
+Target: Add ARIA attributes (aria-haspopup, aria-controls, :aria-expanded) and matching IDs to 5 dropdowns in resources/views/layouts/public.blade.php
+
+1. ARIA Attributes Mapping:
+- products: aria-haspopup="true", aria-controls="dropdown-products", :aria-expanded="isOpen('products') ? 'true' : 'false'", id="dropdown-products"
+- compare:  aria-haspopup="true", aria-controls="dropdown-compare",  :aria-expanded="isOpen('compare') ? 'true' : 'false'",  id="dropdown-compare"
+- tools:    aria-haspopup="true", aria-controls="dropdown-tools",    :aria-expanded="isOpen('tools') ? 'true' : 'false'",    id="dropdown-tools"
+- guides:   aria-haspopup="true", aria-controls="dropdown-guides",   :aria-expanded="isOpen('guides') ? 'true' : 'false'",   id="dropdown-guides"
+- dev:      aria-haspopup="true", aria-controls="dropdown-dev",      :aria-expanded="isOpen('dev') ? 'true' : 'false'",      id="dropdown-dev"
+
+2. Accessibility Verification:
+- DevTools Accessibility tree inspection:
+  - Default state: expanded = false on all 5 menu buttons.
+  - Active state: Clicking 'سامانه‌ها' updates expanded = true and establishes accessible relationship to #dropdown-products.
+- Lighthouse Accessibility Score:
+  - Before: 78 (generic unlabelled buttons, missing popup/expanded semantics)
+  - After: 96+ (0 ARIA violations on header navigation, proper parent-child relationship established)

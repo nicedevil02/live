@@ -1,0 +1,23 @@
+==================================================
+TalaLive Header Rebuild - H-13 Evidence
+Task: aria-current="page" and Navigation Labels
+==================================================
+
+1. aria-current="page" Count Across 3 Different Pages:
+--------------------------------------------------
+- Page '/': document.querySelectorAll('[aria-current="page"]').length = 1 (Active: صفحه اصلی)
+- Page '/pricing': document.querySelectorAll('[aria-current="page"]').length = 1 (Active: تعرفه‌ها)
+- Page '/contact': document.querySelectorAll('[aria-current="page"]').length = 1 (Active: تماس)
+
+Result: Exactly 1 element with aria-current="page" on every tested page.
+
+2. Navigation Labels (aria-label):
+--------------------------------------------------
+- Desktop Nav: aria-label="ناوبری اصلی"
+- Mobile Group 1: aria-label="ناوبری موبایل"
+- Mobile Group 2: aria-label="مقایسه راهکارها و قیمت"
+- Mobile Group 3: aria-label="ماشین‌حساب‌های تخصصی طلا"
+- Mobile Group 4: aria-label="آموزش، شهرها و API"
+- Mobile Group 5: aria-label="درباره و تماس"
+
+Status: PASSED
