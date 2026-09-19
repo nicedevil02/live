@@ -51,14 +51,23 @@ class PublicDisplayController extends Controller
         $citySlug = null;
         $galleryAddress = null;
 
-        foreach (config('cities', []) as $slug => $c) {
-            if (!empty($c['galleries'])) {
-                foreach ($c['galleries'] as $g) {
-                    if (isset($g['username']) && $g['username'] === $user->username) {
-                        $cityName = $c['name'];
-                        $citySlug = $slug;
-                        $galleryAddress = $g['address'] ?? null;
-                        break 2;
+        // اولویت اول: شهر ثبت‌شده در حساب کاربری طلافروشی
+        if (!empty($user->city_slug) && !empty($user->city_name)) {
+            $cityName = $user->city_name;
+            $citySlug = $user->city_slug;
+        }
+
+        // اولویت دوم: تطبیق با گالری‌های کانفیگ شهرها
+        if (!$cityName) {
+            foreach (config('cities', []) as $slug => $c) {
+                if (!empty($c['galleries'])) {
+                    foreach ($c['galleries'] as $g) {
+                        if (isset($g['username']) && $g['username'] === $user->username) {
+                            $cityName = $c['name'];
+                            $citySlug = $slug;
+                            $galleryAddress = $g['address'] ?? null;
+                            break 2;
+                        }
                     }
                 }
             }

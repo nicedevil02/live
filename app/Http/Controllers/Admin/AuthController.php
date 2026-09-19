@@ -473,16 +473,23 @@ class AuthController extends Controller
             'password' => $password,
         ]);
 
-        // ایجاد خودکار ستون شماره در صورت اجرا نشدن مایگریشن
+        // ایجاد خودکار ستون‌های شماره و شهر در صورت اجرا نشدن مایگریشن
         if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'phone')) {
             \Illuminate\Support\Facades\Schema::table('users', function ($table) {
                 $table->string('phone', 20)->nullable()->unique()->after('email');
                 $table->timestamp('phone_verified_at')->nullable()->after('phone');
             });
         }
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'city_slug')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->string('city_slug', 50)->nullable()->after('display_token');
+                $table->string('city_name', 100)->nullable()->after('city_slug');
+            });
+        }
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
+            'city'     => 'nullable|string|max:50',
             'phone'    => ['required', 'string', 'regex:/^09[0-9]{9}$/', 'unique:users,phone'],
             'otp'      => 'required|string|size:5',
             'password' => 'nullable|string|min:4',
@@ -511,6 +518,20 @@ class AuthController extends Controller
         // حذف کدهای مصرف‌شده
         DB::table('otp_verifications')->where('phone', $validated['phone'])->delete();
 
+        // تشخیص نام و اسلاگ شهر طلافروشی جهت سئوی منطقه‌ای و تابلوی زنده
+        $cityInput = $request->input('city', 'tehran');
+        $citiesConfig = config('cities', []);
+        if (isset($citiesConfig[$cityInput])) {
+            $citySlug = $cityInput;
+            $cityName = $citiesConfig[$cityInput]['name'];
+        } elseif ($cityInput === 'other') {
+            $citySlug = 'iran';
+            $cityName = 'ایران';
+        } else {
+            $citySlug = 'tehran';
+            $cityName = 'تهران';
+        }
+
         // ایجاد کاربر جدید با نقش ادمین، فعال فوری و دارای ۱۴ روز دوره تست رایگان
         $user = \App\Models\User::create([
             'name'              => $validated['name'],
@@ -519,6 +540,8 @@ class AuthController extends Controller
             'phone_verified_at' => now(),
             'email'             => !empty($validated['email']) ? $validated['email'] : ($slug . '@talalive.ir'),
             'password'          => Hash::make($password),
+            'city_slug'         => $citySlug,
+            'city_name'         => $cityName,
             'is_admin'          => true,
             'is_super_admin'    => false,
             'is_approved'       => true, // فعال فوری جهت تست بدون اصطکاک!

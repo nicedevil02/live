@@ -21,6 +21,8 @@ class User extends Authenticatable
         'phone_verified_at',
         'password',
         'display_token',
+        'city_slug',
+        'city_name',
         'is_admin',
         'is_super_admin',
         'is_approved',

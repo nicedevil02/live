@@ -153,11 +153,31 @@
                            placeholder="مثال: گالری طلای کیمیا" value="{{ old('name') }}" autocomplete="off">
                 </div>
 
+                {{-- شهر گالری طلافروشی --}}
+                <div class="space-y-1.5">
+                    <label for="citySelect" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                        ۴. شهر گالری یا طلافروشی شما
+                    </label>
+                    <div class="relative w-full">
+                        <select name="city" id="citySelect" required
+                                class="w-full h-13 sm:h-14 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-2xl px-4 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all cursor-pointer">
+                            <option value="" disabled {{ old('city') ? '' : 'selected' }}>شهر خود را انتخاب کنید...</option>
+                            @foreach(config('cities', []) as $slug => $c)
+                                <option value="{{ $slug }}" {{ old('city', 'tehran') === $slug ? 'selected' : '' }}>
+                                    {{ $c['name'] }} (استان {{ $c['province'] ?? $c['name'] }})
+                                </option>
+                            @endforeach
+                            <option value="other" {{ old('city') === 'other' ? 'selected' : '' }}>سایر شهرهای ایران</option>
+                        </select>
+                    </div>
+                    <p class="text-[11px] text-slate-400">جهت تنظیم تابلوی نرخ و ثبت در صفحه طلافروشی‌های شهر شما در گوگل (سئوی محلی)</p>
+                </div>
+
                 {{-- رمز عبور ساده با آیکون چشم --}}
                 <div class="space-y-1.5">
                     <div class="flex items-center justify-between">
                         <label for="passwordInput" class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
-                            ۴. رمز عبور انتخابی
+                            ۵. رمز عبور انتخابی
                         </label>
                         <span class="text-[11px] text-slate-400 font-medium">حداقل ۴ رقم یا کاراکتر (مثلاً: 1234)</span>
                     </div>

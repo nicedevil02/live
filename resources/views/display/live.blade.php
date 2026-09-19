@@ -1425,15 +1425,23 @@
                          class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
                          ✦ نرخ‌گذاری لحظه‌ای طلا و ارز ✦
                     </div>
-                    {{-- متن معرفی کوتاه و ناوبری برگشتی --}}
-                    <p class="text-[11px] text-slate-300/85 mt-1 max-w-sm mx-auto leading-relaxed line-clamp-2">
-                        {{ $galleryIntro ?? ("تابلوی اعلام قیمت لحظه‌ای طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران')) }}
-                    </p>
-                    <nav aria-label="راهنمای دسترسی" class="mt-1 flex items-center justify-center gap-2 text-[10px] font-bold">
-                        <a href="{{ url('/') }}" class="text-amber-400 hover:text-amber-300 transition-colors">صفحه اصلی طلالایو</a>
-                        <span class="text-slate-400 opacity-60">•</span>
-                        <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}" class="text-amber-400 hover:text-amber-300 transition-colors">طلافروشی‌های {{ $cityName ?? 'تهران' }}</a>
-                    </nav>
+                    {{-- دکمه صفحه اصلی طلالایو --}}
+                    <div class="mt-1.5 flex items-center justify-center">
+                        <a href="{{ url('/') }}" target="_blank" 
+                           :class="isLightTheme ? 'bg-amber-500/15 text-amber-900 border-amber-500/30 hover:bg-amber-500/25' : 'bg-white/10 text-amber-300 border-white/10 hover:bg-white/15'"
+                           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold border transition-all shadow-xs">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span>صفحه اصلی طلالایو</span>
+                        </a>
+                    </div>
+
+                    {{-- سئوی محلی گوگل و متن معرفی (نامرئی بصری - مخصوص موتورهای جستجو) --}}
+                    <div class="sr-only">
+                        <p>{{ $galleryIntro ?? ("تابلوی اعلام قیمت لحظه‌ای طلا و سکه " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityName ?? 'ایران')) }}</p>
+                        <nav aria-label="راهنمای دسترسی">
+                            <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}">طلافروشی‌های {{ $cityName ?? 'تهران' }}</a>
+                        </nav>
+                    </div>
                 </div>
 
                 {{-- تاریخ و ساعت (سمت چپ) --}}
