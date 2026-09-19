@@ -1067,13 +1067,14 @@
         }
 
         /* Apple Premium Slider Overlays & Glass Cards (Adaptive for Light/Dark) */
+        /* Apple Premium Slider Overlays & Glass Cards (100% Theme-Adaptive) */
         .slider-scrim-bottom-dark {
             position: absolute !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
             height: 14rem !important;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.70) 50%, rgba(0, 0, 0, 0.25) 80%, transparent 100%) !important;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 50%, transparent 100%) !important;
             pointer-events: none !important;
             z-index: 10 !important;
         }
@@ -1083,84 +1084,56 @@
             left: 0 !important;
             right: 0 !important;
             height: 14rem !important;
-            background: linear-gradient(to top, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.20) 80%, transparent 100%) !important;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%) !important;
             pointer-events: none !important;
             z-index: 10 !important;
         }
         .slider-glass-dock {
             position: absolute !important;
-            bottom: 1.25rem !important;
-            left: 1.25rem !important;
-            right: 1.25rem !important;
+            bottom: 1.15rem !important;
+            left: 1.15rem !important;
+            right: 1.15rem !important;
             z-index: 20 !important;
         }
-        .slider-info-card-dark {
-            background: rgba(10, 15, 29, 0.82) !important;
-            backdrop-filter: blur(24px) saturate(160%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.20) !important;
-            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25) !important;
+        .slider-info-card-adaptive {
+            backdrop-filter: blur(20px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
             border-radius: 1.75rem !important;
-            padding: 1rem 1.25rem !important;
+            padding: 0.9rem 1.15rem !important;
+            transition: all 0.35s ease !important;
         }
-        .slider-info-card-light {
-            background: rgba(255, 255, 255, 0.88) !important;
-            backdrop-filter: blur(24px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
-            box-shadow: 0 20px 40px -10px rgba(100, 116, 139, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
-            border-radius: 1.75rem !important;
-            padding: 1rem 1.25rem !important;
-        }
-        .slider-price-badge-dark {
-            background: linear-gradient(135deg, rgba(217, 119, 6, 0.45) 0%, rgba(180, 83, 9, 0.60) 100%), rgba(15, 23, 42, 0.92) !important;
-            backdrop-filter: blur(16px) !important;
-            -webkit-backdrop-filter: blur(16px) !important;
-            border: 1.5px solid rgba(251, 191, 36, 0.55) !important;
-            box-shadow: 0 10px 25px -4px rgba(217, 119, 6, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
-            border-radius: 1.25rem !important;
-            padding: 0.75rem 1.25rem !important;
-            text-align: right !important;
-        }
-        .slider-price-badge-light {
-            background: linear-gradient(135deg, rgba(254, 243, 199, 0.98) 0%, rgba(253, 230, 138, 0.92) 100%) !important;
-            backdrop-filter: blur(16px) !important;
-            -webkit-backdrop-filter: blur(16px) !important;
-            border: 1.5px solid rgba(245, 158, 11, 0.65) !important;
-            box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
-            border-radius: 1.25rem !important;
-            padding: 0.75rem 1.25rem !important;
-            text-align: right !important;
-        }
-        .slider-meta-chip-dark {
+        .slider-chip {
             display: inline-flex !important;
             align-items: center !important;
-            gap: 0.375rem !important;
+            gap: 0.35rem !important;
             border-radius: 9999px !important;
-            border: 1px solid rgba(255, 255, 255, 0.20) !important;
-            background: rgba(255, 255, 255, 0.12) !important;
-            padding: 0.35rem 0.85rem !important;
-            font-size: 0.875rem !important;
+            padding: 0.3rem 0.75rem !important;
+            font-size: 0.8rem !important;
             font-weight: 700 !important;
-            color: #ffffff !important;
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
+            transition: all 0.2s ease !important;
+        }
+        .slider-chip-dark {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+            color: rgba(255, 255, 255, 0.95) !important;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
         }
-        .slider-meta-chip-light {
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 0.375rem !important;
-            border-radius: 9999px !important;
-            border: 1px solid rgba(203, 213, 225, 0.85) !important;
-            background: rgba(241, 245, 249, 0.92) !important;
-            padding: 0.35rem 0.85rem !important;
-            font-size: 0.875rem !important;
-            font-weight: 700 !important;
-            color: #334155 !important;
-            box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
+        .slider-chip-light {
+            background: rgba(0, 0, 0, 0.04) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+            color: #1e293b !important;
+        }
+        .slider-price-badge-adaptive {
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-radius: 1.25rem !important;
+            padding: 0.65rem 1.1rem !important;
+            text-align: right !important;
+            transition: all 0.35s ease !important;
         }
         .slider-top-badge {
             background: linear-gradient(135deg, rgba(225, 29, 72, 0.92) 0%, rgba(190, 18, 60, 0.95) 60%, rgba(180, 83, 9, 0.90) 100%) !important;
@@ -1828,47 +1801,48 @@
                             <!-- گرادیان محافظتی زیرین (تطبیقی با تم روشن و تاریک) -->
                             <div :class="isLightTheme ? 'slider-scrim-bottom-light' : 'slider-scrim-bottom-dark'"></div>
                             
-                            <!-- داک شیشه‌ای اطلاعات محصول در پایین اسلایدر (تطبیقی با تم روشن و تاریک) -->
+                            <!-- داک شیشه‌ای اطلاعات محصول در پایین اسلایدر (کاملاً هماهنگ با تم فعال و متریال شیشه‌ای) -->
                             <div class="slider-glass-dock">
-                                <div :class="isLightTheme ? 'slider-info-card-light' : 'slider-info-card-dark'">
+                                <div :class="[theme.headerBg || theme.card || 'neu-card-dark-glass', 'slider-info-card-adaptive']"
+                                     class="relative overflow-hidden border shadow-2xl">
                                     <div class="flex flex-row items-end justify-between gap-3">
                                         <div class="min-w-0 flex-1">
-                                            <p :class="isLightTheme ? 'text-slate-900 drop-shadow-sm' : 'text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'" 
-                                               class="break-words text-3xl xl:text-4xl font-black leading-tight" 
+                                            <p :class="[theme.textPrimary, isLightTheme ? 'drop-shadow-sm' : 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]']" 
+                                               class="break-words text-2xl xl:text-3xl font-black leading-tight line-clamp-1" 
                                                x-text="activeProduct.title"></p>
-                                            <div class="mt-2.5 flex items-center gap-2 flex-wrap">
+                                            <div class="mt-2 flex items-center gap-2 flex-wrap">
                                                 <template x-if="settings.show_weight">
-                                                    <span :class="isLightTheme ? 'slider-meta-chip-light' : 'slider-meta-chip-dark'">
-                                                        <span>وزن:</span>
+                                                    <span :class="isLightTheme ? 'slider-chip-light' : 'slider-chip-dark'" class="slider-chip">
+                                                        <span class="opacity-80">وزن:</span>
                                                         <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProduct.weight_gram"></span>
-                                                        <span>گرم</span>
+                                                        <span class="opacity-80">گرم</span>
                                                     </span>
                                                 </template>
                                                 <template x-if="settings.show_profit">
-                                                    <span :class="isLightTheme ? 'slider-meta-chip-light' : 'slider-meta-chip-dark'">
-                                                        <span>سود:</span>
+                                                    <span :class="isLightTheme ? 'slider-chip-light' : 'slider-chip-dark'" class="slider-chip">
+                                                        <span class="opacity-80">سود:</span>
                                                         <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProductProfitPercent"></span>
-                                                        <span>%</span>
+                                                        <span class="opacity-80">%</span>
                                                     </span>
                                                 </template>
                                             </div>
                                         </div>
-                                        <div :class="isLightTheme ? 'slider-price-badge-light' : 'slider-price-badge-dark'" class="shrink-0">
-                                            <div class="flex items-center justify-between gap-2 mb-1">
-                                                <span :class="isLightTheme ? 'text-amber-900 font-black' : 'text-amber-300 drop-shadow-sm font-black'" class="text-[10px] uppercase tracking-[0.2em]">مبلغ نهایی ویترین</span>
+                                        <div :class="[theme.heroCard || (isLightTheme ? 'neu-hero-gold-pearl' : 'neu-hero-gold-imperial'), 'slider-price-badge-adaptive']" class="shrink-0">
+                                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                                <span :class="isLightTheme ? 'text-amber-950 font-black' : 'text-amber-300 drop-shadow-sm font-black'" class="text-[9px] xl:text-[10px] uppercase tracking-wider">مبلغ نهایی ویترین</span>
                                                 <span class="w-1.5 h-1.5 rounded-full" :class="isLightTheme ? 'bg-amber-600 animate-ping' : 'bg-amber-400 animate-ping'"></span>
                                             </div>
                                             <template x-if="activeProductFinalPrice > 0">
-                                                <div class="flex items-baseline gap-1.5">
+                                                <div class="flex items-baseline gap-1.5 justify-between">
                                                     <span :class="isLightTheme ? 'text-amber-950 drop-shadow-sm' : 'text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.6)]'" 
-                                                          class="text-3xl xl:text-4xl font-black tabular-nums tracking-tight" 
+                                                          class="text-2xl xl:text-3xl font-black tabular-nums tracking-tight font-mono" 
                                                           x-text="formatNumber(activeProductFinalPrice)"></span>
-                                                    <span :class="isLightTheme ? 'text-amber-800' : 'text-amber-300'" class="text-xs font-black whitespace-nowrap">تومان</span>
+                                                    <span :class="isLightTheme ? 'text-amber-900 font-bold' : 'text-amber-300 font-bold'" class="text-xs font-black whitespace-nowrap">تومان</span>
                                                 </div>
                                             </template>
                                             <template x-if="activeProductFinalPrice <= 0">
-                                                <span :class="isLightTheme ? 'text-amber-900 bg-amber-100 border border-amber-300' : 'text-amber-200 bg-amber-950/80 border border-amber-500/40'" 
-                                                      class="text-xs font-black rounded-lg px-2.5 py-1 block">در حال استعلام نرخ...</span>
+                                                <span :class="isLightTheme ? 'text-amber-900 bg-amber-100/80 border border-amber-300' : 'text-amber-200 bg-amber-950/80 border border-amber-500/40'" 
+                                                      class="text-[11px] font-black rounded-lg px-2.5 py-1 block text-center">در حال استعلام نرخ...</span>
                                             </template>
                                         </div>
                                     </div>
