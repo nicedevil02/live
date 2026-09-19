@@ -1085,7 +1085,7 @@
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
         <div id="tv-stage-viewport" class="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
-            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between overflow-hidden select-none will-change-transform">
+            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between gap-2 overflow-hidden select-none will-change-transform">
 
             {{-- Header --}}
             <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
