@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1440">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -112,21 +112,49 @@
         })();
     </script>
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
-    @if($isTv ?? false)
     <style>
-        html, body { cursor: none !important; overflow: hidden !important; }
-        * { -webkit-user-select: none !important; user-select: none !important; }
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            overflow: hidden !important;
+            background: #020617;
+            font-family: Vazirmatn, ui-sans-serif, system-ui, sans-serif;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+        @if($isTv ?? false)
+        html, body { cursor: none !important; }
+        @endif
         ::-webkit-scrollbar { display: none !important; }
-        :root { --tv-overscan: 2.5vmin; }
-        body { padding: var(--tv-overscan) !important; box-sizing: border-box; }
-        /* حذف هایلایت فوکوس مرورگر روی تلویزیون */
         *:focus { outline: none !important; }
-        /* W-04: مقیاس خوانایی سه متری برای تلویزیون */
-        html { font-size: 115% !important; }
-        @media (min-width: 1920px) { html { font-size: 125% !important; } }
-        @media (max-width: 1280px) { html { font-size: 105% !important; } }
+
+        /* معماری بوم مجازی مقیاس‌پذیر خودکار (Virtual Canvas Auto-Scaler Engine) */
+        #tv-stage-viewport {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            contain: layout size;
+        }
+        #tv-stage-canvas {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 1920px;
+            height: 1080px;
+            transform-origin: center center;
+            will-change: transform;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            transform: translate(-50%, -50%) scale(1);
+        }
     </style>
-    @endif
     <style>
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.05); } 20% { opacity: 1; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
@@ -223,7 +251,7 @@
             animation: ticker-rtl 45s linear infinite;
         }
         html { background: #020617; }
-        body { min-width: 1440px; font-family: Vazirmatn, ui-sans-serif, system-ui, sans-serif; }
+        body { font-family: Vazirmatn, ui-sans-serif, system-ui, sans-serif; }
         .market-tile-label { overflow-wrap: anywhere; }
         .market-tile-label { line-height: 1.12; }
         .market-price-number { line-height: 0.95; white-space: nowrap; }
@@ -969,8 +997,8 @@
         }
     </style>
 </head>
-<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen">
-    <main x-show="!isLoading" :class="[theme.bg, ecoMode ? 'eco-mode' : '']" class="relative min-h-[100dvh] w-full overflow-hidden transition-colors duration-1000">
+<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen" @keydown.window="handleKeydown($event)">
+    <main x-show="!isLoading" :class="[theme.bg, ecoMode ? 'eco-mode' : '']" class="fixed inset-0 w-screen h-screen overflow-hidden transition-colors duration-1000 select-none">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -1055,10 +1083,12 @@
             <div class="ambient-orb orb-4"></div>
         </div>
 
-        <div class="display-shell relative z-10 flex min-h-[100dvh] flex-col gap-3 p-4 xl:h-screen xl:min-h-screen xl:p-5">
+        {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
+        <div id="tv-stage-viewport" class="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
+            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-6 flex flex-col justify-between overflow-hidden select-none will-change-transform">
 
             {{-- Header --}}
-            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-4 flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
+            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
 
                 {{-- سمت راست: QR کد و اطلاعات --}}
                 <div class="order-1 flex w-[38%] items-center gap-5 text-right">
@@ -1438,6 +1468,22 @@
 
             </footer>
 
+            </div>
+        </div>
+
+        {{-- نشانگر بازخورد کلیدهای ریموت کنترل تلویزیون --}}
+        <div x-show="hudFeedbackText"
+             x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-90 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+             x-transition:leave-end="opacity-0 scale-90 translate-y-4"
+             class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] px-6 py-2.5 rounded-2xl bg-slate-900/90 text-white font-black text-sm border border-amber-400/40 shadow-2xl backdrop-blur-xl flex items-center gap-2.5 pointer-events-none"
+             dir="rtl">
+            <span class="text-amber-400">📺</span>
+            <span x-text="hudFeedbackText"></span>
         </div>
     </main>
 
@@ -1692,7 +1738,10 @@
                 now: new Date(),
                 refreshTimer: null,
                 isFullscreen: false,
-                zoomLevel: parseFloat(localStorage.getItem('display_zoom') || '{{ ($isTv ?? false) ? "1.15" : "1" }}'),
+                zoomLevel: parseFloat(localStorage.getItem('display_zoom') || '1.0'),
+                overscanMargin: parseFloat(localStorage.getItem('display_overscan') || '{{ ($isTv ?? false) ? "0.02" : "0.005" }}'),
+                hudFeedbackText: '',
+                hudFeedbackTimer: null,
                 showControls: false,
                 controlsTimer: null,
                 ecoMode: (function() {
@@ -1898,17 +1947,98 @@
                     }
                 },
 
+                applyStageScale() {
+                    const canvas = document.getElementById('tv-stage-canvas');
+                    if (!canvas) return;
+                    const vw = window.innerWidth || document.documentElement.clientWidth || 1920;
+                    const vh = window.innerHeight || document.documentElement.clientHeight || 1080;
+                    
+                    // کسر حاشیه امن سخت‌افزاری تلویزیون جهت جلوگیری از اووراسکن لبه‌ها
+                    const overscan = Math.max(0, Math.min(0.08, this.overscanMargin || 0));
+                    const availW = Math.max(320, vw * (1 - overscan * 2));
+                    const availH = Math.max(240, vh * (1 - overscan * 2));
+                    
+                    const scaleX = availW / 1920;
+                    const scaleY = availH / 1080;
+                    const baseScale = Math.min(scaleX, scaleY);
+                    const finalScale = Math.max(0.2, baseScale * (this.zoomLevel || 1.0));
+                    
+                    canvas.style.transform = `translate(-50%, -50%) scale(${finalScale})`;
+                },
+
+                showHudFeedback(msg) {
+                    this.hudFeedbackText = msg;
+                    if (this.hudFeedbackTimer) clearTimeout(this.hudFeedbackTimer);
+                    this.hudFeedbackTimer = setTimeout(() => { this.hudFeedbackText = ''; }, 2500);
+                },
+
                 zoomIn() {
-                    if (this.zoomLevel < 1.5) {
-                        this.zoomLevel = Math.min(1.5, this.zoomLevel + 0.05);
-                        localStorage.setItem('display_zoom', this.zoomLevel.toString());
+                    if (this.zoomLevel < 1.35) {
+                        this.zoomLevel = Math.round((this.zoomLevel + 0.03) * 100) / 100;
+                        try { localStorage.setItem('display_zoom', this.zoomLevel.toString()); } catch (e) {}
+                        this.applyStageScale();
+                        this.showHudFeedback(`بزرگ‌نمایی: ${Math.round(this.zoomLevel * 100)}%`);
                     }
                 },
 
                 zoomOut() {
-                    if (this.zoomLevel > 0.5) {
-                        this.zoomLevel = Math.max(0.5, this.zoomLevel - 0.05);
-                        localStorage.setItem('display_zoom', this.zoomLevel.toString());
+                    if (this.zoomLevel > 0.70) {
+                        this.zoomLevel = Math.round((this.zoomLevel - 0.03) * 100) / 100;
+                        try { localStorage.setItem('display_zoom', this.zoomLevel.toString()); } catch (e) {}
+                        this.applyStageScale();
+                        this.showHudFeedback(`کوچک‌نمایی: ${Math.round(this.zoomLevel * 100)}%`);
+                    }
+                },
+
+                resetScale() {
+                    this.zoomLevel = 1.0;
+                    this.overscanMargin = 0.01;
+                    try {
+                        localStorage.setItem('display_zoom', '1.0');
+                        localStorage.setItem('display_overscan', '0.01');
+                    } catch (e) {}
+                    this.applyStageScale();
+                    this.showHudFeedback('تنظیمات مقیاس بازنشانی شد');
+                },
+
+                handleKeydown(e) {
+                    this.triggerControls();
+                    if (['input', 'textarea', 'select'].includes(e.target.tagName?.toLowerCase())) return;
+
+                    switch (e.key) {
+                        case 'ArrowUp':
+                        case '+':
+                        case '=':
+                            e.preventDefault();
+                            this.zoomIn();
+                            break;
+                        case 'ArrowDown':
+                        case '-':
+                        case '_':
+                            e.preventDefault();
+                            this.zoomOut();
+                            break;
+                        case 'f':
+                        case 'F':
+                            e.preventDefault();
+                            this.toggleFullscreen();
+                            break;
+                        case 'm':
+                        case 'M':
+                        case 'Enter':
+                            e.preventDefault();
+                            this.showControls = !this.showControls;
+                            break;
+                        case 'e':
+                        case 'E':
+                            e.preventDefault();
+                            this.toggleEcoMode();
+                            this.showHudFeedback(this.ecoMode ? 'حالت سبک: فعال' : 'حالت سبک: غیرفعال');
+                            break;
+                        case '0':
+                            e.preventDefault();
+                            this.resetScale();
+                            break;
                     }
                 },
 
@@ -1953,10 +2083,17 @@
 
                     document.addEventListener('fullscreenchange', () => {
                         this.isFullscreen = !!document.fullscreenElement;
+                        setTimeout(() => this.applyStageScale(), 150);
                     });
                     
-                    this.$watch('zoomLevel', val => document.documentElement.style.fontSize = Math.round(val * 100) + '%');
-                    document.documentElement.style.fontSize = Math.round(this.zoomLevel * 100) + '%';
+                    // فعال‌سازی موتور مقیاس‌پذیری خودکار بوم برای انواع تلویزیون
+                    this.applyStageScale();
+                    window.addEventListener('resize', () => this.applyStageScale(), { passive: true });
+                    window.addEventListener('orientationchange', () => {
+                        setTimeout(() => this.applyStageScale(), 200);
+                    });
+                    this.$watch('zoomLevel', () => this.applyStageScale());
+                    this.$watch('overscanMargin', () => this.applyStageScale());
 
                     // Sync theme class
                     this.$watch('themeKey', () => document.documentElement.className = (this.isLightTheme ? 'light' : 'dark'));
