@@ -1897,24 +1897,24 @@
                                     </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
-                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
-                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div :class="index < 3 ? 'p-2 rounded-xl' : 'p-1.5 rounded-lg'" class="flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                                                <svg :class="index < 3 ? 'w-5 h-5 xl:w-6 xl:h-6' : 'w-3.5 h-3.5 xl:w-4 xl:h-4'" class="text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                                                     <polyline points="17 6 23 6 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent < 0">
-                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
-                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div :class="index < 3 ? 'p-2 rounded-xl' : 'p-1.5 rounded-lg'" class="flex items-center justify-center bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
+                                                <svg :class="index < 3 ? 'w-5 h-5 xl:w-6 xl:h-6' : 'w-3.5 h-3.5 xl:w-4 xl:h-4'" class="text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                                                     <polyline points="17 18 23 18 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent == 0">
-                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
-                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div :class="index < 3 ? 'p-2 rounded-xl' : 'p-1.5 rounded-lg'" class="flex items-center justify-center bg-white/5 border border-white/10 opacity-40">
+                                                <svg :class="index < 3 ? 'w-5 h-5 xl:w-6 xl:h-6' : 'w-3.5 h-3.5 xl:w-4 xl:h-4'" class="text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                                 </svg>
                                             </div>
@@ -1944,7 +1944,8 @@
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
                                 <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
-                                    <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
+                                    <div class="flex items-center font-black tabular-nums border shadow-sm" :class="[
+                                        index < 3 ? 'gap-2.5 text-sm xl:text-base px-3.5 py-1.5 rounded-full' : 'gap-2 text-xs xl:text-sm px-2.5 xl:px-3 py-1 rounded-full',
                                         themeKey === 'imperial-onyx'
                                             ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
                                             : (themeKey === 'imperial-pearl'
@@ -1963,17 +1964,23 @@
                                     {{-- وضعیت زنده با میکرو-پالس اپلی --}}
                                     <div class="flex items-center">
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
-                                                  :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            <span class="inline-flex items-center font-bold border shadow-sm"
+                                                  :class="[
+                                                      index < 3 ? 'gap-1.5 text-xs xl:text-sm rounded-full px-3 py-1' : 'gap-1 text-[11px] xl:text-xs rounded-full px-2.5 py-0.5',
+                                                      isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                                                  ]">
+                                                <span :class="index < 3 ? 'w-2 h-2' : 'w-1.5 h-1.5'" class="rounded-full bg-amber-500"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
-                                                  :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
-                                                <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
-                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
+                                            <span class="inline-flex items-center font-bold shadow-sm"
+                                                  :class="[
+                                                      index < 3 ? 'gap-2 text-xs xl:text-sm px-3 py-1 rounded-full' : 'gap-1.5 text-[11px] xl:text-xs px-2.5 py-0.5 rounded-full',
+                                                      themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))
+                                                  ]">
+                                                <span :class="index < 3 ? 'h-2.5 w-2.5' : 'h-2 w-2'" class="inline-block rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
+                                                <span :class="index < 3 ? 'text-xs xl:text-[13px]' : 'text-[10px] xl:text-[11px]'" class="opacity-80">لحظه‌ای</span>
                                             </span>
                                         </template>
                                     </div>
