@@ -504,7 +504,7 @@ class BoardActivity : Activity() {
                     mediaPlaybackRequiresUserGesture = false
                     cacheMode = WebSettings.LOAD_DEFAULT
                     useWideViewPort = true
-                    loadWithOverviewMode = true
+                    loadWithOverviewMode = false
                     setSupportZoom(false)
                     builtInZoomControls = false
                     displayZoomControls = false
