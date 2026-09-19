@@ -334,11 +334,11 @@
         .market-tile-label { line-height: 1.12; }
         .market-price-number { line-height: 0.95; white-space: nowrap; }
         .tv-price-featured {
-            font-size: 3.25rem !important;
+            font-size: 3.85rem !important;
             line-height: 1 !important;
         }
         .tv-price-regular {
-            font-size: 2.15rem !important;
+            font-size: 2.5rem !important;
             line-height: 1.05 !important;
         }
         @media (min-width: 1280px) and (max-height: 760px) {
@@ -1888,7 +1888,7 @@
                                         <template x-if="item.symbol === 'gold18'">
                                             <span class="text-amber-500 animate-sparkle text-sm xl:text-base select-none leading-none">✦</span>
                                         </template>
-                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-base xl:text-lg']"
+                                        <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
                                            class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
                                     </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
