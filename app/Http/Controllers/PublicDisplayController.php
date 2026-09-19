@@ -87,14 +87,15 @@ class PublicDisplayController extends Controller
             }
         }
 
-        if (!$cityName) {
-            $cityName = 'تهران';
-            $citySlug = 'tehran';
-            $provinceName = 'تهران';
+        $citiesConfig = \App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig();
+        $isCapital = false;
+        if (isset($citiesConfig[$citySlug])) {
+            $isCapital = !empty($citiesConfig[$citySlug]['is_capital']);
         }
 
-        // اگر شهر دارای استان مجزا باشد (مثلاً ملایر -> استان همدان)، نمایش به صورت «همدان (ملایر)»
-        if (!empty($provinceName) && $provinceName !== $cityName && $citySlug !== 'iran') {
+        // اگر شهر جزو مراکز استان و شهرهای شاخص باشد (مثلاً رشت، تبریز، ارومیه، اهواز، مشهد و...) فقط نام خود شهر نشان داده می‌شود
+        // اگر شهرستان باشد (مثلاً ملایر، نیشابور، کاشان، دزفول، مرودشت و...)، به صورت «همدان (ملایر)»، «اصفهان (کاشان)» و... نشان داده می‌شود.
+        if (!$isCapital && !empty($provinceName) && $provinceName !== $cityName && $citySlug !== 'iran') {
             $cityFullDisplay = "{$provinceName} ({$cityName})";
         } else {
             $cityFullDisplay = $cityName;

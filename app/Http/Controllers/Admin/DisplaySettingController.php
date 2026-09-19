@@ -112,6 +112,18 @@ class DisplaySettingController extends Controller
     }
 
     /**
+     * دریافت مطمئن پیکربندی شهرها حتی در صورت کش بودن کانفیگ
+     */
+    public static function getCitiesConfig(): array
+    {
+        $cities = config('cities');
+        if (empty($cities) || !is_array($cities)) {
+            $cities = require config_path('cities.php');
+        }
+        return $cities ?: [];
+    }
+
+    /**
      * اطمینان از وجود ستون‌های شهر در دیتابیس بدون نیاز به دستور دستی
      */
     private function ensureCityColumnsExist(): void
@@ -119,8 +131,8 @@ class DisplaySettingController extends Controller
         try {
             if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'city_slug')) {
                 \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                    $table->string('city_slug', 50)->nullable()->after('display_token');
-                    $table->string('city_name', 100)->nullable()->after('city_slug');
+                    $table->string('city_slug', 50)->nullable();
+                    $table->string('city_name', 100)->nullable();
                 });
             }
         } catch (\Throwable $e) {
@@ -130,7 +142,7 @@ class DisplaySettingController extends Controller
         try {
             if (!\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'city_slug')) {
                 \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) {
-                    $table->string('city_slug', 50)->nullable()->after('shop_name');
+                    $table->string('city_slug', 50)->nullable();
                 });
             }
         } catch (\Throwable $e) {
@@ -191,13 +203,13 @@ class DisplaySettingController extends Controller
             'qr_desc'   => 'nullable|string|max:255',
         ]);
 
-        // به‌روزرسانی دقیق شهر و نام گالری کاربر
+        $citiesConfig = self::getCitiesConfig();
         $cityInput = trim((string) $request->input('city', ''));
+
         if (empty($cityInput)) {
-            $cityInput = !empty($user->city_slug) ? $user->city_slug : 'tehran';
+            $cityInput = $user->city_slug ?: 'tehran';
         }
 
-        $citiesConfig = config('cities', []);
         if (isset($citiesConfig[$cityInput])) {
             $citySlug = $cityInput;
             $cityName = $citiesConfig[$cityInput]['name'];
@@ -205,33 +217,59 @@ class DisplaySettingController extends Controller
             $citySlug = 'iran';
             $cityName = 'ایران';
         } else {
-            $citySlug = 'tehran';
-            $cityName = 'تهران';
+            // جستجو بر اساس نام فارسی در صورت ارسال نام
+            $found = null;
+            foreach ($citiesConfig as $s => $c) {
+                if (($c['name'] ?? '') === $cityInput) {
+                    $found = [$s, $c['name']];
+                    break;
+                }
+            }
+            if ($found) {
+                $citySlug = $found[0];
+                $cityName = $found[1];
+            } else {
+                $citySlug = $cityInput;
+                $cityName = $cityInput;
+            }
         }
 
-        $user->city_slug = $citySlug;
-        $user->city_name = $cityName;
-        $user->name = $validated['shop_name'];
-        $user->save();
+        // ۱. به‌روزرسانی مستقیم و تضمین‌شده در جدول users
+        \Illuminate\Support\Facades\DB::table('users')->where('id', $user->id)->update([
+            'city_slug'  => $citySlug,
+            'city_name'  => $cityName,
+            'name'       => $validated['shop_name'],
+            'updated_at' => now(),
+        ]);
 
-        // به‌روزرسانی تنظیمات نمایش
-        $settings->shop_name = $validated['shop_name'];
+        // ۲. به‌روزرسانی در جدول display_settings
+        $displaySettingData = [
+            'shop_name'    => $validated['shop_name'],
+            'phone'        => $validated['phone'] ?? '',
+            'instagram'    => $validated['instagram'] ?? '',
+            'rubika'       => $validated['rubika'] ?? '',
+            'qr_link'      => $validated['qr_link'] ?? '',
+            'qr_label'     => $validated['qr_label'] ?? '',
+            'qr_desc'      => $validated['qr_desc'] ?? '',
+            'published_at' => now(),
+            'updated_at'   => now(),
+        ];
+
         if (\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'city_slug')) {
-            $settings->city_slug = $citySlug;
+            $displaySettingData['city_slug'] = $citySlug;
         }
-        $settings->phone = $validated['phone'] ?? '';
-        $settings->instagram = $validated['instagram'] ?? '';
-        $settings->rubika = $validated['rubika'] ?? '';
-        $settings->qr_link = $validated['qr_link'] ?? '';
-        $settings->qr_label = $validated['qr_label'] ?? '';
-        $settings->qr_desc = $validated['qr_desc'] ?? '';
-        $settings->published_at = now();
-        $settings->save();
+
+        \Illuminate\Support\Facades\DB::table('display_settings')->where('user_id', $user->id)->update($displaySettingData);
+
+        $freshUser = \App\Models\User::find($user->id);
+        $freshSettings = \App\Models\DisplaySetting::where('user_id', $user->id)->first();
 
         return response()->json([
-            'message'  => 'اطلاعات فروشگاه و کد QR با موفقیت ذخیره شد.',
-            'settings' => $settings,
-            'user'     => $user->fresh(),
+            'message'   => 'اطلاعات فروشگاه و کد QR با موفقیت ذخیره شد.',
+            'city_slug' => $citySlug,
+            'city_name' => $cityName,
+            'settings'  => $freshSettings,
+            'user'      => $freshUser,
         ]);
     }
 

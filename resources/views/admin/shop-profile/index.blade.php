@@ -70,14 +70,12 @@
                     <select x-model="form.city"
                             class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-shadow cursor-pointer">
                         @php
-                            $groupedCities = collect(config('cities', []))->groupBy('province');
+                            $groupedCities = collect(\App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig())->groupBy('province');
                         @endphp
                         @foreach($groupedCities as $province => $cities)
                             <optgroup label="استان {{ $province }}">
                                 @foreach($cities as $slug => $c)
-                                    <option value="{{ $slug }}">
-                                        {{ $province !== $c['name'] ? ($province . ' (' . $c['name'] . ')') : $c['name'] }}
-                                    </option>
+                                    <option value="{{ $slug }}">{{ $c['name'] }}</option>
                                 @endforeach
                             </optgroup>
                         @endforeach
@@ -219,7 +217,9 @@ function shopProfileManager() {
                 }
 
                 const data = await res.json();
-                if (data.user && data.user.city_slug) {
+                if (data.city_slug) {
+                    this.form.city = data.city_slug;
+                } else if (data.user && data.user.city_slug) {
                     this.form.city = data.user.city_slug;
                 }
                 this.showToast(data.message || 'اطلاعات فروشگاه با موفقیت ذخیره شد.', 'success');
