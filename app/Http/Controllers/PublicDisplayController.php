@@ -145,11 +145,21 @@ class PublicDisplayController extends Controller
     {
         $settings = DisplaySetting::where('user_id', $user->id)->firstOrFail();
         $items    = DisplayItem::where('user_id', $user->id)->orderBy('order')->get();
-        $products = ProductSlide::where('user_id', $user->id)->with('images')->where('is_visible', true)->latest()->get();
-        $priceFeed = $this->marketService->getPriceFeed($user);
-
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
         $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
+
+        // خودترمیمی هوشمند: اگر داده‌های بازار بیش از ۳ دقیقه قدیمی باشند یا در دیتابیس موجود نباشند
+        if ($ageSeconds === null || $ageSeconds > 180) {
+            try {
+                $this->marketService->refreshIfStale(120);
+                $lastFetch = \App\Models\MarketCache::max('fetched_at');
+                $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
+            } catch (\Throwable $e) {
+                \Log::warning('Self-healing market refresh error: ' . $e->getMessage());
+            }
+        }
+
+        $priceFeed = $this->marketService->getPriceFeed($user);
 
         $bingWallpaper = null;
         if (str_starts_with($settings->theme_mode ?? '', 'bing-')) {
