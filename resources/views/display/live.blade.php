@@ -342,7 +342,7 @@
             line-height: 1.05 !important;
         }
         .price-grid {
-            grid-template-rows: 1.6fr 1fr 1fr 1fr;
+            grid-template-rows: 1.5fr 1fr 1fr 1fr;
         }
         @media (min-width: 1280px) and (max-height: 760px) {
             .display-shell { gap: 0.5rem; padding: 0.75rem; }
@@ -1871,7 +1871,7 @@
                     {{-- Unified Single-Pass Glass Backdrop (۱ پاس محاسباتی بلور برای کل ۱۶ کارت به جای ۱۶ پاس مجزا) --}}
                     <div class="price-grid-backdrop absolute -inset-1 rounded-[2.25rem] pointer-events-none z-0"></div>
                     <div class="price-grid relative z-10 grid grid-cols-12 gap-3 h-full min-h-0 auto-rows-fr"
-                         :style="orderedMetrics.length > 11 ? 'grid-template-rows: 1.6fr 1fr 1fr 1fr;' : 'grid-template-rows: 1.5fr 1fr 1fr;'">
+                         :style="orderedMetrics.length > 11 ? 'grid-template-rows: 1.5fr 1fr 1fr 1fr;' : 'grid-template-rows: 1.5fr 1fr 1fr;'">
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
                                  item.symbol === 'gold18' ? (theme.heroCard || 'neu-hero-gold-imperial') : (theme.card + ' ' + theme.cardHover),
