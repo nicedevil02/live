@@ -255,6 +255,14 @@
         .market-tile-label { overflow-wrap: anywhere; }
         .market-tile-label { line-height: 1.12; }
         .market-price-number { line-height: 0.95; white-space: nowrap; }
+        .tv-price-featured {
+            font-size: 3.25rem !important;
+            line-height: 1 !important;
+        }
+        .tv-price-regular {
+            font-size: 2.15rem !important;
+            line-height: 1.05 !important;
+        }
         @media (min-width: 1280px) and (max-height: 760px) {
             .display-shell { gap: 0.5rem; padding: 0.75rem; }
             .display-header { padding-block: 0.75rem; }
@@ -1355,16 +1363,19 @@
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
                                     item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor,
-                                    index < 3 ? 'py-3' : 'py-1.5'
+                                    index < 3 ? 'py-2.5' : 'py-1'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
-                                    <div class="flex items-baseline justify-center whitespace-nowrap w-full gap-1.5">
+                                    <div class="flex flex-col items-center justify-center whitespace-nowrap w-full">
+                                          <span :class="[
+                                              index < 3 ? 'tv-price-featured' : 'tv-price-regular',
+                                              item.symbol === 'gold18' 
+                                                  ? (isLightTheme ? 'text-amber-950 drop-shadow-[0_2px_10px_rgba(217,119,6,0.35)]' : 'text-amber-200 drop-shadow-[0_2px_14px_rgba(251,191,36,0.55)]') 
+                                                  : theme.priceGlow
+                                          ]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md text-center" x-html="item.displayHtml"></span>
                                          <span :class="[
-                                             index < 3 ? 'text-4xl xl:text-5xl leading-none' : 'text-2xl xl:text-3xl',
-                                             item.symbol === 'gold18' 
-                                                 ? (isLightTheme ? 'text-amber-950 drop-shadow-[0_2px_10px_rgba(217,119,6,0.35)]' : 'text-amber-200 drop-shadow-[0_2px_14px_rgba(251,191,36,0.55)]') 
-                                                 : theme.priceGlow
-                                         ]" class="market-price-number font-black tabular-nums tracking-tighter drop-shadow-md" x-html="item.displayHtml"></span>
-                                         <span :class="[index < 3 ? 'text-sm xl:text-base' : 'text-[11px] xl:text-xs', themeKey === 'imperial-onyx' ? 'neu-inset-onyx' : (themeKey === 'imperial-pearl' ? 'neu-inset-pearl' : (themeKey === 'bing-daily' ? 'text-slate-900 bg-white/45 border border-white/60 backdrop-blur-md shadow-xs' : (isLightTheme ? 'text-slate-600 bg-black/5' : 'text-white/70 bg-white/10')))]" class="font-bold px-2 py-0.5 rounded-md whitespace-nowrap select-none border border-white/5" x-text="item.unit"></span>
+                                             index < 3 ? 'text-xs xl:text-sm mt-1' : 'text-[10px] xl:text-[11px] mt-0.5',
+                                             themeKey === 'imperial-onyx' ? 'text-amber-300/75' : (themeKey === 'imperial-pearl' ? 'text-amber-900/75' : (isLightTheme ? 'text-slate-500' : 'text-white/60'))
+                                         ]" class="font-bold tracking-wider select-none" x-text="item.unit"></span>
                                     </div>
                                 </div>
 
