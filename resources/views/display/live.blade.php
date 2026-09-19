@@ -1867,11 +1867,11 @@
                 <div class="relative flex-1 min-h-0 animate-fadeInUp" style="animation-delay: 150ms;">
                     {{-- Unified Single-Pass Glass Backdrop (۱ پاس محاسباتی بلور برای کل ۱۶ کارت به جای ۱۶ پاس مجزا) --}}
                     <div class="price-grid-backdrop absolute -inset-1 rounded-[2.25rem] pointer-events-none z-0"></div>
-                    <div class="price-grid relative z-10 grid grid-cols-12 gap-2.5 h-full min-h-0 auto-rows-fr grid-rows-[1.25fr_1fr_1fr_1fr]">
+                    <div class="price-grid relative z-10 grid grid-cols-12 gap-3 h-full min-h-0 auto-rows-fr grid-rows-[1.5fr_1fr_1fr_1fr]">
                         <template x-for="(item, index) in orderedMetrics" :key="item.symbol">
                             <div :class="[
                                  item.symbol === 'gold18' ? (theme.heroCard || 'neu-hero-gold-imperial') : (theme.card + ' ' + theme.cardHover),
-                                 index < 3 ? 'col-span-4 px-4 xl:px-5 pb-3 pt-2.5' : 'col-span-3 px-3 xl:px-3.5 pb-2 pt-1.5'
+                                 index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
                                  class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-[transform,box-shadow,border-color] duration-300 h-full min-h-0">
 
@@ -1883,7 +1883,7 @@
                                 </template>
 
                                 {{-- هدر کارت: عنوان نماد و فلش روند اپلی همراه با ستاره ظریف طلایی --}}
-                                <div class="relative flex justify-between items-center gap-2 z-10">
+                                <div class="relative flex justify-between items-center gap-3 z-10">
                                     <div class="flex items-center gap-1.5 min-w-0">
                                         <template x-if="item.symbol === 'gold18'">
                                             <span class="text-amber-500 animate-sparkle text-sm xl:text-base select-none leading-none">✦</span>
@@ -1893,24 +1893,24 @@
                                     </div>
                                     <div x-show="item.value > 0" class="flex items-center shrink-0">
                                         <template x-if="item.change_percent > 0">
-                                            <div class="flex items-center justify-center p-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.25)]">
-                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-emerald-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
                                                     <polyline points="17 6 23 6 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent < 0">
-                                            <div class="flex items-center justify-center p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.25)]">
-                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-rose-500 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                                                     <polyline points="17 18 23 18 23 12"></polyline>
                                                 </svg>
                                             </div>
                                         </template>
                                         <template x-if="item.change_percent == 0">
-                                            <div class="flex items-center justify-center p-1 rounded-lg bg-white/5 border border-white/10 opacity-40">
-                                                <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                            <div class="flex items-center justify-center p-1.5 rounded-xl bg-white/5 border border-white/10 opacity-40">
+                                                <svg class="w-4 h-4 xl:w-5 xl:h-5 text-slate-400 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                                 </svg>
                                             </div>
@@ -1921,7 +1921,7 @@
                                 {{-- بدنه کارت: ارقام قیمت با تایپوگرافی باوقار اپلی --}}
                                 <div :class="[
                                     item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950' : 'text-amber-200') : theme.priceColor,
-                                    index < 3 ? 'pt-1 pb-0' : 'pt-0.5 pb-0'
+                                    index < 3 ? 'pt-6 pb-0 translate-y-5' : 'pt-2.5 pb-0 translate-y-2'
                                 ]" class="relative flex-1 flex min-w-0 flex-col justify-center items-center">
                                     <div class="flex flex-col items-center justify-center whitespace-nowrap w-full">
                                           <span :class="[
@@ -1938,9 +1938,9 @@
                                 </div>
 
                                 {{-- فوتر کارت: کپسول نوسان به سبک Apple Stocks و نشانگر زنده --}}
-                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-1.5 pt-1.5' : 'mt-1 pt-1', isLightTheme ? 'border-black/5' : 'border-white/10']">
+                                <div class="relative flex justify-between items-center border-t" :class="[index < 3 ? 'mt-2 pt-2.5' : 'mt-1 pt-2', isLightTheme ? 'border-black/5' : 'border-white/10']">
                                     {{-- کپسول درصد و نوسان (طراحی مشابه Apple Stocks و Neumorphic) --}}
-                                    <div class="flex items-center gap-1.5 font-black tabular-nums text-[11px] xl:text-xs px-2 py-0.5 rounded-full border shadow-sm" :class="[
+                                    <div class="flex items-center gap-2 font-black tabular-nums text-xs xl:text-sm px-2.5 py-1 rounded-full border shadow-sm" :class="[
                                         themeKey === 'imperial-onyx'
                                             ? (item.change_percent > 0 ? 'neu-pill-convex-dark-up' : (item.change_percent < 0 ? 'neu-pill-convex-dark-down' : 'neu-pill-convex-dark-flat'))
                                             : (themeKey === 'imperial-pearl'
@@ -1959,17 +1959,17 @@
                                     {{-- وضعیت زنده با میکرو-پالس اپلی --}}
                                     <div class="flex items-center">
                                         <template x-if="(/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale">
-                                            <span class="inline-flex items-center gap-1 text-[10px] rounded-full px-2 py-0.5 font-bold border shadow-sm"
+                                            <span class="inline-flex items-center gap-1 text-[11px] rounded-full px-2.5 py-0.5 font-bold border shadow-sm"
                                                   :class="isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30'">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                                 <span>قدیمی</span>
                                             </span>
                                         </template>
                                         <template x-if="!((/خرید.*(18|۱۸)/.test(item.label)) ? (orderedMetrics.find(m => m.symbol === 'gold18')?.is_stale ?? item.is_stale) : item.is_stale)">
-                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm"
+                                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm"
                                                   :class="themeKey === 'imperial-onyx' ? 'neu-status-pill-dark' : (themeKey === 'imperial-pearl' ? 'neu-status-pill-light' : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'))">
-                                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
-                                                <span class="text-[9px] opacity-80">لحظه‌ای</span>
+                                                <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.95)] shrink-0"></span>
+                                                <span class="text-[10px] opacity-80">لحظه‌ای</span>
                                             </span>
                                         </template>
                                     </div>
