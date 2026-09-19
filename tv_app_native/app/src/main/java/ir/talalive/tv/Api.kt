@@ -128,7 +128,9 @@ object Api {
         deviceToken: String,
         versionCode: Int,
         androidRelease: String,
-        webViewVersion: String
+        webViewVersion: String,
+        renderMode: String? = null,
+        fallbackReason: String? = null
     ): HeartbeatResult? {
         val bases = Config.baseUrls(ctx)
         for (base in bases) {
@@ -142,6 +144,8 @@ object Api {
                     put("app_version_code", versionCode)
                     put("android_release", androidRelease)
                     put("webview_version", webViewVersion)
+                    if (!renderMode.isNullOrBlank()) put("render_mode", renderMode)
+                    if (!fallbackReason.isNullOrBlank()) put("fallback_reason", fallbackReason)
                 }
 
                 OutputStreamWriter(conn.outputStream, "UTF-8").use { it.write(payload.toString()) }

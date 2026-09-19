@@ -683,6 +683,8 @@ class PublicDisplayController extends Controller
             'app_version'     => $request->input('app_version') ?? $request->input('app_version_code'),
             'android_release' => $request->input('android_release'),
             'webview_version' => $request->input('webview_version'),
+            'render_mode'     => $request->input('render_mode'),
+            'fallback_reason' => $request->input('fallback_reason'),
         ]);
 
         $baseUrl = rtrim(config('app.url', url('/')), '/');

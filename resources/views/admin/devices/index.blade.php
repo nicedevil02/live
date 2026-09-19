@@ -191,6 +191,25 @@
                                 <span class="font-bold text-slate-700 dark:text-slate-200 font-mono text-[11px]">{{ $lastSeenText }}</span>
                             </div>
                             <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                                <span>حالت نمایش:</span>
+                                <span class="font-bold text-slate-700 dark:text-slate-200 text-[11px]">
+                                    @if($dev->render_mode === 'native')
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40 font-mono" title="{{ $dev->fallback_reason ? 'دلیل: ' . $dev->fallback_reason : 'نیتیو مستقل' }}">
+                                            نیتیو (مستقل)
+                                            @if($dev->fallback_reason)
+                                                <span class="text-[9px] text-slate-400 font-normal">({{ $dev->fallback_reason }})</span>
+                                            @endif
+                                        </span>
+                                    @elseif($dev->render_mode === 'web')
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/40 font-mono">
+                                            وب‌ویو (WebView)
+                                        </span>
+                                    @else
+                                        <span class="text-slate-400">خودکار / نامشخص</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
                                 <span>نسخه اپلیکیشن:</span>
                                 <span class="font-bold text-slate-700 dark:text-slate-200 font-mono text-[11px]">{{ $dev->app_version ?: '1' }}</span>
                             </div>

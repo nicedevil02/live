@@ -68,6 +68,7 @@ class BoardActivity : Activity() {
     enum class RenderMode { WEB, NATIVE }
 
     private var currentRenderMode = RenderMode.WEB
+    private var currentFallbackReason: String? = null
     private var nativeBoardView: NativeBoardView? = null
     private var readyWatchdogFailCount = 0
     private val renderCrashTimestamps = mutableListOf<Long>()
@@ -585,6 +586,7 @@ class BoardActivity : Activity() {
         runOnUiThread {
             Log.w(tag, "Switching to NATIVE board mode. Reason: $reason")
             currentRenderMode = RenderMode.NATIVE
+            currentFallbackReason = reason
             TvPrefs.setForcedNative(this, true)
 
             // Stop webview and timers
@@ -634,6 +636,7 @@ class BoardActivity : Activity() {
         runOnUiThread {
             Log.i(tag, "Switching to WEB board mode from menu")
             currentRenderMode = RenderMode.WEB
+            currentFallbackReason = null
             TvPrefs.setForcedNative(this, false)
 
             handler.removeCallbacks(nativeSnapshotRunnable)
@@ -914,8 +917,11 @@ class BoardActivity : Activity() {
         val probe = WebViewProbe.probe(this)
         val webViewVer = probe.versionName ?: if (probe.majorVersion > 0) "${probe.majorVersion}" else "Unknown"
 
+        val rMode = currentRenderMode.name.lowercase()
+        val fbReason = currentFallbackReason
+
         executor.execute {
-            val hb = Api.heartbeat(this, token, verCode, androidRel, webViewVer)
+            val hb = Api.heartbeat(this, token, verCode, androidRel, webViewVer, rMode, fbReason)
             handler.post {
                 try {
                     if (hb != null) {
