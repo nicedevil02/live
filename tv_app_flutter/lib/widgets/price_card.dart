@@ -207,6 +207,9 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
                     textDirection: TextDirection.rtl,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Change Pill (Apple Stocks Style with optional value)
+                      _buildChangePill(),
+
                       // Currency Unit Badge
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -225,9 +228,6 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
                           ),
                         ),
                       ),
-
-                      // Change Pill (Apple Stocks Style with optional value)
-                      _buildChangePill(),
                     ],
                   ),
                 ),
