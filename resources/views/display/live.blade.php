@@ -142,17 +142,16 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            pointer-events: none;
         }
         #tv-stage-canvas {
-            position: relative;
+            position: absolute;
+            left: 0;
+            top: 0;
             width: 1920px;
             height: 1080px;
-            flex-shrink: 0;
-            margin: auto;
-            transform-origin: center center;
+            transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
             transform: scale(1);
         }
     </style>
@@ -1652,8 +1651,8 @@
         </div>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
-        <div id="tv-stage-viewport" class="fixed inset-0 z-10 w-screen h-screen flex items-center justify-center overflow-hidden pointer-events-none">
-            <div id="tv-stage-canvas" class="pointer-events-auto relative w-[1920px] h-[1080px] shrink-0 p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none">
+        <div id="tv-stage-viewport" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
+            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-0 top-0 w-[1920px] h-[1080px] p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none">
 
             {{-- Header --}}
             <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
@@ -2606,8 +2605,15 @@
                     const baseScale = Math.min(scaleX, scaleY);
                     const rawZoom = Number(this.zoomLevel);
                     const validZoom = (!isNaN(rawZoom) && rawZoom > 0.1) ? rawZoom : 1.0;
-                    const finalScale = (!isNaN(baseScale) && baseScale > 0.05) ? Math.max(0.2, baseScale * validZoom) : 1.0;
-                    
+                    const scaledW = 1920 * finalScale;
+                    const scaledH = 1080 * finalScale;
+                    const offsetX = Math.round((vw - scaledW) / 2);
+                    const offsetY = Math.round((vh - scaledH) / 2);
+
+                    canvas.style.transformOrigin = '0 0';
+                    canvas.style.webkitTransformOrigin = '0 0';
+                    canvas.style.left = `${offsetX}px`;
+                    canvas.style.top = `${offsetY}px`;
                     canvas.style.transform = `scale(${finalScale})`;
                     canvas.style.webkitTransform = `scale(${finalScale})`;
                 },
