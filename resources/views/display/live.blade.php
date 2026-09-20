@@ -2605,6 +2605,7 @@
                     const baseScale = Math.min(scaleX, scaleY);
                     const rawZoom = Number(this.zoomLevel);
                     const validZoom = (!isNaN(rawZoom) && rawZoom > 0.1) ? rawZoom : 1.0;
+                    const finalScale = (!isNaN(baseScale) && baseScale > 0.05) ? Math.max(0.2, baseScale * validZoom) : 1.0;
                     const scaledW = 1920 * finalScale;
                     const scaledH = 1080 * finalScale;
                     const offsetX = Math.round((vw - scaledW) / 2);
