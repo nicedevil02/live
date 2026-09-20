@@ -44,7 +44,9 @@ class _BoardScreenState extends State<BoardScreen> {
 
   static const String _prefKeyWebMode = 'tv_webview_mode';
   static const String _prefKeyZoom = 'talalive_zoom_level';
+  static const String _prefKeyDarkMode = 'tv_dark_mode_override';
   double _zoomLevel = 1.0;
+  bool? _isDarkModeOverride;
 
   String _installedVersion = '1.0.0';
   UpdateInfo? _availableUpdate;
@@ -65,6 +67,7 @@ class _BoardScreenState extends State<BoardScreen> {
     _loadInstalledVersion();
     _loadSavedMode();
     _loadSavedZoom();
+    _loadSavedThemeMode();
     _fetchData();
 
     // Zero-overhead clock timer: updates ValueNotifier only, ZERO root rebuilds!
@@ -263,6 +266,30 @@ class _BoardScreenState extends State<BoardScreen> {
         _zoomLevel = savedZoom;
       });
     }
+  }
+
+  void _loadSavedThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(_prefKeyDarkMode)) {
+      final saved = prefs.getBool(_prefKeyDarkMode);
+      if (mounted) {
+        setState(() {
+          _isDarkModeOverride = saved;
+        });
+      }
+    }
+  }
+
+  void _toggleDarkMode() async {
+    final currentIsDark = _isDarkModeOverride ??
+        (_model != null ? BoardThemeData.fromMode(_model!.themeMode).isDark : true);
+    final newMode = !currentIsDark;
+    setState(() {
+      _isDarkModeOverride = newMode;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prefKeyDarkMode, newMode);
+    _showZoomFeedback(newMode ? 'حالت تاریک فعال شد' : 'حالت روشن فعال شد');
   }
 
   void _zoomIn() async {
@@ -1492,9 +1519,9 @@ class _BoardScreenState extends State<BoardScreen> {
     // =========================================================================
     // 2. High-Fidelity Native Flutter Board Mode
     // =========================================================================
-    final theme = _model != null
-        ? BoardThemeData.fromMode(_model!.themeMode)
-        : BoardThemeData.onyxGold;
+    final isDark = _isDarkModeOverride ??
+        (_model != null ? BoardThemeData.fromMode(_model!.themeMode).isDark : true);
+    final theme = isDark ? BoardThemeData.onyxGold : BoardThemeData.imperialPearl;
 
     return KeyboardListener(
       focusNode: _focusNode,
@@ -1620,13 +1647,12 @@ class _BoardScreenState extends State<BoardScreen> {
                             )
                           : Column(
                               children: [
-                                // 1. Header (with Switch to Web button & zero-overhead clock)
+                                // 1. Header (zero-overhead clock)
                                 BoardHeader(
                                   model: _model!,
                                   theme: theme,
                                   timeNotifier: _timeNotifier,
                                   isOffline: _isOffline,
-                                  onSwitchToWeb: () => _setWebViewMode(true),
                                 ),
                                 const SizedBox(height: 14),
 
@@ -1952,10 +1978,43 @@ class _BoardScreenState extends State<BoardScreen> {
 
           const Spacer(),
 
-          // Left: Web Switcher + Disconnect + Update Time
+          // Left: Theme Switcher + Disconnect + Web Switcher + Update Time
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Dark / Light Mode Toggle button
+              InkWell(
+                onTap: _toggleDarkMode,
+                borderRadius: BorderRadius.circular(14),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: (theme.isDark ? const Color(0xFFF59E0B) : const Color(0xFF3B82F6)).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: (theme.isDark ? const Color(0xFFF59E0B) : const Color(0xFF3B82F6)).withOpacity(0.35),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(theme.isDark ? '☀️' : '🌙', style: const TextStyle(fontSize: 12)),
+                      const SizedBox(width: 4),
+                      Text(
+                        theme.isDark ? 'حالت روشن' : 'حالت تاریک',
+                        style: TextStyle(
+                          color: theme.isDark ? theme.goldPrimary : const Color(0xFF2563EB),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Vazirmatn',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+
               // Disconnect button
               InkWell(
                 onTap: _showExitDialog,

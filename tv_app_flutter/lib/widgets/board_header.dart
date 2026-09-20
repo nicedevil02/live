@@ -10,7 +10,6 @@ class BoardHeader extends StatelessWidget {
   final BoardThemeData theme;
   final ValueListenable<DateTime> timeNotifier;
   final bool isOffline;
-  final VoidCallback? onSwitchToWeb;
 
   const BoardHeader({
     super.key,
@@ -18,7 +17,6 @@ class BoardHeader extends StatelessWidget {
     required this.theme,
     required this.timeNotifier,
     this.isOffline = false,
-    this.onSwitchToWeb,
   });
 
   @override
@@ -261,44 +259,8 @@ class BoardHeader extends StatelessWidget {
                 ),
                 const SizedBox(width: 18),
 
-                // Controls Column (Status Badge + Web Switch Button)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildStatusBadge(),
-                    if (onSwitchToWeb != null) ...[
-                      const SizedBox(height: 6),
-                      InkWell(
-                        onTap: onSwitchToWeb,
-                        borderRadius: BorderRadius.circular(14),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: theme.goldPrimary.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: theme.goldPrimary.withOpacity(0.35)),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('🌐', style: TextStyle(fontSize: 13)),
-                              const SizedBox(width: 6),
-                              Text(
-                                'نسخه وب',
-                                style: TextStyle(
-                                  color: theme.goldPrimary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                // Status Badge
+                _buildStatusBadge(),
               ],
             ),
           ),
