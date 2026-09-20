@@ -3,7 +3,7 @@ import '../models/board_model.dart';
 import '../theme/board_theme.dart';
 import '../utils/persian_utils.dart';
 
-class PriceCard extends StatelessWidget {
+class PriceCard extends StatefulWidget {
   final PriceRow row;
   final BoardThemeData theme;
   final bool isHero;
@@ -18,184 +18,219 @@ class PriceCard extends StatelessWidget {
   });
 
   @override
+  State<PriceCard> createState() => _PriceCardState();
+}
+
+class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMixin {
+  AnimationController? _shimmerController;
+
+  @override
+  void initState() {
+    super.initState();
+    final isGold18 = widget.isHero || widget.row.symbol == 'gold18';
+    if (isGold18) {
+      _shimmerController = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 6),
+      )..repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _shimmerController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final row = widget.row;
+    final theme = widget.theme;
+    final isTopRow = widget.isTopRow;
     final hasBuy = row.buyPrice != null && row.buyPrice!.trim().isNotEmpty;
-    final isGold18 = isHero || row.symbol == 'gold18';
+    final isGold18 = widget.isHero || row.symbol == 'gold18';
 
     final cardBg = isGold18 ? theme.heroCardGradient : theme.cardGradient;
     final cardBorder = isGold18 ? theme.heroStrokeColor : theme.cardStrokeColor;
     final titleColor = isGold18 ? theme.heroTextColor : theme.textPrimary;
-    final priceColor = isGold18 ? theme.heroTextColor : (theme.isDark ? theme.goldPrimary : const Color(0xFFB45309));
+    final priceColor = isGold18
+        ? theme.heroTextColor
+        : (theme.isDark ? theme.goldPrimary : const Color(0xFF0F172A));
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTopRow ? 20 : 16,
-        vertical: isTopRow ? 16 : 12,
-      ),
       decoration: BoxDecoration(
         gradient: cardBg,
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
           color: cardBorder,
-          width: isGold18 ? 1.8 : 1.2,
+          width: isGold18 ? 2.0 : 1.2,
         ),
         boxShadow: [
           BoxShadow(
             color: isGold18
-                ? theme.goldPrimary.withOpacity(0.3)
+                ? theme.goldPrimary.withOpacity(theme.isDark ? 0.35 : 0.25)
                 : Colors.black.withOpacity(theme.isDark ? 0.35 : 0.06),
-            blurRadius: isGold18 ? 20 : 14,
+            blurRadius: isGold18 ? 22 : 14,
             offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
         children: [
-          // ===================================================================
-          // 1. Card Header: Title + Status + Trend Icon
-          // ===================================================================
-          Row(
-            textDirection: TextDirection.rtl,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Title & Sparkle
-              Expanded(
-                child: Row(
+          // 1. Shimmer Beam Animation for Gold 18
+          if (isGold18) _buildShimmerBeam(),
+
+          // 2. Main Content
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTopRow ? 20 : 16,
+              vertical: isTopRow ? 16 : 12,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // =============================================================
+                // Card Header: Title + Status + Trend Icon
+                // =============================================================
+                Row(
                   textDirection: TextDirection.rtl,
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (isGold18) ...[
-                      const Text(
-                        '✦',
-                        style: TextStyle(
-                          color: Color(0xFFF59E0B),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                    ],
-                    Flexible(
-                      child: Text(
-                        row.title,
-                        style: TextStyle(
-                          color: titleColor,
-                          fontSize: isTopRow ? 21 : 17,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.3,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    // Title & Sparkle
+                    Expanded(
+                      child: Row(
+                        textDirection: TextDirection.rtl,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (isGold18) ...[
+                            _buildSparkle(),
+                            const SizedBox(width: 6),
+                          ],
+                          Flexible(
+                            child: Text(
+                              row.title,
+                              style: TextStyle(
+                                color: titleColor,
+                                fontSize: isTopRow ? 22 : 17,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: 'Vazirmatn',
+                                letterSpacing: -0.3,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+
+                          // Status Pill (لحظه‌ای / قدیمی)
+                          _buildStatusPill(),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 8),
 
-                    // Status Pill (لحظه‌ای / قدیمی)
-                    _buildStatusPill(),
+                    // Trend Icon Pill
+                    _buildTrendIcon(),
                   ],
                 ),
-              ),
 
-              // Trend Icon Pill
-              _buildTrendIcon(),
-            ],
-          ),
-
-          // ===================================================================
-          // 2. Card Body: Price Number
-          // ===================================================================
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: isTopRow ? 8 : 4),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    PersianUtils.formatPriceString(row.sellPrice),
-                    style: TextStyle(
-                      color: priceColor,
-                      fontSize: isTopRow ? 46 : 36,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'Vazirmatn',
-                      letterSpacing: -0.5,
-                      height: 1.1,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                  ),
-                ),
-                if (hasBuy) ...[
-                  const SizedBox(height: 3),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'خرید: ',
+                // =============================================================
+                // Card Body: Super-Featured Price Number
+                // =============================================================
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: isTopRow ? 6 : 2),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          PersianUtils.formatPriceString(row.sellPrice),
                           style: TextStyle(
-                            color: theme.textMuted,
-                            fontSize: isTopRow ? 14 : 12,
-                            fontWeight: FontWeight.w700,
+                            color: priceColor,
+                            fontSize: isTopRow ? 58 : 38,
+                            fontWeight: FontWeight.w900,
                             fontFamily: 'Vazirmatn',
+                            letterSpacing: -1.0,
+                            height: 1.05,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                        ),
+                      ),
+                      if (hasBuy) ...[
+                        const SizedBox(height: 3),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'خرید: ',
+                                style: TextStyle(
+                                  color: theme.textMuted,
+                                  fontSize: isTopRow ? 14 : 12,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Vazirmatn',
+                                ),
+                              ),
+                              Text(
+                                PersianUtils.formatPriceString(row.buyPrice!),
+                                style: TextStyle(
+                                  color: theme.textSecondary,
+                                  fontSize: isTopRow ? 17 : 15,
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: 'Vazirmatn',
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          PersianUtils.formatPriceString(row.buyPrice!),
+                      ],
+                    ],
+                  ),
+                ),
+
+                // =============================================================
+                // Card Footer: Change Pill (with value) & Currency Unit Badge
+                // =============================================================
+                Container(
+                  padding: const EdgeInsets.only(top: 8),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.08),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    textDirection: TextDirection.rtl,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Currency Unit Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: theme.unitBadgeBg,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: theme.unitBadgeBorder),
+                        ),
+                        child: Text(
+                          row.unit,
                           style: TextStyle(
-                            color: theme.textSecondary,
-                            fontSize: isTopRow ? 17 : 15,
+                            color: theme.unitBadgeText,
+                            fontSize: isTopRow ? 12 : 11,
                             fontWeight: FontWeight.w800,
                             fontFamily: 'Vazirmatn',
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
+                      ),
 
-          // ===================================================================
-          // 3. Card Footer: Change Pill & Currency Unit Badge
-          // ===================================================================
-          Container(
-            padding: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.08),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Row(
-              textDirection: TextDirection.rtl,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Currency Unit Badge
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: theme.unitBadgeBg,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: theme.unitBadgeBorder),
-                  ),
-                  child: Text(
-                    row.unit,
-                    style: TextStyle(
-                      color: theme.unitBadgeText,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                    ),
+                      // Change Pill (Apple Stocks Style with optional value)
+                      _buildChangePill(),
+                    ],
                   ),
                 ),
-
-                // Change Pill (Apple Stocks Style)
-                _buildChangePill(),
               ],
             ),
           ),
@@ -204,38 +239,121 @@ class PriceCard extends StatelessWidget {
     );
   }
 
+  Widget _buildShimmerBeam() {
+    if (_shimmerController == null) return const SizedBox.shrink();
+
+    return AnimatedBuilder(
+      animation: _shimmerController!,
+      builder: (context, child) {
+        final progress = _shimmerController!.value;
+        if (progress > 0.35) return const SizedBox.shrink();
+
+        final sweepPos = (progress / 0.35) * 3.0 - 1.0;
+
+        return Positioned.fill(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(26),
+            child: Transform.rotate(
+              angle: 0.48, // ~28 degrees matching live.blade.php
+              child: FractionalTranslation(
+                translation: Offset(sweepPos, 0),
+                child: Container(
+                  width: 140,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.white.withOpacity(widget.theme.isDark ? 0.12 : 0.30),
+                        const Color(0xFFFDE68A).withOpacity(widget.theme.isDark ? 0.22 : 0.35),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.45, 0.55, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSparkle() {
+    if (_shimmerController == null) {
+      return const Text(
+        '✦',
+        style: TextStyle(
+          color: Color(0xFFF59E0B),
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    }
+    return AnimatedBuilder(
+      animation: _shimmerController!,
+      builder: (context, child) {
+        final t = _shimmerController!.value * 6;
+        final phase = (t - t.floor());
+        final scale = 0.85 + 0.35 * (phase < 0.5 ? phase * 2 : 2 - phase * 2);
+        return Transform.scale(
+          scale: scale,
+          child: const Text(
+            '✦',
+            style: TextStyle(
+              color: Color(0xFFF59E0B),
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildStatusPill() {
+    final theme = widget.theme;
+    final row = widget.row;
     final isStale = row.isStale;
-    final bgColor = isStale ? theme.statusStaleBg : theme.statusLiveBg;
-    final borderColor = isStale ? theme.statusStaleBorder : theme.statusLiveBorder;
-    final textColor = isStale ? theme.statusStaleText : theme.statusLiveText;
+
+    final bg = isStale ? theme.statusStaleBg : theme.statusLiveBg;
+    final border = isStale ? theme.statusStaleBorder : theme.statusLiveBorder;
+    final text = isStale ? theme.statusStaleText : theme.statusLiveText;
     final label = isStale ? 'قدیمی' : 'لحظه‌ای';
+    final dotColor = isStale ? theme.goldPrimary : theme.greenUp;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: borderColor, width: 0.8),
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: border, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 5,
-            height: 5,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(
-              color: textColor,
+              color: dotColor,
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: dotColor.withOpacity(0.6),
+                  blurRadius: 4,
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 4),
           Text(
             label,
             style: TextStyle(
-              color: textColor,
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
+              color: text,
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Vazirmatn',
             ),
           ),
         ],
@@ -244,6 +362,8 @@ class PriceCard extends StatelessWidget {
   }
 
   Widget _buildTrendIcon() {
+    final theme = widget.theme;
+    final row = widget.row;
     Color bg;
     Color border;
     IconData icon;
@@ -282,6 +402,8 @@ class PriceCard extends StatelessWidget {
   }
 
   Widget _buildChangePill() {
+    final theme = widget.theme;
+    final row = widget.row;
     Color bg;
     Color border;
     Color text;
@@ -304,6 +426,11 @@ class PriceCard extends StatelessWidget {
         ? row.changePercent!
         : '۰';
     final sign = row.changeDirection > 0 ? '+' : (row.changeDirection < 0 ? '-' : '');
+    final hasValue = row.changeValue != null &&
+        row.changeValue!.isNotEmpty &&
+        row.changeValue != '0' &&
+        row.changeValue != '۰';
+    final valStr = hasValue ? PersianUtils.formatSignedNumber(row.changeValue) : '';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
@@ -313,10 +440,12 @@ class PriceCard extends StatelessWidget {
         border: Border.all(color: border),
       ),
       child: Text(
-        PersianUtils.toPersianDigits('$sign$pctStr%'),
+        hasValue
+            ? PersianUtils.toPersianDigits('$sign$pctStr% | $valStr')
+            : PersianUtils.toPersianDigits('$sign$pctStr%'),
         style: TextStyle(
           color: text,
-          fontSize: 11,
+          fontSize: widget.isTopRow ? 12 : 11,
           fontWeight: FontWeight.w900,
           fontFamily: 'Vazirmatn',
         ),

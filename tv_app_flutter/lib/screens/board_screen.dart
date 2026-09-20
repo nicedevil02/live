@@ -353,66 +353,125 @@ class _BoardScreenState extends State<BoardScreen> {
               width: 1920,
               height: 1080,
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
-              child: _isLoading
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircularProgressIndicator(color: theme.goldPrimary),
-                          const SizedBox(height: 20),
-                          Text(
-                            'در حال دریافت مظنه‌های لحظه‌ای طلالایو...',
-                            style: TextStyle(color: theme.textSecondary, fontSize: 20),
-                          ),
-                        ],
+              child: Stack(
+                children: [
+                  // Ambient Background Glow Orbs
+                  Positioned(
+                    top: -80,
+                    right: 150,
+                    child: Container(
+                      width: 500,
+                      height: 500,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            theme.goldPrimary.withOpacity(theme.isDark ? 0.08 : 0.05),
+                            Colors.transparent,
+                          ],
+                        ),
                       ),
-                    )
-                  : _model == null
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 80,
+                    child: Container(
+                      width: 450,
+                      height: 450,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            (theme.isDark ? theme.greenUp : theme.goldSecondary)
+                                .withOpacity(theme.isDark ? 0.06 : 0.04),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 250,
+                    left: 550,
+                    child: Container(
+                      width: 400,
+                      height: 400,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            theme.goldSecondary.withOpacity(theme.isDark ? 0.05 : 0.03),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Main Content
+                  _isLoading
                       ? Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              CircularProgressIndicator(color: theme.goldPrimary),
+                              const SizedBox(height: 20),
                               Text(
-                                'خطا در دریافت اطلاعات (${widget.username}). اتصال اینترنت را بررسی فرمایید.',
-                                style: TextStyle(color: theme.redDown, fontSize: 22),
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() => _isLoading = true);
-                                  _fetchData();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: theme.goldPrimary,
-                                  foregroundColor: Colors.black,
-                                ),
-                                child: const Text('تلاش مجدد'),
+                                'در حال دریافت مظنه‌های لحظه‌ای طلالایو...',
+                                style: TextStyle(color: theme.textSecondary, fontSize: 20),
                               ),
                             ],
                           ),
                         )
-                      : Column(
-                          children: [
-                            // 1. Header (with Switch to Web button)
-                            BoardHeader(
-                              model: _model!,
-                              theme: theme,
-                              currentDateTime: _currentDateTime,
-                              isOffline: _isOffline,
-                              onSwitchToWeb: () => _setWebViewMode(true),
-                            ),
-                            const SizedBox(height: 14),
+                      : _model == null
+                          ? Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'خطا در دریافت اطلاعات (${widget.username}). اتصال اینترنت را بررسی فرمایید.',
+                                    style: TextStyle(color: theme.redDown, fontSize: 22),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      setState(() => _isLoading = true);
+                                      _fetchData();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: theme.goldPrimary,
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    child: const Text('تلاش مجدد'),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Column(
+                              children: [
+                                // 1. Header (with Switch to Web button)
+                                BoardHeader(
+                                  model: _model!,
+                                  theme: theme,
+                                  currentDateTime: _currentDateTime,
+                                  isOffline: _isOffline,
+                                  onSwitchToWeb: () => _setWebViewMode(true),
+                                ),
+                                const SizedBox(height: 14),
 
-                            // 2. Main Body (Right: Slider 35%, Left: All Cards Grid 65%)
-                            Expanded(
-                              child: _buildBody(theme),
-                            ),
-                            const SizedBox(height: 12),
+                                // 2. Main Body (Right: Slider 35%, Left: All Cards Grid 65%)
+                                Expanded(
+                                  child: _buildBody(theme),
+                                ),
+                                const SizedBox(height: 12),
 
-                            // 3. Footer (Notice: Marquee Ticker removed completely!)
-                            _buildFooter(theme),
-                          ],
-                        ),
+                                // 3. Footer
+                                _buildFooter(theme),
+                              ],
+                            ),
+                ],
+              ),
             ),
           ),
         ),

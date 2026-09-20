@@ -121,24 +121,32 @@ class _ProductSliderState extends State<ProductSlider> {
           fit: StackFit.expand,
           children: [
             // =================================================================
-            // 1. Full Cover Image
+            // 1. Full Cover Image with Smooth Cross-Fade
             // =================================================================
-            imageUrl.isNotEmpty
-                ? Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3,
-                          valueColor: AlwaysStoppedAnimation<Color>(widget.theme.goldPrimary),
-                        ),
-                      );
-                    },
-                  )
-                : _buildPlaceholder(),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 650),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              child: SizedBox.expand(
+                key: ValueKey<String>('$imageUrl-$_currentIndex'),
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              valueColor: AlwaysStoppedAnimation<Color>(widget.theme.goldPrimary),
+                            ),
+                          );
+                        },
+                      )
+                    : _buildPlaceholder(),
+              ),
+            ),
 
             // =================================================================
             // 2. Scrim Gradient Overlay at bottom

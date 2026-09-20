@@ -6,6 +6,7 @@ class PriceRow {
   final String unit;
   final int changeDirection; // -1 (down), 0 (flat), +1 (up)
   final String? changePercent;
+  final String? changeValue;
   final bool isStale;
 
   const PriceRow({
@@ -16,6 +17,7 @@ class PriceRow {
     required this.unit,
     required this.changeDirection,
     this.changePercent,
+    this.changeValue,
     required this.isStale,
   });
 }
@@ -175,6 +177,7 @@ class BoardModel {
           final dirStr = feed['direction']?.toString().toLowerCase() ?? 'flat';
           final dirInt = dirStr == 'up' ? 1 : (dirStr == 'down' ? -1 : 0);
           final chgPct = feed['change_percent']?.toString().trim();
+          final chgVal = feed['change_value']?.toString().trim();
           final itemStale = _parseBool(feed['is_stale'], false);
 
           rows.add(PriceRow(
@@ -185,6 +188,7 @@ class BoardModel {
             unit: unit,
             changeDirection: dirInt,
             changePercent: chgPct,
+            changeValue: chgVal,
             isStale: itemStale,
           ));
         }
@@ -200,6 +204,7 @@ class BoardModel {
         final dirStr = feed['direction']?.toString().toLowerCase() ?? 'flat';
         final dirInt = dirStr == 'up' ? 1 : (dirStr == 'down' ? -1 : 0);
         final chgPct = feed['change_percent']?.toString().trim();
+        final chgVal = feed['change_value']?.toString().trim();
         final itemStale = _parseBool(feed['is_stale'], false);
 
         rows.add(PriceRow(
@@ -210,6 +215,7 @@ class BoardModel {
           unit: unit,
           changeDirection: dirInt,
           changePercent: chgPct,
+          changeValue: chgVal,
           isStale: itemStale,
         ));
       }
