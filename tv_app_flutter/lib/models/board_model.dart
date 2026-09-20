@@ -1,3 +1,5 @@
+import '../utils/persian_utils.dart';
+
 class PriceRow {
   final String symbol;
   final String title;
@@ -154,10 +156,18 @@ class BoardModel {
     final qrLink = settings?['qr_link']?.toString();
     final qrLabel = settings?['qr_label']?.toString();
     final qrDesc = settings?['qr_desc']?.toString();
-    final cityName = json['cityName']?.toString() ?? settings?['city_name']?.toString();
-    final cityFullDisplay = json['cityFullDisplay']?.toString() ??
-        cityName ??
-        'تهران';
+    final rawCitySlug = json['citySlug']?.toString() ?? settings?['city_slug']?.toString();
+    final rawCityName = json['cityName']?.toString() ?? settings?['city_name']?.toString();
+    final rawCityFull = json['cityFullDisplay']?.toString() ?? settings?['city_full_display']?.toString();
+
+    final cityFullDisplay = (rawCityFull != null && rawCityFull.trim().isNotEmpty && rawCityFull.trim() != 'null')
+        ? PersianUtils.resolveCityName(rawCityFull.trim())
+        : ((rawCityName != null && rawCityName.trim().isNotEmpty && rawCityName.trim() != 'null')
+            ? PersianUtils.resolveCityName(rawCityName.trim())
+            : PersianUtils.resolveCityName(rawCitySlug));
+    final cityName = (rawCityName != null && rawCityName.trim().isNotEmpty && rawCityName.trim() != 'null')
+        ? PersianUtils.resolveCityName(rawCityName.trim())
+        : PersianUtils.resolveCityName(rawCitySlug);
     final themeMode = settings?['theme_mode']?.toString() ?? 'luxury-dark';
     final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??

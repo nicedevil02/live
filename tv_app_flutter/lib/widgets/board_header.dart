@@ -230,7 +230,7 @@ class BoardHeader extends StatelessWidget {
                   valueListenable: timeNotifier,
                   builder: (context, dateTime, _) {
                     return SizedBox(
-                      width: 220,
+                      width: 260,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -239,7 +239,7 @@ class BoardHeader extends StatelessWidget {
                             PersianUtils.formatClock(dateTime),
                             style: TextStyle(
                               color: theme.textPrimary,
-                              fontSize: 54,
+                              fontSize: 50,
                               fontWeight: FontWeight.w900,
                               fontFamily: 'Vazirmatn',
                               fontFeatures: const [FontFeature.tabularFigures()],
@@ -247,6 +247,8 @@ class BoardHeader extends StatelessWidget {
                               height: 1.0,
                             ),
                             maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.visible,
                           ),
                           const SizedBox(height: 4),
                           Text(

@@ -195,6 +195,12 @@ class PublicDisplayController extends Controller
         // استخراج نام، شهر و مشخصات گالری
         $resolved = $this->resolveGalleryCityInfo($user, $settings);
 
+        $settingsData = $settings->toArray();
+        $settingsData['city_slug'] = $resolved['citySlug'];
+        $settingsData['city_name'] = $resolved['cityName'];
+        $settingsData['city_full_display'] = $resolved['cityFullDisplay'];
+        $settingsData['gallery_display_name'] = $resolved['galleryDisplayName'];
+
         return [
             'username'               => $user->username,
             'shopName'               => $resolved['shopName'],
@@ -213,7 +219,7 @@ class PublicDisplayController extends Controller
             'displayItems'           => $items,
             'priceFeed'              => $priceFeed,
             'products'               => $products,
-            'settings'               => $settings,
+            'settings'               => $settingsData,
             'bingWallpaper'          => $bingWallpaper,
         ];
     }
@@ -233,11 +239,12 @@ class PublicDisplayController extends Controller
         $cityFullDisplay = null;
         $galleryAddress = null;
 
+        $citiesConfig = \App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig();
+
         // اولویت اول: شهر ثبت‌شده در حساب کاربری طلافروشی یا تنظیمات نمایش
         $resolvedCitySlug = $user->city_slug ?: ($settings?->city_slug ?? null);
         if (!empty($resolvedCitySlug)) {
             $citySlug = $resolvedCitySlug;
-            $citiesConfig = config('cities', []);
             if (isset($citiesConfig[$citySlug])) {
                 $cityName = $citiesConfig[$citySlug]['name'];
                 $provinceName = $citiesConfig[$citySlug]['province'] ?? null;
@@ -245,14 +252,14 @@ class PublicDisplayController extends Controller
                 $cityName = 'ایران';
                 $provinceName = 'ایران';
             } else {
-                $cityName = $user->city_name ?: 'تهران';
-                $provinceName = $cityName;
+                $cityName = $user->city_name ?: ($citiesConfig[$citySlug]['name'] ?? 'تهران');
+                $provinceName = $citiesConfig[$citySlug]['province'] ?? $cityName;
             }
         }
 
         // اولویت دوم: تطبیق با گالری‌های کانفیگ شهرها
         if (!$cityName) {
-            foreach (config('cities', []) as $slug => $c) {
+            foreach ($citiesConfig as $slug => $c) {
                 if (!empty($c['galleries'])) {
                     foreach ($c['galleries'] as $g) {
                         if (isset($g['username']) && $g['username'] === $user->username) {
@@ -267,7 +274,11 @@ class PublicDisplayController extends Controller
             }
         }
 
-        $citiesConfig = \App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig();
+        if (!$cityName && !empty($user->city_name)) {
+            $cityName = $user->city_name;
+            $provinceName = $user->city_name;
+        }
+
         $isCapital = false;
         if (isset($citiesConfig[$citySlug])) {
             $isCapital = !empty($citiesConfig[$citySlug]['is_capital']);
