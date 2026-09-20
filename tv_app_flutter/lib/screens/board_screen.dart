@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -147,15 +149,24 @@ class _BoardScreenState extends State<BoardScreen> {
     if (_webViewController == null) {
       return const SizedBox.shrink();
     }
+    final gestureRecognizers = <Factory<OneSequenceGestureRecognizer>>{
+      Factory<LongPressGestureRecognizer>(
+        () => LongPressGestureRecognizer()..onLongPress = _showSettingsMenu,
+      ),
+    };
     if (WebViewPlatform.instance is AndroidWebViewPlatform) {
       return WebViewWidget.fromPlatformCreationParams(
         params: AndroidWebViewWidgetCreationParams(
           controller: _webViewController!.platform,
           displayWithHybridComposition: false, // Texture Layer mode: eliminates surface tearing, clipping, and card flashing
+          gestureRecognizers: gestureRecognizers,
         ),
       );
     }
-    return WebViewWidget(controller: _webViewController!);
+    return WebViewWidget(
+      controller: _webViewController!,
+      gestureRecognizers: gestureRecognizers,
+    );
   }
 
   void _loadSavedMode() async {
@@ -223,6 +234,11 @@ class _BoardScreenState extends State<BoardScreen> {
 
   void _handleKey(KeyEvent event) {
     if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.contextMenu ||
+          event.logicalKey == LogicalKeyboardKey.keyM) {
+        _showSettingsMenu();
+        return;
+      }
       if (event.logicalKey == LogicalKeyboardKey.escape ||
           event.logicalKey == LogicalKeyboardKey.backspace) {
         if (_isWebViewMode) {
@@ -232,6 +248,271 @@ class _BoardScreenState extends State<BoardScreen> {
         }
       }
     }
+  }
+
+  void _showSettingsMenu() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (ctx) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Dialog(
+          backgroundColor: const Color(0xFF0F172A).withOpacity(0.94),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+            side: BorderSide(color: const Color(0xFFF59E0B).withOpacity(0.4), width: 1.5),
+          ),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 580, maxHeight: 520),
+            padding: const EdgeInsets.all(24),
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Header with Icon and Title
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF59E0B).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.4)),
+                          ),
+                          child: const Icon(Icons.settings_outlined, color: Color(0xFFF59E0B), size: 26),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'تنظیمات و مدیریت تابلوی طلالایو',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'Vazirmatn',
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'گالری: ${widget.username}  •  وضعیت: ${_isOffline ? "آفلاین" : "متصل و برخط"}',
+                                style: TextStyle(
+                                  color: _isOffline ? Colors.redAccent : const Color(0xFF10B981),
+                                  fontSize: 12,
+                                  fontFamily: 'Vazirmatn',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          icon: const Icon(Icons.close, color: Colors.white70),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+                    const Divider(color: Color(0xFF334155), height: 1),
+                    const SizedBox(height: 18),
+
+                    // Section 1: Display Mode Switcher
+                    const Text(
+                      'حالت نمایش تابلو:',
+                      style: TextStyle(
+                        color: Color(0xFF94A3B8),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Vazirmatn',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        // Native Mode Button
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(ctx).pop();
+                              if (_isWebViewMode) _setWebViewMode(false);
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: !_isWebViewMode ? const Color(0xFFF59E0B).withOpacity(0.2) : const Color(0xFF1E293B),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: !_isWebViewMode ? const Color(0xFFF59E0B) : const Color(0xFF334155),
+                                  width: !_isWebViewMode ? 2 : 1,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.bolt, color: !_isWebViewMode ? const Color(0xFFF59E0B) : Colors.white60, size: 28),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'نسخه بومی (نیتیو)',
+                                    style: TextStyle(
+                                      color: !_isWebViewMode ? Colors.white : Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      fontFamily: 'Vazirmatn',
+                                    ),
+                                  ),
+                                  if (!_isWebViewMode) ...[
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF59E0B),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Text(
+                                        'فعال',
+                                        style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Web Live Mode Button
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(ctx).pop();
+                              if (!_isWebViewMode) _setWebViewMode(true);
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: _isWebViewMode ? const Color(0xFF3B82F6).withOpacity(0.2) : const Color(0xFF1E293B),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: _isWebViewMode ? const Color(0xFF3B82F6) : const Color(0xFF334155),
+                                  width: _isWebViewMode ? 2 : 1,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.language, color: _isWebViewMode ? const Color(0xFF3B82F6) : Colors.white60, size: 28),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'نسخه زنده وب',
+                                    style: TextStyle(
+                                      color: _isWebViewMode ? Colors.white : Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      fontFamily: 'Vazirmatn',
+                                    ),
+                                  ),
+                                  if (_isWebViewMode) ...[
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF3B82F6),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Text(
+                                        'فعال',
+                                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    // Section 2: Quick Actions
+                    Row(
+                      children: [
+                        // Refresh button
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              if (_isWebViewMode) {
+                                _webViewController?.reload();
+                              } else {
+                                _fetchData();
+                              }
+                            },
+                            icon: const Icon(Icons.refresh, size: 20, color: Color(0xFFF59E0B)),
+                            label: const Text('بروزرسانی داده‌ها', style: TextStyle(color: Colors.white, fontFamily: 'Vazirmatn', fontSize: 13)),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Color(0xFF334155)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Unpair button
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              _showExitDialog();
+                            },
+                            icon: const Icon(Icons.link_off, size: 20, color: Colors.redAccent),
+                            label: const Text('قطع اتصال تابلو', style: TextStyle(color: Colors.redAccent, fontFamily: 'Vazirmatn', fontSize: 13)),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.redAccent.withOpacity(0.4)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+                    // Tip about long press
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E293B).withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.touch_app_outlined, size: 16, color: Color(0xFF94A3B8)),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'راهنما: در هر زمان با لمس طولانی صفحه یا کلید Menu کنترل می‌توانید این منو را باز کنید.',
+                              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontFamily: 'Vazirmatn'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _showExitDialog() {
@@ -293,72 +574,32 @@ class _BoardScreenState extends State<BoardScreen> {
         onKeyEvent: _handleKey,
         child: Scaffold(
           backgroundColor: const Color(0xFF020617),
-          body: Stack(
-            children: [
-              _buildWebViewWidget(),
+          body: GestureDetector(
+            onLongPress: _showSettingsMenu,
+            behavior: HitTestBehavior.translucent,
+            child: Stack(
+              children: [
+                _buildWebViewWidget(),
 
-              // Smooth Loading Indicator
-              if (_isWebLoading)
-                Container(
-                  color: const Color(0xFF020617),
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(color: Color(0xFFF59E0B)),
-                      const SizedBox(height: 20),
-                      Text(
-                        'در حال بارگذاری تابلوی زنده وب طلالایو (${widget.username})...',
-                        style: const TextStyle(color: Colors.white70, fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ),
-
-              // Floating Switch Back Button
-              Positioned(
-                bottom: 24,
-                left: 24,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => _setWebViewMode(false),
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                // Smooth Loading Indicator
+                if (_isWebLoading)
+                  Container(
+                    color: const Color(0xFF020617),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(color: Color(0xFFF59E0B)),
+                        const SizedBox(height: 20),
+                        Text(
+                          'در حال بارگذاری تابلوی زنده وب طلالایو (${widget.username})...',
+                          style: const TextStyle(color: Colors.white70, fontSize: 18),
                         ),
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.6),
-                            blurRadius: 18,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('⚡', style: TextStyle(fontSize: 18)),
-                          SizedBox(width: 8),
-                          Text(
-                            'بازگشت به نسخه نیتیو',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
@@ -376,8 +617,11 @@ class _BoardScreenState extends State<BoardScreen> {
       onKeyEvent: _handleKey,
       child: Scaffold(
         backgroundColor: theme.backgroundColor,
-        body: Center(
-          child: FittedBox(
+        body: GestureDetector(
+          onLongPress: _showSettingsMenu,
+          behavior: HitTestBehavior.translucent,
+          child: Center(
+            child: FittedBox(
             fit: BoxFit.contain,
             child: Container(
               width: 1920,
@@ -506,8 +750,9 @@ class _BoardScreenState extends State<BoardScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildBody(BoardThemeData theme) {
     final hasProducts = _model!.products.isNotEmpty;
