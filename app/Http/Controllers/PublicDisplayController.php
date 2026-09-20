@@ -44,62 +44,13 @@ class PublicDisplayController extends Controller
         $snapshot = $this->buildSnapshot($user);
 
         // استخراج نام، شهر و مشخصات گالری جهت بهینه‌سازی لوکال سئو و اسکیما
-        $shopName = !empty($user->displaySetting?->shop_name) ? $user->displaySetting->shop_name : ($user->name ?? 'طلا و مسکوکات');
-        $galleryDisplayName = str_starts_with($shopName, 'گالری') ? $shopName : 'گالری ' . $shopName;
-
-        $cityName = null;
-        $citySlug = null;
-        $provinceName = null;
-        $cityFullDisplay = null;
-        $galleryAddress = null;
-
-        // اولویت اول: شهر ثبت‌شده در حساب کاربری طلافروشی یا تنظیمات نمایش
-        $resolvedCitySlug = $user->city_slug ?: ($user->displaySetting?->city_slug ?? null);
-        if (!empty($resolvedCitySlug)) {
-            $citySlug = $resolvedCitySlug;
-            $citiesConfig = config('cities', []);
-            if (isset($citiesConfig[$citySlug])) {
-                $cityName = $citiesConfig[$citySlug]['name'];
-                $provinceName = $citiesConfig[$citySlug]['province'] ?? null;
-            } elseif ($citySlug === 'iran') {
-                $cityName = 'ایران';
-                $provinceName = 'ایران';
-            } else {
-                $cityName = $user->city_name ?: 'تهران';
-                $provinceName = $cityName;
-            }
-        }
-
-        // اولویت دوم: تطبیق با گالری‌های کانفیگ شهرها
-        if (!$cityName) {
-            foreach (config('cities', []) as $slug => $c) {
-                if (!empty($c['galleries'])) {
-                    foreach ($c['galleries'] as $g) {
-                        if (isset($g['username']) && $g['username'] === $user->username) {
-                            $cityName = $c['name'];
-                            $citySlug = $slug;
-                            $provinceName = $c['province'] ?? null;
-                            $galleryAddress = $g['address'] ?? null;
-                            break 2;
-                        }
-                    }
-                }
-            }
-        }
-
-        $citiesConfig = \App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig();
-        $isCapital = false;
-        if (isset($citiesConfig[$citySlug])) {
-            $isCapital = !empty($citiesConfig[$citySlug]['is_capital']);
-        }
-
-        // اگر شهر جزو مراکز استان و شهرهای شاخص باشد (مثلاً رشت، تبریز، ارومیه، اهواز، مشهد و...) فقط نام خود شهر نشان داده می‌شود
-        // اگر شهرستان باشد (مثلاً ملایر، نیشابور، کاشان، دزفول، مرودشت و...)، به صورت «همدان (ملایر)»، «اصفهان (کاشان)» و... نشان داده می‌شود.
-        if (!$isCapital && !empty($provinceName) && $provinceName !== $cityName && $citySlug !== 'iran') {
-            $cityFullDisplay = "{$provinceName} ({$cityName})";
-        } else {
-            $cityFullDisplay = $cityName;
-        }
+        $shopName = $snapshot['shopName'];
+        $galleryDisplayName = $snapshot['galleryDisplayName'];
+        $cityName = $snapshot['cityName'];
+        $citySlug = $snapshot['citySlug'];
+        $provinceName = $snapshot['provinceName'];
+        $cityFullDisplay = $snapshot['cityFullDisplay'];
+        $galleryAddress = $snapshot['galleryAddress'];
 
         $pageTitle = "قیمت لحظه‌ای طلا و سکه — {$galleryDisplayName} در {$cityFullDisplay} | طلالایو";
         $metaDescription = "مشاهده قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در {$galleryDisplayName} {$cityFullDisplay}. تابلوی آنلاین ویترین طلافروشی متصل به شبکه هوشمند ابری طلالایو.";
@@ -241,8 +192,18 @@ class PublicDisplayController extends Controller
             }
         }
 
+        // استخراج نام، شهر و مشخصات گالری
+        $resolved = $this->resolveGalleryCityInfo($user, $settings);
+
         return [
             'username'               => $user->username,
+            'shopName'               => $resolved['shopName'],
+            'galleryDisplayName'     => $resolved['galleryDisplayName'],
+            'cityName'               => $resolved['cityName'],
+            'citySlug'               => $resolved['citySlug'],
+            'provinceName'           => $resolved['provinceName'],
+            'cityFullDisplay'        => $resolved['cityFullDisplay'],
+            'galleryAddress'         => $resolved['galleryAddress'],
             'updatedAt'              => $lastFetch ? \Illuminate\Support\Carbon::parse($lastFetch)->toISOString() : now()->toISOString(),
             'dataAgeSeconds'         => $ageSeconds,
             'isStale'                => $ageSeconds === null || $ageSeconds > 180,
@@ -254,6 +215,80 @@ class PublicDisplayController extends Controller
             'products'               => $products,
             'settings'               => $settings,
             'bingWallpaper'          => $bingWallpaper,
+        ];
+    }
+
+    /**
+     * استخراج هوشمند و داینامیک نام گالری، شهر و استان
+     */
+    private function resolveGalleryCityInfo($user, $settings = null): array
+    {
+        $settings = $settings ?? $user->displaySetting;
+        $shopName = !empty($settings?->shop_name) ? $settings->shop_name : ($user->name ?? 'طلا و مسکوکات');
+        $galleryDisplayName = str_starts_with($shopName, 'گالری') ? $shopName : 'گالری ' . $shopName;
+
+        $cityName = null;
+        $citySlug = null;
+        $provinceName = null;
+        $cityFullDisplay = null;
+        $galleryAddress = null;
+
+        // اولویت اول: شهر ثبت‌شده در حساب کاربری طلافروشی یا تنظیمات نمایش
+        $resolvedCitySlug = $user->city_slug ?: ($settings?->city_slug ?? null);
+        if (!empty($resolvedCitySlug)) {
+            $citySlug = $resolvedCitySlug;
+            $citiesConfig = config('cities', []);
+            if (isset($citiesConfig[$citySlug])) {
+                $cityName = $citiesConfig[$citySlug]['name'];
+                $provinceName = $citiesConfig[$citySlug]['province'] ?? null;
+            } elseif ($citySlug === 'iran') {
+                $cityName = 'ایران';
+                $provinceName = 'ایران';
+            } else {
+                $cityName = $user->city_name ?: 'تهران';
+                $provinceName = $cityName;
+            }
+        }
+
+        // اولویت دوم: تطبیق با گالری‌های کانفیگ شهرها
+        if (!$cityName) {
+            foreach (config('cities', []) as $slug => $c) {
+                if (!empty($c['galleries'])) {
+                    foreach ($c['galleries'] as $g) {
+                        if (isset($g['username']) && $g['username'] === $user->username) {
+                            $cityName = $c['name'];
+                            $citySlug = $slug;
+                            $provinceName = $c['province'] ?? null;
+                            $galleryAddress = $g['address'] ?? null;
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        $citiesConfig = \App\Http\Controllers\Admin\DisplaySettingController::getCitiesConfig();
+        $isCapital = false;
+        if (isset($citiesConfig[$citySlug])) {
+            $isCapital = !empty($citiesConfig[$citySlug]['is_capital']);
+        }
+
+        // اگر شهر جزو مراکز استان و شهرهای شاخص باشد (مثلاً رشت، تبریز، ارومیه، اهواز، مشهد و...) فقط نام خود شهر نشان داده می‌شود
+        // اگر شهرستان باشد (مثلاً ملایر، نیشابور، کاشان، دزفول، مرودشت و...)، به صورت «همدان (ملایر)»، «اصفهان (کاشان)» و... نشان داده می‌شود.
+        if (!$isCapital && !empty($provinceName) && $provinceName !== $cityName && $citySlug !== 'iran') {
+            $cityFullDisplay = "{$provinceName} ({$cityName})";
+        } else {
+            $cityFullDisplay = $cityName ?? 'تهران';
+        }
+
+        return [
+            'shopName'           => $shopName,
+            'galleryDisplayName' => $galleryDisplayName,
+            'cityName'           => $cityName,
+            'citySlug'           => $citySlug,
+            'provinceName'       => $provinceName,
+            'cityFullDisplay'    => $cityFullDisplay,
+            'galleryAddress'     => $galleryAddress,
         ];
     }
 

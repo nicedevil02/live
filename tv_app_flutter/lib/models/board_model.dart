@@ -93,6 +93,8 @@ class BoardModel {
   final String? qrLabel;
   final String? qrDesc;
   final String? cityFullDisplay;
+  final String? cityName;
+  final String? galleryDisplayName;
   final String themeMode;
   final int sliderIntervalSec;
   final String customMessage;
@@ -115,6 +117,8 @@ class BoardModel {
     this.qrLabel,
     this.qrDesc,
     this.cityFullDisplay,
+    this.cityName,
+    this.galleryDisplayName,
     required this.themeMode,
     required this.sliderIntervalSec,
     required this.customMessage,
@@ -136,9 +140,13 @@ class BoardModel {
 
     final rawSettings = json['settings'];
     final settings = rawSettings is Map ? Map<String, dynamic>.from(rawSettings) : null;
-    final shopName = settings?['shop_name']?.toString().trim().isNotEmpty == true
-        ? settings!['shop_name'].toString()
-        : 'گالری طلا و جواهر طلالایو';
+    final shopName = json['shopName']?.toString().trim().isNotEmpty == true
+        ? json['shopName'].toString()
+        : (settings?['shop_name']?.toString().trim().isNotEmpty == true
+            ? settings!['shop_name'].toString()
+            : 'گالری طلا و جواهر طلالایو');
+    final galleryDisplayName = json['galleryDisplayName']?.toString() ??
+        (shopName.startsWith('گالری') ? shopName : 'گالری $shopName');
     final subtitle = settings?['subtitle']?.toString() ?? 'تابلوی رسمی نرخ لحظه‌ای طلا، سکه و ارز';
     final phone = settings?['phone']?.toString() ?? '';
     final instagram = settings?['instagram']?.toString();
@@ -146,9 +154,10 @@ class BoardModel {
     final qrLink = settings?['qr_link']?.toString();
     final qrLabel = settings?['qr_label']?.toString();
     final qrDesc = settings?['qr_desc']?.toString();
+    final cityName = json['cityName']?.toString() ?? settings?['city_name']?.toString();
     final cityFullDisplay = json['cityFullDisplay']?.toString() ??
-        settings?['city_name']?.toString() ??
-        'اصفهان (کاشان)';
+        cityName ??
+        'تهران';
     final themeMode = settings?['theme_mode']?.toString() ?? 'luxury-dark';
     final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??
@@ -316,6 +325,8 @@ class BoardModel {
       qrLabel: qrLabel,
       qrDesc: qrDesc,
       cityFullDisplay: cityFullDisplay,
+      cityName: cityName,
+      galleryDisplayName: galleryDisplayName,
       themeMode: themeMode,
       sliderIntervalSec: sliderInterval,
       customMessage: customMessage,

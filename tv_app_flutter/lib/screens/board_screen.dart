@@ -1941,6 +1941,30 @@ class _BoardScreenState extends State<BoardScreen> {
             ),
           ),
 
+          // City Gold Centers Pill (Dynamic from backend)
+          if (_model?.cityFullDisplay != null && _model!.cityFullDisplay!.isNotEmpty) ...[
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.05),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.10),
+                ),
+              ),
+              child: Text(
+                'مراکز طلای ${_model!.cityFullDisplay}',
+                style: TextStyle(
+                  color: theme.textSecondary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Vazirmatn',
+                ),
+              ),
+            ),
+          ],
+
           const Spacer(),
 
           // Center: Platform & Developer Credit

@@ -43,21 +43,28 @@ class BoardHeader extends StatelessWidget {
         textDirection: TextDirection.rtl,
         children: [
           // ===================================================================
-          // 1. Right Section: QR Code Card & Labels
+          // 1. Right Section: Contact Badges & QR Code Card & Labels
           // ===================================================================
           Expanded(
             flex: 4,
             child: Row(
               textDirection: TextDirection.rtl,
               children: [
+                // Contact Badges (Phone, Instagram, Rubika)
+                _buildContactPills(),
+                if (model.phone.isNotEmpty ||
+                    (model.instagram != null && model.instagram!.trim().isNotEmpty) ||
+                    (model.rubika != null && model.rubika!.trim().isNotEmpty))
+                  const SizedBox(width: 14),
+
                 // QR Code Frame
                 Container(
-                  width: 96,
-                  height: 96,
-                  padding: const EdgeInsets.all(5),
+                  width: 88,
+                  height: 88,
+                  padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.white.withOpacity(0.5)),
                     boxShadow: [
                       BoxShadow(
@@ -74,7 +81,7 @@ class BoardHeader extends StatelessWidget {
                           ? model.qrLink!
                           : 'https://talalive.ir/${model.username}',
                       version: QrVersions.auto,
-                      size: 86,
+                      size: 80,
                       eyeStyle: const QrEyeStyle(
                         eyeShape: QrEyeShape.square,
                         color: Color(0xFF0F172A),
@@ -86,7 +93,7 @@ class BoardHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
 
                 // Labels
                 Expanded(
@@ -95,26 +102,28 @@ class BoardHeader extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        (model.qrLabel != null && model.qrLabel!.isNotEmpty)
-                            ? model.qrLabel!
-                            : 'همراه ما باشید',
+                        (model.qrLink != null && model.qrLink!.isNotEmpty)
+                            ? (model.qrLabel?.isNotEmpty == true ? model.qrLabel! : 'اسکن کنید')
+                            : (model.qrLabel?.isNotEmpty == true ? model.qrLabel! : 'همراه ما باشید'),
                         style: TextStyle(
                           color: theme.textPrimary,
-                          fontSize: 17,
+                          fontSize: 15,
                           fontWeight: FontWeight.w900,
                           height: 1.2,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       Text(
-                        (model.qrDesc != null && model.qrDesc!.isNotEmpty)
+                        model.qrDesc?.isNotEmpty == true
                             ? model.qrDesc!
-                            : 'اسکن جهت مشاهده در موبایل',
+                            : ((model.qrLink != null && model.qrLink!.isNotEmpty)
+                                ? 'عضویت در شبکه‌های اجتماعی'
+                                : 'اسکن جهت مشاهده در موبایل'),
                         style: TextStyle(
                           color: theme.textSecondary,
-                          fontSize: 13,
+                          fontSize: 11.5,
                           fontWeight: FontWeight.w700,
                           height: 1.3,
                         ),
@@ -137,10 +146,10 @@ class BoardHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  model.shopName,
+                  model.galleryDisplayName ?? model.shopName,
                   style: TextStyle(
                     color: theme.isDark ? const Color(0xFFFDE68A) : const Color(0xFF0F172A),
-                    fontSize: 36,
+                    fontSize: 34,
                     fontWeight: FontWeight.w900,
                     letterSpacing: -0.5,
                     height: 1.1,
@@ -164,7 +173,7 @@ class BoardHeader extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    '✦  نرخ‌گذاری لحظه‌ای طلا و ارز — ${model.cityFullDisplay ?? 'اصفهان (کاشان)'}  ✦',
+                    '✦  نرخ‌گذاری لحظه‌ای طلا و ارز — ${model.cityFullDisplay ?? model.cityName ?? 'تهران'}  ✦',
                     style: TextStyle(
                       color: theme.isDark ? theme.goldPrimary : const Color(0xFF1D4ED8),
                       fontSize: 12,
@@ -208,7 +217,7 @@ class BoardHeader extends StatelessWidget {
           ),
 
           // ===================================================================
-          // 3. Left Section: Status, Web Switcher, Divider, and Clock (Clock on far left)
+          // 3. Left Section: Status, Divider, and Clock (Fixed-width Tabular Clock)
           // ===================================================================
           Expanded(
             flex: 4,
@@ -216,36 +225,43 @@ class BoardHeader extends StatelessWidget {
               textDirection: TextDirection.ltr,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Clock & Date (At the far left edge!)
+                // Clock & Date (Fixed-width container with Tabular Figures to prevent jitter)
                 ValueListenableBuilder<DateTime>(
                   valueListenable: timeNotifier,
                   builder: (context, dateTime, _) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          PersianUtils.formatClock(dateTime),
-                          style: TextStyle(
-                            color: theme.textPrimary,
-                            fontSize: 56,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'Vazirmatn',
-                            letterSpacing: -1,
-                            height: 1.0,
+                    return SizedBox(
+                      width: 220,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            PersianUtils.formatClock(dateTime),
+                            style: TextStyle(
+                              color: theme.textPrimary,
+                              fontSize: 54,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'Vazirmatn',
+                              fontFeatures: const [FontFeature.tabularFigures()],
+                              letterSpacing: 0,
+                              height: 1.0,
+                            ),
+                            maxLines: 1,
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          PersianUtils.getShamsiDateString(dateTime),
-                          style: TextStyle(
-                            color: theme.textSecondary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Vazirmatn',
+                          const SizedBox(height: 4),
+                          Text(
+                            PersianUtils.getShamsiDateString(dateTime),
+                            style: TextStyle(
+                              color: theme.textSecondary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Vazirmatn',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -269,6 +285,99 @@ class BoardHeader extends StatelessWidget {
     ),
   );
 }
+
+  Widget _buildContactPills() {
+    final items = <Widget>[];
+
+    // Phone
+    if (model.phone.isNotEmpty) {
+      items.add(_buildContactItem(
+        icon: Icons.phone_rounded,
+        iconColor: const Color(0xFF34D399),
+        text: PersianUtils.toPersianDigits(model.phone),
+        isLtr: true,
+      ));
+    }
+
+    // Instagram
+    if (model.instagram != null && model.instagram!.trim().isNotEmpty) {
+      items.add(_buildContactItem(
+        icon: Icons.camera_alt_outlined,
+        iconColor: const Color(0xFFF472B6),
+        text: model.instagram!.startsWith('@') ? model.instagram! : '@${model.instagram!}',
+        isLtr: true,
+      ));
+    }
+
+    // Rubika
+    if (model.rubika != null && model.rubika!.trim().isNotEmpty) {
+      items.add(_buildContactItem(
+        icon: Icons.chat_bubble_outline_rounded,
+        iconColor: const Color(0xFFA78BFA),
+        text: model.rubika!,
+        isLtr: false,
+      ));
+    }
+
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(height: 5),
+          items[i],
+        ],
+      ],
+    );
+  }
+
+  Widget _buildContactItem({
+    required IconData icon,
+    required Color iconColor,
+    required String text,
+    required bool isLtr,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4.5),
+      decoration: BoxDecoration(
+        color: theme.isDark
+            ? Colors.white.withOpacity(0.06)
+            : Colors.black.withOpacity(0.04),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.isDark
+              ? Colors.white.withOpacity(0.12)
+              : Colors.black.withOpacity(0.08),
+        ),
+      ),
+      child: Directionality(
+        textDirection: isLtr ? TextDirection.ltr : TextDirection.rtl,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: iconColor),
+            const SizedBox(width: 6),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 140),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: theme.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Vazirmatn',
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildStatusBadge() {
     Color bgColor;
