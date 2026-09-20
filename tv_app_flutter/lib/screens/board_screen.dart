@@ -186,9 +186,26 @@ class _BoardScreenState extends State<BoardScreen> {
                     )
                   : _model == null
                       ? Center(
-                          child: Text(
-                            'خطا در دریافت اطلاعات. اتصال اینترنت را بررسی فرمایید.',
-                            style: TextStyle(color: theme.redDown, fontSize: 22),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'خطا در دریافت اطلاعات (${widget.username}). اتصال اینترنت را بررسی فرمایید.',
+                                style: TextStyle(color: theme.redDown, fontSize: 22),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() => _isLoading = true);
+                                  _fetchData();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: theme.goldPrimary,
+                                  foregroundColor: Colors.black,
+                                ),
+                                child: const Text('تلاش مجدد'),
+                              ),
+                            ],
                           ),
                         )
                       : Column(

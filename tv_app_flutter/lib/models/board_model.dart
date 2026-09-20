@@ -38,6 +38,27 @@ class ProductItem {
   });
 }
 
+int _parseInt(dynamic val, int def) {
+  if (val == null) return def;
+  if (val is num) return val.toInt();
+  if (val is String) {
+    return int.tryParse(val) ?? (double.tryParse(val)?.toInt() ?? def);
+  }
+  return def;
+}
+
+bool _parseBool(dynamic val, bool def) {
+  if (val == null) return def;
+  if (val is bool) return val;
+  if (val is num) return val != 0;
+  if (val is String) {
+    final s = val.toLowerCase().trim();
+    if (s == 'true' || s == '1') return true;
+    if (s == 'false' || s == '0') return false;
+  }
+  return def;
+}
+
 class BoardModel {
   final String username;
   final String shopName;
@@ -74,18 +95,19 @@ class BoardModel {
   factory BoardModel.fromJson(Map<String, dynamic> json, String rawString) {
     final username = json['username']?.toString() ?? '';
     final updatedAt = json['updatedAt']?.toString() ?? '';
-    final dataAgeSec = (json['dataAgeSeconds'] as num?)?.toInt() ?? 0;
-    final isStale = json['isStale'] == true;
-    final refreshSec = ((json['refreshIntervalSeconds'] as num?)?.toInt() ?? 60).clamp(5, 300);
+    final dataAgeSec = _parseInt(json['dataAgeSeconds'], 0);
+    final isStale = _parseBool(json['isStale'], false);
+    final refreshSec = _parseInt(json['refreshIntervalSeconds'], 60).clamp(5, 300);
 
-    final settings = json['settings'] as Map<String, dynamic>?;
+    final rawSettings = json['settings'];
+    final settings = rawSettings is Map ? Map<String, dynamic>.from(rawSettings) : null;
     final shopName = settings?['shop_name']?.toString().trim().isNotEmpty == true
         ? settings!['shop_name'].toString()
         : 'گالری طلا و جواهر طلالایو';
     final subtitle = settings?['subtitle']?.toString() ?? 'تابلوی رسمی نرخ لحظه‌ای طلا، سکه و ارز';
     final phone = settings?['phone']?.toString() ?? '';
     final themeMode = settings?['theme_mode']?.toString() ?? 'luxury-dark';
-    final sliderInterval = ((settings?['slider_interval_sec'] as num?)?.toInt() ?? 8).clamp(3, 60);
+    final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??
         'به سامانه تابلوی هوشمند نرخ لحظه‌ای طلالایو خوش آمدید • نمایش دقیق و لحظه‌ای مظنه طلا، سکه و مسکوکات';
 
@@ -93,10 +115,11 @@ class BoardModel {
     final priceFeedMap = <String, Map<String, dynamic>>{};
     final feedList = json['priceFeed'] as List<dynamic>? ?? [];
     for (final item in feedList) {
-      if (item is Map<String, dynamic>) {
-        final symbol = item['symbol']?.toString().trim() ?? '';
+      if (item is Map) {
+        final map = Map<String, dynamic>.from(item);
+        final symbol = map['symbol']?.toString().trim() ?? '';
         if (symbol.isNotEmpty) {
-          priceFeedMap[symbol] = item;
+          priceFeedMap[symbol] = map;
         }
       }
     }
@@ -109,10 +132,11 @@ class BoardModel {
       final entries = <Map<String, dynamic>>[];
       for (var i = 0; i < displayItems.length; i++) {
         final d = displayItems[i];
-        if (d is Map<String, dynamic>) {
-          final enabled = d['enabled'] != false;
+        if (d is Map) {
+          final dMap = Map<String, dynamic>.from(d);
+          final enabled = dMap['enabled'] != false;
           if (enabled) {
-            entries.add(d);
+            entries.add(dMap);
           }
         }
       }
@@ -130,7 +154,7 @@ class BoardModel {
           final dirStr = feed['direction']?.toString().toLowerCase() ?? 'flat';
           final dirInt = dirStr == 'up' ? 1 : (dirStr == 'down' ? -1 : 0);
           final chgPct = feed['change_percent']?.toString().trim();
-          final itemStale = feed['is_stale'] == true;
+          final itemStale = _parseBool(feed['is_stale'], false);
 
           rows.add(PriceRow(
             symbol: key,
@@ -155,7 +179,7 @@ class BoardModel {
         final dirStr = feed['direction']?.toString().toLowerCase() ?? 'flat';
         final dirInt = dirStr == 'up' ? 1 : (dirStr == 'down' ? -1 : 0);
         final chgPct = feed['change_percent']?.toString().trim();
-        final itemStale = feed['is_stale'] == true;
+        final itemStale = _parseBool(feed['is_stale'], false);
 
         rows.add(PriceRow(
           symbol: entry.key,
@@ -175,19 +199,19 @@ class BoardModel {
     final prodList = json['products'] as List<dynamic>?;
     if (prodList != null) {
       for (final p in prodList) {
-        if (p is Map<String, dynamic>) {
-          final isVisible = p['is_visible'];
-          final visible = isVisible == true || isVisible == '1' || isVisible == 1;
+        if (p is Map) {
+          final pMap = Map<String, dynamic>.from(p);
+          final visible = _parseBool(pMap['is_visible'], true);
           if (!visible) continue;
 
-          final id = p['id']?.toString() ?? '';
-          final title = p['title']?.toString() ?? '';
-          final weight = p['weight_gram']?.toString();
-          final price = p['final_price']?.toString();
-          final labor = p['labor_fee']?.toString();
+          final id = pMap['id']?.toString() ?? '';
+          final title = pMap['title']?.toString() ?? '';
+          final weight = pMap['weight_gram']?.toString();
+          final price = pMap['final_price']?.toString();
+          final labor = pMap['labor_fee']?.toString();
 
           final imgList = <String>[];
-          final rawImgs = p['image_urls'] as List<dynamic>?;
+          final rawImgs = pMap['image_urls'] as List<dynamic>?;
           if (rawImgs != null) {
             for (final u in rawImgs) {
               if (u != null && u.toString().trim().isNotEmpty) {
@@ -196,7 +220,7 @@ class BoardModel {
             }
           }
           if (imgList.isEmpty) {
-            final single = p['image_url']?.toString().trim();
+            final single = pMap['image_url']?.toString().trim();
             if (single != null && single.isNotEmpty) {
               imgList.add(single);
             }

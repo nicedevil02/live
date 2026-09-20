@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/board_model.dart';
@@ -101,6 +102,7 @@ class ApiService {
     for (final base in baseUrls) {
       try {
         final url = Uri.parse('$base/api/display/snapshot/$username?t=${DateTime.now().millisecondsSinceEpoch}');
+        debugPrint('[TalaLiveTV] Fetching snapshot from: $url');
         final response = await http.get(
           url,
           headers: {
@@ -108,19 +110,31 @@ class ApiService {
             'User-Agent': 'TalaLiveTV-Flutter/2.0',
             'Cache-Control': 'no-cache',
           },
-        ).timeout(const Duration(seconds: 7));
+        ).timeout(const Duration(seconds: 8));
+
+        debugPrint('[TalaLiveTV] Snapshot response HTTP ${response.statusCode} from $base');
 
         if (response.statusCode == 200) {
           final rawBody = response.body;
-          final jsonMap = json.decode(rawBody) as Map<String, dynamic>;
-          final model = BoardModel.fromJson(jsonMap, rawBody);
+          debugPrint('[TalaLiveTV] Snapshot body length: ${rawBody.length}');
+          try {
+            final jsonMap = json.decode(rawBody) as Map<String, dynamic>;
+            final model = BoardModel.fromJson(jsonMap, rawBody);
 
-          // Save last good snapshot to offline cache
-          await prefs.setString(_prefKeyLastSnapshot, rawBody);
-          return model;
+            // Save last good snapshot to offline cache
+            await prefs.setString(_prefKeyLastSnapshot, rawBody);
+            debugPrint('[TalaLiveTV] Successfully parsed BoardModel: ${model.rows.length} rows, ${model.products.length} products');
+            return model;
+          } catch (parseErr, stack) {
+            debugPrint('[TalaLiveTV] ERROR parsing snapshot JSON: $parseErr');
+            debugPrint('$stack');
+          }
+        } else {
+          debugPrint('[TalaLiveTV] Snapshot HTTP ${response.statusCode}: ${response.body.substring(0, response.body.length.clamp(0, 300))}');
         }
-      } catch (e) {
-        // Try fallback
+      } catch (e, stack) {
+        debugPrint('[TalaLiveTV] Snapshot fetch error on $base: $e');
+        debugPrint('$stack');
       }
     }
 
@@ -128,11 +142,12 @@ class ApiService {
     final cached = prefs.getString(_prefKeyLastSnapshot);
     if (cached != null && cached.isNotEmpty) {
       try {
+        debugPrint('[TalaLiveTV] Attempting offline fallback from cache');
         final jsonMap = json.decode(cached) as Map<String, dynamic>;
-        // Mark as stale in offline mode
         jsonMap['isStale'] = true;
         return BoardModel.fromJson(jsonMap, cached);
       } catch (e) {
+        debugPrint('[TalaLiveTV] Offline fallback error: $e');
         return null;
       }
     }
