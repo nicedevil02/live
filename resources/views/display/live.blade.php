@@ -142,14 +142,13 @@
             justify-content: center;
         }
         #tv-stage-canvas {
-            position: absolute;
-            left: 50%;
-            top: 50%;
+            position: relative;
             width: 1920px;
             height: 1080px;
+            flex-shrink: 0;
+            margin: auto;
             transform-origin: center center;
-            will-change: transform;
-            transform: translate(-50%, -50%) scale(1);
+            transform: scale(1);
         }
     </style>
     <style>
@@ -1518,9 +1517,6 @@
             backdrop-filter: blur(14px) saturate(140%);
             -webkit-backdrop-filter: blur(14px) saturate(140%);
             background: rgba(0, 0, 0, 0.05);
-            contain: strict;
-            transform: translateZ(0);
-            backface-visibility: hidden;
         }
 
         .theme-imperial-pearl .price-grid-backdrop,
@@ -1651,8 +1647,8 @@
         </div>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
-        <div id="tv-stage-viewport" class="absolute inset-0 z-10 w-full h-full flex items-center justify-center overflow-hidden pointer-events-none">
-            <div id="tv-stage-canvas" class="pointer-events-auto absolute left-1/2 top-1/2 w-[1920px] h-[1080px] p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none will-change-transform">
+        <div id="tv-stage-viewport" class="fixed inset-0 z-10 w-screen h-screen flex items-center justify-center overflow-hidden pointer-events-none">
+            <div id="tv-stage-canvas" class="pointer-events-auto relative w-[1920px] h-[1080px] shrink-0 p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none">
 
             {{-- Header --}}
             <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
@@ -2604,7 +2600,8 @@
                     const validZoom = (!isNaN(rawZoom) && rawZoom > 0.1) ? rawZoom : 1.0;
                     const finalScale = (!isNaN(baseScale) && baseScale > 0.05) ? Math.max(0.2, baseScale * validZoom) : 1.0;
                     
-                    canvas.style.transform = `translate(-50%, -50%) scale(${finalScale})`;
+                    canvas.style.transform = `scale(${finalScale})`;
+                    canvas.style.webkitTransform = `scale(${finalScale})`;
                 },
 
                 showHudFeedback(msg) {

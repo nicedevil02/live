@@ -520,7 +520,7 @@ class BoardActivity : Activity() {
                     Log.w(this@BoardActivity.tag, "Falling back to software layer due to repeated render crashes ($crashCount)")
                     View.LAYER_TYPE_SOFTWARE
                 } else {
-                    View.LAYER_TYPE_HARDWARE
+                    View.LAYER_TYPE_NONE
                 }
                 setLayerType(layer, null)
 
