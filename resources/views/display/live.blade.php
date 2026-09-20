@@ -1849,9 +1849,10 @@
                                             <template x-if="activeProductFinalPrice > 0">
                                                 <div class="flex items-baseline gap-1.5 justify-between">
                                                     <span :class="isLightTheme ? 'text-amber-950 drop-shadow-sm' : 'text-white drop-shadow-[0_2px_12px_rgba(251,191,36,0.6)]'" 
-                                                          class="text-2xl xl:text-3xl font-black tabular-nums tracking-tight font-mono" 
+                                                          class="text-2xl xl:text-3xl font-black tabular-nums tracking-tight font-['Vazirmatn']" 
+                                                          style="font-family: 'Vazirmatn', sans-serif !important;"
                                                           x-text="formatNumber(activeProductFinalPrice)"></span>
-                                                    <span :class="isLightTheme ? 'text-amber-900 font-bold' : 'text-amber-300 font-bold'" class="text-xs font-black whitespace-nowrap">تومان</span>
+                                                    <span :class="isLightTheme ? 'text-amber-900 font-bold' : 'text-amber-300 font-bold'" class="text-xs font-black whitespace-nowrap font-['Vazirmatn']" style="font-family: 'Vazirmatn', sans-serif !important;">تومان</span>
                                                 </div>
                                             </template>
                                             <template x-if="activeProductFinalPrice <= 0">
