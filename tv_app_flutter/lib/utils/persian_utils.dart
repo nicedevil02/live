@@ -31,12 +31,30 @@ class PersianUtils {
       final parts = clean.split('.');
       final intPart = parts[0].replaceAll(RegExp(r'[^\d]'), '');
       final formattedInt = _groupDigits(intPart.isEmpty ? '0' : intPart);
-      return toPersianDigits('$formattedInt.${parts[1]}');
+      final decimal = parts[1].replaceAll(RegExp(r'0+$'), '');
+      if (decimal.isEmpty) {
+        return toPersianDigits(formattedInt);
+      }
+      return toPersianDigits('$formattedInt.$decimal');
     }
 
     final digitsOnly = clean.replaceAll(RegExp(r'[^\d]'), '');
     if (digitsOnly.isEmpty) return toPersianDigits(clean);
     return toPersianDigits(_groupDigits(digitsOnly));
+  }
+
+  static String formatSignedNumber(dynamic val, [int decimals = 0]) {
+    if (val == null) return '۰';
+    num n = 0;
+    if (val is num) {
+      n = val;
+    } else if (val is String) {
+      n = double.tryParse(val) ?? 0;
+    }
+    final sign = n > 0 ? '+' : (n < 0 ? '-' : '');
+    final absVal = n.abs();
+    final formatted = decimals > 0 ? absVal.toStringAsFixed(decimals) : formatPriceString(absVal.toString());
+    return toPersianDigits('$sign$formatted');
   }
 
   static String _groupDigits(String digits) {

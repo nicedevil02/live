@@ -6,117 +6,126 @@ import '../utils/persian_utils.dart';
 class PriceCard extends StatelessWidget {
   final PriceRow row;
   final BoardThemeData theme;
+  final bool isHero;
+  final bool isTopRow;
 
   const PriceCard({
     super.key,
     required this.row,
     required this.theme,
+    this.isHero = false,
+    this.isTopRow = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final hasBuy = row.buyPrice != null && row.buyPrice!.trim().isNotEmpty;
+    final isGold18 = isHero || row.symbol == 'gold18';
+
+    final cardBg = isGold18 ? theme.heroCardGradient : theme.cardGradient;
+    final cardBorder = isGold18 ? theme.heroStrokeColor : theme.cardStrokeColor;
+    final titleColor = isGold18 ? theme.heroTextColor : theme.textPrimary;
+    final priceColor = isGold18 ? theme.heroTextColor : (theme.isDark ? theme.goldPrimary : const Color(0xFFB45309));
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: isTopRow ? 20 : 16,
+        vertical: isTopRow ? 16 : 12,
+      ),
       decoration: BoxDecoration(
-        gradient: theme.cardGradient,
-        borderRadius: BorderRadius.circular(18),
+        gradient: cardBg,
+        borderRadius: BorderRadius.circular(26),
         border: Border.all(
-          color: theme.cardStrokeColor,
-          width: 1.3,
+          color: cardBorder,
+          width: isGold18 ? 1.8 : 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(theme.isDark ? 0.3 : 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: isGold18
+                ? theme.goldPrimary.withOpacity(0.3)
+                : Colors.black.withOpacity(theme.isDark ? 0.35 : 0.06),
+            blurRadius: isGold18 ? 20 : 14,
+            offset: const Offset(0, 6),
           ),
-          if (theme.isDark)
-            BoxShadow(
-              color: theme.goldPrimary.withOpacity(0.04),
-              blurRadius: 20,
-              spreadRadius: 1,
-            ),
         ],
       ),
-      child: Row(
-        textDirection: TextDirection.rtl,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // 1. Commodity Title (Right side in RTL)
-          Expanded(
-            flex: 11,
-            child: Row(
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: theme.goldPrimary,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.goldPrimary.withOpacity(0.6),
-                        blurRadius: 4,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    row.title,
-                    style: TextStyle(
-                      color: theme.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // 2. Main Price (Center)
-          Expanded(
-            flex: 14,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Sell Price
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
+          // ===================================================================
+          // 1. Card Header: Title + Status + Trend Icon
+          // ===================================================================
+          Row(
+            textDirection: TextDirection.rtl,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Title & Sparkle
+              Expanded(
+                child: Row(
+                  textDirection: TextDirection.rtl,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      PersianUtils.formatPriceString(row.sellPrice),
-                      style: TextStyle(
-                        color: theme.goldPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.5,
+                    if (isGold18) ...[
+                      const Text(
+                        '✦',
+                        style: TextStyle(
+                          color: Color(0xFFF59E0B),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                    ],
+                    Flexible(
+                      child: Text(
+                        row.title,
+                        style: TextStyle(
+                          color: titleColor,
+                          fontSize: isTopRow ? 21 : 17,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.3,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      row.unit,
-                      style: TextStyle(
-                        color: theme.textMuted,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    const SizedBox(width: 8),
+
+                    // Status Pill (لحظه‌ای / قدیمی)
+                    _buildStatusPill(),
                   ],
                 ),
+              ),
 
-                // Buy Price (if enabled)
+              // Trend Icon Pill
+              _buildTrendIcon(),
+            ],
+          ),
+
+          // ===================================================================
+          // 2. Card Body: Price Number
+          // ===================================================================
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: isTopRow ? 10 : 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  PersianUtils.formatPriceString(row.sellPrice),
+                  style: TextStyle(
+                    color: priceColor,
+                    fontSize: isTopRow ? 34 : 28,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: 'monospace',
+                    letterSpacing: -1,
+                    height: 1.0,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 if (hasBuy) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -124,16 +133,17 @@ class PriceCard extends StatelessWidget {
                         'خرید: ',
                         style: TextStyle(
                           color: theme.textMuted,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
                         PersianUtils.formatPriceString(row.buyPrice!),
                         style: TextStyle(
                           color: theme.textSecondary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'monospace',
                         ),
                       ),
                     ],
@@ -143,12 +153,44 @@ class PriceCard extends StatelessWidget {
             ),
           ),
 
-          // 3. Direction & Change (Left side in RTL)
-          Expanded(
-            flex: 8,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: _buildChangeBadge(),
+          // ===================================================================
+          // 3. Card Footer: Change Pill & Currency Unit Badge
+          // ===================================================================
+          Container(
+            padding: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.08),
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Row(
+              textDirection: TextDirection.rtl,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Currency Unit Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: theme.unitBadgeBg,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.unitBadgeBorder),
+                  ),
+                  child: Text(
+                    row.unit,
+                    style: TextStyle(
+                      color: theme.unitBadgeText,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+
+                // Change Pill (Apple Stocks Style)
+                _buildChangePill(),
+              ],
             ),
           ),
         ],
@@ -156,62 +198,123 @@ class PriceCard extends StatelessWidget {
     );
   }
 
-  Widget _buildChangeBadge() {
-    Color badgeColor;
-    Color textColor;
-    String arrow;
-
-    if (row.changeDirection > 0) {
-      badgeColor = theme.greenUp.withOpacity(0.18);
-      textColor = theme.greenUp;
-      arrow = '▲';
-    } else if (row.changeDirection < 0) {
-      badgeColor = theme.redDown.withOpacity(0.18);
-      textColor = theme.redDown;
-      arrow = '▼';
-    } else {
-      badgeColor = theme.textMuted.withOpacity(0.15);
-      textColor = theme.textMuted;
-      arrow = '●';
-    }
-
-    final changeStr = row.changePercent != null && row.changePercent!.isNotEmpty
-        ? PersianUtils.toPersianDigits('${row.changePercent!}%')
-        : '';
+  Widget _buildStatusPill() {
+    final isStale = row.isStale;
+    final bgColor = isStale ? theme.statusStaleBg : theme.statusLiveBg;
+    final borderColor = isStale ? theme.statusStaleBorder : theme.statusLiveBorder;
+    final textColor = isStale ? theme.statusStaleText : theme.statusLiveText;
+    final label = isStale ? 'قدیمی' : 'لحظه‌ای';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
-        color: badgeColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: textColor.withOpacity(0.35),
-          width: 1,
-        ),
+        color: bgColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: borderColor, width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            arrow,
-            style: TextStyle(
+          Container(
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(
               color: textColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
+              shape: BoxShape.circle,
             ),
           ),
-          if (changeStr.isNotEmpty) ...[
-            const SizedBox(width: 5),
-            Text(
-              changeStr,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-              ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 9,
+              fontWeight: FontWeight.w800,
             ),
-          ],
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTrendIcon() {
+    Color bg;
+    Color border;
+    IconData icon;
+    Color iconColor;
+
+    if (row.changeDirection > 0) {
+      bg = theme.pillUpBg;
+      border = theme.pillUpBorder;
+      icon = Icons.arrow_upward;
+      iconColor = theme.greenUp;
+    } else if (row.changeDirection < 0) {
+      bg = theme.pillDownBg;
+      border = theme.pillDownBorder;
+      icon = Icons.arrow_downward;
+      iconColor = theme.redDown;
+    } else {
+      bg = theme.pillFlatBg;
+      border = theme.pillFlatBorder;
+      icon = Icons.remove;
+      iconColor = theme.pillFlatText;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: border, width: 1),
+      ),
+      child: Icon(
+        icon,
+        size: 14,
+        color: iconColor,
+      ),
+    );
+  }
+
+  Widget _buildChangePill() {
+    Color bg;
+    Color border;
+    Color text;
+
+    if (row.changeDirection > 0) {
+      bg = theme.pillUpBg;
+      border = theme.pillUpBorder;
+      text = theme.pillUpText;
+    } else if (row.changeDirection < 0) {
+      bg = theme.pillDownBg;
+      border = theme.pillDownBorder;
+      text = theme.pillDownText;
+    } else {
+      bg = theme.pillFlatBg;
+      border = theme.pillFlatBorder;
+      text = theme.pillFlatText;
+    }
+
+    final pctStr = row.changePercent != null && row.changePercent!.isNotEmpty
+        ? row.changePercent!
+        : '۰';
+    final sign = row.changeDirection > 0 ? '+' : (row.changeDirection < 0 ? '-' : '');
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border),
+      ),
+      child: Text(
+        PersianUtils.toPersianDigits('$sign$pctStr%'),
+        style: TextStyle(
+          color: text,
+          fontSize: 11,
+          fontWeight: FontWeight.w900,
+          fontFamily: 'monospace',
+        ),
+        textDirection: TextDirection.ltr,
       ),
     );
   }
