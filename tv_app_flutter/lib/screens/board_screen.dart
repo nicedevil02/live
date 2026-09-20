@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 import '../models/board_model.dart';
 import '../services/api_service.dart';
 import '../theme/board_theme.dart';
@@ -10,7 +11,6 @@ import '../utils/persian_utils.dart';
 import '../widgets/board_header.dart';
 import '../widgets/price_card.dart';
 import '../widgets/product_slider.dart';
-import '../widgets/marquee_ticker.dart';
 import 'pairing_screen.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -30,15 +30,13 @@ class _BoardScreenState extends State<BoardScreen> {
   bool _isLoading = true;
   bool _isOffline = false;
   bool _isWebViewMode = false;
+  bool _isWebLoading = true;
   late final WebViewController _webViewController;
   DateTime _currentDateTime = DateTime.now();
 
   Timer? _clockTimer;
   Timer? _refreshTimer;
-  Timer? _pageSwapTimer;
 
-  int _currentPage = 0;
-  static const int _itemsPerPage = 8;
   static const String _prefKeyWebMode = 'tv_webview_mode';
 
   @override
@@ -48,7 +46,7 @@ class _BoardScreenState extends State<BoardScreen> {
     _loadSavedMode();
     _fetchData();
 
-    // 1. Clock timer (every 1 second)
+    // Clock timer (every 1 second)
     _clockTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) {
         setState(() {
@@ -56,24 +54,59 @@ class _BoardScreenState extends State<BoardScreen> {
         });
       }
     });
-
-    // 2. Page swap timer (every 10 seconds if multiple pages)
-    _pageSwapTimer = Timer.periodic(const Duration(seconds: 10), (_) {
-      if (mounted && _model != null && _model!.rows.length > _itemsPerPage) {
-        final totalPages = (_model!.rows.length + _itemsPerPage - 1) ~/ _itemsPerPage;
-        setState(() {
-          _currentPage = (_currentPage + 1) % totalPages;
-        });
-      }
-    });
   }
 
   void _initWebViewController() {
     final webUrl = 'https://talalive.ir/${widget.username}?tv=1';
-    _webViewController = WebViewController()
+
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is AndroidWebViewPlatform) {
+      params = AndroidWebViewControllerCreationParams();
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    final controller = WebViewController.fromPlatformCreationParams(params);
+
+    controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFF020617))
-      ..loadRequest(Uri.parse(webUrl));
+      ..setUserAgent(
+        'Mozilla/5.0 (Linux; Android 10; SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TalaLiveTV/2.0',
+      )
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (url) {
+            if (mounted) setState(() => _isWebLoading = true);
+          },
+          onPageFinished: (url) {
+            if (mounted) setState(() => _isWebLoading = false);
+          },
+          onWebResourceError: (error) {
+            debugPrint('[TalaLiveTV] Web resource error: ${error.description}');
+          },
+        ),
+      );
+
+    if (controller.platform is AndroidWebViewController) {
+      final androidController = controller.platform as AndroidWebViewController;
+      androidController.setMediaPlaybackRequiresUserGesture(false);
+    }
+
+    controller.loadRequest(Uri.parse(webUrl));
+    _webViewController = controller;
+  }
+
+  Widget _buildWebViewWidget() {
+    if (WebViewPlatform.instance is AndroidWebViewPlatform) {
+      return WebViewWidget.fromPlatformCreationParams(
+        params: AndroidWebViewWidgetCreationParams(
+          controller: _webViewController.platform,
+          displayWithHybridComposition: true, // Eliminates flickering and tearing on Android TV!
+        ),
+      );
+    }
+    return WebViewWidget(controller: _webViewController);
   }
 
   void _loadSavedMode() async {
@@ -129,7 +162,6 @@ class _BoardScreenState extends State<BoardScreen> {
   void dispose() {
     _clockTimer?.cancel();
     _refreshTimer?.cancel();
-    _pageSwapTimer?.cancel();
     super.dispose();
   }
 
@@ -197,7 +229,7 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   Widget build(BuildContext context) {
     // =========================================================================
-    // 1. Web View Mode
+    // 1. Web View Mode (Smooth & Hybrid Composition without flickering)
     // =========================================================================
     if (_isWebViewMode) {
       return KeyboardListener(
@@ -207,18 +239,37 @@ class _BoardScreenState extends State<BoardScreen> {
           backgroundColor: const Color(0xFF020617),
           body: Stack(
             children: [
-              WebViewWidget(controller: _webViewController),
+              _buildWebViewWidget(),
+
+              // Smooth Loading Indicator
+              if (_isWebLoading)
+                Container(
+                  color: const Color(0xFF020617),
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(color: Color(0xFFF59E0B)),
+                      const SizedBox(height: 20),
+                      Text(
+                        'در حال بارگذاری تابلوی زنده وب طلالایو (${widget.username})...',
+                        style: const TextStyle(color: Colors.white70, fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+
               // Floating Switch Back Button
               Positioned(
-                bottom: 20,
-                left: 20,
+                bottom: 24,
+                left: 24,
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () => _setWebViewMode(false),
                     borderRadius: BorderRadius.circular(30),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
@@ -226,22 +277,22 @@ class _BoardScreenState extends State<BoardScreen> {
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 18,
+                            offset: const Offset(0, 6),
                           ),
                         ],
                       ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('⚡', style: TextStyle(fontSize: 16)),
+                          Text('⚡', style: TextStyle(fontSize: 18)),
                           SizedBox(width: 8),
                           Text(
                             'بازگشت به نسخه نیتیو',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14,
+                              fontSize: 15,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -326,20 +377,13 @@ class _BoardScreenState extends State<BoardScreen> {
                             ),
                             const SizedBox(height: 14),
 
-                            // 2. Main Body (Cards Grid + Optional Product Slider)
+                            // 2. Main Body (Right: Slider 35%, Left: All Cards Grid 65%)
                             Expanded(
                               child: _buildBody(theme),
                             ),
                             const SizedBox(height: 12),
 
-                            // 3. Marquee Ticker
-                            MarqueeTicker(
-                              text: _model!.customMessage,
-                              theme: theme,
-                            ),
-                            const SizedBox(height: 10),
-
-                            // 4. Footer (matching live.blade.php)
+                            // 3. Footer (Notice: Marquee Ticker removed completely!)
                             _buildFooter(theme),
                           ],
                         ),
@@ -354,80 +398,121 @@ class _BoardScreenState extends State<BoardScreen> {
     final hasProducts = _model!.products.isNotEmpty;
     final allRows = _model!.rows;
 
-    final startIndex = _currentPage * _itemsPerPage;
-    final endIndex = (startIndex + _itemsPerPage).clamp(0, allRows.length);
-    final pageRows = allRows.sublist(startIndex, endIndex);
-
-    final half = (pageRows.length + 1) ~/ 2;
-    final col1 = pageRows.sublist(0, half.clamp(0, pageRows.length));
-    final col2 = half < pageRows.length ? pageRows.sublist(half) : <PriceRow>[];
-
     return Row(
       textDirection: TextDirection.rtl,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Price Cards Grid (Right Side in RTL - 65% width)
-        Expanded(
-          flex: hasProducts ? 13 : 20,
-          child: Row(
-            textDirection: TextDirection.rtl,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: Column(
-                  children: col1.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final row = entry.value;
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: PriceCard(
-                          row: row,
-                          theme: theme,
-                          isHero: index == 0 && row.symbol == 'gold18',
-                          isTopRow: index == 0,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  children: col2.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final row = entry.value;
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: PriceCard(
-                          row: row,
-                          theme: theme,
-                          isHero: false,
-                          isTopRow: index == 0,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Product Showcase Sidebar (Left Side in RTL - 35% width)
+        // =====================================================================
+        // 1. RIGHT SIDE: Product Slider (35% width in RTL)
+        // =====================================================================
         if (hasProducts) ...[
-          const SizedBox(width: 16),
           Expanded(
-            flex: 7,
+            flex: 7, // 35% of total width
             child: ProductSlider(
               products: _model!.products,
               intervalSec: _model!.sliderIntervalSec,
               theme: theme,
             ),
           ),
+          const SizedBox(width: 16),
         ],
+
+        // =====================================================================
+        // 2. LEFT SIDE: ALL Cards Grid (65% width, or 100% if no products)
+        // =====================================================================
+        Expanded(
+          flex: hasProducts ? 13 : 20, // 65% or 100%
+          child: _buildPriceGrid(allRows, theme),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceGrid(List<PriceRow> rows, BoardThemeData theme) {
+    if (rows.isEmpty) {
+      return Center(
+        child: Text(
+          'در حال حاضر نرخی برای نمایش تنظیم نشده است.',
+          style: TextStyle(color: theme.textSecondary, fontSize: 22),
+        ),
+      );
+    }
+
+    // Row 1 (Top Row): First 3 cards (Large)
+    final topCards = rows.take(3).toList();
+    final remainingCards = rows.skip(3).toList();
+
+    // Chunk remaining cards into rows of 4 (Smaller)
+    final remainingRows = <List<PriceRow>>[];
+    for (var i = 0; i < remainingCards.length; i += 4) {
+      final end = (i + 4).clamp(0, remainingCards.length);
+      remainingRows.add(remainingCards.sublist(i, end));
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Top Row: 3 Large Cards
+        Expanded(
+          flex: 14, // 1.4x height for prominent top 3 items
+          child: Row(
+            textDirection: TextDirection.rtl,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: topCards.asMap().entries.map((entry) {
+              final index = entry.key;
+              final row = entry.value;
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: index == topCards.length - 1 ? 0 : 5,
+                    right: index == 0 ? 0 : 5,
+                    bottom: 5,
+                  ),
+                  child: PriceCard(
+                    row: row,
+                    theme: theme,
+                    isHero: index == 0 && row.symbol == 'gold18',
+                    isTopRow: true,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+
+        // Remaining Rows: 4 Smaller Cards per row
+        ...remainingRows.map((chunk) {
+          return Expanded(
+            flex: 10, // 1.0x height
+            child: Row(
+              textDirection: TextDirection.rtl,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: List.generate(4, (colIdx) {
+                if (colIdx < chunk.length) {
+                  final row = chunk[colIdx];
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: colIdx == 3 ? 0 : 5,
+                        right: colIdx == 0 ? 0 : 5,
+                        top: 5,
+                        bottom: 5,
+                      ),
+                      child: PriceCard(
+                        row: row,
+                        theme: theme,
+                        isHero: false,
+                        isTopRow: false,
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Expanded(child: SizedBox.shrink());
+                }
+              }),
+            ),
+          );
+        }),
       ],
     );
   }
