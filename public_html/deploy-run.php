@@ -78,7 +78,7 @@ if (function_exists('shell_exec')) {
         $shellAllowed = true;
         $targetBranch = preg_replace('/[^a-zA-Z0-9_\-\/]/', '', $_GET['branch'] ?? 'master');
         if (empty($targetBranch)) $targetBranch = 'master';
-        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout ' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1';
+        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout ' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard FETCH_HEAD 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
             $log[] = 'Git sync output: ' . trim($gitOutput);
