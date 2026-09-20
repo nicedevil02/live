@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#020617">
+    @stack('head')
 
     <!-- PWA Settings & Apple Mobile Web App -->
     <link rel="manifest" href="{{ asset('manifest.json') }}">
@@ -146,6 +147,7 @@
 
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     @vite('resources/css/app.css')
+    @stack('styles')
 
     <!-- Alpine.js (Local) -->
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>

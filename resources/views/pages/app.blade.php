@@ -1,8 +1,20 @@
 @extends('layouts.public')
 
 @section('title', 'دانلود اپلیکیشن طلالایو | نرم‌افزار تابلوی طلافروشی و تلویزیون هوشمند Android TV')
-@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۲.۰.۱ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه بدون مینی‌کیس با راه‌اندازی در ۶۰ ثانیه.')
+@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۱.۰.۱ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه بدون مینی‌کیس با راه‌اندازی در ۶۰ ثانیه.')
 @section('canonical', 'https://talalive.ir/app')
+
+{{-- استانداردهای سئوی تصویر پیش‌نمایش در شبکه‌های اجتماعی و پیام‌رسان‌ها (Open Graph / Twitter) --}}
+@section('og_image', asset('images/tv-preview.png'))
+@section('og_image_width', '1024')
+@section('og_image_height', '577')
+@section('og_image_type', 'image/png')
+@section('og_image_alt', 'اسکرین‌شات واقعی نرم‌افزار تابلوی هوشمند طلافروشی طلالایو روی تلویزیون هوشمند Android TV با نرخ لحظه‌ای طلا و سکه')
+
+@push('head')
+    {{-- بهینه‌سازی سرعت لود تصویر اصلی هیرو (LCP Preload) جهت ارتقای رتبه سئو فنی و لایت‌هاوس --}}
+    <link rel="preload" as="image" href="{{ asset('images/tv-preview.webp') }}?v=1.0.1" type="image/webp" fetchpriority="high">
+@endpush
 
 @push('styles')
 <style>
@@ -208,19 +220,24 @@
                     {{-- فریم تلویزیون ۶۵ اینچ هوشمند طلالایو --}}
                     <div class="relative w-full rounded-[24px] sm:rounded-[28px] p-2 sm:p-2.5 bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 dark:from-slate-700 dark:via-slate-800 dark:to-slate-950 tv-mockup-shadow border border-slate-300/80 dark:border-slate-700/60 transition-transform duration-500 hover:scale-[1.01] group">
                         
-                        {{-- صفحه نمایشگر واقعی تلویزیون --}}
-                        <div class="relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 border border-amber-500/30 shadow-2xl">
-                            {{-- تصویر اسکرین‌شات زنده و واقعی اپلیکیشن --}}
+                        {{-- صفحه نمایشگر واقعی تلویزیون با رعایت کامل اصول سئو تصویر --}}
+                        <figure class="relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 border border-amber-500/30 shadow-2xl m-0">
+                            {{-- تصویر اسکرین‌شات زنده و واقعی اپلیکیشن با فرمت بهینه WebP و پشتیبانی از نسخه PNG --}}
                             <picture>
                                 <source srcset="{{ asset('images/tv-preview.webp') }}?v=1.0.1" type="image/webp">
                                 <img src="{{ asset('images/tv-preview.png') }}?v=1.0.1" 
-                                     alt="اسکرین‌شات واقعی اپلیکیشن تابلوی هوشمند طلالایو روی تلویزیون مغازه" 
+                                     alt="اسکرین‌شات واقعی تابلوی طلافروشی طلالایو روی تلویزیون هوشمند Android TV با نمایش لحظه‌ای قیمت طلا، سکه و ویترین طلا" 
+                                     title="پیش‌نمایش زنده اپلیکیشن تابلوی طلافروشی طلالایو روی تلویزیون مغازه"
                                      class="w-full h-auto object-cover block select-none"
                                      width="1024" 
                                      height="577" 
                                      loading="eager"
-                                     fetchpriority="high">
+                                     fetchpriority="high"
+                                     decoding="async">
                             </picture>
+
+                            {{-- کپشن سئو برای ایندکسینگ بهتر در گوگل ایمیجز و دسترس‌پذیری اسکرین‌ریدرها --}}
+                            <figcaption class="sr-only">اسکرین‌شات واقعی تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو روی تلویزیون هوشمند طلافروشی</figcaption>
 
                             {{-- افکت تابش و انعکاس ملایم شیشه نمایشگر (Glossy TV Screen Reflection) --}}
                             <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-amber-500/[0.08] pointer-events-none"></div>
@@ -230,7 +247,7 @@
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
                                 <span>پیش‌نمایش زنده اپلیکیشن (v1.0.1)</span>
                             </div>
-                        </div>
+                        </figure>
 
                     </div>
 
@@ -604,6 +621,24 @@
       "softwareVersion": "1.0.1",
       "fileSize": "48552583",
       "downloadUrl": "https://talalive.ir/downloads/talalive-tv.apk",
+      "image": {
+        "@@type": "ImageObject",
+        "url": "https://talalive.ir/images/tv-preview.png",
+        "contentUrl": "https://talalive.ir/images/tv-preview.webp",
+        "caption": "اسکرین‌شات واقعی اپلیکیشن تابلوی هوشمند طلافروشی طلالایو روی تلویزیون",
+        "width": 1024,
+        "height": 577
+      },
+      "screenshot": [
+        {
+          "@@type": "ImageObject",
+          "url": "https://talalive.ir/images/tv-preview.png",
+          "contentUrl": "https://talalive.ir/images/tv-preview.webp",
+          "caption": "نمای واقعی تابلوی هوشمند نرخ لحظه‌ای طلا، سکه و ویترین آنلاین روی تلویزیون مغازه",
+          "width": 1024,
+          "height": 577
+        }
+      ],
       "offers": {
         "@@type": "Offer",
         "price": "0",
