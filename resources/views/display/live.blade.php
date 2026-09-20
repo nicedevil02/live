@@ -2371,10 +2371,15 @@
                 controlsTimer: null,
                 ecoMode: (function() {
                     try {
+                        const saved = localStorage.getItem('display_eco_mode');
+                        if (saved !== null) {
+                            return saved === 'true';
+                        }
+                        // پیش‌فرض در صورت عدم ذخیره قبلی (برای اپ فعال باشد)
                         if (new URLSearchParams(window.location.search).get('app') === '1' || {{ ($isApp ?? false) ? 'true' : 'false' }}) {
                             return true;
                         }
-                        return localStorage.getItem('display_eco_mode') === 'true';
+                        return false;
                     } catch (e) {
                         return false;
                     }

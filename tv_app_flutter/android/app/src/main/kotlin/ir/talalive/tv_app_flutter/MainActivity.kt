@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.view.KeyEvent
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -12,12 +13,20 @@ import java.io.File
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "ir.talalive.tv/updater"
+    private var methodChannel: MethodChannel? = null
+    private var isDialogOpen: Boolean = false
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        methodChannel?.setMethodCallHandler { call, result ->
             when (call.method) {
+                "setDialogState" -> {
+                    isDialogOpen = call.argument<Boolean>("isOpen") ?: false
+                    result.success(true)
+                }
+
                 "getAppVersion" -> {
                     try {
                         val pInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -120,5 +129,34 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_MENU,
+                KeyEvent.KEYCODE_SETTINGS,
+                KeyEvent.KEYCODE_HELP,
+                KeyEvent.KEYCODE_INFO -> {
+                    methodChannel?.invokeMethod("onMenuPressed", null)
+                    return true
+                }
+                KeyEvent.KEYCODE_DPAD_UP,
+                KeyEvent.KEYCODE_PAGE_UP -> {
+                    if (!isDialogOpen) {
+                        methodChannel?.invokeMethod("onDpadUp", null)
+                        return true
+                    }
+                }
+                KeyEvent.KEYCODE_DPAD_DOWN,
+                KeyEvent.KEYCODE_PAGE_DOWN -> {
+                    if (!isDialogOpen) {
+                        methodChannel?.invokeMethod("onDpadDown", null)
+                        return true
+                    }
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 }

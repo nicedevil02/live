@@ -47,9 +47,13 @@ class _BoardScreenState extends State<BoardScreen> {
   double _zoomLevel = 1.0;
 
   String _installedVersion = '1.0.0';
-  int _installedVersionCode = 1;
   UpdateInfo? _availableUpdate;
 
+  static const MethodChannel _nativeChannel = MethodChannel('ir.talalive.tv/updater');
+  final FocusNode _focusNode = FocusNode();
+  bool _isSettingsOpen = false;
+  String? _zoomFeedbackText;
+  Timer? _zoomFeedbackTimer;
 
   @override
   void initState() {
@@ -57,6 +61,7 @@ class _BoardScreenState extends State<BoardScreen> {
     if (!kIsWeb) {
       _initWebViewController();
     }
+    _setupNativeKeyHandler();
     _loadInstalledVersion();
     _loadSavedMode();
     _loadSavedZoom();
@@ -75,7 +80,34 @@ class _BoardScreenState extends State<BoardScreen> {
     _updateCheckTimer = Timer(const Duration(seconds: 12), () {
       _checkForUpdate(manual: false);
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focusNode.requestFocus();
+    });
   }
+
+  void _setupNativeKeyHandler() {
+    _nativeChannel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case 'onMenuPressed':
+          if (!_isSettingsOpen && mounted) {
+            _showSettingsMenu();
+          }
+          break;
+        case 'onDpadUp':
+          if (!_isSettingsOpen && mounted) {
+            _zoomIn();
+          }
+          break;
+        case 'onDpadDown':
+          if (!_isSettingsOpen && mounted) {
+            _zoomOut();
+          }
+          break;
+      }
+    });
+  }
+
 
 
   void _initWebViewController() {
@@ -232,6 +264,7 @@ class _BoardScreenState extends State<BoardScreen> {
     if (_isWebViewMode) {
       _webViewController?.runJavaScript("window.dispatchEvent(new KeyboardEvent('keydown', { key: '+' }));");
     }
+    _showZoomFeedback('بزرگ‌نمایی: ${PersianUtils.toPersianDigits((rounded * 100).round().toString())}٪');
   }
 
   void _zoomOut() async {
@@ -243,6 +276,7 @@ class _BoardScreenState extends State<BoardScreen> {
     if (_isWebViewMode) {
       _webViewController?.runJavaScript("window.dispatchEvent(new KeyboardEvent('keydown', { key: '-' }));");
     }
+    _showZoomFeedback('کوچک‌نمایی: ${PersianUtils.toPersianDigits((rounded * 100).round().toString())}٪');
   }
 
   void _resetZoom() async {
@@ -252,6 +286,23 @@ class _BoardScreenState extends State<BoardScreen> {
     if (_isWebViewMode) {
       _webViewController?.runJavaScript("window.dispatchEvent(new KeyboardEvent('keydown', { key: '0' }));");
     }
+    _showZoomFeedback('مقیاس: ۱۰۰٪');
+  }
+
+  void _showZoomFeedback(String text) {
+    _zoomFeedbackTimer?.cancel();
+    if (mounted) {
+      setState(() {
+        _zoomFeedbackText = text;
+      });
+    }
+    _zoomFeedbackTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _zoomFeedbackText = null;
+        });
+      }
+    });
   }
 
   void _loadInstalledVersion() async {
@@ -259,11 +310,9 @@ class _BoardScreenState extends State<BoardScreen> {
     if (mounted) {
       setState(() {
         _installedVersion = info['versionName'] as String;
-        _installedVersionCode = info['versionCode'] as int;
       });
     }
   }
-
 
   void _fetchData() async {
     final model = await ApiService.fetchSnapshot(widget.username);
@@ -299,19 +348,40 @@ class _BoardScreenState extends State<BoardScreen> {
     _clockTimer?.cancel();
     _refreshTimer?.cancel();
     _updateCheckTimer?.cancel();
+    _zoomFeedbackTimer?.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
-
 
   void _handleKey(KeyEvent event) {
     if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.contextMenu ||
-          event.logicalKey == LogicalKeyboardKey.keyM) {
-        _showSettingsMenu();
+          event.logicalKey == LogicalKeyboardKey.keyM ||
+          event.logicalKey == LogicalKeyboardKey.select) {
+        if (!_isSettingsOpen) {
+          _showSettingsMenu();
+        }
         return;
+      }
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+          event.logicalKey == LogicalKeyboardKey.pageUp) {
+        if (!_isSettingsOpen) {
+          _zoomIn();
+          return;
+        }
+      }
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+          event.logicalKey == LogicalKeyboardKey.pageDown) {
+        if (!_isSettingsOpen) {
+          _zoomOut();
+          return;
+        }
       }
       if (event.logicalKey == LogicalKeyboardKey.escape ||
           event.logicalKey == LogicalKeyboardKey.backspace) {
+        if (_isSettingsOpen) {
+          return;
+        }
         if (_isWebViewMode) {
           _setWebViewMode(false);
         } else {
@@ -321,446 +391,451 @@ class _BoardScreenState extends State<BoardScreen> {
     }
   }
 
+
   void _showSettingsMenu() {
+    if (_isSettingsOpen) return;
+    _isSettingsOpen = true;
+    _nativeChannel.invokeMethod('setDialogState', {'isOpen': true});
+
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.7),
       builder: (ctx) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: StatefulBuilder(
-          builder: (context, setDialogState) => Dialog(
-            backgroundColor: const Color(0xFF0F172A).withOpacity(0.94),
+          builder: (dialogCtx, setDialogState) => Dialog(
+            backgroundColor: const Color(0xFF0F172A).withOpacity(0.96),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(24),
               side: BorderSide(color: const Color(0xFFF59E0B).withOpacity(0.4), width: 1.5),
             ),
-            insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 580, maxHeight: 560),
-              padding: const EdgeInsets.all(24),
+              constraints: const BoxConstraints(maxWidth: 680, maxHeight: 380),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
               child: Directionality(
                 textDirection: TextDirection.rtl,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Header with Icon and Title
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF59E0B).withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.4)),
-                            ),
-                            child: const Icon(Icons.settings_outlined, color: Color(0xFFF59E0B), size: 26),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Header Row
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF59E0B).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'تنظیمات و مدیریت تابلوی طلالایو',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
-                                    fontFamily: 'Vazirmatn',
-                                  ),
+                          child: const Icon(Icons.settings_outlined, color: Color(0xFFF59E0B), size: 22),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Text(
+                                'تنظیمات تابلوی طلالایو',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'Vazirmatn',
                                 ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  'گالری: ${widget.username}  •  وضعیت: ${_isOffline ? "آفلاین" : "متصل و برخط"}  •  نسخه ${PersianUtils.toPersianDigits(_installedVersion)}',
+                              ),
+                              const SizedBox(width: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: (_isOffline ? Colors.redAccent : const Color(0xFF10B981)).withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: (_isOffline ? Colors.redAccent : const Color(0xFF10B981)).withOpacity(0.4)),
+                                ),
+                                child: Text(
+                                  _isOffline ? 'آفلاین' : 'برخط',
                                   style: TextStyle(
                                     color: _isOffline ? Colors.redAccent : const Color(0xFF10B981),
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontFamily: 'Vazirmatn',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'نسخه ${PersianUtils.toPersianDigits(_installedVersion)}',
+                                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontFamily: 'Vazirmatn'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          icon: const Icon(Icons.close, color: Colors.white70, size: 20),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+                    const Divider(color: Color(0xFF334155), height: 1),
+                    const SizedBox(height: 12),
+
+                    // Grid Layout: 2 Columns x 2 Cards (Compact & Fits TV screen without scroll)
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Column 1: Mode Switch + Zoom
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // Box 1: Mode Switch
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1E293B),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(color: const Color(0xFF334155)),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'حالت نمایش تابلو:',
+                                        style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          // Native
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.of(ctx).pop();
+                                                if (_isWebViewMode) _setWebViewMode(false);
+                                              },
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                                decoration: BoxDecoration(
+                                                  color: !_isWebViewMode ? const Color(0xFFF59E0B).withOpacity(0.2) : Colors.transparent,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                    color: !_isWebViewMode ? const Color(0xFFF59E0B) : const Color(0xFF475569),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.bolt, size: 16, color: !_isWebViewMode ? const Color(0xFFF59E0B) : Colors.white60),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      'بومی (نیتیو)',
+                                                      style: TextStyle(
+                                                        color: !_isWebViewMode ? Colors.white : Colors.white60,
+                                                        fontSize: 12,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontFamily: 'Vazirmatn',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          // Web
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.of(ctx).pop();
+                                                if (!_isWebViewMode) _setWebViewMode(true);
+                                              },
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                                decoration: BoxDecoration(
+                                                  color: _isWebViewMode ? const Color(0xFF3B82F6).withOpacity(0.2) : Colors.transparent,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                    color: _isWebViewMode ? const Color(0xFF3B82F6) : const Color(0xFF475569),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.language, size: 16, color: _isWebViewMode ? const Color(0xFF3B82F6) : Colors.white60),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      'زنده وب',
+                                                      style: TextStyle(
+                                                        color: _isWebViewMode ? Colors.white : Colors.white60,
+                                                        fontSize: 12,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontFamily: 'Vazirmatn',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                // Box 2: Zoom Controls
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF1E293B),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(color: const Color(0xFF334155)),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              'بزرگ‌نمایی تابلو:',
+                                              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                            ),
+                                            const Text(
+                                              '(جهت‌های ↑ و ↓ کنترل)',
+                                              style: TextStyle(color: Color(0xFF64748B), fontSize: 10, fontFamily: 'Vazirmatn'),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            // Zoom Out
+                                            IconButton(
+                                              onPressed: () {
+                                                _zoomOut();
+                                                setDialogState(() {});
+                                              },
+                                              icon: const Icon(Icons.remove_circle_outline, color: Colors.white70, size: 26),
+                                              tooltip: 'کوچک‌نمایی',
+                                            ),
+                                            const SizedBox(width: 8),
+                                            // Percentage button
+                                            InkWell(
+                                              onTap: () {
+                                                _resetZoom();
+                                                setDialogState(() {});
+                                              },
+                                              borderRadius: BorderRadius.circular(8),
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFF0F172A),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.5)),
+                                                ),
+                                                child: Text(
+                                                  '${PersianUtils.toPersianDigits((_zoomLevel * 100).round().toString())}٪',
+                                                  style: const TextStyle(
+                                                    color: Color(0xFFF59E0B),
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 17,
+                                                    fontFamily: 'Vazirmatn',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            // Zoom In
+                                            IconButton(
+                                              onPressed: () {
+                                                _zoomIn();
+                                                setDialogState(() {});
+                                              },
+                                              icon: const Icon(Icons.add_circle_outline, color: Color(0xFFF59E0B), size: 26),
+                                              tooltip: 'بزرگ‌نمایی',
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          IconButton(
-                            onPressed: () => Navigator.of(ctx).pop(),
-                            icon: const Icon(Icons.close, color: Colors.white70),
-                          ),
-                        ],
-                      ),
 
-                      const SizedBox(height: 20),
-                      const Divider(color: Color(0xFF334155), height: 1),
-                      const SizedBox(height: 18),
-
-                      // Section 1: Display Mode Switcher
-                      const Text(
-                        'حالت نمایش تابلو:',
-                        style: TextStyle(
-                          color: Color(0xFF94A3B8),
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Vazirmatn',
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          // Native Mode Button
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(ctx).pop();
-                                if (_isWebViewMode) _setWebViewMode(false);
-                              },
-                              borderRadius: BorderRadius.circular(16),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                                decoration: BoxDecoration(
-                                  color: !_isWebViewMode ? const Color(0xFFF59E0B).withOpacity(0.2) : const Color(0xFF1E293B),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: !_isWebViewMode ? const Color(0xFFF59E0B) : const Color(0xFF334155),
-                                    width: !_isWebViewMode ? 2 : 1,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.bolt, color: !_isWebViewMode ? const Color(0xFFF59E0B) : Colors.white60, size: 28),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      'نسخه بومی (نیتیو)',
-                                      style: TextStyle(
-                                        color: !_isWebViewMode ? Colors.white : Colors.white70,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        fontFamily: 'Vazirmatn',
-                                      ),
-                                    ),
-                                    if (!_isWebViewMode) ...[
-                                      const SizedBox(height: 4),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFF59E0B),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: const Text(
-                                          'فعال',
-                                          style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
                           const SizedBox(width: 12),
-                          // Web Live Mode Button
+
+                          // Column 2: OTA Update + Quick Actions
                           Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(ctx).pop();
-                                if (!_isWebViewMode) _setWebViewMode(true);
-                              },
-                              borderRadius: BorderRadius.circular(16),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                                decoration: BoxDecoration(
-                                  color: _isWebViewMode ? const Color(0xFF3B82F6).withOpacity(0.2) : const Color(0xFF1E293B),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: _isWebViewMode ? const Color(0xFF3B82F6) : const Color(0xFF334155),
-                                    width: _isWebViewMode ? 2 : 1,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.language, color: _isWebViewMode ? const Color(0xFF3B82F6) : Colors.white60, size: 28),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      'نسخه زنده وب',
-                                      style: TextStyle(
-                                        color: _isWebViewMode ? Colors.white : Colors.white70,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        fontFamily: 'Vazirmatn',
-                                      ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // Box 3: OTA Update Card
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1E293B),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: _availableUpdate != null
+                                          ? const Color(0xFF10B981).withOpacity(0.6)
+                                          : const Color(0xFF38BDF8).withOpacity(0.3),
                                     ),
-                                    if (_isWebViewMode) ...[
-                                      const SizedBox(height: 4),
+                                  ),
+                                  child: Row(
+                                    children: [
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF3B82F6),
-                                          borderRadius: BorderRadius.circular(8),
+                                          color: (_availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8)).withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
-                                        child: const Text(
-                                          'فعال',
-                                          style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                        child: Icon(
+                                          _availableUpdate != null ? Icons.system_update_rounded : Icons.cloud_download_outlined,
+                                          color: _availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8),
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _availableUpdate != null ? 'نسخه جدید آماده نصب است' : 'بروزرسانی آنلاین (OTA)',
+                                              style: TextStyle(
+                                                color: _availableUpdate != null ? const Color(0xFF34D399) : Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                fontFamily: 'Vazirmatn',
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              _availableUpdate != null
+                                                  ? 'نسخه ${PersianUtils.toPersianDigits(_availableUpdate!.remoteVersion)}'
+                                                  : 'نسخه شما: ${PersianUtils.toPersianDigits(_installedVersion)}',
+                                              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 10, fontFamily: 'Vazirmatn'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(ctx).pop();
+                                          if (_availableUpdate != null) {
+                                            _showUpdateDialog(_availableUpdate!);
+                                          } else {
+                                            _checkForUpdate(manual: true);
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: _availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8),
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                          minimumSize: Size.zero,
+                                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        child: Text(
+                                          _availableUpdate != null ? 'نصب آپدیت' : 'بررسی',
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn', fontSize: 11),
                                         ),
                                       ),
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
 
-                      const SizedBox(height: 18),
+                                const SizedBox(height: 10),
 
-                      // Section 2: Zoom Controls (بزرگ‌نمایی و کوچک‌نمایی)
-                      const Text(
-                        'بزرگ‌نمایی و مقیاس تابلو:',
-                        style: TextStyle(
-                          color: Color(0xFF94A3B8),
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Vazirmatn',
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E293B),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: const Color(0xFF334155)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Zoom Out (-) Button
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _zoomOut();
-                                setDialogState(() {});
-                              },
-                              icon: const Icon(Icons.remove, size: 18),
-                              label: const Text('کوچک‌نمایی', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, fontWeight: FontWeight.bold)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF334155),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                              ),
-                            ),
-
-                            // Zoom Percentage with reset hint
-                            InkWell(
-                              onTap: () {
-                                _resetZoom();
-                                setDialogState(() {});
-                              },
-                              borderRadius: BorderRadius.circular(10),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '${(_zoomLevel * 100).round()}%',
-                                      style: const TextStyle(
-                                        color: Color(0xFFF59E0B),
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 20,
-                                        fontFamily: 'Vazirmatn',
-                                      ),
+                                // Box 4: Quick Actions (Refresh & Exit)
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF1E293B),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(color: const Color(0xFF334155)),
                                     ),
-                                    const Text(
-                                      'لمس برای ۱۰۰٪',
-                                      style: TextStyle(color: Color(0xFF64748B), fontSize: 10, fontFamily: 'Vazirmatn'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            // Zoom In (+) Button
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _zoomIn();
-                                setDialogState(() {});
-                              },
-                              icon: const Icon(Icons.add, size: 18),
-                              label: const Text('بزرگ‌نمایی', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, fontWeight: FontWeight.bold)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF59E0B),
-                                foregroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 18),
-
-                      // Section 3: Online OTA Update Card
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E293B),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: _availableUpdate != null
-                                ? const Color(0xFF10B981).withOpacity(0.6)
-                                : const Color(0xFF38BDF8).withOpacity(0.3),
-                            width: _availableUpdate != null ? 1.5 : 1.0,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: (_availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8)).withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                _availableUpdate != null ? Icons.system_update_rounded : Icons.cloud_download_outlined,
-                                color: _availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8),
-                                size: 24,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        'بروزرسانی آنلاین برنامه (OTA)',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          fontFamily: 'Vazirmatn',
-                                        ),
-                                      ),
-                                      if (_availableUpdate != null) ...[
-                                        const SizedBox(width: 8),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF10B981),
-                                            borderRadius: BorderRadius.circular(6),
+                                    child: Row(
+                                      children: [
+                                        // Refresh Button
+                                        Expanded(
+                                          child: OutlinedButton.icon(
+                                            onPressed: () {
+                                              Navigator.of(ctx).pop();
+                                              if (_isWebViewMode) {
+                                                _webViewController?.reload();
+                                              } else {
+                                                _fetchData();
+                                              }
+                                            },
+                                            icon: const Icon(Icons.refresh, size: 16, color: Color(0xFFF59E0B)),
+                                            label: const Text('بروزرسانی داده', style: TextStyle(color: Colors.white, fontFamily: 'Vazirmatn', fontSize: 11)),
+                                            style: OutlinedButton.styleFrom(
+                                              side: const BorderSide(color: Color(0xFF334155)),
+                                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                            ),
                                           ),
-                                          child: const Text(
-                                            'نسخه جدید!',
-                                            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        // Exit / Unpair
+                                        Expanded(
+                                          child: OutlinedButton.icon(
+                                            onPressed: () {
+                                              Navigator.of(ctx).pop();
+                                              _showExitDialog();
+                                            },
+                                            icon: const Icon(Icons.link_off, size: 16, color: Colors.redAccent),
+                                            label: const Text('خروج / لغو اتصال', style: TextStyle(color: Colors.redAccent, fontFamily: 'Vazirmatn', fontSize: 11)),
+                                            style: OutlinedButton.styleFrom(
+                                              side: BorderSide(color: Colors.redAccent.withOpacity(0.4)),
+                                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                            ),
                                           ),
                                         ),
                                       ],
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    _availableUpdate != null
-                                        ? 'نسخه جدید ${PersianUtils.toPersianDigits(_availableUpdate!.remoteVersion)} آماده دانلود است'
-                                        : 'نسخه فعلی شما: ${PersianUtils.toPersianDigits(_installedVersion)} (کد ${PersianUtils.toPersianDigits(_installedVersionCode.toString())})',
-                                    style: TextStyle(
-                                      color: _availableUpdate != null ? const Color(0xFF34D399) : const Color(0xFF94A3B8),
-                                      fontSize: 11,
-                                      fontFamily: 'Vazirmatn',
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(ctx).pop();
-                                if (_availableUpdate != null) {
-                                  _showUpdateDialog(_availableUpdate!);
-                                } else {
-                                  _checkForUpdate(manual: true);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                              ),
-                              child: Text(
-                                _availableUpdate != null ? 'مشاهده و نصب' : 'بررسی نسخه',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn', fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-
-                      const SizedBox(height: 18),
-
-                    // Section 4: Quick Actions
-                    Row(
-                      children: [
-                        // Refresh button
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              Navigator.of(ctx).pop();
-                              if (_isWebViewMode) {
-                                _webViewController?.reload();
-                              } else {
-                                _fetchData();
-                              }
-                            },
-                            icon: const Icon(Icons.refresh, size: 20, color: Color(0xFFF59E0B)),
-                            label: const Text('بروزرسانی داده‌ها', style: TextStyle(color: Colors.white, fontFamily: 'Vazirmatn', fontSize: 13)),
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFF334155)),
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Unpair button
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              Navigator.of(ctx).pop();
-                              _showExitDialog();
-                            },
-                            icon: const Icon(Icons.link_off, size: 20, color: Colors.redAccent),
-                            label: const Text('قطع اتصال تابلو', style: TextStyle(color: Colors.redAccent, fontFamily: 'Vazirmatn', fontSize: 13)),
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.redAccent.withOpacity(0.4)),
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
 
-
-                    const SizedBox(height: 16),
-                    // Tip about long press
+                    const SizedBox(height: 10),
+                    // Quick Remote Help Bar
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B).withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(12),
+                        color: const Color(0xFF0F172A),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.touch_app_outlined, size: 16, color: Color(0xFF94A3B8)),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'راهنما: در هر زمان با لمس طولانی صفحه یا کلید Menu کنترل می‌توانید این منو را باز کنید.',
-                              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontFamily: 'Vazirmatn'),
-                            ),
+                          Icon(Icons.tv_rounded, size: 14, color: Color(0xFF94A3B8)),
+                          SizedBox(width: 6),
+                          Text(
+                            'کنترل تلویزیون: کلید Menu برای بازکردن منو  •  کلیدهای ↑ و ↓ برای بزرگ‌نمایی/کوچک‌نمایی',
+                            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 10, fontFamily: 'Vazirmatn'),
                           ),
                         ],
                       ),
@@ -772,11 +847,17 @@ class _BoardScreenState extends State<BoardScreen> {
           ),
         ),
       ),
-    ),
-  );
-}
+    ).then((_) {
+      _isSettingsOpen = false;
+      _nativeChannel.invokeMethod('setDialogState', {'isOpen': false});
+      _focusNode.requestFocus();
+    });
+  }
 
   void _showExitDialog() {
+    _isSettingsOpen = true;
+    _nativeChannel.invokeMethod('setDialogState', {'isOpen': true});
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -821,8 +902,13 @@ class _BoardScreenState extends State<BoardScreen> {
           ),
         ],
       ),
-    );
+    ).then((_) {
+      _isSettingsOpen = false;
+      _nativeChannel.invokeMethod('setDialogState', {'isOpen': false});
+      _focusNode.requestFocus();
+    });
   }
+
 
   void _checkForUpdate({bool manual = false}) async {
     if (manual) {
@@ -931,6 +1017,9 @@ class _BoardScreenState extends State<BoardScreen> {
   }
 
   void _showUpdateDialog(UpdateInfo info) {
+    _isSettingsOpen = true;
+    _nativeChannel.invokeMethod('setDialogState', {'isOpen': true});
+
     bool isDownloading = false;
     double progress = 0.0;
     int receivedBytes = 0;
@@ -1305,7 +1394,11 @@ class _BoardScreenState extends State<BoardScreen> {
           },
         ),
       ),
-    );
+    ).then((_) {
+      _isSettingsOpen = false;
+      _nativeChannel.invokeMethod('setDialogState', {'isOpen': false});
+      _focusNode.requestFocus();
+    });
   }
 
   @override
@@ -1316,7 +1409,7 @@ class _BoardScreenState extends State<BoardScreen> {
     // =========================================================================
     if (_isWebViewMode) {
       return KeyboardListener(
-        focusNode: FocusNode()..requestFocus(),
+        focusNode: _focusNode,
         onKeyEvent: _handleKey,
         child: Scaffold(
           backgroundColor: const Color(0xFF020617),
@@ -1344,6 +1437,36 @@ class _BoardScreenState extends State<BoardScreen> {
                       ],
                     ),
                   ),
+
+                // Zoom Feedback HUD
+                if (_zoomFeedbackText != null)
+                  Positioned(
+                    bottom: 30,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F172A).withOpacity(0.92),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFFF59E0B), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black.withOpacity(0.6), blurRadius: 16, offset: const Offset(0, 4)),
+                          ],
+                        ),
+                        child: Text(
+                          _zoomFeedbackText!,
+                          style: const TextStyle(
+                            color: Color(0xFFF59E0B),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Vazirmatn',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -1359,42 +1482,45 @@ class _BoardScreenState extends State<BoardScreen> {
         : BoardThemeData.onyxGold;
 
     return KeyboardListener(
-      focusNode: FocusNode()..requestFocus(),
+      focusNode: _focusNode,
       onKeyEvent: _handleKey,
       child: Scaffold(
         backgroundColor: theme.backgroundColor,
         body: GestureDetector(
           onLongPress: _showSettingsMenu,
           behavior: HitTestBehavior.translucent,
-          child: Center(
-            child: Transform.scale(
-              scale: _zoomLevel,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Container(
-              width: 1920,
-              height: 1080,
-              padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
-              child: Stack(
-                children: [
-                  // Ambient Background Glow Orbs
-                  Positioned(
-                    top: -80,
-                    right: 150,
+          child: Stack(
+            children: [
+              Center(
+                child: Transform.scale(
+                  scale: _zoomLevel,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
                     child: Container(
-                      width: 500,
-                      height: 500,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            theme.goldPrimary.withOpacity(theme.isDark ? 0.08 : 0.05),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                      width: 1920,
+                      height: 1080,
+                      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+                      child: Stack(
+                        children: [
+                          // Ambient Background Glow Orbs
+                          Positioned(
+                            top: -80,
+                            right: 150,
+                            child: Container(
+                              width: 500,
+                              height: 500,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  colors: [
+                                    theme.goldPrimary.withOpacity(theme.isDark ? 0.08 : 0.05),
+                                    Colors.transparent,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
                   Positioned(
                     bottom: 0,
                     left: 80,
@@ -1492,11 +1618,43 @@ class _BoardScreenState extends State<BoardScreen> {
                                 _buildFooter(theme),
                               ],
                             ),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+
+          // Zoom Feedback HUD in Native Mode
+          if (_zoomFeedbackText != null)
+            Positioned(
+              bottom: 30,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F172A).withOpacity(0.92),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFF59E0B), width: 1.5),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.6), blurRadius: 16, offset: const Offset(0, 4)),
+                    ],
+                  ),
+                  child: Text(
+                    _zoomFeedbackText!,
+                    style: const TextStyle(
+                      color: Color(0xFFF59E0B),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Vazirmatn',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     ),
   ),
