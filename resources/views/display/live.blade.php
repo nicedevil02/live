@@ -127,6 +127,11 @@
         @if($isTv ?? false)
         html, body { cursor: none !important; }
         @endif
+        @if($isApp ?? false)
+        /* بهینه‌سازی پردازش گرافیکی اختصاصی داخل اپلیکیشن بدون کوچکترین تاثیر روی مرورگر */
+        .ambient-orb-container { display: none !important; }
+        #tv-stage-canvas { transform-style: flat !important; }
+        @endif
         ::-webkit-scrollbar { display: none !important; }
         *:focus { outline: none !important; }
 
@@ -2371,6 +2376,9 @@
                 controlsTimer: null,
                 ecoMode: (function() {
                     try {
+                        if (new URLSearchParams(window.location.search).get('app') === '1' || {{ ($isApp ?? false) ? 'true' : 'false' }}) {
+                            return true;
+                        }
                         return localStorage.getItem('display_eco_mode') === 'true';
                     } catch (e) {
                         return false;

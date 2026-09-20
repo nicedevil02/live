@@ -62,7 +62,7 @@ class _ProductSliderState extends State<ProductSlider> {
 
   String _normalizeImageUrl(String raw) {
     var url = raw.trim();
-    if (url.isEmpty) return '';
+    if (url.isEmpty) return 'https://talalive.ir/icons/icon-512x512.png';
     if (url.startsWith('//')) {
       return 'https:$url';
     }
@@ -83,15 +83,12 @@ class _ProductSliderState extends State<ProductSlider> {
     if (widget.products.isEmpty) {
       return Container(
         decoration: BoxDecoration(
-          color: widget.theme.cardGradient.colors.first.withOpacity(0.5),
           borderRadius: BorderRadius.circular(40),
           border: Border.all(color: widget.theme.cardStrokeColor, width: 1.5),
         ),
-        alignment: Alignment.center,
-        child: Icon(
-          Icons.diamond_outlined,
-          size: 100,
-          color: widget.theme.goldPrimary.withOpacity(0.2),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(40),
+          child: _buildPlaceholder(),
         ),
       );
     }
@@ -129,22 +126,7 @@ class _ProductSliderState extends State<ProductSlider> {
               switchOutCurve: Curves.easeInOut,
               child: SizedBox.expand(
                 key: ValueKey<String>('$imageUrl-$_currentIndex'),
-                child: imageUrl.isNotEmpty
-                    ? Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              valueColor: AlwaysStoppedAnimation<Color>(widget.theme.goldPrimary),
-                            ),
-                          );
-                        },
-                      )
-                    : _buildPlaceholder(),
+                child: _buildProductImage(imageUrl),
               ),
             ),
 
@@ -386,9 +368,10 @@ class _ProductSliderState extends State<ProductSlider> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
+              textDirection: TextDirection.rtl,
               children: [
                 Text(
-                  PersianUtils.formatPriceString(displayPrice),
+                  PersianUtils.formatPrice(displayPrice),
                   style: TextStyle(
                     color: widget.theme.heroTextColor,
                     fontSize: 28,
@@ -397,7 +380,7 @@ class _ProductSliderState extends State<ProductSlider> {
                     letterSpacing: -0.5,
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 5),
                 Text(
                   'تومان',
                   style: TextStyle(
@@ -466,14 +449,45 @@ class _ProductSliderState extends State<ProductSlider> {
     );
   }
 
+  Widget _buildProductImage(String imageUrl) {
+    final isDefaultIcon = imageUrl.isEmpty || imageUrl.contains('icon-512x512');
+    if (isDefaultIcon) {
+      return _buildPlaceholder();
+    }
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            valueColor: AlwaysStoppedAnimation<Color>(widget.theme.goldPrimary),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildPlaceholder() {
     return Container(
-      color: widget.theme.isDark ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
+      color: widget.theme.isDark ? const Color(0xFF0F172A) : Colors.white,
       alignment: Alignment.center,
-      child: Icon(
-        Icons.diamond_outlined,
-        size: 72,
-        color: widget.theme.goldPrimary.withOpacity(0.35),
+      child: Image.asset(
+        'assets/images/icon-512x512.png',
+        fit: BoxFit.contain,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: widget.theme.isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.diamond_outlined,
+            size: 72,
+            color: widget.theme.goldPrimary.withOpacity(0.35),
+          ),
+        ),
       ),
     );
   }

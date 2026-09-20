@@ -87,6 +87,12 @@ class BoardModel {
   final String shopName;
   final String subtitle;
   final String phone;
+  final String? instagram;
+  final String? rubika;
+  final String? qrLink;
+  final String? qrLabel;
+  final String? qrDesc;
+  final String? cityFullDisplay;
   final String themeMode;
   final int sliderIntervalSec;
   final String customMessage;
@@ -103,6 +109,12 @@ class BoardModel {
     required this.shopName,
     required this.subtitle,
     required this.phone,
+    this.instagram,
+    this.rubika,
+    this.qrLink,
+    this.qrLabel,
+    this.qrDesc,
+    this.cityFullDisplay,
     required this.themeMode,
     required this.sliderIntervalSec,
     required this.customMessage,
@@ -129,6 +141,14 @@ class BoardModel {
         : 'گالری طلا و جواهر طلالایو';
     final subtitle = settings?['subtitle']?.toString() ?? 'تابلوی رسمی نرخ لحظه‌ای طلا، سکه و ارز';
     final phone = settings?['phone']?.toString() ?? '';
+    final instagram = settings?['instagram']?.toString();
+    final rubika = settings?['rubika']?.toString();
+    final qrLink = settings?['qr_link']?.toString();
+    final qrLabel = settings?['qr_label']?.toString();
+    final qrDesc = settings?['qr_desc']?.toString();
+    final cityFullDisplay = json['cityFullDisplay']?.toString() ??
+        settings?['city_name']?.toString() ??
+        'اصفهان (کاشان)';
     final themeMode = settings?['theme_mode']?.toString() ?? 'luxury-dark';
     final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??
@@ -290,6 +310,12 @@ class BoardModel {
       shopName: shopName,
       subtitle: subtitle,
       phone: phone,
+      instagram: instagram,
+      rubika: rubika,
+      qrLink: qrLink,
+      qrLabel: qrLabel,
+      qrDesc: qrDesc,
+      cityFullDisplay: cityFullDisplay,
       themeMode: themeMode,
       sliderIntervalSec: sliderInterval,
       customMessage: customMessage,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../models/board_model.dart';
 import '../theme/board_theme.dart';
 import '../utils/persian_utils.dart';
@@ -22,7 +23,7 @@ class BoardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
       decoration: BoxDecoration(
         color: theme.headerBackground.withOpacity(theme.isDark ? 0.85 : 0.95),
         borderRadius: BorderRadius.circular(28),
@@ -42,90 +43,83 @@ class BoardHeader extends StatelessWidget {
         textDirection: TextDirection.rtl,
         children: [
           // ===================================================================
-          // 1. Right Section: Shop Monogram & Subtitle
+          // 1. Right Section: QR Code Card & Labels
           // ===================================================================
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Row(
               textDirection: TextDirection.rtl,
               children: [
-                // Monogram Circle
+                // QR Code Frame
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 96,
+                  height: 96,
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        theme.goldSecondary,
-                        theme.goldPrimary,
-                        const Color(0xFFB45309),
-                      ],
-                    ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: Colors.white.withOpacity(0.5)),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.goldPrimary.withOpacity(0.45),
-                        blurRadius: 16,
+                        color: Colors.black.withOpacity(0.18),
+                        blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'زر',
-                    style: TextStyle(
-                      color: Color(0xFF020617),
-                      fontSize: 26,
-                      fontWeight: FontWeight.w900,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: QrImageView(
+                      data: (model.qrLink != null && model.qrLink!.isNotEmpty)
+                          ? model.qrLink!
+                          : 'https://talalive.ir/${model.username}',
+                      version: QrVersions.auto,
+                      size: 86,
+                      eyeStyle: const QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: Color(0xFF0F172A),
+                      ),
+                      dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: Color(0xFF0F172A),
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 16),
 
-                // Subtitle Info
+                // Labels
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        model.subtitle.isNotEmpty ? model.subtitle : 'تابلوی رسمی نرخ لحظه‌ای طلا، سکه و ارز',
+                        (model.qrLabel != null && model.qrLabel!.isNotEmpty)
+                            ? model.qrLabel!
+                            : 'همراه ما باشید',
                         style: TextStyle(
-                          color: theme.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          height: 1.3,
+                          color: theme.textPrimary,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w900,
+                          height: 1.2,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: theme.goldPrimary.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: theme.goldPrimary.withOpacity(0.25)),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'همراه ما باشید',
-                                  style: TextStyle(
-                                    color: theme.goldPrimary,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      Text(
+                        (model.qrDesc != null && model.qrDesc!.isNotEmpty)
+                            ? model.qrDesc!
+                            : 'اسکن جهت مشاهده در موبایل',
+                        style: TextStyle(
+                          color: theme.textSecondary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          height: 1.3,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -135,44 +129,73 @@ class BoardHeader extends StatelessWidget {
           ),
 
           // ===================================================================
-          // 2. Center Section: Shop Name & City Tag
+          // 2. Center Section: Shop Name, City Tag, and Home Link
           // ===================================================================
           Expanded(
             flex: 4,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ShaderMask(
-                  shaderCallback: (bounds) => theme.titleGradient.createShader(bounds),
-                  child: Text(
-                    model.shopName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 34,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
-                      height: 1.1,
+                Text(
+                  model.shopName,
+                  style: TextStyle(
+                    color: theme.isDark ? const Color(0xFFFDE68A) : const Color(0xFF0F172A),
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                    height: 1.1,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: theme.isDark
+                        ? theme.goldPrimary.withOpacity(0.12)
+                        : const Color(0xFF2563EB).withOpacity(0.10),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: theme.isDark
+                          ? theme.goldPrimary.withOpacity(0.25)
+                          : const Color(0xFF2563EB).withOpacity(0.25),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
+                  ),
+                  child: Text(
+                    '✦  نرخ‌گذاری لحظه‌ای طلا و ارز — ${model.cityFullDisplay ?? 'اصفهان (کاشان)'}  ✦',
+                    style: TextStyle(
+                      color: theme.isDark ? theme.goldPrimary : const Color(0xFF1D4ED8),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 5),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
                   decoration: BoxDecoration(
                     color: theme.goldPrimary.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: theme.goldPrimary.withOpacity(0.25)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '✦  نرخ‌گذاری لحظه‌ای طلا و ارز  ✦',
-                        style: TextStyle(
+                      Container(
+                        width: 5,
+                        height: 5,
+                        decoration: BoxDecoration(
                           color: theme.goldPrimary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'صفحه اصلی طلالایو',
+                        style: TextStyle(
+                          color: theme.isDark ? theme.goldPrimary : const Color(0xFF78350F),
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
                         ),
@@ -185,37 +208,38 @@ class BoardHeader extends StatelessWidget {
           ),
 
           // ===================================================================
-          // 3. Left Section: Status, Web Switcher, Divider, and Clock
+          // 3. Left Section: Status, Web Switcher, Divider, and Clock (Clock on far left)
           // ===================================================================
           Expanded(
             flex: 4,
             child: Row(
               textDirection: TextDirection.ltr,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Clock & Date
+                // Clock & Date (At the far left edge!)
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       PersianUtils.formatClock(currentDateTime),
                       style: TextStyle(
                         color: theme.textPrimary,
-                        fontSize: 42,
+                        fontSize: 56,
                         fontWeight: FontWeight.w900,
-                        fontFamily: 'monospace',
+                        fontFamily: 'Vazirmatn',
                         letterSpacing: -1,
                         height: 1.0,
                       ),
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 4),
                     Text(
                       PersianUtils.getShamsiDateString(currentDateTime),
                       style: TextStyle(
                         color: theme.textSecondary,
-                        fontSize: 13,
+                        fontSize: 15,
                         fontWeight: FontWeight.w700,
+                        fontFamily: 'Vazirmatn',
                       ),
                     ),
                   ],
@@ -225,7 +249,7 @@ class BoardHeader extends StatelessWidget {
                 // Vertical Divider
                 Container(
                   width: 1,
-                  height: 48,
+                  height: 54,
                   color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.12),
                 ),
                 const SizedBox(width: 18),
@@ -242,7 +266,7 @@ class BoardHeader extends StatelessWidget {
                         onTap: onSwitchToWeb,
                         borderRadius: BorderRadius.circular(14),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                           decoration: BoxDecoration(
                             color: theme.goldPrimary.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(14),
@@ -251,13 +275,13 @@ class BoardHeader extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('🌐', style: TextStyle(fontSize: 12)),
-                              const SizedBox(width: 5),
+                              const Text('🌐', style: TextStyle(fontSize: 13)),
+                              const SizedBox(width: 6),
                               Text(
                                 'نسخه وب',
                                 style: TextStyle(
                                   color: theme.goldPrimary,
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),

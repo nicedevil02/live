@@ -123,6 +123,7 @@ class PublicDisplayController extends Controller
             'phone'              => $phone,
             'isExpired'          => $isExpired,
             'isTv'               => $request->boolean('tv'),
+            'isApp'              => $request->boolean('app'),
         ]);
     }
 

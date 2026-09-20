@@ -144,7 +144,7 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          PersianUtils.formatPriceString(row.sellPrice),
+                          PersianUtils.formatPrice(row.sellPrice, symbol: row.symbol),
                           style: TextStyle(
                             color: priceColor,
                             fontSize: isTopRow ? 58 : 38,
@@ -174,7 +174,7 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
                                 ),
                               ),
                               Text(
-                                PersianUtils.formatPriceString(row.buyPrice!),
+                                PersianUtils.formatPrice(row.buyPrice!, symbol: row.symbol),
                                 style: TextStyle(
                                   color: theme.textSecondary,
                                   fontSize: isTopRow ? 17 : 15,
@@ -422,15 +422,9 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
       text = theme.pillFlatText;
     }
 
-    final pctStr = row.changePercent != null && row.changePercent!.isNotEmpty
-        ? row.changePercent!
-        : '۰';
-    final sign = row.changeDirection > 0 ? '+' : (row.changeDirection < 0 ? '-' : '');
-    final hasValue = row.changeValue != null &&
-        row.changeValue!.isNotEmpty &&
-        row.changeValue != '0' &&
-        row.changeValue != '۰';
-    final valStr = hasValue ? PersianUtils.formatSignedNumber(row.changeValue) : '';
+    final pctStr = PersianUtils.formatSignedPercent(row.changePercent);
+    final valStr = PersianUtils.formatSignedChangeValue(row.changeValue, symbol: row.symbol);
+    final displayText = '$pctStr | $valStr';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
@@ -440,9 +434,7 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
         border: Border.all(color: border),
       ),
       child: Text(
-        hasValue
-            ? PersianUtils.toPersianDigits('$sign$pctStr% | $valStr')
-            : PersianUtils.toPersianDigits('$sign$pctStr%'),
+        displayText,
         style: TextStyle(
           color: text,
           fontSize: widget.isTopRow ? 12 : 11,

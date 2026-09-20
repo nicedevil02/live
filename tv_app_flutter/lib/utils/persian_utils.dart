@@ -13,34 +13,81 @@ class PersianUtils {
     return result;
   }
 
-  static String formatNumber(num value) {
-    final str = value.toString();
-    if (str.contains('.')) {
-      final parts = str.split('.');
+  static String formatNumber(num value, [int decimals = 0]) {
+    if (decimals > 0) {
+      final fixed = value.toStringAsFixed(decimals);
+      final parts = fixed.split('.');
       final intPart = _groupDigits(parts[0]);
-      return toPersianDigits('$intPart.${parts[1]}');
+      return toPersianDigits('$intPart/${parts[1]}');
     }
-    return toPersianDigits(_groupDigits(str));
+    return toPersianDigits(_groupDigits(value.round().toString()));
   }
 
-  static String formatPriceString(String raw) {
-    final clean = raw.trim();
-    if (clean.isEmpty) return '۰';
-
-    if (clean.contains('.')) {
-      final parts = clean.split('.');
-      final intPart = parts[0].replaceAll(RegExp(r'[^\d]'), '');
-      final formattedInt = _groupDigits(intPart.isEmpty ? '0' : intPart);
-      final decimal = parts[1].replaceAll(RegExp(r'0+$'), '');
-      if (decimal.isEmpty) {
-        return toPersianDigits(formattedInt);
-      }
-      return toPersianDigits('$formattedInt.$decimal');
+  static String formatPrice(dynamic raw, {int decimals = 0, String symbol = ''}) {
+    if (raw == null) return '۰';
+    if (symbol == 'ounce' || symbol == 'bitcoin') {
+      decimals = 2;
     }
 
-    final digitsOnly = clean.replaceAll(RegExp(r'[^\d]'), '');
-    if (digitsOnly.isEmpty) return toPersianDigits(clean);
-    return toPersianDigits(_groupDigits(digitsOnly));
+    num n = 0;
+    if (raw is num) {
+      n = raw;
+    } else if (raw is String) {
+      final clean = raw.trim();
+      if (clean.isEmpty) return '۰';
+      if (clean.contains('.')) {
+        final parts = clean.split('.');
+        final intPart = num.tryParse(parts[0].replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+        final decPart = parts[1].replaceAll(RegExp(r'[^\d]'), '');
+        if (decPart.isEmpty) {
+          n = intPart;
+        } else {
+          n = num.tryParse('$intPart.$decPart') ?? intPart;
+        }
+      } else {
+        n = num.tryParse(clean.replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+      }
+    }
+
+    return formatNumber(n, decimals);
+  }
+
+  static String formatPriceString(String raw, {String symbol = ''}) {
+    final clean = raw.trim();
+    if (clean.isEmpty) return '۰';
+    final decimals = (symbol == 'ounce' || symbol == 'bitcoin') ? 2 : 0;
+    return formatPrice(raw, decimals: decimals);
+  }
+
+  static String formatSignedPercent(dynamic val) {
+    if (val == null) return '۰/۰۰%';
+    num n = 0;
+    if (val is num) {
+      n = val;
+    } else if (val is String) {
+      n = double.tryParse(val.replaceAll('%', '').trim()) ?? 0;
+    }
+    final sign = n > 0 ? '+' : (n < 0 ? '-' : '');
+    final absVal = n.abs();
+    final fixed = absVal.toStringAsFixed(2);
+    final parts = fixed.split('.');
+    final formatted = '${parts[0]}/${parts[1]}';
+    return toPersianDigits('$sign$formatted%');
+  }
+
+  static String formatSignedChangeValue(dynamic val, {String symbol = ''}) {
+    if (val == null) return '۰';
+    final decimals = (symbol == 'ounce' || symbol == 'bitcoin') ? 2 : 0;
+    num n = 0;
+    if (val is num) {
+      n = val;
+    } else if (val is String) {
+      n = double.tryParse(val.trim()) ?? 0;
+    }
+    final sign = n > 0 ? '+' : (n < 0 ? '-' : '');
+    final absVal = n.abs();
+    final formatted = formatNumber(absVal, decimals);
+    return toPersianDigits('$sign$formatted');
   }
 
   static String formatSignedNumber(dynamic val, [int decimals = 0]) {
@@ -53,7 +100,7 @@ class PersianUtils {
     }
     final sign = n > 0 ? '+' : (n < 0 ? '-' : '');
     final absVal = n.abs();
-    final formatted = decimals > 0 ? absVal.toStringAsFixed(decimals) : formatPriceString(absVal.toString());
+    final formatted = formatNumber(absVal, decimals);
     return toPersianDigits('$sign$formatted');
   }
 

@@ -60,7 +60,7 @@ class _BoardScreenState extends State<BoardScreen> {
   }
 
   void _initWebViewController() {
-    final webUrl = 'https://talalive.ir/${widget.username}?tv=1';
+    final webUrl = 'https://talalive.ir/${widget.username}?tv=1&app=1';
 
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is AndroidWebViewPlatform) {
@@ -79,14 +79,37 @@ class _BoardScreenState extends State<BoardScreen> {
       )
       ..setNavigationDelegate(
         NavigationDelegate(
+          onProgress: (progress) {
+            if (progress >= 70 && mounted && _isWebLoading) {
+              setState(() => _isWebLoading = false);
+            }
+          },
           onPageStarted: (url) {
             if (mounted) setState(() => _isWebLoading = true);
+            Timer(const Duration(seconds: 4), () {
+              if (mounted && _isWebLoading) {
+                setState(() => _isWebLoading = false);
+              }
+            });
           },
           onPageFinished: (url) {
             if (mounted) setState(() => _isWebLoading = false);
+            _webViewController?.runJavaScript('''
+              (function() {
+                if (document.getElementById('talalive-app-tuning')) return;
+                const s = document.createElement('style');
+                s.id = 'talalive-app-tuning';
+                s.textContent = `
+                  .ambient-orb-container { display: none !important; }
+                  #tv-stage-canvas { transform-style: flat !important; }
+                `;
+                document.head.appendChild(s);
+              })();
+            ''');
           },
           onWebResourceError: (error) {
             debugPrint('[TalaLiveTV] Web resource error: ${error.description}');
+            if (mounted) setState(() => _isWebLoading = false);
           },
         ),
       );
@@ -114,7 +137,7 @@ class _BoardScreenState extends State<BoardScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'https://talalive.ir/${widget.username}?tv=1',
+              'https://talalive.ir/${widget.username}?tv=1&app=1',
               style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
             ),
           ],
@@ -128,7 +151,7 @@ class _BoardScreenState extends State<BoardScreen> {
       return WebViewWidget.fromPlatformCreationParams(
         params: AndroidWebViewWidgetCreationParams(
           controller: _webViewController!.platform,
-          displayWithHybridComposition: true, // Eliminates flickering and tearing on Android TV!
+          displayWithHybridComposition: false, // Texture Layer mode: eliminates surface tearing, clipping, and card flashing
         ),
       );
     }
@@ -152,6 +175,13 @@ class _BoardScreenState extends State<BoardScreen> {
       setState(() {
         _isWebViewMode = enabled;
       });
+      if (enabled) {
+        Timer(const Duration(milliseconds: 3500), () {
+          if (mounted && _isWebLoading) {
+            setState(() => _isWebLoading = false);
+          }
+        });
+      }
     }
   }
 
@@ -496,7 +526,21 @@ class _BoardScreenState extends State<BoardScreen> {
               isStale: false,
             ),
     );
-    final gold18Price = num.tryParse(gold18Row.sellPrice.replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+
+    num parsePrice(String raw) {
+      final clean = raw.trim();
+      if (clean.isEmpty) return 0;
+      if (clean.contains('.')) {
+        final parts = clean.split('.');
+        final intPart = num.tryParse(parts[0].replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+        final decPart = parts[1].replaceAll(RegExp(r'[^\d]'), '');
+        if (decPart.isEmpty) return intPart;
+        return num.tryParse('$intPart.$decPart') ?? intPart;
+      }
+      return num.tryParse(clean.replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+    }
+
+    final gold18Price = parsePrice(gold18Row.sellPrice);
 
     return Row(
       textDirection: TextDirection.rtl,
