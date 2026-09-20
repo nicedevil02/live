@@ -730,8 +730,11 @@
 </script>
 
     {{-- مودال هوشمند و زیبای راهنمای نصب وب‌اپلیکیشن PWA --}}
-    <div id="pwa-install-modal" class="pwa-modal-overlay">
-        <div class="pwa-modal-box">
+    <div id="pwa-install-modal" 
+         style="display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999999; background-color: rgba(2, 6, 23, 0.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box; opacity: 0; transition: opacity 0.25s ease-in-out;"
+         class="pwa-modal-overlay">
+        <div style="position: relative; width: 100%; max-width: 28rem; background-color: #ffffff; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45); padding: 1.5rem; color: #0f172a; text-align: right; z-index: 10000000;"
+             class="pwa-modal-box">
             
             <!-- هدر مودال -->
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
@@ -897,6 +900,7 @@
                     }
                 }
 
+                modal.style.display = 'flex';
                 modal.classList.add('modal-active');
                 document.body.style.overflow = 'hidden';
                 setTimeout(function() { modal.style.opacity = '1'; }, 10);
@@ -908,6 +912,7 @@
                 modal.style.opacity = '0';
                 document.body.style.overflow = '';
                 setTimeout(function() { 
+                    modal.style.display = 'none';
                     modal.classList.remove('modal-active');
                 }, 250);
             };

@@ -279,6 +279,7 @@
         }
         [x-cloak] { display: none !important; }
     </style>
+    @stack('styles')
 </head>
 <body class="bg-slate-50 dark:bg-[#020617] text-slate-800 dark:text-slate-100 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-300" x-data="publicLayoutHandler()">
 
