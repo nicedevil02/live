@@ -360,9 +360,9 @@ class _ProductSliderState extends State<ProductSlider> {
                                 PersianUtils.formatPriceString(product.finalPrice ?? '۰'),
                                 style: TextStyle(
                                   color: widget.theme.heroTextColor,
-                                  fontSize: 24,
+                                  fontSize: 28,
                                   fontWeight: FontWeight.w900,
-                                  fontFamily: 'monospace',
+                                  fontFamily: 'Vazirmatn',
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -371,8 +371,9 @@ class _ProductSliderState extends State<ProductSlider> {
                                 'تومان',
                                 style: TextStyle(
                                   color: widget.theme.heroTextColor.withOpacity(0.85),
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w800,
+                                  fontFamily: 'Vazirmatn',
                                 ),
                               ),
                             ],

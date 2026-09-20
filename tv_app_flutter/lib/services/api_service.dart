@@ -49,13 +49,14 @@ class ApiService {
     for (final base in baseUrls) {
       try {
         final url = Uri.parse('$base/api/tv/register-session');
+        final headers = {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.0',
+        };
         final response = await http.post(
           url,
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Accept': 'application/json',
-            'User-Agent': 'TalaLiveTV-Flutter/2.0',
-          },
+          headers: headers,
           body: json.encode({}),
         ).timeout(const Duration(seconds: 8));
 
@@ -64,7 +65,7 @@ class ApiService {
           return data;
         }
       } catch (e) {
-        // Try next base url
+        debugPrint('[TalaLiveTV] createPairingSession error on $base: $e');
       }
     }
     return null;
@@ -74,12 +75,13 @@ class ApiService {
     for (final base in baseUrls) {
       try {
         final url = Uri.parse('$base/api/tv/check/$sessionCode');
+        final headers = {
+          'Accept': 'application/json',
+          if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.0',
+        };
         final response = await http.get(
           url,
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'TalaLiveTV-Flutter/2.0',
-          },
+          headers: headers,
         ).timeout(const Duration(seconds: 5));
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -87,7 +89,7 @@ class ApiService {
           return data;
         }
       } catch (e) {
-        // Try next base url
+        debugPrint('[TalaLiveTV] checkPairingStatus error on $base: $e');
       }
     }
     return null;
@@ -103,13 +105,14 @@ class ApiService {
       try {
         final url = Uri.parse('$base/api/display/snapshot/$username?t=${DateTime.now().millisecondsSinceEpoch}');
         debugPrint('[TalaLiveTV] Fetching snapshot from: $url');
+        final headers = {
+          'Accept': 'application/json',
+          'Cache-Control': 'no-cache',
+          if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.0',
+        };
         final response = await http.get(
           url,
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'TalaLiveTV-Flutter/2.0',
-            'Cache-Control': 'no-cache',
-          },
+          headers: headers,
         ).timeout(const Duration(seconds: 8));
 
         debugPrint('[TalaLiveTV] Snapshot response HTTP ${response.statusCode} from $base');

@@ -106,47 +106,53 @@ class PriceCard extends StatelessWidget {
           // 2. Card Body: Price Number
           // ===================================================================
           Padding(
-            padding: EdgeInsets.symmetric(vertical: isTopRow ? 10 : 6),
+            padding: EdgeInsets.symmetric(vertical: isTopRow ? 8 : 4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  PersianUtils.formatPriceString(row.sellPrice),
-                  style: TextStyle(
-                    color: priceColor,
-                    fontSize: isTopRow ? 34 : 28,
-                    fontWeight: FontWeight.w900,
-                    fontFamily: 'monospace',
-                    letterSpacing: -1,
-                    height: 1.0,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    PersianUtils.formatPriceString(row.sellPrice),
+                    style: TextStyle(
+                      color: priceColor,
+                      fontSize: isTopRow ? 46 : 36,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: 'Vazirmatn',
+                      letterSpacing: -0.5,
+                      height: 1.1,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
                   ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 if (hasBuy) ...[
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'خرید: ',
-                        style: TextStyle(
-                          color: theme.textMuted,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                  const SizedBox(height: 3),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'خرید: ',
+                          style: TextStyle(
+                            color: theme.textMuted,
+                            fontSize: isTopRow ? 14 : 12,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Vazirmatn',
+                          ),
                         ),
-                      ),
-                      Text(
-                        PersianUtils.formatPriceString(row.buyPrice!),
-                        style: TextStyle(
-                          color: theme.textSecondary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'monospace',
+                        Text(
+                          PersianUtils.formatPriceString(row.buyPrice!),
+                          style: TextStyle(
+                            color: theme.textSecondary,
+                            fontSize: isTopRow ? 17 : 15,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Vazirmatn',
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ],
@@ -312,7 +318,7 @@ class PriceCard extends StatelessWidget {
           color: text,
           fontSize: 11,
           fontWeight: FontWeight.w900,
-          fontFamily: 'monospace',
+          fontFamily: 'Vazirmatn',
         ),
         textDirection: TextDirection.ltr,
       ),

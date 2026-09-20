@@ -721,9 +721,9 @@ class _BoardScreenState extends State<BoardScreen> {
                       PersianUtils.toPersianDigits(updateTime),
                       style: TextStyle(
                         color: theme.textSecondary,
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        fontFamily: 'monospace',
+                        fontFamily: 'Vazirmatn',
                       ),
                     ),
                   ],
