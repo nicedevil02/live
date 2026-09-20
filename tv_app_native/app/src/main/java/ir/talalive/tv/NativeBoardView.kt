@@ -25,8 +25,10 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
 
     // Header UI
     private val tvShopName: TextView
+    private val tvSubtitle: TextView
     private val tvPhone: TextView
     private val tvStatusBadge: TextView
+    private val tvShamsiDate: TextView
     private val tvClock: TextView
 
     // Body UI
@@ -38,7 +40,8 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
     private val tvProductDetails: TextView
     private val tvSlideCounter: TextView
 
-    // Footer UI
+    // Ticker & Footer UI
+    private val tvMarqueeTicker: TextView
     private val tvFooterUpdate: TextView
     private val tvFooterDomain: TextView
 
@@ -82,18 +85,44 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         }
 
         val padH = Scale.px(context, 0.035f).toInt()
-        val padV = Scale.px(context, 0.025f).toInt()
+        val padV = Scale.px(context, 0.020f).toInt()
         setPadding(padH, padV, padH, padV)
 
-        // 1. Header (Shop Name + Phone + Status Badge + Clock)
+        // =========================================================================
+        // 1. Luxury Header (Logo + Shop Name/Subtitle + Status + Date/Clock)
+        // =========================================================================
         val headerLayout = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-                bottomMargin = Scale.px(context, 0.018f).toInt()
+                bottomMargin = Scale.px(context, 0.014f).toInt()
+            }
+            layoutParams = lp
+            background = makeHeaderDrawable()
+            val pH = Scale.px(context, 0.024f).toInt()
+            val pV = Scale.px(context, 0.014f).toInt()
+            setPadding(pH, pV, pH, pV)
+        }
+
+        // Logo Monogram
+        val ivLogo = TextView(context).apply {
+            text = "زر"
+            setTextColor(Color.parseColor("#020617"))
+            typeface = Fonts.bold(context)
+            Scale.applyTextSize(this, 0.028f)
+            gravity = Gravity.CENTER
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                colors = intArrayOf(Color.parseColor("#FBBF24"), Color.parseColor("#D97706"))
+                orientation = GradientDrawable.Orientation.TL_BR
+            }
+            val size = Scale.px(context, 0.055f).toInt()
+            val lp = LayoutParams(size, size).apply {
+                leftMargin = Scale.px(context, 0.014f).toInt()
             }
             layoutParams = lp
         }
+        headerLayout.addView(ivLogo)
 
         val titleContainer = LinearLayout(context).apply {
             orientation = VERTICAL
@@ -102,56 +131,84 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         }
 
         tvShopName = TextView(context).apply {
-            text = "طلالایو TV"
+            text = "گالری طلا و جواهر طلالایو"
             setTextColor(Color.parseColor("#F59E0B")) // Gold
             typeface = Fonts.bold(context)
-            Scale.applyTextSize(this, 0.044f)
+            Scale.applyTextSize(this, 0.038f)
+        }
+
+        tvSubtitle = TextView(context).apply {
+            text = "تابلوی رسمی نرخ لحظه‌ای طلا، سکه و ارز"
+            setTextColor(Color.parseColor("#94A3B8"))
+            typeface = Fonts.regular(context)
+            Scale.applyTextSize(this, 0.018f)
         }
 
         tvPhone = TextView(context).apply {
             text = ""
-            setTextColor(Color.parseColor("#94A3B8"))
+            setTextColor(Color.parseColor("#CBD5E1"))
             typeface = Fonts.regular(context)
-            Scale.applyTextSize(this, 0.020f)
+            Scale.applyTextSize(this, 0.018f)
             visibility = View.GONE
         }
 
         titleContainer.addView(tvShopName)
+        titleContainer.addView(tvSubtitle)
         titleContainer.addView(tvPhone)
 
+        // Status Badge (Live / Backup / Offline)
         tvStatusBadge = TextView(context).apply {
-            text = "به‌روز"
+            text = "● نرخ لحظه‌ای"
             setTextColor(Color.parseColor("#22C55E"))
             typeface = Fonts.bold(context)
-            Scale.applyTextSize(this, 0.022f)
+            Scale.applyTextSize(this, 0.020f)
             gravity = Gravity.CENTER
-            val pH = Scale.px(context, 0.016f).toInt()
-            val pV = Scale.px(context, 0.008f).toInt()
-            setPadding(pH, pV, pH, pV)
-            background = makeBadgeDrawable("#166534", "#22C55E")
+            val bH = Scale.px(context, 0.018f).toInt()
+            val bV = Scale.px(context, 0.008f).toInt()
+            setPadding(bH, bV, bH, bV)
+            background = makeBadgeDrawable("#14532D", "#22C55E")
             val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                rightMargin = Scale.px(context, 0.02f).toInt()
-                leftMargin = Scale.px(context, 0.02f).toInt()
+                rightMargin = Scale.px(context, 0.015f).toInt()
+                leftMargin = Scale.px(context, 0.015f).toInt()
             }
+            layoutParams = lp
+        }
+
+        // Date & Clock Container (Left-aligned in RTL)
+        val timeContainer = LinearLayout(context).apply {
+            orientation = VERTICAL
+            gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
+            val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             layoutParams = lp
         }
 
         tvClock = TextView(context).apply {
             text = "۰۰:۰۰:۰۰"
-            setTextColor(Color.parseColor("#E2E8F0"))
+            setTextColor(Color.parseColor("#F8FAFC"))
             typeface = Fonts.bold(context)
-            Scale.applyTextSize(this, 0.038f)
+            Scale.applyTextSize(this, 0.034f)
             gravity = Gravity.LEFT
-            val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            layoutParams = lp
         }
+
+        tvShamsiDate = TextView(context).apply {
+            text = PersianText.getShamsiDate()
+            setTextColor(Color.parseColor("#94A3B8"))
+            typeface = Fonts.regular(context)
+            Scale.applyTextSize(this, 0.018f)
+            gravity = Gravity.LEFT
+        }
+
+        timeContainer.addView(tvClock)
+        timeContainer.addView(tvShamsiDate)
 
         headerLayout.addView(titleContainer)
         headerLayout.addView(tvStatusBadge)
-        headerLayout.addView(tvClock)
+        headerLayout.addView(timeContainer)
         addView(headerLayout)
 
+        // =========================================================================
         // 2. Body Container (Cards Grid + Optional Product Slideshow)
+        // =========================================================================
         bodyContainer = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER
@@ -227,12 +284,37 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
 
         addView(bodyContainer)
 
-        // 3. Footer (Last Updated + Domain)
+        // =========================================================================
+        // 3. Marquee Ticker (Smooth scrolling announcement bar)
+        // =========================================================================
+        tvMarqueeTicker = TextView(context).apply {
+            text = "به سامانه تابلوی هوشمند نرخ لحظه‌ای طلالایو خوش آمدید • نمایش دقیق و لحظه‌ای مظنه طلا، سکه و مسکوکات"
+            setTextColor(Color.parseColor("#FCD34D"))
+            typeface = Fonts.regular(context)
+            Scale.applyTextSize(this, 0.019f)
+            isSingleLine = true
+            ellipsize = android.text.TextUtils.TruncateAt.MARQUEE
+            marqueeRepeatLimit = -1
+            isSelected = true
+            background = makeTickerDrawable()
+            val pH = Scale.px(context, 0.020f).toInt()
+            val pV = Scale.px(context, 0.008f).toInt()
+            setPadding(pH, pV, pH, pV)
+            val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                topMargin = Scale.px(context, 0.010f).toInt()
+            }
+            layoutParams = lp
+        }
+        addView(tvMarqueeTicker)
+
+        // =========================================================================
+        // 4. Footer (Last Updated + Domain)
+        // =========================================================================
         val footerLayout = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-                topMargin = Scale.px(context, 0.018f).toInt()
+                topMargin = Scale.px(context, 0.008f).toInt()
             }
             layoutParams = lp
         }
@@ -241,7 +323,7 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
             text = "آخرین به‌روزرسانی: ---"
             setTextColor(Color.parseColor("#94A3B8"))
             typeface = Fonts.regular(context)
-            Scale.applyTextSize(this, 0.022f)
+            Scale.applyTextSize(this, 0.018f)
             val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
             layoutParams = lp
         }
@@ -250,7 +332,7 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
             text = "talalive.ir"
             setTextColor(Color.parseColor("#64748B"))
             typeface = Fonts.regular(context)
-            Scale.applyTextSize(this, 0.022f)
+            Scale.applyTextSize(this, 0.018f)
             gravity = Gravity.LEFT
             val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             layoutParams = lp
@@ -550,12 +632,33 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         return card
     }
 
+    private fun makeHeaderDrawable(): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            colors = intArrayOf(Color.parseColor("#0F172A"), Color.parseColor("#020617"))
+            orientation = GradientDrawable.Orientation.TOP_BOTTOM
+            cornerRadius = Scale.px(context, 0.018f)
+            setStroke(Scale.px(context, 0.0018f).toInt().coerceAtLeast(1), Color.parseColor("#F59E0B"))
+        }
+    }
+
+    private fun makeTickerDrawable(): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            colors = intArrayOf(Color.parseColor("#1E293B"), Color.parseColor("#0F172A"))
+            orientation = GradientDrawable.Orientation.LEFT_RIGHT
+            cornerRadius = Scale.px(context, 0.012f)
+            setStroke(Scale.px(context, 0.0012f).toInt().coerceAtLeast(1), Color.parseColor("#D97706"))
+        }
+    }
+
     private fun makeCardDrawable(): GradientDrawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
-            setColor(Color.parseColor("#0F172A")) // Slate 900
+            colors = intArrayOf(Color.parseColor("#111827"), Color.parseColor("#0B0F19"))
+            orientation = GradientDrawable.Orientation.TOP_BOTTOM
             cornerRadius = Scale.px(context, 0.016f)
-            setStroke(Scale.px(context, 0.0015f).toInt().coerceAtLeast(1), Color.parseColor("#1E293B"))
+            setStroke(Scale.px(context, 0.0015f).toInt().coerceAtLeast(1), Color.parseColor("#F59E0B"))
         }
     }
 
