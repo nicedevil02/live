@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +32,7 @@ class _BoardScreenState extends State<BoardScreen> {
   bool _isOffline = false;
   bool _isWebViewMode = false;
   bool _isWebLoading = true;
-  late final WebViewController _webViewController;
+  WebViewController? _webViewController;
   DateTime _currentDateTime = DateTime.now();
 
   Timer? _clockTimer;
@@ -42,7 +43,9 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   void initState() {
     super.initState();
-    _initWebViewController();
+    if (!kIsWeb) {
+      _initWebViewController();
+    }
     _loadSavedMode();
     _fetchData();
 
@@ -98,15 +101,38 @@ class _BoardScreenState extends State<BoardScreen> {
   }
 
   Widget _buildWebViewWidget() {
+    if (kIsWeb) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.language, size: 64, color: Color(0xFFF59E0B)),
+            const SizedBox(height: 16),
+            const Text(
+              'شما در حال حاضر روی مرورگر وب قرار دارید.',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'https://talalive.ir/${widget.username}?tv=1',
+              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+            ),
+          ],
+        ),
+      );
+    }
+    if (_webViewController == null) {
+      return const SizedBox.shrink();
+    }
     if (WebViewPlatform.instance is AndroidWebViewPlatform) {
       return WebViewWidget.fromPlatformCreationParams(
         params: AndroidWebViewWidgetCreationParams(
-          controller: _webViewController.platform,
+          controller: _webViewController!.platform,
           displayWithHybridComposition: true, // Eliminates flickering and tearing on Android TV!
         ),
       );
     }
-    return WebViewWidget(controller: _webViewController);
+    return WebViewWidget(controller: _webViewController!);
   }
 
   void _loadSavedMode() async {
