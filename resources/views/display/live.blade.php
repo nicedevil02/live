@@ -129,7 +129,7 @@
         @endif
         @if($isApp ?? false)
         /* بهینه‌سازی پردازش گرافیکی اختصاصی داخل اپلیکیشن بدون کوچکترین تاثیر روی مرورگر */
-        .ambient-orb-container { display: none !important; }
+        /* .ambient-orb-container { display: none !important; } */
         #tv-stage-canvas { transform-style: flat !important; }
         @endif
         ::-webkit-scrollbar { display: none !important; }
@@ -2375,10 +2375,11 @@
                         if (saved !== null) {
                             return saved === 'true';
                         }
-                        // پیش‌فرض در صورت عدم ذخیره قبلی (برای اپ فعال باشد)
+                        /* پیش‌فرض در صورت عدم ذخیره قبلی (برای اپ فعال باشد) - به درخواست غیرفعال شد
                         if (new URLSearchParams(window.location.search).get('app') === '1' || {{ ($isApp ?? false) ? 'true' : 'false' }}) {
                             return true;
                         }
+                        */
                         return false;
                     } catch (e) {
                         return false;

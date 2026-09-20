@@ -157,7 +157,7 @@ class _BoardScreenState extends State<BoardScreen> {
                 const s = document.createElement('style');
                 s.id = 'talalive-app-tuning';
                 s.textContent = `
-                  .ambient-orb-container { display: none !important; }
+                  /* .ambient-orb-container { display: none !important; } */
                   #tv-stage-canvas { transform-style: flat !important; }
                 `;
                 document.head.appendChild(s);
