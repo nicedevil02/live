@@ -424,6 +424,21 @@ class _BoardScreenState extends State<BoardScreen> {
     final hasProducts = _model!.products.isNotEmpty;
     final allRows = _model!.rows;
 
+    final gold18Row = allRows.firstWhere(
+      (r) => r.symbol == 'gold18',
+      orElse: () => allRows.isNotEmpty
+          ? allRows.first
+          : const PriceRow(
+              symbol: '',
+              title: '',
+              sellPrice: '0',
+              unit: '',
+              changeDirection: 0,
+              isStale: false,
+            ),
+    );
+    final gold18Price = num.tryParse(gold18Row.sellPrice.replaceAll(RegExp(r'[^\d]'), '')) ?? 0;
+
     return Row(
       textDirection: TextDirection.rtl,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -438,6 +453,7 @@ class _BoardScreenState extends State<BoardScreen> {
               products: _model!.products,
               intervalSec: _model!.sliderIntervalSec,
               theme: theme,
+              gold18Price: gold18Price,
             ),
           ),
           const SizedBox(width: 16),

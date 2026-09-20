@@ -26,6 +26,8 @@ class ProductItem {
   final String? weightGram;
   final String? finalPrice;
   final String? laborFee;
+  final String? profitValue;
+  final String? profitType;
   final List<String> imageUrls;
 
   const ProductItem({
@@ -34,8 +36,27 @@ class ProductItem {
     this.weightGram,
     this.finalPrice,
     this.laborFee,
+    this.profitValue,
+    this.profitType,
     required this.imageUrls,
   });
+
+  String getDisplayPrice(num gold18Price) {
+    final w = num.tryParse(weightGram ?? '') ?? 0;
+    final l = num.tryParse(laborFee ?? '') ?? 0;
+    final pv = num.tryParse(profitValue ?? '') ?? 0;
+    final isPercent = profitType == 'percent';
+    if (gold18Price > 0 && w > 0) {
+      final base = (gold18Price * w) + l;
+      final profit = isPercent ? (base * (pv / 100)) : pv;
+      final calc = (base + profit).round();
+      if (calc > 0) return calc.toString();
+    }
+    if (finalPrice != null && finalPrice!.isNotEmpty && finalPrice != '0') {
+      return finalPrice!;
+    }
+    return '۰';
+  }
 }
 
 int _parseInt(dynamic val, int def) {
@@ -209,8 +230,25 @@ class BoardModel {
           final weight = pMap['weight_gram']?.toString();
           final price = pMap['final_price']?.toString();
           final labor = pMap['labor_fee']?.toString();
+          final profitVal = pMap['profit_value']?.toString();
+          final profitTyp = pMap['profit_type']?.toString();
 
           final imgList = <String>[];
+          // 1. Eloquent 'images' relationship: [{url: "..."}, ...]
+          final imagesList = pMap['images'] as List<dynamic>?;
+          if (imagesList != null) {
+            for (final img in imagesList) {
+              if (img is Map) {
+                final u = img['url']?.toString().trim();
+                if (u != null && u.isNotEmpty) {
+                  imgList.add(u);
+                }
+              } else if (img is String && img.trim().isNotEmpty) {
+                imgList.add(img.trim());
+              }
+            }
+          }
+          // 2. Fallback: image_urls
           final rawImgs = pMap['image_urls'] as List<dynamic>?;
           if (rawImgs != null) {
             for (final u in rawImgs) {
@@ -219,6 +257,7 @@ class BoardModel {
               }
             }
           }
+          // 3. Fallback: image_url
           if (imgList.isEmpty) {
             final single = pMap['image_url']?.toString().trim();
             if (single != null && single.isNotEmpty) {
@@ -232,6 +271,8 @@ class BoardModel {
             weightGram: weight,
             finalPrice: price,
             laborFee: labor,
+            profitValue: profitVal,
+            profitType: profitTyp,
             imageUrls: imgList,
           ));
         }

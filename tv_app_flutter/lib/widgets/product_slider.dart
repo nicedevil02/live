@@ -8,12 +8,14 @@ class ProductSlider extends StatefulWidget {
   final List<ProductItem> products;
   final int intervalSec;
   final BoardThemeData theme;
+  final num gold18Price;
 
   const ProductSlider({
     super.key,
     required this.products,
     required this.intervalSec,
     required this.theme,
+    this.gold18Price = 0,
   });
 
   @override
@@ -299,8 +301,12 @@ class _ProductSliderState extends State<ProductSlider> {
                                 _buildChip('وزن:', '${product.weightGram!} گرم'),
                                 const SizedBox(width: 8),
                               ],
-                              if (product.laborFee != null && product.laborFee!.isNotEmpty) ...[
+                              if (product.profitValue != null && product.profitValue!.isNotEmpty && product.profitValue != '0') ...[
+                                _buildChip('سود:', '${product.profitValue}%'),
+                                const SizedBox(width: 8),
+                              ] else if (product.laborFee != null && product.laborFee!.isNotEmpty && product.laborFee != '0') ...[
                                 _buildChip('اجرت:', product.laborFee!),
+                                const SizedBox(width: 8),
                               ],
                             ],
                           ),
@@ -310,83 +316,109 @@ class _ProductSliderState extends State<ProductSlider> {
                     const SizedBox(width: 16),
 
                     // Left: Price Box (مبلغ نهایی ویترین)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        gradient: widget.theme.heroCardGradient,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: widget.theme.heroStrokeColor, width: 1.5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: widget.theme.goldPrimary.withOpacity(0.25),
-                            blurRadius: 14,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: BoxDecoration(
-                                  color: widget.theme.goldPrimary,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                'مبلغ نهایی ویترین',
-                                style: TextStyle(
-                                  color: widget.theme.heroTextColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(
-                                PersianUtils.formatPriceString(product.finalPrice ?? '۰'),
-                                style: TextStyle(
-                                  color: widget.theme.heroTextColor,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
-                                  fontFamily: 'Vazirmatn',
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'تومان',
-                                style: TextStyle(
-                                  color: widget.theme.heroTextColor.withOpacity(0.85),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  fontFamily: 'Vazirmatn',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildPriceBox(product),
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPriceBox(ProductItem product) {
+    final displayPrice = product.getDisplayPrice(widget.gold18Price);
+    final hasValidPrice = displayPrice != '۰' && (num.tryParse(displayPrice) ?? 0) > 0;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: widget.theme.heroCardGradient,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: widget.theme.heroStrokeColor, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: widget.theme.goldPrimary.withOpacity(0.25),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: widget.theme.goldPrimary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                'مبلغ نهایی ویترین',
+                style: TextStyle(
+                  color: widget.theme.heroTextColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Vazirmatn',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          if (hasValidPrice)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  PersianUtils.formatPriceString(displayPrice),
+                  style: TextStyle(
+                    color: widget.theme.heroTextColor,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: 'Vazirmatn',
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'تومان',
+                  style: TextStyle(
+                    color: widget.theme.heroTextColor.withOpacity(0.85),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    fontFamily: 'Vazirmatn',
+                  ),
+                ),
+              ],
+            )
+          else
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: widget.theme.goldPrimary.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'در حال استعلام نرخ...',
+                style: TextStyle(
+                  color: widget.theme.heroTextColor,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Vazirmatn',
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
