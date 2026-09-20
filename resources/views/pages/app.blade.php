@@ -103,7 +103,7 @@
                     {{-- بج نسخه جدید و پشتیبانی سیستم‌ها --}}
                     <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
-                        <span>نسخه جدید ۲.۰.۱ • مجهز به سیستم بروزرسانی آنلاین (OTA) و کنترل ریموت</span>
+                        <span>نسخه جدید ۱.۰.۱ • مجهز به سیستم بروزرسانی آنلاین (OTA) و کنترل ریموت</span>
                     </div>
 
                     {{-- تیتر اصلی H1 فوق‌العاده قوی سئو --}}
@@ -135,12 +135,12 @@
                         {{-- دکمه‌های دانلود --}}
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- دانلود مستقیم APK برای تلویزیون -->
-                            <a href="/downloads/talalive-tv.apk?v=2.0.1" 
+                            <a href="/downloads/talalive-tv.apk?v=1.0.1" 
                                class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-lg shadow-amber-500/20 text-right border border-amber-400/50 group">
                                 <span class="text-3xl group-hover:scale-110 transition-transform">📺</span>
                                 <div class="min-w-0 flex-1">
                                     <span class="block text-[11px] font-bold text-slate-900 opacity-90">دانلود مستقیم اپلیکیشن تلویزیون</span>
-                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۲.۰.۱)</span>
+                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۱)</span>
                                     <span class="block text-[10px] text-slate-900 font-medium">حجم ۴۶ مگابایت • اندروید تی‌وی، اندروید باکس و موبایل</span>
                                 </div>
                             </a>
@@ -206,123 +206,36 @@
                     <div class="absolute -inset-4 bg-gradient-to-r from-amber-500/25 via-yellow-500/30 to-amber-600/20 blur-3xl rounded-[40px] opacity-75 dark:opacity-90 pointer-events-none"></div>
 
                     {{-- فریم تلویزیون ۶۵ اینچ هوشمند طلالایو --}}
-                    <div class="relative w-full rounded-[28px] p-2.5 sm:p-3 bg-gradient-to-b from-slate-300 via-slate-400 to-slate-500 dark:from-slate-700 dark:via-slate-800 dark:to-slate-950 tv-mockup-shadow border border-slate-300/80 dark:border-slate-700/60 transition-transform duration-500 hover:scale-[1.01]">
+                    <div class="relative w-full rounded-[24px] sm:rounded-[28px] p-2 sm:p-2.5 bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 dark:from-slate-700 dark:via-slate-800 dark:to-slate-950 tv-mockup-shadow border border-slate-300/80 dark:border-slate-700/60 transition-transform duration-500 hover:scale-[1.01] group">
                         
-                        {{-- صفحه نمایشگر زنده تلویزیون --}}
-                        <div class="relative rounded-2xl bg-slate-950 overflow-hidden border border-amber-500/30 text-white aspect-[16/10] flex flex-col justify-between p-3 sm:p-3.5 shadow-2xl select-none">
-                            
-                            {{-- هدر تابلوی تلویزیون (کاملاً مدرن و مطابق نسخه اصلی) --}}
-                            <div class="flex items-center justify-between border-b border-amber-500/20 pb-2">
-                                {{-- سمت راست: QR کد و اطلاعات تماس --}}
-                                <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-lg bg-white p-0.5 shadow-sm shrink-0 flex items-center justify-center">
-                                        <div class="w-full h-full bg-slate-900 rounded flex items-center justify-center text-[7px] font-mono font-black text-amber-400">QR</div>
-                                    </div>
-                                    <div class="text-right hidden sm:block">
-                                        <div class="font-black text-[9px] text-amber-200 leading-none">۰۹۱۲۰۰۰۰۰۰۰</div>
-                                        <div class="text-[8px] text-pink-400 font-bold mt-0.5" dir="ltr">@talalive</div>
-                                    </div>
-                                </div>
+                        {{-- صفحه نمایشگر واقعی تلویزیون --}}
+                        <div class="relative rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 border border-amber-500/30 shadow-2xl">
+                            {{-- تصویر اسکرین‌شات زنده و واقعی اپلیکیشن --}}
+                            <picture>
+                                <source srcset="{{ asset('images/tv-preview.webp') }}?v=1.0.1" type="image/webp">
+                                <img src="{{ asset('images/tv-preview.png') }}?v=1.0.1" 
+                                     alt="اسکرین‌شات واقعی اپلیکیشن تابلوی هوشمند طلالایو روی تلویزیون مغازه" 
+                                     class="w-full h-auto object-cover block select-none"
+                                     width="1024" 
+                                     height="577" 
+                                     loading="eager"
+                                     fetchpriority="high">
+                            </picture>
 
-                                {{-- مرکز: نام گالری و نشان شهر --}}
-                                <div class="text-center">
-                                    <div class="font-black text-xs sm:text-sm text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 tracking-tight">گالری طلا و جواهر طلالایو</div>
-                                    <div class="inline-flex items-center gap-1 px-2 py-0.5 mt-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[8px] text-amber-300 font-black">
-                                        <span>✦</span>
-                                        <span>نرخ‌گذاری لحظه‌ای طلا و ارز — تهران</span>
-                                        <span>✦</span>
-                                    </div>
-                                </div>
+                            {{-- افکت تابش و انعکاس ملایم شیشه نمایشگر (Glossy TV Screen Reflection) --}}
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-amber-500/[0.08] pointer-events-none"></div>
 
-                                {{-- سمت چپ: ساعت با ثانیه‌شمار و وضعیت اتصال --}}
-                                <div class="flex items-center gap-2 text-left" dir="ltr">
-                                    <div>
-                                        <div class="font-mono text-xs sm:text-sm font-black text-white tabular-nums leading-none">
-                                            {{ date('H:i:s') }}
-                                        </div>
-                                        <div class="text-[8px] text-slate-400 font-bold mt-0.5" dir="rtl">
-                                            امروز
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1 bg-emerald-500/15 border border-emerald-500/40 px-1.5 py-0.5 rounded-full text-emerald-400 text-[8px] font-black">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                                        <span dir="rtl">برخط</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- کارت‌های نرخ‌های واقعی لوکس --}}
-                            <div class="grid grid-cols-2 gap-2 my-auto">
-                                {{-- طلای ۱۸ عیار --}}
-                                <div class="bg-gradient-to-b from-amber-500/20 via-slate-900/95 to-slate-950 border-2 border-amber-400/60 rounded-xl p-2 text-right space-y-0.5 shadow-lg shadow-amber-500/15">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[10px] text-amber-300 font-black">✦ طلای ۱۸ عیار (گرم)</span>
-                                        <span class="text-[8px] px-1 py-0.2 rounded bg-amber-500/25 text-amber-300 font-black">شاخص</span>
-                                    </div>
-                                    <div class="text-sm sm:text-base font-black text-amber-400 font-mono tracking-wider drop-shadow-[0_2px_8px_rgba(251,191,36,0.35)]" dir="ltr">
-                                        {{ !empty($rates['gold18']) && $rates['gold18'] > 0 ? number_format($rates['gold18']) : '۴,۶۵۰,۰۰۰' }}
-                                    </div>
-                                    <div class="flex items-center justify-between pt-1 border-t border-white/10 text-[8px]">
-                                        <span class="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold font-mono" dir="ltr">+۱.۵٪ | ۱۲۵,۰۰۰</span>
-                                        <span class="px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 font-bold">تومان</span>
-                                    </div>
-                                </div>
-
-                                {{-- سکه تمام امامی --}}
-                                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-300 font-bold">سکه بهار آزادی (امامی)</div>
-                                    <div class="text-sm sm:text-base font-black text-amber-300 font-mono tracking-wider" dir="ltr">
-                                        {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '۵۲,۸۰۰,۰۰۰' }}
-                                    </div>
-                                    <div class="flex items-center justify-between pt-1 border-t border-white/10 text-[8px]">
-                                        <span class="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold font-mono" dir="ltr">+۰.۸٪ | ۴۰۰,۰۰۰</span>
-                                        <span class="px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 font-bold">تومان</span>
-                                    </div>
-                                </div>
-
-                                {{-- مظنه مثقال تهران --}}
-                                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-300 font-bold">مظنه مثقال ۱۷ عیار</div>
-                                    <div class="text-sm sm:text-base font-black text-white font-mono tracking-wider" dir="ltr">
-                                        {{ !empty($rates['mesghal']) && $rates['mesghal'] > 0 ? number_format($rates['mesghal']) : '۲۰,۱۵۰,۰۰۰' }}
-                                    </div>
-                                    <div class="flex items-center justify-between pt-1 border-t border-white/10 text-[8px]">
-                                        <span class="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold font-mono" dir="ltr">+۱.۲٪</span>
-                                        <span class="px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 font-bold">تومان</span>
-                                    </div>
-                                </div>
-
-                                {{-- انس طلا / نیم سکه --}}
-                                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2 text-right space-y-0.5">
-                                    <div class="text-[10px] text-slate-300 font-bold">نیم سکه بهار آزادی</div>
-                                    <div class="text-sm sm:text-base font-black text-white font-mono tracking-wider" dir="ltr">
-                                        {{ !empty($rates['coin_half']) && $rates['coin_half'] > 0 ? number_format($rates['coin_half']) : '۲۷,۲۰۰,۰۰۰' }}
-                                    </div>
-                                    <div class="flex items-center justify-between pt-1 border-t border-white/10 text-[8px]">
-                                        <span class="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold font-mono" dir="ltr">+۰.۵٪</span>
-                                        <span class="px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 font-bold">تومان</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- فوتر تابلوی تلویزیون --}}
-                            <div class="pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-[8px] text-slate-400">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-amber-400 font-bold">TalaLive.ir</span>
-                                    <span>•</span>
-                                    <span>مراکز طلای تهران</span>
-                                </div>
-                                <div class="font-mono text-slate-500">By Bahman Dev</div>
-                                <div class="flex items-center gap-1 text-emerald-400 font-bold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                    <span>آپدیت آنلاین OTA فعال</span>
-                                </div>
+                            {{-- برچسب زنده بودن و اتصال در گوشه تصویر --}}
+                            <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-500/40 text-[10px] font-bold text-amber-300 shadow-lg">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
+                                <span>پیش‌نمایش زنده اپلیکیشن (v1.0.1)</span>
                             </div>
                         </div>
+
                     </div>
 
                     {{-- موبایل شناور در گوشه تلویزیون (نشان‌دهنده کنترل تابلو با گوشی و ریموت) --}}
-                    <div class="hidden sm:block absolute -bottom-6 -left-6 w-48 rounded-2xl p-2 bg-slate-900 border-2 border-amber-400/60 shadow-2xl shadow-black/60 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                    <div class="hidden sm:block absolute -bottom-6 -left-6 w-48 rounded-2xl p-2 bg-slate-900 border-2 border-amber-400/60 shadow-2xl shadow-black/60 transform rotate-2 hover:rotate-0 transition-transform duration-300 z-20">
                         <div class="flex justify-center mb-1">
                             <div class="w-8 h-1 bg-slate-700 rounded-full"></div>
                         </div>
@@ -337,8 +250,8 @@
                                     <span class="font-mono font-bold text-amber-300">▲ / ▼ ۱۰۰٪</span>
                                 </div>
                                 <div class="flex items-center justify-between text-[8px]">
-                                    <span class="text-slate-400">تم فعال:</span>
-                                    <span class="text-amber-300 font-bold">لوکس شیشه‌ای</span>
+                                    <span class="text-slate-400">نسخه نرم‌افزار:</span>
+                                    <span class="text-amber-300 font-bold font-mono">۱.۰.۱</span>
                                 </div>
                             </div>
                             <div class="bg-amber-500/20 text-amber-300 text-center py-1 rounded text-[9px] font-bold">
@@ -688,7 +601,7 @@
       "operatingSystem": "Android TV, Google TV, Android Box, Web Browser",
       "applicationCategory": "BusinessApplication",
       "description": "نرم‌افزار هوشمند مدیریت تابلوی طلافروشی، نمایش لحظه‌ای نرخ طلا و سکه روی تلویزیون مغازه بدون نیاز به کامپیوتر یا مینی‌کیس.",
-      "softwareVersion": "2.0.1",
+      "softwareVersion": "1.0.1",
       "fileSize": "48552583",
       "downloadUrl": "https://talalive.ir/downloads/talalive-tv.apk",
       "offers": {
