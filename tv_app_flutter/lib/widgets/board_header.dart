@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../models/board_model.dart';
@@ -7,7 +8,7 @@ import '../utils/persian_utils.dart';
 class BoardHeader extends StatelessWidget {
   final BoardModel model;
   final BoardThemeData theme;
-  final DateTime currentDateTime;
+  final ValueListenable<DateTime> timeNotifier;
   final bool isOffline;
   final VoidCallback? onSwitchToWeb;
 
@@ -15,14 +16,15 @@ class BoardHeader extends StatelessWidget {
     super.key,
     required this.model,
     required this.theme,
-    required this.currentDateTime,
+    required this.timeNotifier,
     this.isOffline = false,
     this.onSwitchToWeb,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return RepaintBoundary(
+      child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
       decoration: BoxDecoration(
         color: theme.headerBackground.withOpacity(theme.isDark ? 0.85 : 0.95),
@@ -217,32 +219,37 @@ class BoardHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // Clock & Date (At the far left edge!)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      PersianUtils.formatClock(currentDateTime),
-                      style: TextStyle(
-                        color: theme.textPrimary,
-                        fontSize: 56,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: 'Vazirmatn',
-                        letterSpacing: -1,
-                        height: 1.0,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      PersianUtils.getShamsiDateString(currentDateTime),
-                      style: TextStyle(
-                        color: theme.textSecondary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Vazirmatn',
-                      ),
-                    ),
-                  ],
+                ValueListenableBuilder<DateTime>(
+                  valueListenable: timeNotifier,
+                  builder: (context, dateTime, _) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          PersianUtils.formatClock(dateTime),
+                          style: TextStyle(
+                            color: theme.textPrimary,
+                            fontSize: 56,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'Vazirmatn',
+                            letterSpacing: -1,
+                            height: 1.0,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          PersianUtils.getShamsiDateString(dateTime),
+                          style: TextStyle(
+                            color: theme.textSecondary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Vazirmatn',
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(width: 20),
 
@@ -297,8 +304,9 @@ class BoardHeader extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildStatusBadge() {
     Color bgColor;

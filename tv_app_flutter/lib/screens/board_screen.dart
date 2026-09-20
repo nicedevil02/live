@@ -36,7 +36,7 @@ class _BoardScreenState extends State<BoardScreen> {
   bool _isWebViewMode = false;
   bool _isWebLoading = true;
   WebViewController? _webViewController;
-  DateTime _currentDateTime = DateTime.now();
+  final ValueNotifier<DateTime> _timeNotifier = ValueNotifier<DateTime>(DateTime.now());
 
   Timer? _clockTimer;
   Timer? _refreshTimer;
@@ -67,14 +67,8 @@ class _BoardScreenState extends State<BoardScreen> {
     _loadSavedZoom();
     _fetchData();
 
-    // Clock timer (every 1 second)
-    _clockTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) {
-        setState(() {
-          _currentDateTime = DateTime.now();
-        });
-      }
-    });
+    // Zero-overhead clock timer: updates ValueNotifier only, ZERO root rebuilds!
+    _startClockTimer();
 
     // Check update in background after 12 seconds
     _updateCheckTimer = Timer(const Duration(seconds: 12), () {
@@ -83,6 +77,15 @@ class _BoardScreenState extends State<BoardScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _focusNode.requestFocus();
+    });
+  }
+
+  void _startClockTimer() {
+    _clockTimer?.cancel();
+    _clockTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        _timeNotifier.value = DateTime.now();
+      }
     });
   }
 
@@ -236,11 +239,18 @@ class _BoardScreenState extends State<BoardScreen> {
         _isWebViewMode = enabled;
       });
       if (enabled) {
+        // Pause background polling and clock on TV to conserve CPU and RAM
+        _refreshTimer?.cancel();
+        _clockTimer?.cancel();
         Timer(const Duration(milliseconds: 3500), () {
           if (mounted && _isWebLoading) {
             setState(() => _isWebLoading = false);
           }
         });
+      } else {
+        // Resume clock and immediately fetch latest snapshot for Native board
+        _startClockTimer();
+        _fetchData();
       }
     }
   }
@@ -350,6 +360,7 @@ class _BoardScreenState extends State<BoardScreen> {
     _updateCheckTimer?.cancel();
     _zoomFeedbackTimer?.cancel();
     _focusNode.dispose();
+    _timeNotifier.dispose();
     super.dispose();
   }
 
@@ -411,7 +422,7 @@ class _BoardScreenState extends State<BoardScreen> {
             ),
             insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 680, maxHeight: 380),
+              constraints: const BoxConstraints(maxWidth: 680, maxHeight: 420),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
               child: Directionality(
                 textDirection: TextDirection.rtl,
@@ -594,7 +605,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                 // Box 2: Zoom Controls
                                 Expanded(
                                   child: Container(
-                                    padding: const EdgeInsets.all(12),
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF1E293B),
                                       borderRadius: BorderRadius.circular(16),
@@ -617,7 +628,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 6),
+                                        const SizedBox(height: 4),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
@@ -627,8 +638,10 @@ class _BoardScreenState extends State<BoardScreen> {
                                                 _zoomOut();
                                                 setDialogState(() {});
                                               },
-                                              icon: const Icon(Icons.remove_circle_outline, color: Colors.white70, size: 26),
+                                              icon: const Icon(Icons.remove_circle_outline, color: Colors.white70, size: 24),
                                               tooltip: 'کوچک‌نمایی',
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                                             ),
                                             const SizedBox(width: 8),
                                             // Percentage button
@@ -639,7 +652,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                               },
                                               borderRadius: BorderRadius.circular(8),
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                                                 decoration: BoxDecoration(
                                                   color: const Color(0xFF0F172A),
                                                   borderRadius: BorderRadius.circular(8),
@@ -650,7 +663,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                                   style: const TextStyle(
                                                     color: Color(0xFFF59E0B),
                                                     fontWeight: FontWeight.w900,
-                                                    fontSize: 17,
+                                                    fontSize: 16,
                                                     fontFamily: 'Vazirmatn',
                                                   ),
                                                 ),
@@ -663,8 +676,10 @@ class _BoardScreenState extends State<BoardScreen> {
                                                 _zoomIn();
                                                 setDialogState(() {});
                                               },
-                                              icon: const Icon(Icons.add_circle_outline, color: Color(0xFFF59E0B), size: 26),
+                                              icon: const Icon(Icons.add_circle_outline, color: Color(0xFFF59E0B), size: 24),
                                               tooltip: 'بزرگ‌نمایی',
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
                                             ),
                                           ],
                                         ),
@@ -764,7 +779,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                 // Box 4: Quick Actions (Refresh & Exit)
                                 Expanded(
                                   child: Container(
-                                    padding: const EdgeInsets.all(12),
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF1E293B),
                                       borderRadius: BorderRadius.circular(16),
@@ -787,7 +802,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                             label: const Text('بروزرسانی داده', style: TextStyle(color: Colors.white, fontFamily: 'Vazirmatn', fontSize: 11)),
                                             style: OutlinedButton.styleFrom(
                                               side: const BorderSide(color: Color(0xFF334155)),
-                                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                             ),
                                           ),
@@ -804,7 +819,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                             label: const Text('خروج / لغو اتصال', style: TextStyle(color: Colors.redAccent, fontFamily: 'Vazirmatn', fontSize: 11)),
                                             style: OutlinedButton.styleFrom(
                                               side: BorderSide(color: Colors.redAccent.withOpacity(0.4)),
-                                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                             ),
                                           ),
@@ -1502,60 +1517,67 @@ class _BoardScreenState extends State<BoardScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
                       child: Stack(
                         children: [
-                          // Ambient Background Glow Orbs
-                          Positioned(
-                            top: -80,
-                            right: 150,
-                            child: Container(
-                              width: 500,
-                              height: 500,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  colors: [
-                                    theme.goldPrimary.withOpacity(theme.isDark ? 0.08 : 0.05),
-                                    Colors.transparent,
-                                  ],
-                                ),
+                          // Ambient Background Glow Orbs (Isolated by RepaintBoundary to avoid GPU redraw)
+                          Positioned.fill(
+                            child: RepaintBoundary(
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: -80,
+                                    right: 150,
+                                    child: Container(
+                                      width: 500,
+                                      height: 500,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            theme.goldPrimary.withOpacity(theme.isDark ? 0.08 : 0.05),
+                                            Colors.transparent,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 80,
+                                    child: Container(
+                                      width: 450,
+                                      height: 450,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            (theme.isDark ? theme.greenUp : theme.goldSecondary)
+                                                .withOpacity(theme.isDark ? 0.06 : 0.04),
+                                            Colors.transparent,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 250,
+                                    left: 550,
+                                    child: Container(
+                                      width: 400,
+                                      height: 400,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            theme.goldSecondary.withOpacity(theme.isDark ? 0.05 : 0.03),
+                                            Colors.transparent,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-
-                  Positioned(
-                    bottom: 0,
-                    left: 80,
-                    child: Container(
-                      width: 450,
-                      height: 450,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            (theme.isDark ? theme.greenUp : theme.goldSecondary)
-                                .withOpacity(theme.isDark ? 0.06 : 0.04),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 250,
-                    left: 550,
-                    child: Container(
-                      width: 400,
-                      height: 400,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            theme.goldSecondary.withOpacity(theme.isDark ? 0.05 : 0.03),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
 
                   // Main Content
                   _isLoading
@@ -1598,11 +1620,11 @@ class _BoardScreenState extends State<BoardScreen> {
                             )
                           : Column(
                               children: [
-                                // 1. Header (with Switch to Web button)
+                                // 1. Header (with Switch to Web button & zero-overhead clock)
                                 BoardHeader(
                                   model: _model!,
                                   theme: theme,
-                                  currentDateTime: _currentDateTime,
+                                  timeNotifier: _timeNotifier,
                                   isOffline: _isOffline,
                                   onSwitchToWeb: () => _setWebViewMode(true),
                                 ),
@@ -1704,11 +1726,13 @@ class _BoardScreenState extends State<BoardScreen> {
         if (hasProducts) ...[
           Expanded(
             flex: 7, // 35% of total width
-            child: ProductSlider(
-              products: _model!.products,
-              intervalSec: _model!.sliderIntervalSec,
-              theme: theme,
-              gold18Price: gold18Price,
+            child: RepaintBoundary(
+              child: ProductSlider(
+                products: _model!.products,
+                intervalSec: _model!.sliderIntervalSec,
+                theme: theme,
+                gold18Price: gold18Price,
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -1719,7 +1743,9 @@ class _BoardScreenState extends State<BoardScreen> {
         // =====================================================================
         Expanded(
           flex: hasProducts ? 13 : 20, // 65% or 100%
-          child: _buildPriceGrid(allRows, theme),
+          child: RepaintBoundary(
+            child: _buildPriceGrid(allRows, theme),
+          ),
         ),
       ],
     );
@@ -1817,7 +1843,7 @@ class _BoardScreenState extends State<BoardScreen> {
   Widget _buildFooter(BoardThemeData theme) {
     final updateTime = _model!.updatedAtText.isNotEmpty
         ? _model!.updatedAtText.replaceAll('T', ' ').substring(0, 16.clamp(0, _model!.updatedAtText.length))
-        : PersianUtils.formatClock(_currentDateTime);
+        : PersianUtils.formatClock(_timeNotifier.value);
 
     return Container(
       height: 54,
