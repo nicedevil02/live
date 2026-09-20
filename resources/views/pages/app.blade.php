@@ -19,6 +19,60 @@
     .dark .tv-mockup-shadow {
         box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 45px -5px rgba(245, 158, 11, 0.25);
     }
+    /* استایل‌های قطعی و لوکس مودال نصب PWA با لایه پس‌زمینه تیره و z-index بالا */
+    #pwa-install-modal {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999999 !important;
+        background-color: rgba(2, 6, 23, 0.82) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        backdrop-filter: blur(14px) !important;
+        display: none;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1rem !important;
+        box-sizing: border-box !important;
+        opacity: 0;
+        transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    #pwa-install-modal.modal-active {
+        display: flex !important;
+    }
+    .pwa-modal-box {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 28rem !important;
+        background-color: #ffffff !important;
+        border-radius: 1.5rem !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45) !important;
+        padding: 1.5rem !important;
+        color: #0f172a !important;
+        text-align: right !important;
+        z-index: 10000000 !important;
+        animation: pwaModalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .dark .pwa-modal-box {
+        background-color: #0f172a !important;
+        border-color: #334155 !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85) !important;
+        color: #f8fafc !important;
+    }
+    @keyframes pwaModalScaleUp {
+        from {
+            transform: scale(0.95) translateY(10px);
+            opacity: 0.8;
+        }
+        to {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    }
 </style>
 @endpush
 
@@ -676,10 +730,8 @@
 </script>
 
     {{-- مودال هوشمند و زیبای راهنمای نصب وب‌اپلیکیشن PWA --}}
-    <div id="pwa-install-modal" 
-         style="display: none; opacity: 0;" 
-         class="fixed inset-0 z-[99999] items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md transition-opacity duration-200">
-        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden p-5 sm:p-6 text-right">
+    <div id="pwa-install-modal" class="pwa-modal-overlay">
+        <div class="pwa-modal-box">
             
             <!-- هدر مودال -->
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
@@ -845,7 +897,8 @@
                     }
                 }
 
-                modal.style.display = 'flex';
+                modal.classList.add('modal-active');
+                document.body.style.overflow = 'hidden';
                 setTimeout(function() { modal.style.opacity = '1'; }, 10);
             };
 
@@ -853,7 +906,10 @@
                 const modal = document.getElementById('pwa-install-modal');
                 if (!modal) return;
                 modal.style.opacity = '0';
-                setTimeout(function() { modal.style.display = 'none'; }, 200);
+                document.body.style.overflow = '';
+                setTimeout(function() { 
+                    modal.classList.remove('modal-active');
+                }, 250);
             };
 
             window.triggerPwaPromptFromModal = function() {
