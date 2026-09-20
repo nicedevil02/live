@@ -28,6 +28,7 @@ class _PairingScreenState extends State<PairingScreen> {
   }
 
   void _startPairingProcess() async {
+    _pollingTimer?.cancel();
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -36,10 +37,10 @@ class _PairingScreenState extends State<PairingScreen> {
     final session = await ApiService.createPairingSession();
     if (!mounted) return;
 
-    if (session != null) {
-      final code = session['code']?.toString() ?? '';
-      final sessId = session['session_id']?.toString() ?? '';
-      final qr = session['qr_url']?.toString() ?? 'https://talalive.ir/tv?code=$code';
+    if (session != null && (session['success'] == true || session['activation_code'] != null)) {
+      final code = session['activation_code']?.toString() ?? session['code']?.toString() ?? '';
+      final sessId = session['session_code']?.toString() ?? session['session_id']?.toString() ?? '';
+      final qr = 'https://talalive.ir/p/$code';
 
       setState(() {
         _pairingCode = code;
@@ -68,7 +69,7 @@ class _PairingScreenState extends State<PairingScreen> {
       if (status != null && status['paired'] == true) {
         timer.cancel();
         final username = status['username']?.toString() ?? '';
-        final token = status['token']?.toString();
+        final token = status['device_token']?.toString() ?? status['token']?.toString();
 
         if (username.isNotEmpty) {
           await ApiService.savePairing(username, token);

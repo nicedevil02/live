@@ -47,13 +47,18 @@ class ApiService {
   static Future<Map<String, dynamic>?> createPairingSession() async {
     for (final base in baseUrls) {
       try {
-        final url = Uri.parse('$base/api/display/pairing/request');
+        final url = Uri.parse('$base/api/tv/register-session');
         final response = await http.post(
           url,
-          headers: {'Accept': 'application/json', 'User-Agent': 'TalaLiveTV-Flutter/2.0'},
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            'User-Agent': 'TalaLiveTV-Flutter/2.0',
+          },
+          body: json.encode({}),
         ).timeout(const Duration(seconds: 8));
 
-        if (response.statusCode == 200) {
+        if (response.statusCode >= 200 && response.statusCode < 300) {
           final data = json.decode(response.body) as Map<String, dynamic>;
           return data;
         }
@@ -64,16 +69,19 @@ class ApiService {
     return null;
   }
 
-  static Future<Map<String, dynamic>?> checkPairingStatus(String sessionId) async {
+  static Future<Map<String, dynamic>?> checkPairingStatus(String sessionCode) async {
     for (final base in baseUrls) {
       try {
-        final url = Uri.parse('$base/api/display/pairing/status?session_id=$sessionId');
+        final url = Uri.parse('$base/api/tv/check/$sessionCode');
         final response = await http.get(
           url,
-          headers: {'Accept': 'application/json', 'User-Agent': 'TalaLiveTV-Flutter/2.0'},
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'TalaLiveTV-Flutter/2.0',
+          },
         ).timeout(const Duration(seconds: 5));
 
-        if (response.statusCode == 200) {
+        if (response.statusCode >= 200 && response.statusCode < 300) {
           final data = json.decode(response.body) as Map<String, dynamic>;
           return data;
         }
