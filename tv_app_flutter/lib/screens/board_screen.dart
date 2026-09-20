@@ -9,6 +9,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import '../models/board_model.dart';
 import '../services/api_service.dart';
+import '../services/update_service.dart';
 import '../theme/board_theme.dart';
 import '../utils/persian_utils.dart';
 import '../widgets/board_header.dart';
@@ -39,10 +40,16 @@ class _BoardScreenState extends State<BoardScreen> {
 
   Timer? _clockTimer;
   Timer? _refreshTimer;
+  Timer? _updateCheckTimer;
 
   static const String _prefKeyWebMode = 'tv_webview_mode';
   static const String _prefKeyZoom = 'talalive_zoom_level';
   double _zoomLevel = 1.0;
+
+  String _installedVersion = '1.0.0';
+  int _installedVersionCode = 1;
+  UpdateInfo? _availableUpdate;
+
 
   @override
   void initState() {
@@ -50,6 +57,7 @@ class _BoardScreenState extends State<BoardScreen> {
     if (!kIsWeb) {
       _initWebViewController();
     }
+    _loadInstalledVersion();
     _loadSavedMode();
     _loadSavedZoom();
     _fetchData();
@@ -62,7 +70,13 @@ class _BoardScreenState extends State<BoardScreen> {
         });
       }
     });
+
+    // Check update in background after 12 seconds
+    _updateCheckTimer = Timer(const Duration(seconds: 12), () {
+      _checkForUpdate(manual: false);
+    });
   }
+
 
   void _initWebViewController() {
     final webUrl = 'https://talalive.ir/${widget.username}?tv=1&app=1';
@@ -240,6 +254,17 @@ class _BoardScreenState extends State<BoardScreen> {
     }
   }
 
+  void _loadInstalledVersion() async {
+    final info = await UpdateService.getAppVersion();
+    if (mounted) {
+      setState(() {
+        _installedVersion = info['versionName'] as String;
+        _installedVersionCode = info['versionCode'] as int;
+      });
+    }
+  }
+
+
   void _fetchData() async {
     final model = await ApiService.fetchSnapshot(widget.username);
 
@@ -273,8 +298,10 @@ class _BoardScreenState extends State<BoardScreen> {
   void dispose() {
     _clockTimer?.cancel();
     _refreshTimer?.cancel();
+    _updateCheckTimer?.cancel();
     super.dispose();
   }
+
 
   void _handleKey(KeyEvent event) {
     if (event is KeyDownEvent) {
@@ -346,7 +373,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'گالری: ${widget.username}  •  وضعیت: ${_isOffline ? "آفلاین" : "متصل و برخط"}',
+                                  'گالری: ${widget.username}  •  وضعیت: ${_isOffline ? "آفلاین" : "متصل و برخط"}  •  نسخه ${PersianUtils.toPersianDigits(_installedVersion)}',
                                   style: TextStyle(
                                     color: _isOffline ? Colors.redAccent : const Color(0xFF10B981),
                                     fontSize: 12,
@@ -574,7 +601,106 @@ class _BoardScreenState extends State<BoardScreen> {
 
                       const SizedBox(height: 18),
 
-                    // Section 2: Quick Actions
+                      // Section 3: Online OTA Update Card
+                      Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E293B),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: _availableUpdate != null
+                                ? const Color(0xFF10B981).withOpacity(0.6)
+                                : const Color(0xFF38BDF8).withOpacity(0.3),
+                            width: _availableUpdate != null ? 1.5 : 1.0,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: (_availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8)).withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                _availableUpdate != null ? Icons.system_update_rounded : Icons.cloud_download_outlined,
+                                color: _availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8),
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'بروزرسانی آنلاین برنامه (OTA)',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          fontFamily: 'Vazirmatn',
+                                        ),
+                                      ),
+                                      if (_availableUpdate != null) ...[
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF10B981),
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: const Text(
+                                            'نسخه جدید!',
+                                            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    _availableUpdate != null
+                                        ? 'نسخه جدید ${PersianUtils.toPersianDigits(_availableUpdate!.remoteVersion)} آماده دانلود است'
+                                        : 'نسخه فعلی شما: ${PersianUtils.toPersianDigits(_installedVersion)} (کد ${PersianUtils.toPersianDigits(_installedVersionCode.toString())})',
+                                    style: TextStyle(
+                                      color: _availableUpdate != null ? const Color(0xFF34D399) : const Color(0xFF94A3B8),
+                                      fontSize: 11,
+                                      fontFamily: 'Vazirmatn',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop();
+                                if (_availableUpdate != null) {
+                                  _showUpdateDialog(_availableUpdate!);
+                                } else {
+                                  _checkForUpdate(manual: true);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _availableUpdate != null ? const Color(0xFF10B981) : const Color(0xFF38BDF8),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              ),
+                              child: Text(
+                                _availableUpdate != null ? 'مشاهده و نصب' : 'بررسی نسخه',
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn', fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 18),
+
+                    // Section 4: Quick Actions
                     Row(
                       children: [
                         // Refresh button
@@ -616,6 +742,7 @@ class _BoardScreenState extends State<BoardScreen> {
                         ),
                       ],
                     ),
+
 
                     const SizedBox(height: 16),
                     // Tip about long press
@@ -697,8 +824,493 @@ class _BoardScreenState extends State<BoardScreen> {
     );
   }
 
+  void _checkForUpdate({bool manual = false}) async {
+    if (manual) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: Colors.black54,
+        builder: (ctx) => Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0F172A),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFF38BDF8).withOpacity(0.5)),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 20, offset: const Offset(0, 8)),
+              ],
+            ),
+            child: const Directionality(
+              textDirection: TextDirection.rtl,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(color: Color(0xFF38BDF8), strokeWidth: 2.5),
+                  ),
+                  SizedBox(width: 16),
+                  Text(
+                    'در حال بررسی آخرین نسخه طلالایو...',
+                    style: TextStyle(color: Colors.white, fontFamily: 'Vazirmatn', fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final update = await UpdateService.checkUpdate();
+
+    if (manual && mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+
+    if (!mounted) return;
+
+    if (update.hasUpdate) {
+      setState(() => _availableUpdate = update);
+      _showUpdateDialog(update);
+    } else if (manual) {
+      _showUpToDateDialog();
+    }
+  }
+
+  void _showUpToDateDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0F172A),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(color: const Color(0xFF10B981).withOpacity(0.4)),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text(
+              'برنامه کاملاً بروز است',
+              style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn', fontSize: 16),
+              textDirection: TextDirection.rtl,
+            ),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.check_circle_outline, color: Color(0xFF10B981), size: 24),
+            ),
+          ],
+        ),
+        content: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text(
+            'شما در حال حاضر از آخرین نسخه پایدار طلالایو TV (نسخه ${PersianUtils.toPersianDigits(_installedVersion)}) استفاده می‌فرمایید.',
+            style: const TextStyle(color: Color(0xFFCBD5E1), fontFamily: 'Vazirmatn', fontSize: 14, height: 1.6),
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF10B981),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('متوجه شدم', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUpdateDialog(UpdateInfo info) {
+    bool isDownloading = false;
+    double progress = 0.0;
+    int receivedBytes = 0;
+    int totalBytes = 0;
+    String statusMessage = '';
+    String? errorMessage;
+    bool isCancelled = false;
+
+    showDialog(
+      context: context,
+      barrierDismissible: !info.isMandatory && !isDownloading,
+      barrierColor: Colors.black.withOpacity(0.75),
+      builder: (ctx) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: StatefulBuilder(
+          builder: (dialogCtx, setDialogState) {
+            final percentInt = (progress * 100).round();
+            final receivedMb = (receivedBytes / (1024 * 1024)).toStringAsFixed(1);
+            final totalMb = totalBytes > 0
+                ? (totalBytes / (1024 * 1024)).toStringAsFixed(1)
+                : info.fileSize;
+
+            return Dialog(
+              backgroundColor: const Color(0xFF0F172A).withOpacity(0.96),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+                side: BorderSide(
+                  color: const Color(0xFFF59E0B).withOpacity(0.5),
+                  width: 1.5,
+                ),
+              ),
+              insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 560, maxHeight: 580),
+                padding: const EdgeInsets.all(24),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Header
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFF59E0B).withOpacity(0.35),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.system_update_rounded,
+                                color: Colors.black,
+                                size: 28,
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    info.title,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900,
+                                      fontFamily: 'Vazirmatn',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  const Text(
+                                    'نسخه جدید طلالایو TV آماده دریافت و نصب خودکار است',
+                                    style: TextStyle(
+                                      color: Color(0xFF94A3B8),
+                                      fontSize: 12,
+                                      fontFamily: 'Vazirmatn',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (!info.isMandatory && !isDownloading)
+                              IconButton(
+                                onPressed: () => Navigator.of(dialogCtx).pop(),
+                                icon: const Icon(Icons.close, color: Colors.white70),
+                              ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 18),
+                        const Divider(color: Color(0xFF334155), height: 1),
+                        const SizedBox(height: 16),
+
+                        // Version Comparison & File Size Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E293B),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFF334155)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Old vs New
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF334155),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      'نسخه کنونی: ${PersianUtils.toPersianDigits(info.currentVersion)}',
+                                      style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 11, fontFamily: 'Vazirmatn'),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8),
+                                    child: Icon(Icons.arrow_back_rounded, color: Color(0xFFF59E0B), size: 16),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF59E0B).withOpacity(0.2),
+                                      border: Border.all(color: const Color(0xFFF59E0B)),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      'نسخه جدید: ${PersianUtils.toPersianDigits(info.remoteVersion)}',
+                                      style: const TextStyle(color: Color(0xFFF59E0B), fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // File Size
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0F172A),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'حجم: ${PersianUtils.toPersianDigits(info.fileSize)}',
+                                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontFamily: 'Vazirmatn'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Changelog Box
+                        const Text(
+                          'تغییرات و امکانات جدید این نسخه:',
+                          style: TextStyle(
+                            color: Color(0xFF94A3B8),
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Vazirmatn',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF020617).withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFF334155)),
+                          ),
+                          child: Text(
+                            info.changelog,
+                            style: const TextStyle(
+                              color: Color(0xFFE2E8F0),
+                              fontSize: 13,
+                              height: 1.8,
+                              fontFamily: 'Vazirmatn',
+                            ),
+                          ),
+                        ),
+
+                        // Error Banner (if any)
+                        if (errorMessage != null) ...[
+                          const SizedBox(height: 14),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.redAccent.withOpacity(0.4)),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.error_outline, color: Colors.redAccent, size: 20),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    errorMessage!,
+                                    style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontFamily: 'Vazirmatn'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+
+                        // Downloading State
+                        if (isDownloading) ...[
+                          const SizedBox(height: 20),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1E293B),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.3)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      statusMessage.isNotEmpty ? statusMessage : 'در حال دانلود فایل بروزرسانی...',
+                                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                    ),
+                                    Text(
+                                      '${PersianUtils.toPersianDigits(percentInt.toString())}٪',
+                                      style: const TextStyle(color: Color(0xFFF59E0B), fontSize: 14, fontWeight: FontWeight.w900, fontFamily: 'Vazirmatn'),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: LinearProgressIndicator(
+                                    value: progress > 0 ? progress : null,
+                                    minHeight: 8,
+                                    backgroundColor: const Color(0xFF334155),
+                                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFF59E0B)),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${PersianUtils.toPersianDigits(receivedMb)} مگابایت از ${PersianUtils.toPersianDigits(totalMb)}',
+                                      style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11, fontFamily: 'Vazirmatn'),
+                                    ),
+                                    const Text(
+                                      'لطفاً تلویزیون را خاموش نکنید',
+                                      style: TextStyle(color: Color(0xFF64748B), fontSize: 10, fontFamily: 'Vazirmatn'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+
+                        const SizedBox(height: 20),
+
+                        // Action Buttons
+                        if (!isDownloading) ...[
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    setDialogState(() {
+                                      isDownloading = true;
+                                      errorMessage = null;
+                                      statusMessage = 'در حال برقراری ارتباط با سرور...';
+                                      progress = 0.0;
+                                      receivedBytes = 0;
+                                    });
+
+                                    UpdateService.downloadAndInstall(
+                                      downloadUrl: info.downloadUrl,
+                                      onProgress: (received, total) {
+                                        setDialogState(() {
+                                          receivedBytes = received;
+                                          totalBytes = total;
+                                          progress = total > 0 ? (received / total).clamp(0.0, 1.0) : 0.0;
+                                          statusMessage = 'در حال دریافت فایل بروزرسانی...';
+                                        });
+                                      },
+                                      onInstallStarted: () {
+                                        setDialogState(() {
+                                          statusMessage = 'دانلود کامل شد! در حال اجرای نصاب اندروید...';
+                                        });
+                                      },
+                                      onError: (err) {
+                                        setDialogState(() {
+                                          isDownloading = false;
+                                          errorMessage = err;
+                                        });
+                                      },
+                                      isCancelled: () => isCancelled,
+                                    );
+                                  },
+                                  icon: const Icon(Icons.download_rounded, size: 20),
+                                  label: const Text(
+                                    'دانلود و نصب خودکار',
+                                    style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 14),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF59E0B),
+                                    foregroundColor: Colors.black,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                    elevation: 4,
+                                  ),
+                                ),
+                              ),
+                              if (!info.isMandatory) ...[
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  flex: 1,
+                                  child: OutlinedButton(
+                                    onPressed: () => Navigator.of(dialogCtx).pop(),
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(color: Color(0xFF334155)),
+                                      foregroundColor: const Color(0xFF94A3B8),
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                    ),
+                                    child: const Text('انصراف', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13)),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ] else ...[
+                          OutlinedButton(
+                            onPressed: () {
+                              isCancelled = true;
+                              Navigator.of(dialogCtx).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Color(0xFF475569)),
+                              foregroundColor: const Color(0xFFCBD5E1),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                            child: const Text('لغو دانلود', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13)),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     // =========================================================================
     // 1. Web View Mode (Smooth & Hybrid Composition without flickering)
     // =========================================================================

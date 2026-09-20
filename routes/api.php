@@ -8,9 +8,11 @@ Route::get('/display/snapshot/{username}', [PublicDisplayController::class, 'sna
 Route::get('/display/health/{username}', [PublicDisplayController::class, 'health']);
 Route::get('/tv/check/{session_code}', [PublicDisplayController::class, 'checkPairingStatus']);
 Route::get('/tv/qr/{code}', [PublicDisplayController::class, 'qrCode'])->middleware('throttle:60,1');
+Route::get('/tv/version', [PublicDisplayController::class, 'tvVersion']);
 Route::post('/tv/register-session', [PublicDisplayController::class, 'registerSession']);
 Route::post('/tv/magic-sms', [PublicDisplayController::class, 'sendMagicSms'])->middleware('throttle:5,1');
 Route::post('/tv/heartbeat', [PublicDisplayController::class, 'heartbeat'])->middleware('throttle:120,1');
+
 
 // Endpoint برای دریافت دستی قیمت‌ها (محافظت‌شده با توکن و محدودیت نرخ)
 Route::post('/display/refresh', function () {
