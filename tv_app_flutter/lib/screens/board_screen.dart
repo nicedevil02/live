@@ -41,6 +41,8 @@ class _BoardScreenState extends State<BoardScreen> {
   Timer? _refreshTimer;
 
   static const String _prefKeyWebMode = 'tv_webview_mode';
+  static const String _prefKeyZoom = 'talalive_zoom_level';
+  double _zoomLevel = 1.0;
 
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _BoardScreenState extends State<BoardScreen> {
       _initWebViewController();
     }
     _loadSavedMode();
+    _loadSavedZoom();
     _fetchData();
 
     // Clock timer (every 1 second)
@@ -196,6 +199,47 @@ class _BoardScreenState extends State<BoardScreen> {
     }
   }
 
+  void _loadSavedZoom() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedZoom = prefs.getDouble(_prefKeyZoom) ?? 1.0;
+    if (mounted) {
+      setState(() {
+        _zoomLevel = savedZoom;
+      });
+    }
+  }
+
+  void _zoomIn() async {
+    final newZoom = (_zoomLevel + 0.05).clamp(0.70, 1.35);
+    final rounded = double.parse(newZoom.toStringAsFixed(2));
+    setState(() => _zoomLevel = rounded);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_prefKeyZoom, rounded);
+    if (_isWebViewMode) {
+      _webViewController?.runJavaScript("window.dispatchEvent(new KeyboardEvent('keydown', { key: '+' }));");
+    }
+  }
+
+  void _zoomOut() async {
+    final newZoom = (_zoomLevel - 0.05).clamp(0.70, 1.35);
+    final rounded = double.parse(newZoom.toStringAsFixed(2));
+    setState(() => _zoomLevel = rounded);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_prefKeyZoom, rounded);
+    if (_isWebViewMode) {
+      _webViewController?.runJavaScript("window.dispatchEvent(new KeyboardEvent('keydown', { key: '-' }));");
+    }
+  }
+
+  void _resetZoom() async {
+    setState(() => _zoomLevel = 1.0);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_prefKeyZoom, 1.0);
+    if (_isWebViewMode) {
+      _webViewController?.runJavaScript("window.dispatchEvent(new KeyboardEvent('keydown', { key: '0' }));");
+    }
+  }
+
   void _fetchData() async {
     final model = await ApiService.fetchSnapshot(widget.username);
 
@@ -256,190 +300,279 @@ class _BoardScreenState extends State<BoardScreen> {
       barrierColor: Colors.black.withOpacity(0.7),
       builder: (ctx) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Dialog(
-          backgroundColor: const Color(0xFF0F172A).withOpacity(0.94),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
-            side: BorderSide(color: const Color(0xFFF59E0B).withOpacity(0.4), width: 1.5),
-          ),
-          insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 580, maxHeight: 520),
-            padding: const EdgeInsets.all(24),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Header with Icon and Title
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF59E0B).withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.4)),
+        child: StatefulBuilder(
+          builder: (context, setDialogState) => Dialog(
+            backgroundColor: const Color(0xFF0F172A).withOpacity(0.94),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28),
+              side: BorderSide(color: const Color(0xFFF59E0B).withOpacity(0.4), width: 1.5),
+            ),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 580, maxHeight: 560),
+              padding: const EdgeInsets.all(24),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Header with Icon and Title
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF59E0B).withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.4)),
+                            ),
+                            child: const Icon(Icons.settings_outlined, color: Color(0xFFF59E0B), size: 26),
                           ),
-                          child: const Icon(Icons.settings_outlined, color: Color(0xFFF59E0B), size: 26),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'تنظیمات و مدیریت تابلوی طلالایو',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  fontFamily: 'Vazirmatn',
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'تنظیمات و مدیریت تابلوی طلالایو',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'Vazirmatn',
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'گالری: ${widget.username}  •  وضعیت: ${_isOffline ? "آفلاین" : "متصل و برخط"}',
-                                style: TextStyle(
-                                  color: _isOffline ? Colors.redAccent : const Color(0xFF10B981),
-                                  fontSize: 12,
-                                  fontFamily: 'Vazirmatn',
+                                const SizedBox(height: 2),
+                                Text(
+                                  'گالری: ${widget.username}  •  وضعیت: ${_isOffline ? "آفلاین" : "متصل و برخط"}',
+                                  style: TextStyle(
+                                    color: _isOffline ? Colors.redAccent : const Color(0xFF10B981),
+                                    fontSize: 12,
+                                    fontFamily: 'Vazirmatn',
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () => Navigator.of(ctx).pop(),
-                          icon: const Icon(Icons.close, color: Colors.white70),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-                    const Divider(color: Color(0xFF334155), height: 1),
-                    const SizedBox(height: 18),
-
-                    // Section 1: Display Mode Switcher
-                    const Text(
-                      'حالت نمایش تابلو:',
-                      style: TextStyle(
-                        color: Color(0xFF94A3B8),
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Vazirmatn',
+                          IconButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            icon: const Icon(Icons.close, color: Colors.white70),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        // Native Mode Button
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(ctx).pop();
-                              if (_isWebViewMode) _setWebViewMode(false);
-                            },
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                              decoration: BoxDecoration(
-                                color: !_isWebViewMode ? const Color(0xFFF59E0B).withOpacity(0.2) : const Color(0xFF1E293B),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: !_isWebViewMode ? const Color(0xFFF59E0B) : const Color(0xFF334155),
-                                  width: !_isWebViewMode ? 2 : 1,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.bolt, color: !_isWebViewMode ? const Color(0xFFF59E0B) : Colors.white60, size: 28),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    'نسخه بومی (نیتیو)',
-                                    style: TextStyle(
-                                      color: !_isWebViewMode ? Colors.white : Colors.white70,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      fontFamily: 'Vazirmatn',
-                                    ),
-                                  ),
-                                  if (!_isWebViewMode) ...[
-                                    const SizedBox(height: 4),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF59E0B),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Text(
-                                        'فعال',
-                                        style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Web Live Mode Button
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(ctx).pop();
-                              if (!_isWebViewMode) _setWebViewMode(true);
-                            },
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                              decoration: BoxDecoration(
-                                color: _isWebViewMode ? const Color(0xFF3B82F6).withOpacity(0.2) : const Color(0xFF1E293B),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: _isWebViewMode ? const Color(0xFF3B82F6) : const Color(0xFF334155),
-                                  width: _isWebViewMode ? 2 : 1,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.language, color: _isWebViewMode ? const Color(0xFF3B82F6) : Colors.white60, size: 28),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    'نسخه زنده وب',
-                                    style: TextStyle(
-                                      color: _isWebViewMode ? Colors.white : Colors.white70,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      fontFamily: 'Vazirmatn',
-                                    ),
-                                  ),
-                                  if (_isWebViewMode) ...[
-                                    const SizedBox(height: 4),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF3B82F6),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Text(
-                                        'فعال',
-                                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
 
-                    const SizedBox(height: 18),
+                      const SizedBox(height: 20),
+                      const Divider(color: Color(0xFF334155), height: 1),
+                      const SizedBox(height: 18),
+
+                      // Section 1: Display Mode Switcher
+                      const Text(
+                        'حالت نمایش تابلو:',
+                        style: TextStyle(
+                          color: Color(0xFF94A3B8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Vazirmatn',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          // Native Mode Button
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(ctx).pop();
+                                if (_isWebViewMode) _setWebViewMode(false);
+                              },
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  color: !_isWebViewMode ? const Color(0xFFF59E0B).withOpacity(0.2) : const Color(0xFF1E293B),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: !_isWebViewMode ? const Color(0xFFF59E0B) : const Color(0xFF334155),
+                                    width: !_isWebViewMode ? 2 : 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.bolt, color: !_isWebViewMode ? const Color(0xFFF59E0B) : Colors.white60, size: 28),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'نسخه بومی (نیتیو)',
+                                      style: TextStyle(
+                                        color: !_isWebViewMode ? Colors.white : Colors.white70,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: 'Vazirmatn',
+                                      ),
+                                    ),
+                                    if (!_isWebViewMode) ...[
+                                      const SizedBox(height: 4),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF59E0B),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: const Text(
+                                          'فعال',
+                                          style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Web Live Mode Button
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(ctx).pop();
+                                if (!_isWebViewMode) _setWebViewMode(true);
+                              },
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  color: _isWebViewMode ? const Color(0xFF3B82F6).withOpacity(0.2) : const Color(0xFF1E293B),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: _isWebViewMode ? const Color(0xFF3B82F6) : const Color(0xFF334155),
+                                    width: _isWebViewMode ? 2 : 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.language, color: _isWebViewMode ? const Color(0xFF3B82F6) : Colors.white60, size: 28),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'نسخه زنده وب',
+                                      style: TextStyle(
+                                        color: _isWebViewMode ? Colors.white : Colors.white70,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: 'Vazirmatn',
+                                      ),
+                                    ),
+                                    if (_isWebViewMode) ...[
+                                      const SizedBox(height: 4),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF3B82F6),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: const Text(
+                                          'فعال',
+                                          style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn'),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 18),
+
+                      // Section 2: Zoom Controls (بزرگ‌نمایی و کوچک‌نمایی)
+                      const Text(
+                        'بزرگ‌نمایی و مقیاس تابلو:',
+                        style: TextStyle(
+                          color: Color(0xFF94A3B8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Vazirmatn',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E293B),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFF334155)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Zoom Out (-) Button
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _zoomOut();
+                                setDialogState(() {});
+                              },
+                              icon: const Icon(Icons.remove, size: 18),
+                              label: const Text('کوچک‌نمایی', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, fontWeight: FontWeight.bold)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF334155),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              ),
+                            ),
+
+                            // Zoom Percentage with reset hint
+                            InkWell(
+                              onTap: () {
+                                _resetZoom();
+                                setDialogState(() {});
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${(_zoomLevel * 100).round()}%',
+                                      style: const TextStyle(
+                                        color: Color(0xFFF59E0B),
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 20,
+                                        fontFamily: 'Vazirmatn',
+                                      ),
+                                    ),
+                                    const Text(
+                                      'لمس برای ۱۰۰٪',
+                                      style: TextStyle(color: Color(0xFF64748B), fontSize: 10, fontFamily: 'Vazirmatn'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            // Zoom In (+) Button
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _zoomIn();
+                                setDialogState(() {});
+                              },
+                              icon: const Icon(Icons.add, size: 18),
+                              label: const Text('بزرگ‌نمایی', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, fontWeight: FontWeight.bold)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF59E0B),
+                                foregroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 18),
 
                     // Section 2: Quick Actions
                     Row(
@@ -512,8 +645,9 @@ class _BoardScreenState extends State<BoardScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _showExitDialog() {
     showDialog(
@@ -621,9 +755,11 @@ class _BoardScreenState extends State<BoardScreen> {
           onLongPress: _showSettingsMenu,
           behavior: HitTestBehavior.translucent,
           child: Center(
-            child: FittedBox(
-            fit: BoxFit.contain,
-            child: Container(
+            child: Transform.scale(
+              scale: _zoomLevel,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Container(
               width: 1920,
               height: 1080,
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
@@ -751,7 +887,8 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
       ),
     ),
-  );
+  ),
+);
 }
 
   Widget _buildBody(BoardThemeData theme) {
