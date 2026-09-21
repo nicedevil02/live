@@ -34,12 +34,22 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $currentCount = ProductSlide::where('user_id', auth()->id())->count();
+        if ($currentCount >= 10) {
+            return response()->json([
+                'message' => 'سقف مجاز اسلایدر ویترین حداکثر ۱۰ محصول است. برای افزودن محصول جدید ابتدا یکی از موارد قبلی را حذف نمایید.',
+                'errors'  => [
+                    'title' => ['سقف مجاز ویترین حداکثر ۱۰ محصول است.']
+                ]
+            ], 422);
+        }
+
         $data = $request->validate([
             'title'           => 'required|string|max:255',
             'weight_gram'     => 'required|numeric|min:0',
             'profit_value'    => 'required|numeric|min:0',
             'profit_type'     => 'required|in:percent,amount',
-            'image_file'      => 'nullable|image|max:2048',
+            'image_file'      => 'nullable|image|max:25600',
         ]);
 
         $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
@@ -134,7 +144,7 @@ class ProductController extends Controller
     public function uploadImageFile(Request $request, $id)
     {
         $request->validate([
-            'image' => 'required|image|max:2048'
+            'image' => 'required|image|max:25600'
         ]);
         $userId = auth()->id();
         $product = ProductSlide::where('user_id', $userId)->findOrFail($id);

@@ -23,8 +23,11 @@
             <h2 class="text-xl font-bold text-slate-900 dark:text-white">مدیریت ویترین (اسلایدر)</h2>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">تصاویر و اطلاعات محصولات نمایش‌داده‌شده در تابلو</p>
             <div class="flex items-center gap-4 mt-2">
-                <span class="text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-lg" x-text="visibleCount + ' نمایان'"></span>
-                <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-lg" x-text="hiddenCount + ' مخفی'"></span>
+                <span class="text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-lg font-medium" x-text="visibleCount + ' نمایان'"></span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-lg font-medium" x-text="hiddenCount + ' مخفی'"></span>
+                <span class="text-xs px-2.5 py-0.5 rounded-lg font-bold"
+                      :class="products.length >= 10 ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800' : 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'"
+                      x-text="products.length + ' از ۱۰ اسلایدر'"></span>
             </div>
         </div>
         @include('admin.products.partials.create-form')
@@ -92,6 +95,59 @@
 
 @push('scripts')
 <script>
+/**
+ * تابع بهینه‌سازی و کاهش حجم تصویر در کلاینت بدون افت کیفیت محسوس
+ * تصاویر بزرگ موبایل را به نسخه WebP با کیفیت بالا و حجم بسیار پایین تبدیل می‌کند
+ */
+window.compressImage = function(file, maxDim = 1600, quality = 0.85) {
+    return new Promise((resolve) => {
+        if (!file || !file.type || !file.type.startsWith('image/')) {
+            return resolve(file);
+        }
+        if (file.type === 'image/gif') {
+            return resolve(file);
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+                if (width > maxDim || height > maxDim) {
+                    if (width > height) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        return resolve(file);
+                    }
+                    const cleanName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                    const newFile = new File([blob], cleanName, {
+                        type: 'image/webp',
+                        lastModified: Date.now()
+                    });
+                    resolve(newFile);
+                }, 'image/webp', quality);
+            };
+            img.onerror = () => resolve(file);
+        };
+        reader.onerror = () => resolve(file);
+    });
+};
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('productsManager', () => ({
         products: [],

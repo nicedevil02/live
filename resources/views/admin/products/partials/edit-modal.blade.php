@@ -70,24 +70,25 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div class="flex gap-2">
-                    <input type="text" x-model="imageUrl" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-xs outline-none focus:ring-2 focus:ring-blue-500" placeholder="لینک تصویر جدید (URL)">
+                    <input type="text" x-model="imageUrl" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-blue-500" placeholder="لینک تصویر جدید (URL)">
                     <button @click="handleAddImageUrl" class="px-4 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold hover:bg-slate-300 transition-colors">افزودن</button>
                 </div>
-                <div class="flex gap-2">
-                    <label class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-[10px] text-slate-500 cursor-pointer flex items-center truncate">
-                        <span x-text="imageFile ? imageFile.name : 'انتخاب فایل تصویر...'"></span>
-                        <input type="file" class="hidden" x-ref="fileInput" @change="
-                            const file = $event.target.files[0];
-                            if (file && file.size > 2 * 1024 * 1024) {
-                                alert('حداکثر حجم مجاز برای تصویر ۲ مگابایت می‌باشد.');
-                                $event.target.value = '';
-                                imageFile = null;
-                            } else {
-                                imageFile = file;
-                            }
-                        ">
+                <div>
+                    <label class="w-full bg-blue-50 dark:bg-blue-900/20 border-2 border-dashed border-blue-300 dark:border-blue-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-xl px-4 py-2.5 text-xs text-blue-700 dark:text-blue-300 font-bold cursor-pointer flex items-center justify-center gap-2 transition-all shadow-sm">
+                        <template x-if="isUploading">
+                            <div class="flex items-center gap-2">
+                                <span class="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></span>
+                                <span>در حال کاهش حجم و آپلود خودکار...</span>
+                            </div>
+                        </template>
+                        <template x-if="!isUploading">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                                <span>انتخاب تصویر (آپلود و فشرده‌سازی خودکار)</span>
+                            </div>
+                        </template>
+                        <input type="file" accept="image/*" class="hidden" x-ref="fileInput" :disabled="isUploading" @change="handleAutoUploadFile($event)">
                     </label>
-                    <button @click="handleUploadFile" :disabled="!imageFile" class="px-4 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors">آپلود</button>
                 </div>
             </div>
         </div>
@@ -109,7 +110,7 @@ function editProductForm() {
         form: { title: '', weight_gram: 0, profit_value: 0, profit_type: 'percent', base_gold_price: {{ $latestGoldPrice }} },
         localProduct: { images: [] },
         imageUrl: '',
-        imageFile: null,
+        isUploading: false,
         isSaving: false,
 
         get finalPrice() {
@@ -175,30 +176,34 @@ function editProductForm() {
             } catch(e) { alert('خطا در افزودن لینک'); }
         },
 
-        async handleUploadFile() {
-            if (!this.imageFile) return;
-            const fd = new FormData();
-            fd.append('image', this.imageFile);
+        async handleAutoUploadFile(event) {
+            const rawFile = event.target.files[0];
+            if (!rawFile) return;
+            this.isUploading = true;
             try {
+                const compressedFile = await window.compressImage(rawFile, 1600, 0.85);
+                const fd = new FormData();
+                fd.append('image', compressedFile);
+
                 const res = await fetch(`/admin/products/${this.id}/images/upload`, {
                     method: 'POST',
                     headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                     body: fd
                 });
                 if (!res.ok) {
-                    const result = await res.json();
-                    if (res.status === 422) {
-                        alert(result.message || 'فایل نامعتبر است (حداکثر ۲ مگابایت)');
-                    } else {
-                        alert('خطا در سرور');
-                    }
+                    const result = await res.json().catch(() => ({}));
+                    alert(result.message || 'خطا در آپلود تصویر');
                     return;
                 }
                 const img = await res.json();
                 this.localProduct.images.push(img);
-                this.imageFile = null;
                 if (this.$refs.fileInput) this.$refs.fileInput.value = '';
-            } catch(e) { alert('خطا در آپلود'); }
+            } catch(e) {
+                alert('خطا در فشرده‌سازی یا آپلود تصویر');
+            } finally {
+                this.isUploading = false;
+                this.$nextTick(() => lucide.createIcons());
+            }
         },
 
         async handleDeleteImage(imageId) {
