@@ -3,12 +3,16 @@ package ir.talalive.tv
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
@@ -22,6 +26,7 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
 
     private val handler = Handler(Looper.getMainLooper())
     private var currentModel: BoardModel? = null
+    private val previousPriceMap = mutableMapOf<String, String>()
 
     // Header UI
     private val tvShopName: TextView
@@ -565,14 +570,66 @@ class NativeBoardView(context: Context) : LinearLayout(context) {
         }
 
         // Price (Center)
+        val rowKey = if (item.symbol.isNotBlank()) item.symbol else item.title
+        val currentFormatted = PersianText.toPersianDigits(PersianText.groupThousands(item.price))
+        val oldPriceStr = previousPriceMap[rowKey]
+        previousPriceMap[rowKey] = item.price
+
         val tvPrice = TextView(context).apply {
-            text = PersianText.toPersianDigits(PersianText.groupThousands(item.price))
             setTextColor(Color.parseColor("#F59E0B")) // Gold
             typeface = Fonts.bold(context)
             Scale.applyTextSize(this, 0.038f)
             gravity = Gravity.CENTER
             val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.4f)
             layoutParams = lp
+
+            if (!oldPriceStr.isNullOrBlank() && oldPriceStr != item.price) {
+                val prevFormatted = PersianText.toPersianDigits(PersianText.groupThousands(oldPriceStr))
+                var i = 0
+                val minLen = Math.min(prevFormatted.length, currentFormatted.length)
+                while (i < minLen && prevFormatted[i] == currentFormatted[i]) {
+                    i++
+                }
+
+                if (i < currentFormatted.length) {
+                    val oldVal = oldPriceStr.replace(",", "").replace(" ", "").toDoubleOrNull() ?: 0.0
+                    val newVal = item.price.replace(",", "").replace(" ", "").toDoubleOrNull() ?: 0.0
+                    val isUp = newVal > oldVal
+                    val flashColor = if (isUp) Color.parseColor("#10B981") else Color.parseColor("#F43F5E")
+                    val defaultColor = Color.parseColor("#F59E0B")
+
+                    val spannable = SpannableString(currentFormatted)
+                    spannable.setSpan(ForegroundColorSpan(flashColor), i, currentFormatted.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    text = spannable
+
+                    ValueAnimator.ofFloat(0f, 1f).apply {
+                        duration = 2300L
+                        addUpdateListener { anim ->
+                            val t = anim.animatedValue as Float
+                            if (t >= 0.87f) {
+                                val fade = ((t - 0.87f) / 0.13f).coerceIn(0f, 1f)
+                                val r = (Color.red(flashColor) + fade * (Color.red(defaultColor) - Color.red(flashColor))).toInt()
+                                val g = (Color.green(flashColor) + fade * (Color.green(defaultColor) - Color.green(flashColor))).toInt()
+                                val b = (Color.blue(flashColor) + fade * (Color.blue(defaultColor) - Color.blue(flashColor))).toInt()
+                                val curColor = Color.rgb(r, g, b)
+                                val s = SpannableString(currentFormatted)
+                                s.setSpan(ForegroundColorSpan(curColor), i, currentFormatted.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                text = s
+                            }
+                        }
+                        addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                text = currentFormatted
+                            }
+                        })
+                        start()
+                    }
+                } else {
+                    text = currentFormatted
+                }
+            } else {
+                text = currentFormatted
+            }
         }
 
         // Change & Direction (Left column in RTL)

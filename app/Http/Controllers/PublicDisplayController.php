@@ -795,14 +795,14 @@ class PublicDisplayController extends Controller
 
         return response()->json([
             'success'            => true,
-            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.2'),
-            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 4),
+            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.3'),
+            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 5),
             'min_version_code'   => (int) ($tvConfig['min_version_code'] ?? 2),
             'download_url'       => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
             'file_size'          => $tvConfig['file_size'] ?? '46.3 MB',
             'mandatory'          => false,
             'title'              => 'نسخه جدید طلالایو TV موجود است',
-            'changelog'          => "• آیکون رسمی و بنر جدید ۱۶:۹ طلالایو در تلویزیون\n• حل مشکل ناپدید شدن نشانگر ماوس در حالت وب با سیستم Auto-Hide هوشمند\n• بهبود عملکرد، روانی و نرخ تازه‌سازی قیمت‌ها",
+            'changelog'          => "• انیمیشن تغییر رنگ سبز و قرمز ارقام تغییریافته به مدت ۲٫۳ ثانیه مطابق تابلوی وب\n• آیکون رسمی و بنر جدید ۱۶:۹ طلالایو در تلویزیون\n• حل مشکل ناپدید شدن نشانگر ماوس در حالت وب با سیستم Auto-Hide هوشمند",
             'released_at'        => now()->toDateString(),
         ]);
     }

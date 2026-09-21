@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/board_model.dart';
 import '../theme/board_theme.dart';
@@ -21,12 +22,24 @@ class PriceCard extends StatefulWidget {
   State<PriceCard> createState() => _PriceCardState();
 }
 
-class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMixin {
+class _PriceCardState extends State<PriceCard> with TickerProviderStateMixin {
   AnimationController? _shimmerController;
+  AnimationController? _flashController;
+  Animation<double>? _flashAnimation;
+  String _currentPriceFormatted = '';
+  int _diffStartIndex = -1;
+  bool _isPriceUp = true;
 
   @override
   void initState() {
     super.initState();
+    _currentPriceFormatted = PersianUtils.formatPrice(widget.row.sellPrice, symbol: widget.row.symbol);
+    _flashController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2300),
+    );
+    _flashAnimation = CurvedAnimation(parent: _flashController!, curve: Curves.linear);
+
     final isGold18 = widget.isHero || widget.row.symbol == 'gold18';
     if (isGold18) {
       _shimmerController = AnimationController(
@@ -37,8 +50,37 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
   }
 
   @override
+  void didUpdateWidget(covariant PriceCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.row.sellPrice != oldWidget.row.sellPrice) {
+      final oldFormatted = PersianUtils.formatPrice(oldWidget.row.sellPrice, symbol: oldWidget.row.symbol);
+      final newFormatted = PersianUtils.formatPrice(widget.row.sellPrice, symbol: widget.row.symbol);
+      _currentPriceFormatted = newFormatted;
+
+      final oldVal = double.tryParse(oldWidget.row.sellPrice.replaceAll(',', '').replaceAll(' ', '')) ?? 0.0;
+      final newVal = double.tryParse(widget.row.sellPrice.replaceAll(',', '').replaceAll(' ', '')) ?? 0.0;
+
+      if (oldVal != newVal) {
+        _isPriceUp = newVal > oldVal;
+        int i = 0;
+        final minLen = math.min(oldFormatted.length, newFormatted.length);
+        while (i < minLen && oldFormatted[i] == newFormatted[i]) {
+          i++;
+        }
+        _diffStartIndex = i;
+        _flashController?.forward(from: 0.0);
+      } else {
+        _diffStartIndex = -1;
+      }
+    } else {
+      _currentPriceFormatted = PersianUtils.formatPrice(widget.row.sellPrice, symbol: widget.row.symbol);
+    }
+  }
+
+  @override
   void dispose() {
     _shimmerController?.dispose();
+    _flashController?.dispose();
     super.dispose();
   }
 
@@ -143,19 +185,7 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
                     children: [
                       FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(
-                          PersianUtils.formatPrice(row.sellPrice, symbol: row.symbol),
-                          style: TextStyle(
-                            color: priceColor,
-                            fontSize: isTopRow ? 58 : 38,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'Vazirmatn',
-                            letterSpacing: -1.0,
-                            height: 1.05,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                        ),
+                        child: _buildPriceNumber(priceColor, isTopRow ? 58 : 38),
                       ),
                       if (hasBuy) ...[
                         const SizedBox(height: 3),
@@ -443,6 +473,77 @@ class _PriceCardState extends State<PriceCard> with SingleTickerProviderStateMix
         ),
         textDirection: TextDirection.ltr,
       ),
+    );
+  }
+
+  Widget _buildPriceNumber(Color defaultColor, double fontSize) {
+    if (_diffStartIndex < 0 ||
+        _diffStartIndex >= _currentPriceFormatted.length ||
+        _flashController == null ||
+        !_flashController!.isAnimating) {
+      return Text(
+        _currentPriceFormatted,
+        style: TextStyle(
+          color: defaultColor,
+          fontSize: fontSize,
+          fontWeight: FontWeight.w900,
+          fontFamily: 'Vazirmatn',
+          letterSpacing: -1.0,
+          height: 1.05,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+      );
+    }
+
+    return AnimatedBuilder(
+      animation: _flashAnimation!,
+      builder: (context, child) {
+        final t = _flashAnimation!.value;
+        final flashColor = _isPriceUp ? const Color(0xFF10B981) : const Color(0xFFF43F5E);
+        final Color animatedColor;
+        if (t < 0.87) {
+          animatedColor = flashColor;
+        } else {
+          final fadeProgress = ((t - 0.87) / 0.13).clamp(0.0, 1.0);
+          animatedColor = Color.lerp(flashColor, defaultColor, fadeProgress) ?? defaultColor;
+        }
+
+        final prefix = _currentPriceFormatted.substring(0, _diffStartIndex);
+        final suffix = _currentPriceFormatted.substring(_diffStartIndex);
+
+        return Text.rich(
+          TextSpan(
+            children: [
+              if (prefix.isNotEmpty)
+                TextSpan(
+                  text: prefix,
+                  style: TextStyle(
+                    color: defaultColor,
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: 'Vazirmatn',
+                    letterSpacing: -1.0,
+                    height: 1.05,
+                  ),
+                ),
+              TextSpan(
+                text: suffix,
+                style: TextStyle(
+                  color: animatedColor,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Vazirmatn',
+                  letterSpacing: -1.0,
+                  height: 1.05,
+                ),
+              ),
+            ],
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+        );
+      },
     );
   }
 }
