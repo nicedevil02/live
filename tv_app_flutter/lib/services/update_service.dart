@@ -48,11 +48,15 @@ class UpdateInfo {
     );
   }
 
-  factory UpdateInfo.withError(String message) {
+  factory UpdateInfo.withError(
+    String message, {
+    String currentVersion = '1.0.0',
+    int currentVersionCode = 1,
+  }) {
     return UpdateInfo(
       hasUpdate: false,
-      currentVersion: '1.0.0',
-      currentVersionCode: 1,
+      currentVersion: currentVersion,
+      currentVersionCode: currentVersionCode,
       remoteVersion: '',
       remoteVersionCode: 0,
       downloadUrl: '',
@@ -90,19 +94,23 @@ class UpdateService {
     return {'versionCode': 1, 'versionName': '1.0.0'};
   }
 
-  /// استعلام نسخه از سرور و مقایسه با نسخه فعلی
+  /// استعلام نسخه از سرور و مقایسه با نسخه فعلی (پشتیبانی دوگانه از API و فایل مانیفست)
   static Future<UpdateInfo> checkUpdate() async {
     final localInfo = await getAppVersion();
     final localVersionCode = localInfo['versionCode'] as int;
     final localVersionName = localInfo['versionName'] as String;
 
+    String? lastError;
+
     for (final base in baseUrls) {
+      // ۱. تلاش اول: اندپوینت اختصاصی OTA
       try {
         final url = Uri.parse('$base/api/tv/version?t=${DateTime.now().millisecondsSinceEpoch}');
         final response = await http.get(
           url,
           headers: {
             'Accept': 'application/json',
+            'Cache-Control': 'no-cache',
             if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.0',
           },
         ).timeout(const Duration(seconds: 8));
@@ -110,31 +118,86 @@ class UpdateService {
         if (response.statusCode == 200) {
           final data = json.decode(response.body) as Map<String, dynamic>;
           final remoteCode = (data['version_code'] as num?)?.toInt() ?? 0;
-          final remoteName = (data['version'] as String?) ?? '1.0.1';
-          final downloadUrl = (data['download_url'] as String?) ?? '';
-          final fileSize = (data['file_size'] as String?) ?? '26.8 MB';
+          final remoteName = (data['version'] as String?) ?? '1.0.8';
+          final downloadUrl = (data['download_url'] as String?) ?? '$base/downloads/talalive-tv.apk';
+          final fileSize = (data['file_size'] as String?) ?? '46.4 MB';
           final changelog = (data['changelog'] as String?) ?? 'بهبود کارایی و پایداری سامانه';
           final isMandatory = (data['mandatory'] as bool?) ?? false;
           final title = (data['title'] as String?) ?? 'بروزرسانی جدید طلالایو TV';
 
           final hasUpdate = remoteCode > localVersionCode;
 
-          return UpdateInfo(
-            hasUpdate: hasUpdate,
-            currentVersion: localVersionName,
-            currentVersionCode: localVersionCode,
-            remoteVersion: remoteName,
-            remoteVersionCode: remoteCode,
-            downloadUrl: downloadUrl,
-            fileSize: fileSize,
-            changelog: changelog,
-            isMandatory: isMandatory,
-            title: title,
-          );
+          if (hasUpdate) {
+            return UpdateInfo(
+              hasUpdate: true,
+              currentVersion: localVersionName,
+              currentVersionCode: localVersionCode,
+              remoteVersion: remoteName,
+              remoteVersionCode: remoteCode,
+              downloadUrl: downloadUrl,
+              fileSize: fileSize,
+              changelog: changelog,
+              isMandatory: isMandatory,
+              title: title,
+            );
+          }
         }
       } catch (e) {
-        debugPrint('[UpdateService] checkUpdate error on $base: $e');
+        lastError = e.toString();
+        debugPrint('[UpdateService] checkUpdate API error on $base: $e');
       }
+
+      // ۲. تلاش دوم: فایل مانیفست استاتیک talalive-tv.json (فال‌بک در صورت اختلال در سرور لاراول)
+      try {
+        final url = Uri.parse('$base/downloads/talalive-tv.json?t=${DateTime.now().millisecondsSinceEpoch}');
+        final response = await http.get(
+          url,
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache',
+            if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.0',
+          },
+        ).timeout(const Duration(seconds: 8));
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body) as Map<String, dynamic>;
+          final remoteCode = (data['version_code'] as num?)?.toInt() ?? 0;
+          final remoteName = (data['version_name'] as String?) ?? (data['version'] as String?) ?? '1.0.8';
+          final downloadUrl = (data['download_url'] as String?) ?? '$base/downloads/talalive-tv.apk';
+          final fileSize = (data['size_formatted'] as String?) ?? (data['file_size'] as String?) ?? '46.4 MB';
+          final changelog = (data['changelog'] as String?) ?? 'به‌روزرسانی و ارتقای کارایی نرم‌افزار';
+          final isMandatory = (data['mandatory'] as bool?) ?? false;
+          final title = (data['title'] as String?) ?? 'بروزرسانی جدید طلالایو TV';
+
+          final hasUpdate = remoteCode > localVersionCode;
+
+          if (hasUpdate) {
+            return UpdateInfo(
+              hasUpdate: true,
+              currentVersion: localVersionName,
+              currentVersionCode: localVersionCode,
+              remoteVersion: remoteName,
+              remoteVersionCode: remoteCode,
+              downloadUrl: downloadUrl,
+              fileSize: fileSize,
+              changelog: changelog,
+              isMandatory: isMandatory,
+              title: title,
+            );
+          }
+        }
+      } catch (e) {
+        lastError = e.toString();
+        debugPrint('[UpdateService] checkUpdate manifest fallback error on $base: $e');
+      }
+    }
+
+    if (lastError != null) {
+      return UpdateInfo.withError(
+        'عدم دسترسی به سرور به‌روزرسانی',
+        currentVersion: localVersionName,
+        currentVersionCode: localVersionCode,
+      );
     }
 
     return UpdateInfo.noUpdate(

@@ -812,17 +812,44 @@ class PublicDisplayController extends Controller
         $tvConfig = config('tv', []);
         $baseUrl = rtrim(config('app.url', url('/')), '/');
 
+        // خواندن مانیفست رسمی talalive-tv.json به عنوان منبع واحد حقیقت (Single Source of Truth)
+        $manifestPaths = [
+            public_path('downloads/talalive-tv.json'),
+            base_path('public_html/downloads/talalive-tv.json'),
+        ];
+        $manifest = null;
+        foreach ($manifestPaths as $path) {
+            if (file_exists($path)) {
+                $decoded = json_decode((string) file_get_contents($path), true);
+                if (is_array($decoded) && !empty($decoded['version_code'])) {
+                    $manifest = $decoded;
+                    break;
+                }
+            }
+        }
+
+        $versionCode = $manifest['version_code'] ?? ($tvConfig['latest_version_code'] ?? 10);
+        $versionName = $manifest['version_name'] ?? ($tvConfig['latest_version'] ?? '1.0.8');
+        $fileSize = $manifest['size_formatted'] ?? ($tvConfig['file_size'] ?? '46.4 MB');
+        $downloadUrl = $manifest['download_url'] ?? ($tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'));
+        $minVersionCode = $manifest['min_version_code'] ?? ($tvConfig['min_version_code'] ?? 2);
+        $releasedAt = $manifest['released_at'] ?? now()->toDateString();
+
         return response()->json([
             'success'            => true,
-            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.6'),
-            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 8),
-            'min_version_code'   => (int) ($tvConfig['min_version_code'] ?? 2),
-            'download_url'       => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
-            'file_size'          => $tvConfig['file_size'] ?? '46.4 MB',
+            'version'            => (string) $versionName,
+            'version_code'       => (int) $versionCode,
+            'min_version_code'   => (int) $minVersionCode,
+            'download_url'       => (string) $downloadUrl,
+            'file_size'          => (string) $fileSize,
             'mandatory'          => false,
             'title'              => 'نسخه جدید طلالایو TV موجود است',
-            'changelog'          => "• حذف عنوان هاردکد شده و هماهنگی کامل نام مغازه با پنل مدیریت\n• راه‌اندازی تصاویر پس‌زمینه روز بینگ (Bing Wallpapers) در تم‌های بینگ\n• ارتقا و درخشان‌سازی حباب‌های امبینت پس‌زمینه و شفافیت کریستالی کاشی‌ها\n• افزودن دکمه حالت سبک / روان (Eco Mode) به فوتر جهت اجرای فوق‌روان روی همه تلویزیون‌ها",
-            'released_at'        => now()->toDateString(),
+            'changelog'          => "• بهینه‌سازی پردازش گرافیکی GPU و کاهش چشمگیر مصرف رم و باتری\n• ترنزیشن روان و سینمایی اسلایدها و استوری‌بار هوشمند\n• ارتقا و درخشان‌سازی حباب‌های امبینت پس‌زمینه و شفافیت کریستالی کاشی‌ها\n• رفع باگ‌های گزارش‌شده و ارتقای ثبات و هماهنگی با انواع تلویزیون هوشمند",
+            'released_at'        => (string) $releasedAt,
+        ])->withHeaders([
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma'        => 'no-cache',
+            'Expires'       => '0',
         ]);
     }
 }

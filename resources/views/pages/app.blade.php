@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'دانلود اپلیکیشن طلالایو | نرم‌افزار تابلوی طلافروشی و تلویزیون هوشمند Android TV')
-@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۱.۰.۱ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه بدون مینی‌کیس با راه‌اندازی در ۶۰ ثانیه.')
+@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۱.۰.۸ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه بدون مینی‌کیس با راه‌اندازی در ۶۰ ثانیه.')
 @section('canonical', 'https://talalive.ir/app')
 
 {{-- استانداردهای سئوی تصویر پیش‌نمایش در شبکه‌های اجتماعی و پیام‌رسان‌ها (Open Graph / Twitter) --}}
@@ -115,7 +115,7 @@
                     {{-- بج نسخه جدید و پشتیبانی سیستم‌ها --}}
                     <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
-                        <span>نسخه جدید ۱.۰.۷ • مجهز به سیستم بروزرسانی آنلاین (OTA) و کنترل ریموت</span>
+                        <span>نسخه جدید ۱.۰.۸ • مجهز به سیستم بروزرسانی آنلاین (OTA) و کنترل ریموت</span>
                     </div>
 
                     {{-- تیتر اصلی H1 فوق‌العاده قوی سئو --}}
@@ -245,7 +245,7 @@
                             {{-- برچسب زنده بودن و اتصال در گوشه تصویر --}}
                             <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-500/40 text-[10px] font-bold text-amber-300 shadow-lg">
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
-                                <span>پیش‌نمایش زنده اپلیکیشن (v1.0.7)</span>
+                                <span>پیش‌نمایش زنده اپلیکیشن (v1.0.8)</span>
                             </div>
                         </figure>
 
@@ -268,7 +268,7 @@
                                 </div>
                                 <div class="flex items-center justify-between text-[8px]">
                                     <span class="text-slate-400">نسخه نرم‌افزار:</span>
-                                    <span class="text-amber-300 font-bold font-mono">۱.۰.۷</span>
+                                    <span class="text-amber-300 font-bold font-mono">۱.۰.۸</span>
                                 </div>
                             </div>
                             <div class="bg-amber-500/20 text-amber-300 text-center py-1 rounded text-[9px] font-bold">
@@ -618,7 +618,7 @@
       "operatingSystem": "Android TV, Google TV, Android Box, Web Browser",
       "applicationCategory": "BusinessApplication",
       "description": "نرم‌افزار هوشمند مدیریت تابلوی طلافروشی، نمایش لحظه‌ای نرخ طلا و سکه روی تلویزیون مغازه بدون نیاز به کامپیوتر یا مینی‌کیس.",
-      "softwareVersion": "1.0.7",
+      "softwareVersion": "1.0.8",
       "fileSize": "48683203",
       "downloadUrl": "https://talalive.ir/downloads/talalive-tv.apk",
       "image": {

@@ -1007,7 +1007,11 @@ class _BoardScreenState extends State<BoardScreen> {
       setState(() => _availableUpdate = update);
       _showUpdateDialog(update);
     } else if (manual) {
-      _showUpToDateDialog();
+      if (update.error != null) {
+        _showUpdateErrorDialog(update.error!);
+      } else {
+        _showUpToDateDialog();
+      }
     }
   }
 
@@ -1055,6 +1059,63 @@ class _BoardScreenState extends State<BoardScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: const Text('متوجه شدم', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUpdateErrorDialog(String errorMsg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0F172A),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(color: const Color(0xFFF59E0B).withOpacity(0.5)),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text(
+              'خطا در بررسی بروزرسانی',
+              style: TextStyle(color: Color(0xFFF59E0B), fontWeight: FontWeight.bold, fontFamily: 'Vazirmatn', fontSize: 16),
+              textDirection: TextDirection.rtl,
+            ),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF59E0B).withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.wifi_off_rounded, color: Color(0xFFF59E0B), size: 24),
+            ),
+          ],
+        ),
+        content: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Text(
+            'ارتباط با سرور طلالایو جهت دریافت مشخصات نسخه جدید برقرار نشد. لطفاً اتصال اینترنت تلویزیون را بررسی نموده و مجدداً تلاش فرمایید.\n(پیام: $errorMsg)',
+            style: const TextStyle(color: Color(0xFFCBD5E1), fontFamily: 'Vazirmatn', fontSize: 13, height: 1.6),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('بستن', style: TextStyle(color: Color(0xFF94A3B8), fontFamily: 'Vazirmatn')),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _checkForUpdate(manual: true);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF59E0B),
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('تلاش مجدد', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold)),
           ),
         ],
       ),
