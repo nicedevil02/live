@@ -189,22 +189,6 @@
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.03) translate3d(0,0,0); } 100% { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
         @keyframes crossFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; will-change: opacity; }
-        @keyframes ken-burns {
-            0% {
-                transform: scale3d(1, 1, 1);
-            }
-            100% {
-                transform: scale3d(1.08, 1.08, 1);
-            }
-        }
-        .animate-ken-burns {
-            animation: ken-burns var(--ken-burns-duration, 8s) cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-            will-change: transform;
-            transform-origin: 53% 47%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform: translate3d(0, 0, 0);
-        }
         @keyframes story-progress-anim {
             from { width: 0%; }
             to { width: 100%; }
@@ -1841,9 +1825,8 @@
                                     <img :src="slot.url || activeProductImageUrl" 
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                          :alt="activeProduct?.title || ''"
-                                         class="absolute inset-0 w-full h-full object-cover"
-                                         :class="!ecoMode ? 'animate-ken-burns' : ''"
-                                         :style="'--ken-burns-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
+                                         class="absolute inset-0 w-full h-full object-cover scale-[1.08] origin-center"
+                                         style="transform: scale(1.08); transform-origin: center;">
                                 </div>
                             </template>
 
