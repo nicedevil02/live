@@ -205,9 +205,22 @@
             -webkit-backface-visibility: hidden;
             transform: translateZ(0);
         }
-        @keyframes story-progress-anim {
-            from { width: 0%; }
-            to { width: 100%; }
+        @keyframes story-progress-scale {
+            0% {
+                transform: scaleX(0);
+            }
+            100% {
+                transform: scaleX(1);
+            }
+        }
+        .story-bar-fill {
+            width: 100%;
+            height: 100%;
+            transform-origin: right center;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
         }
         @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-5%, 5%); } }
         @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(5%, -5%); } }
@@ -1833,11 +1846,12 @@
                 {{-- Product Slider --}}
                 <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
                     <template x-if="activeProduct">
-                        <div class="absolute inset-0">
+                        <div class="absolute inset-0" style="contain: paint layout; isolation: isolate;">
                             <!-- لایه‌های دوگانه پینگ‌پنگ جهت ترنزیشن فید متقاطع واقعی و ری‌استارت پیوسته کن‌برنز -->
                             <template x-for="(slot, sIdx) in slots" :key="slot.key">
                                 <div class="absolute inset-0 transition-opacity duration-700 ease-in-out overflow-hidden"
-                                     :class="slot.active ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'">
+                                     :class="slot.active ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
+                                     style="contain: paint layout; will-change: opacity;">
                                     <img :key="'img-slot-' + slot.key"
                                          :src="slot.url || activeProductImageUrl" 
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
@@ -2233,14 +2247,14 @@
                                  :class="isLightTheme ? 'bg-slate-900/25' : 'bg-white/30'"
                                  @click="goToSlide(i)"
                                  :title="prod.title || ('محصول ' + (i + 1))">
-                                <!-- نوار پر شونده نرم زمانی -->
-                                <div class="h-full rounded-full transition-none"
+                                <!-- نوار پر شونده نرم زمانی (۱۰۰٪ شتاب‌یافته سخت‌افزاری GPU بدون Reflow) -->
+                                <div class="h-full w-full rounded-full story-bar-fill transition-none"
                                      :class="isLightTheme ? 'bg-slate-900 shadow-sm' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
                                      :style="i < activeIndex 
-                                         ? 'width: 100%;' 
+                                         ? 'transform: scaleX(1);' 
                                          : (i > activeIndex 
-                                             ? 'width: 0%;' 
-                                             : 'animation: story-progress-anim ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;')"
+                                             ? 'transform: scaleX(0);' 
+                                             : 'animation: story-progress-scale ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;')"
                                      :key="'story-' + i + '-' + slideKey">
                                 </div>
                             </div>
