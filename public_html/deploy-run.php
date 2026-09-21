@@ -21,24 +21,40 @@ if (empty($providedKey) || !hash_equals($secretKey, $providedKey)) {
 $startTime = microtime(true);
 $log = [];
 
-$sourceDir = '/home/talaliv1/repositories/live';
 $targetDir = '/home/talaliv1';
+if (!is_dir($targetDir)) {
+    $targetDir = dirname(__DIR__);
+}
 
-// Fallback detection if paths differ
-if (!is_dir($sourceDir)) {
-    $docRoot = dirname(__DIR__); // /home/talaliv1
-    if (is_dir("$docRoot/repositories/live")) {
-        $sourceDir = "$docRoot/repositories/live";
-        $targetDir = $docRoot;
+$sourceCandidates = [
+    $_GET['repo'] ?? '',
+    "$targetDir/repositories/talalive",
+    "$targetDir/repositories/live_app",
+    "$targetDir/repositories/live",
+    "$targetDir/repositories/live_repo",
+];
+
+$sourceDir = '';
+foreach ($sourceCandidates as $cand) {
+    if (!empty($cand) && is_dir($cand)) {
+        $sourceDir = $cand;
+        break;
     }
 }
 
-if (!is_dir($sourceDir)) {
+if (empty($sourceDir) && is_dir("$targetDir/repositories")) {
+    $found = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
+    if (!empty($found)) {
+        $sourceDir = $found[0];
+    }
+}
+
+if (empty($sourceDir) || !is_dir($sourceDir)) {
     http_response_code(500);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
         'success' => false,
-        'message' => 'Source repository not found at: ' . $sourceDir
+        'message' => 'Source repository not found. Searched in: ' . json_encode($sourceCandidates)
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }

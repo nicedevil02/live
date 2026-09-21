@@ -2,15 +2,12 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/talaliv1
-    - /bin/cp -R app $DEPLOYPATH/
-    - /bin/cp -R bootstrap $DEPLOYPATH/
-    - /bin/cp -R config $DEPLOYPATH/
-    - /bin/cp -R database $DEPLOYPATH/
-    - /bin/cp -R resources $DEPLOYPATH/
-    - /bin/cp -R routes $DEPLOYPATH/
-    - /bin/cp -R public_html/. $DEPLOYPATH/public_html/
-    - /bin/cp -R public_html/. $DEPLOYPATH/public/ || true
-    - /bin/cp artisan $DEPLOYPATH/
-    - /bin/cp composer.json $DEPLOYPATH/
-    - /bin/cp package.json $DEPLOYPATH/
-    - /usr/bin/curl -k -s -L "https://raw.githubusercontent.com/nicedevil02/live/apk-dist/talalive-tv.apk" -o $DEPLOYPATH/public_html/downloads/talalive-tv.apk || true
+    - /bin/cp -Rf app $DEPLOYPATH/
+    - /bin/cp -Rf bootstrap $DEPLOYPATH/
+    - /bin/cp -Rf config $DEPLOYPATH/
+    - /bin/cp -Rf database $DEPLOYPATH/
+    - /bin/cp -Rf resources $DEPLOYPATH/
+    - /bin/cp -Rf routes $DEPLOYPATH/
+    - /bin/cp -Rf public_html/. $DEPLOYPATH/public_html/
+    - /bin/cp -f artisan $DEPLOYPATH/
+    - /bin/cp -f composer.json $DEPLOYPATH/
