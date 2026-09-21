@@ -26,29 +26,52 @@ if (!is_dir($targetDir)) {
     $targetDir = dirname(__DIR__);
 }
 
-if (!empty($_GET['sync_blade'])) {
-    $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php?t=' . time();
+if (!empty($_GET['sync_blade']) || !empty($_GET['sync_files']) || !empty($_GET['sync_all'])) {
+    $filesToFetch = [
+        'resources/views/pages/app.blade.php',
+        'resources/views/display/live.blade.php',
+        'config/tv.php',
+        'app/Http/Controllers/PublicDisplayController.php',
+        'public_html/downloads/talalive-tv.json',
+        'public_html/deploy-run.php',
+    ];
+    $synced = [];
     $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
-    $newBlade = @file_get_contents($rawUrl, false, $ctx);
-    if ($newBlade && strlen($newBlade) > 10000) {
-        @file_put_contents("$targetDir/resources/views/display/live.blade.php", $newBlade);
-        $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
-        if (!empty($foundRepos)) {
-            foreach ($foundRepos as $r) {
-                if (is_dir("$r/resources/views/display")) {
-                    @file_put_contents("$r/resources/views/display/live.blade.php", $newBlade);
+    
+    foreach ($filesToFetch as $relPath) {
+        $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
+        $content = @file_get_contents($rawUrl, false, $ctx);
+        if ($content !== false && strlen($content) > 10) {
+            $dest = "$targetDir/$relPath";
+            $destDir = dirname($dest);
+            if (!is_dir($destDir)) @mkdir($destDir, 0755, true);
+            @file_put_contents($dest, $content);
+            $synced[] = $relPath;
+
+            // Also sync to repositories if present
+            $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
+            if (!empty($foundRepos)) {
+                foreach ($foundRepos as $r) {
+                    $rDest = "$r/$relPath";
+                    $rDir = dirname($rDest);
+                    if (!is_dir($rDir)) @mkdir($rDir, 0755, true);
+                    @file_put_contents($rDest, $content);
                 }
             }
         }
-        $vDir = "$targetDir/storage/framework/views";
-        if (is_dir($vDir)) {
-            foreach (glob("$vDir/*.php") as $vf) { @unlink($vf); }
-        }
-        if (function_exists('opcache_reset')) { @opcache_reset(); }
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['success' => true, 'message' => 'live.blade.php synced directly and view cache cleared!', 'bytes' => strlen($newBlade)]);
-        exit;
     }
+
+    $vDir = "$targetDir/storage/framework/views";
+    if (is_dir($vDir)) {
+        foreach (glob("$vDir/*.php") as $vf) { @unlink($vf); }
+    }
+    $cCache = "$targetDir/bootstrap/cache/config.php";
+    if (file_exists($cCache)) { @unlink($cCache); }
+    if (function_exists('opcache_reset')) { @opcache_reset(); }
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => true, 'message' => 'Files synced directly and caches cleared!', 'synced_files' => $synced]);
+    exit;
 }
 
 $sourceCandidates = [
