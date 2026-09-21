@@ -11,7 +11,9 @@
     <title>{{ $pageTitle ?? ("قیمت لحظه‌ای طلا و سکه — " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityFullDisplay ?? $cityName ?? 'ایران') . " | طلالایو") }}</title>
     <meta name="description" content="{{ $metaDescription ?? ("مشاهده آنلاین قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در " . ($galleryDisplayName ?? 'گالری طلا') . " " . ($cityFullDisplay ?? $cityName ?? '') . ". نرخ‌های بروزرسانی شده متصل به شبکه ابری طلالایو.") }}">
     <link rel="canonical" href="{{ url('/' . ($username ?? '')) }}">
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
+    <link rel="manifest" href="{{ asset('manifest.json') }}?v=2">
 
     {{-- اسکیما ساختاریافته JewelryStore (زیرمجموعه LocalBusiness) صنف طلا و جواهر بدون امتیاز ساختگی --}}
     <script type="application/ld+json">

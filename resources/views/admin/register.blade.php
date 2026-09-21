@@ -20,6 +20,8 @@
     <meta name="description" content="ثبت‌نام و راه‌اندازی فوری تابلوی اختصاصی هوشمند نرخ طلا و سکه برای گالری طلافروشی در سامانه طلالایو. ۱۴ روز استفاده آزمایشی کاملاً رایگان بدون نیاز به پرداخت.">
     <meta name="robots" content="noindex, follow">
 
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     @vite('resources/css/app.css')
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
@@ -43,7 +45,7 @@
         {{-- سربرگ بالا: لوگو، دکمه تغییر تم و بازگشت به صفحه اصلی --}}
         <div class="flex items-center justify-between gap-3 px-1">
             <a href="/" class="flex items-center gap-2.5 group shrink-0">
-                <img src="{{ asset('images/logo.png') }}" class="h-9 w-9 object-contain rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/60 p-1 shadow-sm" alt="طلالایو">
+                <img src="{{ asset('images/logo.png') }}?v=2" class="h-9 w-9 object-contain rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/60 p-1 shadow-sm" alt="طلالایو">
                 <div>
                     <span class="text-sm font-black text-slate-900 dark:text-amber-400 group-hover:text-amber-600 transition-colors">طلالایو &middot; TalaLive</span>
                     <span class="block text-[10px] text-slate-500 dark:text-slate-400">سامانه تابلوی هوشمند طلافروشی</span>

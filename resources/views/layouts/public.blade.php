@@ -6,12 +6,15 @@
     <meta name="theme-color" content="#020617">
     @stack('head')
 
-    <!-- PWA Settings & Apple Mobile Web App -->
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <!-- Favicons & App Icons (Cache-Busted v=2) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=2">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('icons/icon-192x192.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}?v=2">
+    <link rel="manifest" href="{{ asset('manifest.json') }}?v=2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="طلالایو">
-    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
 
     {{-- ضبط زودهنگام رویداد نصب PWA برای جلوگیری از دست رفتن رویداد در تمامی صفحات --}}
     <script>
@@ -364,7 +367,7 @@
                 {{-- لوگو و نام برند --}}
                 <a href="/" class="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0">
                     <div class="relative shrink-0">
-                        <img src="{{ asset('images/logo.png') }}" width="44" height="44" loading="eager" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white/90 dark:bg-slate-900/80 p-1 border border-slate-200/80 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
+                        <img src="{{ asset('images/logo.png') }}?v=2" width="44" height="44" loading="eager" decoding="async" class="h-8 w-8 sm:h-11 sm:w-11 object-contain rounded-xl sm:rounded-2xl shadow-md shadow-amber-500/10 bg-white/90 dark:bg-slate-900/80 p-1 border border-slate-200/80 dark:border-slate-700/60" alt="طلالایو (طلا لایو)">
                         <span class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-amber-500"></span>
@@ -476,7 +479,7 @@
             {{-- ستون ۱: معرفی برند و راه‌های ارتباطی --}}
             <div class="space-y-4 sm:col-span-2 md:col-span-1 lg:col-span-1">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo.png') }}" width="40" height="40" loading="lazy" decoding="async" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو (طلا لایو)">
+                    <img src="{{ asset('images/logo.png') }}?v=2" width="40" height="40" loading="lazy" decoding="async" class="h-10 w-10 object-contain rounded-xl bg-slate-900 border border-slate-800 p-1" alt="طلالایو (طلا لایو)">
                     <div>
                         <div class="text-base font-black text-amber-400">طلالایو (طلا لایو) &middot; TalaLive</div>
                         <p class="text-[11px] text-slate-500">سامانه ابری تابلوی هوشمند طلافروشی</p>
@@ -710,7 +713,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                navigator.serviceWorker.register('/sw.js?v=7').catch(function(err) {
                     console.warn('PWA registration failed:', err);
                 });
             });

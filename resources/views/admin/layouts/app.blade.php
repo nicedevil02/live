@@ -23,13 +23,15 @@
         })();
     </script>
 
-    <!-- PWA Settings & Apple Mobile Web App -->
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <!-- Favicons & App Icons (Cache-Busted v=2) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}?v=2">
+    <link rel="manifest" href="{{ asset('manifest.json') }}?v=2">
     <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="طلالایو">
-    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
@@ -64,7 +66,7 @@
         >
             <div class="flex h-16 items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
                 <div class="flex items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}" class="h-9 w-9 object-contain rounded-xl bg-slate-100 dark:bg-slate-800 p-0.5" alt="Logo">
+                    <img src="{{ asset('images/logo.png') }}?v=2" class="h-9 w-9 object-contain rounded-xl bg-slate-100 dark:bg-slate-800 p-0.5" alt="Logo">
                     <h2 class="text-lg font-black">پنل مدیریت</h2>
                 </div>
                 <button @click="mobileMenu = false" class="lg:hidden text-slate-500 p-2 hover:text-rose-500 transition-colors">

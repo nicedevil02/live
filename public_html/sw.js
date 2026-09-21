@@ -1,13 +1,16 @@
 // bump cache name to force clients to update when deployed
-const CACHE_NAME = 'gold-app-v6';
+const CACHE_NAME = 'gold-app-v7';
 const APP_SHELL = [
   '/',
-  '/manifest.json',
+  '/manifest.json?v=2',
   '/fonts/vazirmatn.css',
   '/fonts/Vazirmatn-variable.woff2',
   '/vendor/alpinejs.min.js',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/icons/icon-192x192.png?v=2',
+  '/icons/icon-512x512.png?v=2',
+  '/images/logo.png?v=2',
+  '/favicon.png?v=2',
+  '/favicon.ico?v=2'
 ];
 
 self.addEventListener('install', event => {

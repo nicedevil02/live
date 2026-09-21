@@ -20,6 +20,8 @@
     <meta name="description" content="ورود به پنل مدیریت تابلوی اختصاصی هوشمند طلا و سکه طلالایو.">
     <meta name="robots" content="noindex, follow">
 
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     @vite('resources/css/app.css')
 
@@ -39,7 +41,7 @@
     <header class="w-full max-w-md mx-auto pt-1 sm:pt-3 shrink-0">
         <div class="flex items-center justify-between gap-3 px-1">
             <a href="/" class="flex items-center gap-2.5 group shrink-0">
-                <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 object-contain rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 shadow-xs" alt="طلالایو">
+                <img src="{{ asset('images/logo.png') }}?v=2" class="h-10 w-10 object-contain rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 shadow-xs" alt="طلالایو">
                 <div>
                     <span class="text-sm sm:text-base font-black text-slate-900 dark:text-amber-400 group-hover:text-amber-600 transition-colors">طلالایو &middot; TalaLive</span>
                     <span class="block text-[11px] text-slate-500 dark:text-slate-400">پنل مدیریت تابلوی اختصاصی</span>
