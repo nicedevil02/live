@@ -189,38 +189,44 @@
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.03) translate3d(0,0,0); } 100% { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
         @keyframes crossFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; will-change: opacity; }
-        @keyframes continuous-zoom {
-            0% {
-                transform: scale3d(1, 1, 1);
-            }
-            100% {
-                transform: scale3d(1.08, 1.08, 1);
-            }
-        }
-        .animate-continuous-zoom {
-            animation: continuous-zoom var(--zoom-duration, 8s) linear forwards;
-            will-change: transform;
-            transform-origin: center center;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform: translateZ(0);
-        }
-        @keyframes story-progress-scale {
-            0% {
-                transform: scaleX(0);
-            }
-            100% {
-                transform: scaleX(1);
-            }
-        }
-        .story-bar-fill {
+        /* شیوه سخت‌افزاری اپل: ترنزیشن مقیاس مستقیم روی کارت گرافیک (Zero CPU / 60-120 FPS GPU Compositing) */
+        .apple-zoom-img {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
-            transform-origin: right center;
+            object-fit: cover;
+            transform: scale(1) translateZ(0);
+            transform-origin: center center;
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            transform: translateZ(0);
+            transition: transform var(--zoom-duration, 8s) linear;
+        }
+        .apple-zoom-img.is-zooming {
+            transform: scale(1.08) translateZ(0);
+        }
+
+        .apple-story-bar {
+            width: 100%;
+            height: 100%;
+            transform-origin: right center; /* RTL */
+            transform: scaleX(0) translateZ(0);
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .apple-story-bar.is-waiting {
+            transform: scaleX(0) translateZ(0);
+            transition: none;
+        }
+        .apple-story-bar.is-completed {
+            transform: scaleX(1) translateZ(0);
+            transition: none;
+        }
+        .apple-story-bar.is-active {
+            transform: scaleX(1) translateZ(0);
+            transition: transform var(--story-duration, 8s) linear;
         }
         @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-5%, 5%); } }
         @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(5%, -5%); } }
@@ -1856,8 +1862,8 @@
                                          :src="slot.url || activeProductImageUrl" 
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                          :alt="activeProduct?.title || ''"
-                                         class="absolute inset-0 w-full h-full object-cover"
-                                         :class="!ecoMode ? 'animate-continuous-zoom' : ''"
+                                         class="apple-zoom-img"
+                                         :class="slot.zoomed && !ecoMode ? 'is-zooming' : ''"
                                          :style="'--zoom-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
                                 </div>
                             </template>
@@ -2247,14 +2253,13 @@
                                  :class="isLightTheme ? 'bg-slate-900/25' : 'bg-white/30'"
                                  @click="goToSlide(i)"
                                  :title="prod.title || ('محصول ' + (i + 1))">
-                                <!-- نوار پر شونده نرم زمانی (۱۰۰٪ شتاب‌یافته سخت‌افزاری GPU بدون Reflow) -->
-                                <div class="h-full w-full rounded-full story-bar-fill transition-none"
-                                     :class="isLightTheme ? 'bg-slate-900 shadow-sm' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
-                                     :style="i < activeIndex 
-                                         ? 'transform: scaleX(1);' 
-                                         : (i > activeIndex 
-                                             ? 'transform: scaleX(0);' 
-                                             : 'animation: story-progress-scale ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;')"
+                                <!-- نوار پر شونده نرم زمانی شیوه اپل (۱۰۰٪ شتاب‌یافته سخت‌افزاری scaleX با ترنزیشن GPU) -->
+                                <div class="apple-story-bar rounded-full"
+                                     :class="[
+                                         isLightTheme ? 'bg-slate-900 shadow-sm' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]',
+                                         i < activeIndex ? 'is-completed' : (i > activeIndex ? 'is-waiting' : (storyActive ? 'is-active' : 'is-waiting'))
+                                     ]"
+                                     :style="'--story-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'"
                                      :key="'story-' + i + '-' + slideKey">
                                 </div>
                             </div>
@@ -2749,9 +2754,10 @@
                 activeSlotIndex: 0,
                 slideKey: 1,
                 slots: [
-                    { url: '', active: true, key: 1 },
-                    { url: '', active: false, key: 2 }
+                    { url: '', active: true, zoomed: false, key: 1 },
+                    { url: '', active: false, zoomed: false, key: 2 }
                 ],
+                storyActive: false,
                 sliderTimer: null,
                 now: new Date(),
                 refreshTimer: null,
@@ -2907,15 +2913,22 @@
                 transitionToNextSlide() {
                     this.slideKey++;
                     const nextSlot = 1 - this.activeSlotIndex;
+                    this.storyActive = false;
                     this.slots[nextSlot] = {
                         url: this.activeProductImageUrl,
                         key: this.slideKey,
-                        active: false
+                        active: false,
+                        zoomed: false
                     };
                     requestAnimationFrame(() => {
-                        this.slots[nextSlot].active = true;
-                        this.slots[this.activeSlotIndex].active = false;
-                        this.activeSlotIndex = nextSlot;
+                        requestAnimationFrame(() => {
+                            this.slots[nextSlot].active = true;
+                            this.slots[nextSlot].zoomed = true;
+                            this.slots[this.activeSlotIndex].active = false;
+                            this.slots[this.activeSlotIndex].zoomed = false;
+                            this.activeSlotIndex = nextSlot;
+                            this.storyActive = true;
+                        });
                     });
                 },
 
@@ -3222,6 +3235,12 @@
 
                     // شروع هوشمند اسلایدر با قابلیت تنظیم داینامیک
                     this.slots[0].url = this.activeProductImageUrl;
+                    this.slots[0].key = 1;
+                    this.slots[0].active = true;
+                    requestAnimationFrame(() => {
+                        this.slots[0].zoomed = true;
+                        this.storyActive = true;
+                    });
                     this.startSlider();
                     this.$watch('settings.slider_interval_sec', () => this.startSlider());
 
