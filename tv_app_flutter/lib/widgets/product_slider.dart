@@ -41,6 +41,7 @@ class _ProductSliderState extends State<ProductSlider>
   int _emptyGuideIndex = 0;
   Timer? _emptyGuideTimer;
   late AnimationController _progressController;
+  late Animation<double> _zoomAnimation;
 
   @override
   void initState() {
@@ -52,6 +53,11 @@ class _ProductSliderState extends State<ProductSlider>
     _progressController = AnimationController(
       vsync: this,
       duration: duration,
+    );
+
+    // 2. Continuous linear zoom from 0% (1.0) to 8% (1.08)
+    _zoomAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _progressController, curve: Curves.linear),
     );
 
     _progressController.addStatusListener((status) {
@@ -179,7 +185,7 @@ class _ProductSliderState extends State<ProductSlider>
       fit: StackFit.expand,
       children: [
             // =================================================================
-            // 1. Static 8% Zoom Product Image with Smooth Cross-Fade
+            // 1. Continuous 0 to 8% Zoom Product Image with Smooth Cross-Fade
             // =================================================================
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 700),
@@ -187,9 +193,15 @@ class _ProductSliderState extends State<ProductSlider>
               switchOutCurve: Curves.easeInOut,
               child: SizedBox.expand(
                 key: ValueKey<String>('$imageUrl-$_currentIndex'),
-                child: Transform.scale(
-                  scale: 1.08,
-                  alignment: Alignment.center,
+                child: AnimatedBuilder(
+                  animation: _zoomAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _zoomAnimation.value,
+                      alignment: Alignment.center,
+                      child: child,
+                    );
+                  },
                   child: _buildProductImage(imageUrl),
                 ),
               ),

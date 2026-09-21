@@ -189,6 +189,22 @@
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.03) translate3d(0,0,0); } 100% { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
         @keyframes crossFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; will-change: opacity; }
+        @keyframes continuous-zoom {
+            0% {
+                transform: scale3d(1, 1, 1);
+            }
+            100% {
+                transform: scale3d(1.08, 1.08, 1);
+            }
+        }
+        .animate-continuous-zoom {
+            animation: continuous-zoom var(--zoom-duration, 8s) linear forwards;
+            will-change: transform;
+            transform-origin: center center;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+        }
         @keyframes story-progress-anim {
             from { width: 0%; }
             to { width: 100%; }
@@ -1822,11 +1838,13 @@
                             <template x-for="(slot, sIdx) in slots" :key="slot.key">
                                 <div class="absolute inset-0 transition-opacity duration-700 ease-in-out overflow-hidden"
                                      :class="slot.active ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'">
-                                    <img :src="slot.url || activeProductImageUrl" 
+                                    <img :key="'img-slot-' + slot.key"
+                                         :src="slot.url || activeProductImageUrl" 
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                          :alt="activeProduct?.title || ''"
-                                         class="absolute inset-0 w-full h-full object-cover scale-[1.08] origin-center"
-                                         style="transform: scale(1.08); transform-origin: center;">
+                                         class="absolute inset-0 w-full h-full object-cover"
+                                         :class="!ecoMode ? 'animate-continuous-zoom' : ''"
+                                         :style="'--zoom-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
                                 </div>
                             </template>
 
@@ -2875,11 +2893,16 @@
                 transitionToNextSlide() {
                     this.slideKey++;
                     const nextSlot = 1 - this.activeSlotIndex;
-                    this.slots[nextSlot].url = this.activeProductImageUrl;
-                    this.slots[nextSlot].key = this.slideKey;
-                    this.slots[nextSlot].active = true;
-                    this.slots[this.activeSlotIndex].active = false;
-                    this.activeSlotIndex = nextSlot;
+                    this.slots[nextSlot] = {
+                        url: this.activeProductImageUrl,
+                        key: this.slideKey,
+                        active: false
+                    };
+                    requestAnimationFrame(() => {
+                        this.slots[nextSlot].active = true;
+                        this.slots[this.activeSlotIndex].active = false;
+                        this.activeSlotIndex = nextSlot;
+                    });
                 },
 
                 goToSlide(index) {
