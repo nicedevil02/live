@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/board_model.dart';
 import '../theme/board_theme.dart';
@@ -22,41 +21,91 @@ class ProductSlider extends StatefulWidget {
   State<ProductSlider> createState() => _ProductSliderState();
 }
 
-class _ProductSliderState extends State<ProductSlider> {
+class _ProductSliderState extends State<ProductSlider>
+    with TickerProviderStateMixin {
   int _currentIndex = 0;
-  Timer? _timer;
+  late AnimationController _progressController;
+  late AnimationController _kenBurnsController;
+  late Animation<double> _kenBurnsScale;
+  late Animation<Offset> _kenBurnsOffset;
 
   @override
   void initState() {
     super.initState();
-    _startTimer();
-  }
 
-  void _startTimer() {
-    _timer?.cancel();
-    if (widget.products.length <= 1) return;
+    final duration = Duration(seconds: widget.intervalSec.clamp(3, 120));
 
-    _timer = Timer.periodic(Duration(seconds: widget.intervalSec), (timer) {
-      if (mounted) {
-        setState(() {
-          _currentIndex = (_currentIndex + 1) % widget.products.length;
-        });
+    // 1. Story progress controller: runs from 0.0 to 1.0 over intervalSec
+    _progressController = AnimationController(
+      vsync: this,
+      duration: duration,
+    );
+
+    // 2. Ken-Burns subtle cinematic camera movement
+    _kenBurnsController = AnimationController(
+      vsync: this,
+      duration: duration,
+    );
+
+    _kenBurnsScale = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _kenBurnsController, curve: Curves.linear),
+    );
+
+    _kenBurnsOffset = Tween<Offset>(
+      begin: const Offset(0.0, 0.0),
+      end: const Offset(-0.02, 0.015),
+    ).animate(
+      CurvedAnimation(parent: _kenBurnsController, curve: Curves.linear),
+    );
+
+    _progressController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _goToNextSlide();
       }
     });
+
+    _startSlide();
+  }
+
+  void _startSlide() {
+    if (widget.products.isEmpty) return;
+    _progressController.reset();
+    _kenBurnsController.reset();
+
+    if (widget.products.length > 1) {
+      _progressController.forward();
+      _kenBurnsController.forward();
+    }
+  }
+
+  void _goToNextSlide() {
+    if (!mounted || widget.products.length <= 1) return;
+    setState(() {
+      _currentIndex = (_currentIndex + 1) % widget.products.length;
+    });
+    _startSlide();
   }
 
   @override
   void didUpdateWidget(covariant ProductSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.intervalSec != widget.intervalSec ||
-        oldWidget.products.length != widget.products.length) {
-      _startTimer();
+    if (oldWidget.intervalSec != widget.intervalSec) {
+      final newDuration = Duration(seconds: widget.intervalSec.clamp(3, 120));
+      _progressController.duration = newDuration;
+      _kenBurnsController.duration = newDuration;
+      _startSlide();
+    } else if (oldWidget.products.length != widget.products.length) {
+      if (_currentIndex >= widget.products.length) {
+        _currentIndex = 0;
+      }
+      _startSlide();
     }
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _progressController.dispose();
+    _kenBurnsController.dispose();
     super.dispose();
   }
 
@@ -118,26 +167,38 @@ class _ProductSliderState extends State<ProductSlider> {
           fit: StackFit.expand,
           children: [
             // =================================================================
-            // 1. Full Cover Image with Smooth Cross-Fade
+            // 1. Ken-Burns Animated Product Image with Smooth Cross-Fade
             // =================================================================
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 650),
+              duration: const Duration(milliseconds: 700),
               switchInCurve: Curves.easeInOut,
               switchOutCurve: Curves.easeInOut,
               child: SizedBox.expand(
                 key: ValueKey<String>('$imageUrl-$_currentIndex'),
-                child: _buildProductImage(imageUrl),
+                child: AnimatedBuilder(
+                  animation: _kenBurnsController,
+                  builder: (context, child) {
+                    return FractionalTranslation(
+                      translation: _kenBurnsOffset.value,
+                      child: Transform.scale(
+                        scale: _kenBurnsScale.value,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: _buildProductImage(imageUrl),
+                ),
               ),
             ),
 
             // =================================================================
-            // 2. Scrim Gradient Overlay at bottom
+            // 2. Scrim Gradient Overlay at bottom for readable text dock
             // =================================================================
             Positioned(
               left: 0,
               right: 0,
               bottom: 0,
-              height: 280,
+              height: 320,
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -146,13 +207,13 @@ class _ProductSliderState extends State<ProductSlider> {
                     colors: widget.theme.isDark
                         ? [
                             Colors.transparent,
-                            const Color(0xCC05070C),
-                            const Color(0xF505070C),
+                            const Color(0x9905070C),
+                            const Color(0xFA05070C),
                           ]
                         : [
                             Colors.transparent,
-                            const Color(0xAAFFFFFF),
-                            const Color(0xF5FFFFFF),
+                            const Color(0x99FFFFFF),
+                            const Color(0xFAFFFFFF),
                           ],
                   ),
                 ),
@@ -160,11 +221,11 @@ class _ProductSliderState extends State<ProductSlider> {
             ),
 
             // =================================================================
-            // 3. Top-Left Badge: "پیشنهاد شگفت‌انگیز"
+            // 3. Top-Left Badge: «پیشنهاد شگفت‌انگیز» with Pulsing Live Dot
             // =================================================================
             Positioned(
-              top: 20,
-              left: 20,
+              top: 22,
+              left: 22,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
@@ -178,33 +239,27 @@ class _ProductSliderState extends State<ProductSlider> {
                     ],
                   ),
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.5),
+                  border: Border.all(color: Colors.white.withOpacity(0.40), width: 1.5),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFE11D48).withOpacity(0.4),
+                      color: const Color(0xFFE11D48).withOpacity(0.45),
                       blurRadius: 18,
                       offset: const Offset(0, 6),
                     ),
                   ],
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
+                    PulsingLiveDot(color: Colors.white, size: 8),
+                    SizedBox(width: 9),
+                    Text(
                       'پیشنهاد شگفت‌انگیز',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
+                        fontFamily: 'Vazirmatn',
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -214,30 +269,13 @@ class _ProductSliderState extends State<ProductSlider> {
             ),
 
             // =================================================================
-            // 4. Top-Right Story Indicator Dots
+            // 4. Top-Right Story Progress Bar (Instagram / TikTok Style)
             // =================================================================
             if (widget.products.length > 1)
               Positioned(
-                top: 24,
+                top: 26,
                 right: 24,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(widget.products.length, (index) {
-                    final isActive = index == _currentIndex;
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.only(left: 6),
-                      width: isActive ? 34 : 10,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: isActive
-                            ? (widget.theme.isDark ? Colors.white : const Color(0xFF0F172A))
-                            : (widget.theme.isDark ? Colors.white38 : Colors.black26),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    );
-                  }),
-                ),
+                child: _buildSegmentedStoryBar(),
               ),
 
             // =================================================================
@@ -248,7 +286,7 @@ class _ProductSliderState extends State<ProductSlider> {
               right: 18,
               bottom: 18,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
                 decoration: BoxDecoration(
                   color: widget.theme.headerBackground.withOpacity(widget.theme.isDark ? 0.88 : 0.94),
                   borderRadius: BorderRadius.circular(28),
@@ -280,6 +318,7 @@ class _ProductSliderState extends State<ProductSlider> {
                               color: widget.theme.textPrimary,
                               fontSize: 22,
                               fontWeight: FontWeight.w900,
+                              fontFamily: 'Vazirmatn',
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -291,10 +330,14 @@ class _ProductSliderState extends State<ProductSlider> {
                                 _buildChip('وزن:', '${product.weightGram!} گرم'),
                                 const SizedBox(width: 8),
                               ],
-                              if (product.profitValue != null && product.profitValue!.isNotEmpty && product.profitValue != '0') ...[
+                              if (product.profitValue != null &&
+                                  product.profitValue!.isNotEmpty &&
+                                  product.profitValue != '0') ...[
                                 _buildChip('سود:', '${product.profitValue}%'),
                                 const SizedBox(width: 8),
-                              ] else if (product.laborFee != null && product.laborFee!.isNotEmpty && product.laborFee != '0') ...[
+                              ] else if (product.laborFee != null &&
+                                  product.laborFee!.isNotEmpty &&
+                                  product.laborFee != '0') ...[
                                 _buildChip('اجرت:', product.laborFee!),
                                 const SizedBox(width: 8),
                               ],
@@ -314,6 +357,58 @@ class _ProductSliderState extends State<ProductSlider> {
           ],
         ),
       ),
+    );
+  }
+
+  /// Segmented story progress bar (fills across intervalSec)
+  Widget _buildSegmentedStoryBar() {
+    return AnimatedBuilder(
+      animation: _progressController,
+      builder: (context, _) {
+        final count = widget.products.length;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(count, (index) {
+            double fillRatio = 0.0;
+            if (index < _currentIndex) {
+              fillRatio = 1.0;
+            } else if (index == _currentIndex) {
+              fillRatio = _progressController.value;
+            } else {
+              fillRatio = 0.0;
+            }
+
+            final barWidth = count > 8 ? 20.0 : (count > 4 ? 32.0 : 44.0);
+
+            return Container(
+              margin: const EdgeInsets.only(left: 6),
+              width: barWidth,
+              height: 5,
+              decoration: BoxDecoration(
+                color: widget.theme.isDark ? Colors.white24 : Colors.black26,
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: fillRatio,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: widget.theme.isDark ? Colors.white : const Color(0xFF0F172A),
+                    borderRadius: BorderRadius.circular(3),
+                    boxShadow: [
+                      if (fillRatio > 0)
+                        BoxShadow(
+                          color: (widget.theme.isDark ? Colors.white : const Color(0xFF0F172A)).withOpacity(0.5),
+                          blurRadius: 4,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 
@@ -342,15 +437,11 @@ class _ProductSliderState extends State<ProductSlider> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: widget.theme.goldPrimary,
-                  shape: BoxShape.circle,
-                ),
+              PulsingLiveDot(
+                color: widget.theme.goldPrimary,
+                size: 6,
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 6),
               Text(
                 'مبلغ نهایی ویترین',
                 style: TextStyle(
@@ -433,6 +524,7 @@ class _ProductSliderState extends State<ProductSlider> {
               color: widget.theme.textSecondary,
               fontSize: 11,
               fontWeight: FontWeight.w600,
+              fontFamily: 'Vazirmatn',
             ),
           ),
           const SizedBox(width: 4),
@@ -442,6 +534,7 @@ class _ProductSliderState extends State<ProductSlider> {
               color: widget.theme.goldPrimary,
               fontSize: 11,
               fontWeight: FontWeight.w800,
+              fontFamily: 'Vazirmatn',
             ),
           ),
         ],
@@ -488,6 +581,93 @@ class _ProductSliderState extends State<ProductSlider> {
             color: widget.theme.goldPrimary.withOpacity(0.35),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// A pulsing live dot that mimics CSS `animate-ping` with expanding halo
+class PulsingLiveDot extends StatefulWidget {
+  final Color color;
+  final double size;
+
+  const PulsingLiveDot({
+    super.key,
+    required this.color,
+    this.size = 8,
+  });
+
+  @override
+  State<PulsingLiveDot> createState() => _PulsingLiveDotState();
+}
+
+class _PulsingLiveDotState extends State<PulsingLiveDot>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+  late final Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..repeat();
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 2.4).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.8, end: 0.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widget.size * 2.2,
+      height: widget.size * 2.2,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Expanding & fading halo
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _scaleAnimation.value,
+                child: Opacity(
+                  opacity: _fadeAnimation.value,
+                  child: Container(
+                    width: widget.size,
+                    height: widget.size,
+                    decoration: BoxDecoration(
+                      color: widget.color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          // Solid core dot
+          Container(
+            width: widget.size,
+            height: widget.size,
+            decoration: BoxDecoration(
+              color: widget.color,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ],
       ),
     );
   }

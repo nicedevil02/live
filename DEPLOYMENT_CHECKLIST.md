@@ -72,12 +72,12 @@ https://talalive.ir/deploy-run.php?key=tala_deploy_7f8c9b1e2a3d4f5
 
 هنگام انتشار نسخه جدید برای تلویزیون‌ها:
 
-### ۱️⃣ بیلد و امضای نسخه Release در سیستم توسعه
+### ۱️⃣ بیلد نسخه Release در سیستم توسعه
 ```powershell
-cd tv_app_native
-.\gradlew.bat assembleRelease
+cd tv_app_flutter
+flutter build apk --release
 ```
-فایل خروجی تولید شده: `tv_app_native/app/build/outputs/apk/release/app-release.apk`
+فایل خروجی تولید شده: `tv_app_flutter/build/app/outputs/flutter-apk/app-release.apk`
 
 ### ۲️⃣ قرار دادن فایل نصبی در پوشه دانلود
 فایل APK را به مسیر زیر کپی کرده و به `talalive-tv.apk` تغییر نام دهید:

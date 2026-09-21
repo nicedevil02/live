@@ -15,6 +15,7 @@ import '../utils/persian_utils.dart';
 import '../widgets/board_header.dart';
 import '../widgets/price_card.dart';
 import '../widgets/product_slider.dart';
+import '../widgets/ambient_orbs.dart';
 import 'pairing_screen.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -1519,9 +1520,9 @@ class _BoardScreenState extends State<BoardScreen> {
     // =========================================================================
     // 2. High-Fidelity Native Flutter Board Mode
     // =========================================================================
-    final isDark = _isDarkModeOverride ??
-        (_model != null ? BoardThemeData.fromMode(_model!.themeMode).isDark : true);
-    final theme = isDark ? BoardThemeData.onyxGold : BoardThemeData.imperialPearl;
+    final theme = _isDarkModeOverride != null
+        ? (_isDarkModeOverride! ? BoardThemeData.onyxGold : BoardThemeData.imperialPearl)
+        : BoardThemeData.fromKey(_model?.themeMode);
 
     return KeyboardListener(
       focusNode: _focusNode,
@@ -1544,65 +1545,10 @@ class _BoardScreenState extends State<BoardScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
                       child: Stack(
                         children: [
-                          // Ambient Background Glow Orbs (Isolated by RepaintBoundary to avoid GPU redraw)
+                          // 12 Ambient Background Glow Orbs (GPU-accelerated, zero redraw penalty)
                           Positioned.fill(
-                            child: RepaintBoundary(
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    top: -80,
-                                    right: 150,
-                                    child: Container(
-                                      width: 500,
-                                      height: 500,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: RadialGradient(
-                                          colors: [
-                                            theme.goldPrimary.withOpacity(theme.isDark ? 0.08 : 0.05),
-                                            Colors.transparent,
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 80,
-                                    child: Container(
-                                      width: 450,
-                                      height: 450,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: RadialGradient(
-                                          colors: [
-                                            (theme.isDark ? theme.greenUp : theme.goldSecondary)
-                                                .withOpacity(theme.isDark ? 0.06 : 0.04),
-                                            Colors.transparent,
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 250,
-                                    left: 550,
-                                    child: Container(
-                                      width: 400,
-                                      height: 400,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: RadialGradient(
-                                          colors: [
-                                            theme.goldSecondary.withOpacity(theme.isDark ? 0.05 : 0.03),
-                                            Colors.transparent,
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            child: AmbientOrbsBackground(
+                              orbColors: theme.orbColors,
                             ),
                           ),
 

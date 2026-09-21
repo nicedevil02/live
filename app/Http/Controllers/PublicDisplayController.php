@@ -795,14 +795,14 @@ class PublicDisplayController extends Controller
 
         return response()->json([
             'success'            => true,
-            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.3'),
-            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 5),
+            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.4'),
+            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 6),
             'min_version_code'   => (int) ($tvConfig['min_version_code'] ?? 2),
             'download_url'       => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
             'file_size'          => $tvConfig['file_size'] ?? '46.3 MB',
             'mandatory'          => false,
             'title'              => 'نسخه جدید طلالایو TV موجود است',
-            'changelog'          => "• انیمیشن تغییر رنگ سبز و قرمز ارقام تغییریافته به مدت ۲٫۳ ثانیه مطابق تابلوی وب\n• آیکون رسمی و بنر جدید ۱۶:۹ طلالایو در تلویزیون\n• حل مشکل ناپدید شدن نشانگر ماوس در حالت وب با سیستم Auto-Hide هوشمند",
+            'changelog'          => "• پیاده‌سازی کامل ۸ پالت تم لوکس شاهنشاهی و متالیک با ۱۲ گوی نوری شناور\n• اسکنر لیزری طلایی متحرک روی کد QR اختصاصی گالری\n• افکت زوم سینمایی کین‌برنز (Ken-Burns) و نوار استوری اینستاگرامی روی اسلایدر ویترین\n• نشان لوکس پیشنهاد شگفت‌انگیز با نقطه نوری تپنده و فونت وزیرمتن قیمت‌ها\n• بهینه‌سازی حداکثری عملکرد برای پردازنده‌های ضعیف‌تر تلویزیون",
             'released_at'        => now()->toDateString(),
         ]);
     }

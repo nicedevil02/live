@@ -44,6 +44,9 @@ class BoardThemeData {
   final Color unitBadgeBorder;
   final Color unitBadgeText;
 
+  // Ambient Floating Orb Colors
+  final List<Color> orbColors;
+
   const BoardThemeData({
     required this.isDark,
     required this.backgroundColor,
@@ -81,8 +84,10 @@ class BoardThemeData {
     required this.unitBadgeBg,
     required this.unitBadgeBorder,
     required this.unitBadgeText,
+    required this.orbColors,
   });
 
+  // 1. Imperial Onyx (Default Luxury 24K Gold Dark Mode)
   static const BoardThemeData onyxGold = BoardThemeData(
     isDark: true,
     backgroundColor: Color(0xFF05070C),
@@ -130,8 +135,17 @@ class BoardThemeData {
     unitBadgeBg: Color(0x660F172A),
     unitBadgeBorder: Color(0x4DFBBF24),
     unitBadgeText: Color(0xFFFDE68A),
+    orbColors: [
+      Color(0xFFFBBF24),
+      Color(0xFFF59E0B),
+      Color(0xFFFEF08A),
+      Color(0xFFD97706),
+      Color(0xFFFCD34D),
+      Color(0xFFB45309),
+    ],
   );
 
+  // 2. Imperial Pearl (Luxurious Champagne Light Mode)
   static const BoardThemeData imperialPearl = BoardThemeData(
     isDark: false,
     backgroundColor: Color(0xFFF6F7FB),
@@ -179,12 +193,386 @@ class BoardThemeData {
     unitBadgeBg: Color(0xE6F1F5F9),
     unitBadgeBorder: Color(0x59D97706),
     unitBadgeText: Color(0xFF78350F),
+    orbColors: [
+      Color(0xFF38BDF8),
+      Color(0xFFF43F5E),
+      Color(0xFFF59E0B),
+      Color(0xFF10B981),
+      Color(0xFF3B82F6),
+      Color(0xFFA855F7),
+    ],
   );
 
-  static BoardThemeData fromMode(String mode) {
-    if (mode.contains('light') || mode.contains('pearl')) {
+  // 3. Gold Royal (Rich Amber Gold)
+  static const BoardThemeData goldRoyal = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF0A0702),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE6241708), Color(0xF2150D03)],
+    ),
+    cardStrokeColor: Color(0x80F59E0B),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF078350F), Color(0xF0451A03), Color(0xFA1E0B02)],
+    ),
+    heroStrokeColor: Color(0xFFFCD34D),
+    heroTextColor: Color(0xFFFEF08A),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFFEF08A), Color(0xFFF59E0B), Color(0xFFD97706)],
+    ),
+    goldPrimary: Color(0xFFF59E0B),
+    goldSecondary: Color(0xFFFCD34D),
+    textPrimary: Color(0xFFFFFBEB),
+    textSecondary: Color(0xFFFDE68A),
+    textMuted: Color(0xFFB45309),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC1A0E04),
+    headerBackground: Color(0xCC150B03),
+    footerBackground: Color(0xCC150B03),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x66241708),
+    unitBadgeBorder: Color(0x59F59E0B),
+    unitBadgeText: Color(0xFFFDE68A),
+    orbColors: [
+      Color(0xFFFBBF24),
+      Color(0xFFF59E0B),
+      Color(0xFFFDE047),
+      Color(0xFFD97706),
+      Color(0xFFFCD34D),
+      Color(0xFFB45309),
+    ],
+  );
+
+  // 4. Emerald Night (Deep Emerald, Mint & Jade)
+  static const BoardThemeData emeraldNight = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF02130E),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE6062C21), Color(0xF2031B14)],
+    ),
+    cardStrokeColor: Color(0x8010B981),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF0064E3B), Color(0xF0022C22), Color(0xFA011A14)],
+    ),
+    heroStrokeColor: Color(0xFF34D399),
+    heroTextColor: Color(0xFFA7F3D0),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFA7F3D0), Color(0xFF34D399), Color(0xFF10B981)],
+    ),
+    goldPrimary: Color(0xFF10B981),
+    goldSecondary: Color(0xFF34D399),
+    textPrimary: Color(0xFFECFDF5),
+    textSecondary: Color(0xFFA7F3D0),
+    textMuted: Color(0xFF047857),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC041F17),
+    headerBackground: Color(0xCC031B14),
+    footerBackground: Color(0xCC031B14),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x66062C21),
+    unitBadgeBorder: Color(0x5910B981),
+    unitBadgeText: Color(0xFFA7F3D0),
+    orbColors: [
+      Color(0xFF10B981),
+      Color(0xFF34D399),
+      Color(0xFF059669),
+      Color(0xFF6EE7B7),
+      Color(0xFF047857),
+      Color(0xFF10B981),
+    ],
+  );
+
+  // 5. Blue Ocean (Sapphire, Deep Oceanic Cyan & Azure)
+  static const BoardThemeData blueOcean = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF030D1A),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE60A2540), Color(0xF2051628)],
+    ),
+    cardStrokeColor: Color(0x8006B6D4),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF0083344), Color(0xF00C4A6E), Color(0xFA021F3F)],
+    ),
+    heroStrokeColor: Color(0xFF38BDF8),
+    heroTextColor: Color(0xFFBAE6FD),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFBAE6FD), Color(0xFF38BDF8), Color(0xFF06B6D4)],
+    ),
+    goldPrimary: Color(0xFF06B6D4),
+    goldSecondary: Color(0xFF38BDF8),
+    textPrimary: Color(0xFFF0F9FF),
+    textSecondary: Color(0xFFBAE6FD),
+    textMuted: Color(0xFF0369A1),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC051D33),
+    headerBackground: Color(0xCC04172B),
+    footerBackground: Color(0xCC04172B),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x660A2540),
+    unitBadgeBorder: Color(0x5906B6D4),
+    unitBadgeText: Color(0xFFBAE6FD),
+    orbColors: [
+      Color(0xFF06B6D4),
+      Color(0xFF0EA5E9),
+      Color(0xFF22D3EE),
+      Color(0xFF38BDF8),
+      Color(0xFF0284C7),
+      Color(0xFF06B6D4),
+    ],
+  );
+
+  // 6. Purple Haze (Royal Amethyst, Neon Violet & Fuchsia)
+  static const BoardThemeData purpleHaze = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF10051C),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE6260D3E), Color(0xF2160624)],
+    ),
+    cardStrokeColor: Color(0x80C026D3),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF04A044E), Color(0xF03B0764), Color(0xFA1E0538)],
+    ),
+    heroStrokeColor: Color(0xFFE879F9),
+    heroTextColor: Color(0xFFF5D0FE),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFF5D0FE), Color(0xFFE879F9), Color(0xFFC026D3)],
+    ),
+    goldPrimary: Color(0xFFC026D3),
+    goldSecondary: Color(0xFFE879F9),
+    textPrimary: Color(0xFFFAF5FF),
+    textSecondary: Color(0xFFF5D0FE),
+    textMuted: Color(0xFF9333EA),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC1F0833),
+    headerBackground: Color(0xCC1A072B),
+    footerBackground: Color(0xCC1A072B),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x66260D3E),
+    unitBadgeBorder: Color(0x59C026D3),
+    unitBadgeText: Color(0xFFF5D0FE),
+    orbColors: [
+      Color(0xFFC026D3),
+      Color(0xFFA855F7),
+      Color(0xFFD946EF),
+      Color(0xFF9333EA),
+      Color(0xFFE879F9),
+      Color(0xFFC026D3),
+    ],
+  );
+
+  // 7. Rose Dark (Ruby Crimson & Dark Garnet)
+  static const BoardThemeData roseDark = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF17030A),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE6380B1B), Color(0xF220040E)],
+    ),
+    cardStrokeColor: Color(0x80F43F5E),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF04C0519), Color(0xF0881337), Color(0xFA24020B)],
+    ),
+    heroStrokeColor: Color(0xFFFB7185),
+    heroTextColor: Color(0xFFFECDD3),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFFECDD3), Color(0xFFFB7185), Color(0xFFF43F5E)],
+    ),
+    goldPrimary: Color(0xFFF43F5E),
+    goldSecondary: Color(0xFFFB7185),
+    textPrimary: Color(0xFFFFF1F2),
+    textSecondary: Color(0xFFFECDD3),
+    textMuted: Color(0xFFBE123C),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC2A0614),
+    headerBackground: Color(0xCC220510),
+    footerBackground: Color(0xCC220510),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x66380B1B),
+    unitBadgeBorder: Color(0x59F43F5E),
+    unitBadgeText: Color(0xFFFECDD3),
+    orbColors: [
+      Color(0xFFF43F5E),
+      Color(0xFFFB7185),
+      Color(0xFFE11D48),
+      Color(0xFFFDA4AF),
+      Color(0xFFBE123C),
+      Color(0xFFF43F5E),
+    ],
+  );
+
+  // 8. Pure Black (AMOLED Pure Black & Titanium Silver)
+  static const BoardThemeData pureBlack = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF000000),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF0C0C0E), Color(0xFF040405)],
+    ),
+    cardStrokeColor: Color(0x4D52525B), // 30% zinc-600
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF1E1E24), Color(0xFF111115), Color(0xFF050507)],
+    ),
+    heroStrokeColor: Color(0xFFA1A1AA),
+    heroTextColor: Color(0xFFF4F4F5),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFFFFFFF), Color(0xFFD4D4D8), Color(0xFFA1A1AA)],
+    ),
+    goldPrimary: Color(0xFFE4E4E7),
+    goldSecondary: Color(0xFFA1A1AA),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFA1A1AA),
+    textMuted: Color(0xFF71717A),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC09090B),
+    headerBackground: Color(0xCC050506),
+    footerBackground: Color(0xCC050506),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x6618181B),
+    unitBadgeBorder: Color(0x4DA1A1AA),
+    unitBadgeText: Color(0xFFE4E4E7),
+    orbColors: [], // Orbs completely disabled for OLED pure black
+  );
+
+  static BoardThemeData fromKey(String? key) {
+    if (key == null) return onyxGold;
+    final clean = key.toLowerCase().trim();
+
+    if (clean.contains('pearl') || clean.contains('light')) {
       return imperialPearl;
     }
+    if (clean.contains('royal')) {
+      return goldRoyal;
+    }
+    if (clean.contains('emerald')) {
+      return emeraldNight;
+    }
+    if (clean.contains('blue') || clean.contains('ocean')) {
+      return blueOcean;
+    }
+    if (clean.contains('purple') || clean.contains('haze')) {
+      return purpleHaze;
+    }
+    if (clean.contains('rose')) {
+      return roseDark;
+    }
+    if (clean.contains('pure') || clean.contains('black')) {
+      return pureBlack;
+    }
     return onyxGold;
+  }
+
+  static BoardThemeData fromMode(String mode) {
+    return fromKey(mode);
   }
 }

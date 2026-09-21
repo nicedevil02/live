@@ -147,12 +147,12 @@
                         {{-- دکمه‌های دانلود --}}
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- دانلود مستقیم APK برای تلویزیون -->
-                            <a href="/downloads/talalive-tv.apk?v=1.0.3" 
+                            <a href="/downloads/talalive-tv.apk?v=1.0.4" 
                                 class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-lg shadow-amber-500/20 text-right border border-amber-400/50 group">
                                 <span class="text-3xl group-hover:scale-110 transition-transform">📺</span>
                                 <div class="min-w-0 flex-1">
                                     <span class="block text-[11px] font-bold text-slate-900 opacity-90">دانلود مستقیم اپلیکیشن تلویزیون</span>
-                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۳)</span>
+                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۴)</span>
                                     <span class="block text-[10px] text-slate-900 font-medium">حجم ۴۶ مگابایت • اندروید تی‌وی، اندروید باکس و موبایل</span>
                                 </div>
                             </a>
@@ -245,7 +245,7 @@
                             {{-- برچسب زنده بودن و اتصال در گوشه تصویر --}}
                             <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-500/40 text-[10px] font-bold text-amber-300 shadow-lg">
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
-                                <span>پیش‌نمایش زنده اپلیکیشن (v1.0.3)</span>
+                                <span>پیش‌نمایش زنده اپلیکیشن (v1.0.4)</span>
                             </div>
                         </figure>
 
@@ -618,7 +618,7 @@
       "operatingSystem": "Android TV, Google TV, Android Box, Web Browser",
       "applicationCategory": "BusinessApplication",
       "description": "نرم‌افزار هوشمند مدیریت تابلوی طلافروشی، نمایش لحظه‌ای نرخ طلا و سکه روی تلویزیون مغازه بدون نیاز به کامپیوتر یا مینی‌کیس.",
-      "softwareVersion": "1.0.3",
+      "softwareVersion": "1.0.4",
       "fileSize": "48601283",
       "downloadUrl": "https://talalive.ir/downloads/talalive-tv.apk",
       "image": {
