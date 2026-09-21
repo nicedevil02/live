@@ -26,6 +26,31 @@ if (!is_dir($targetDir)) {
     $targetDir = dirname(__DIR__);
 }
 
+if (!empty($_GET['sync_blade'])) {
+    $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php?t=' . time();
+    $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
+    $newBlade = @file_get_contents($rawUrl, false, $ctx);
+    if ($newBlade && strlen($newBlade) > 10000) {
+        @file_put_contents("$targetDir/resources/views/display/live.blade.php", $newBlade);
+        $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
+        if (!empty($foundRepos)) {
+            foreach ($foundRepos as $r) {
+                if (is_dir("$r/resources/views/display")) {
+                    @file_put_contents("$r/resources/views/display/live.blade.php", $newBlade);
+                }
+            }
+        }
+        $vDir = "$targetDir/storage/framework/views";
+        if (is_dir($vDir)) {
+            foreach (glob("$vDir/*.php") as $vf) { @unlink($vf); }
+        }
+        if (function_exists('opcache_reset')) { @opcache_reset(); }
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['success' => true, 'message' => 'live.blade.php synced directly and view cache cleared!', 'bytes' => strlen($newBlade)]);
+        exit;
+    }
+}
+
 $sourceCandidates = [
     $_GET['repo'] ?? '',
     "$targetDir/repositories/talalive",
