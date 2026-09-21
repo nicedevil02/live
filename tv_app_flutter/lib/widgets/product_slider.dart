@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../models/board_model.dart';
 import '../theme/board_theme.dart';
@@ -8,6 +9,7 @@ class ProductSlider extends StatefulWidget {
   final int intervalSec;
   final BoardThemeData theme;
   final num gold18Price;
+  final bool isEcoMode;
 
   const ProductSlider({
     super.key,
@@ -15,6 +17,7 @@ class ProductSlider extends StatefulWidget {
     required this.intervalSec,
     required this.theme,
     this.gold18Price = 0,
+    this.isEcoMode = false,
   });
 
   @override
@@ -130,15 +133,21 @@ class _ProductSliderState extends State<ProductSlider>
   @override
   Widget build(BuildContext context) {
     if (widget.products.isEmpty) {
-      return Container(
+      final placeholder = Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
           border: Border.all(color: widget.theme.cardStrokeColor, width: 1.5),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(40),
-          child: _buildPlaceholder(),
-        ),
+        child: _buildPlaceholder(),
+      );
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(40),
+        child: widget.isEcoMode
+            ? placeholder
+            : BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: placeholder,
+              ),
       );
     }
 
@@ -146,26 +155,9 @@ class _ProductSliderState extends State<ProductSlider>
     final rawUrl = product.imageUrls.isNotEmpty ? product.imageUrls.first : '';
     final imageUrl = _normalizeImageUrl(rawUrl);
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(40),
-        border: Border.all(
-          color: widget.theme.cardStrokeColor,
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(widget.theme.isDark ? 0.50 : 0.12),
-            blurRadius: 30,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
+    final sliderStack = Stack(
+      fit: StackFit.expand,
+      children: [
             // =================================================================
             // 1. Ken-Burns Animated Product Image with Smooth Cross-Fade
             // =================================================================
@@ -355,8 +347,40 @@ class _ProductSliderState extends State<ProductSlider>
               ),
             ),
           ],
+        );
+
+    final Widget glassSlider;
+    if (!widget.isEcoMode) {
+      glassSlider = ClipRRect(
+        borderRadius: BorderRadius.circular(40),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: sliderStack,
         ),
+      );
+    } else {
+      glassSlider = ClipRRect(
+        borderRadius: BorderRadius.circular(40),
+        child: sliderStack,
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+        border: Border.all(
+          color: widget.theme.cardStrokeColor,
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(widget.theme.isDark ? 0.50 : 0.12),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
+      child: glassSlider,
     );
   }
 

@@ -45,7 +45,7 @@ class _AmbientOrbsBackgroundState extends State<AmbientOrbsBackground>
         animation: _controller,
         builder: (context, _) {
           return CustomPaint(
-            size: const Size(1920, 1080),
+            size: Size.infinite,
             painter: _AmbientOrbsPainter(
               progress: _controller.value,
               colors: widget.orbColors,
@@ -83,29 +83,29 @@ class _AmbientOrbsPainter extends CustomPainter {
 
   static const List<_OrbConfig> _configs = [
     // 1. Top Right
-    _OrbConfig(xRatio: 0.82, yRatio: 0.12, radius: 460, speedMultiplier: 1.0, phaseShift: 0.0, colorIndex: 0, opacity: 0.70),
+    _OrbConfig(xRatio: 0.82, yRatio: 0.12, radius: 520, speedMultiplier: 1.0, phaseShift: 0.0, colorIndex: 0, opacity: 0.88),
     // 2. Top Left
-    _OrbConfig(xRatio: 0.15, yRatio: 0.18, radius: 420, speedMultiplier: 1.2, phaseShift: 1.2, colorIndex: 1, opacity: 0.65),
+    _OrbConfig(xRatio: 0.15, yRatio: 0.18, radius: 480, speedMultiplier: 1.2, phaseShift: 1.2, colorIndex: 1, opacity: 0.82),
     // 3. Center Right
-    _OrbConfig(xRatio: 0.74, yRatio: 0.48, radius: 400, speedMultiplier: 0.9, phaseShift: 2.4, colorIndex: 2, opacity: 0.68),
+    _OrbConfig(xRatio: 0.74, yRatio: 0.48, radius: 460, speedMultiplier: 0.9, phaseShift: 2.4, colorIndex: 2, opacity: 0.85),
     // 4. Bottom Left
-    _OrbConfig(xRatio: 0.18, yRatio: 0.82, radius: 500, speedMultiplier: 1.1, phaseShift: 3.6, colorIndex: 3, opacity: 0.62),
+    _OrbConfig(xRatio: 0.18, yRatio: 0.82, radius: 560, speedMultiplier: 1.1, phaseShift: 3.6, colorIndex: 3, opacity: 0.80),
     // 5. Bottom Right
-    _OrbConfig(xRatio: 0.88, yRatio: 0.86, radius: 450, speedMultiplier: 0.8, phaseShift: 4.8, colorIndex: 4, opacity: 0.65),
+    _OrbConfig(xRatio: 0.88, yRatio: 0.86, radius: 500, speedMultiplier: 0.8, phaseShift: 4.8, colorIndex: 4, opacity: 0.82),
     // 6. Center Stage
-    _OrbConfig(xRatio: 0.48, yRatio: 0.42, radius: 480, speedMultiplier: 1.3, phaseShift: 0.8, colorIndex: 5, opacity: 0.58),
+    _OrbConfig(xRatio: 0.48, yRatio: 0.42, radius: 540, speedMultiplier: 1.3, phaseShift: 0.8, colorIndex: 5, opacity: 0.78),
     // 7. Top Center
-    _OrbConfig(xRatio: 0.52, yRatio: 0.08, radius: 380, speedMultiplier: 1.0, phaseShift: 2.0, colorIndex: 0, opacity: 0.62),
+    _OrbConfig(xRatio: 0.52, yRatio: 0.08, radius: 440, speedMultiplier: 1.0, phaseShift: 2.0, colorIndex: 0, opacity: 0.82),
     // 8. Mid Left
-    _OrbConfig(xRatio: 0.28, yRatio: 0.46, radius: 400, speedMultiplier: 0.85, phaseShift: 3.2, colorIndex: 1, opacity: 0.56),
+    _OrbConfig(xRatio: 0.28, yRatio: 0.46, radius: 460, speedMultiplier: 0.85, phaseShift: 3.2, colorIndex: 1, opacity: 0.76),
     // 9. Mid Top Left
-    _OrbConfig(xRatio: 0.34, yRatio: 0.24, radius: 420, speedMultiplier: 1.15, phaseShift: 4.4, colorIndex: 2, opacity: 0.60),
+    _OrbConfig(xRatio: 0.34, yRatio: 0.24, radius: 480, speedMultiplier: 1.15, phaseShift: 4.4, colorIndex: 2, opacity: 0.80),
     // 10. Mid Bottom Left
-    _OrbConfig(xRatio: 0.36, yRatio: 0.74, radius: 390, speedMultiplier: 0.95, phaseShift: 5.6, colorIndex: 3, opacity: 0.56),
+    _OrbConfig(xRatio: 0.36, yRatio: 0.74, radius: 450, speedMultiplier: 0.95, phaseShift: 5.6, colorIndex: 3, opacity: 0.75),
     // 11. Mid Top Right
-    _OrbConfig(xRatio: 0.62, yRatio: 0.22, radius: 410, speedMultiplier: 1.05, phaseShift: 1.6, colorIndex: 4, opacity: 0.60),
+    _OrbConfig(xRatio: 0.62, yRatio: 0.22, radius: 470, speedMultiplier: 1.05, phaseShift: 1.6, colorIndex: 4, opacity: 0.80),
     // 12. Mid Bottom Right
-    _OrbConfig(xRatio: 0.64, yRatio: 0.76, radius: 430, speedMultiplier: 0.9, phaseShift: 2.8, colorIndex: 5, opacity: 0.58),
+    _OrbConfig(xRatio: 0.64, yRatio: 0.76, radius: 490, speedMultiplier: 0.9, phaseShift: 2.8, colorIndex: 5, opacity: 0.76),
   ];
 
   _AmbientOrbsPainter({
@@ -122,8 +122,8 @@ class _AmbientOrbsPainter extends CustomPainter {
 
       // Subtle sinusoidal 2D displacement
       final angle = (progress * 2 * math.pi * cfg.speedMultiplier) + cfg.phaseShift;
-      final dx = math.sin(angle) * 45.0;
-      final dy = math.cos(angle * 0.8) * 36.0;
+      final dx = math.sin(angle) * 55.0;
+      final dy = math.cos(angle * 0.8) * 44.0;
 
       final cx = (size.width * cfg.xRatio) + dx;
       final cy = (size.height * cfg.yRatio) + dy;
@@ -133,11 +133,11 @@ class _AmbientOrbsPainter extends CustomPainter {
         ..shader = RadialGradient(
           colors: [
             color.withOpacity(cfg.opacity),
-            color.withOpacity(cfg.opacity * 0.55),
-            color.withOpacity(cfg.opacity * 0.18),
+            color.withOpacity(cfg.opacity * 0.65),
+            color.withOpacity(cfg.opacity * 0.25),
             Colors.transparent,
           ],
-          stops: const [0.0, 0.35, 0.70, 1.0],
+          stops: const [0.0, 0.40, 0.75, 1.0],
         ).createShader(Rect.fromCircle(center: center, radius: cfg.radius));
 
       canvas.drawCircle(center, cfg.radius, paint);

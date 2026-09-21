@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../models/board_model.dart';
 import '../theme/board_theme.dart';
@@ -9,6 +10,7 @@ class PriceCard extends StatefulWidget {
   final BoardThemeData theme;
   final bool isHero;
   final bool isTopRow;
+  final bool isEcoMode;
 
   const PriceCard({
     super.key,
@@ -16,6 +18,7 @@ class PriceCard extends StatefulWidget {
     required this.theme,
     this.isHero = false,
     this.isTopRow = false,
+    this.isEcoMode = false,
   });
 
   @override
@@ -99,7 +102,7 @@ class _PriceCardState extends State<PriceCard> with TickerProviderStateMixin {
         ? theme.heroTextColor
         : (theme.isDark ? theme.goldPrimary : const Color(0xFF0F172A));
 
-    return Container(
+    final cardBody = Container(
       decoration: BoxDecoration(
         gradient: cardBg,
         borderRadius: BorderRadius.circular(26),
@@ -107,15 +110,6 @@ class _PriceCardState extends State<PriceCard> with TickerProviderStateMixin {
           color: cardBorder,
           width: isGold18 ? 2.0 : 1.2,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isGold18
-                ? theme.goldPrimary.withOpacity(theme.isDark ? 0.35 : 0.25)
-                : Colors.black.withOpacity(theme.isDark ? 0.35 : 0.06),
-            blurRadius: isGold18 ? 22 : 14,
-            offset: const Offset(0, 6),
-          ),
-        ],
       ),
       child: Stack(
         children: [
@@ -286,6 +280,38 @@ class _PriceCardState extends State<PriceCard> with TickerProviderStateMixin {
           ),
         ],
       ),
+    );
+
+    final Widget glassCard;
+    if (!widget.isEcoMode) {
+      glassCard = ClipRRect(
+        borderRadius: BorderRadius.circular(26),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: cardBody,
+        ),
+      );
+    } else {
+      glassCard = ClipRRect(
+        borderRadius: BorderRadius.circular(26),
+        child: cardBody,
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: isGold18
+                ? theme.goldPrimary.withOpacity(theme.isDark ? 0.35 : 0.25)
+                : Colors.black.withOpacity(theme.isDark ? 0.35 : 0.06),
+            blurRadius: isGold18 ? 22 : 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: glassCard,
     );
   }
 

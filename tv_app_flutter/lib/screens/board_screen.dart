@@ -1591,9 +1591,8 @@ class _BoardScreenState extends State<BoardScreen> {
                               ),
                             ),
 
-                          // 2. 12 Ambient Background Glow Orbs (GPU-accelerated, hidden in eco mode, bing themes, or pure-black)
+                          // 2. 12 Ambient Background Glow Orbs (GPU-accelerated, hidden in eco mode or pure-black)
                           if (!_isEcoMode &&
-                              !theme.isBingTheme &&
                               theme.themeKey != 'pure-black' &&
                               theme.orbColors.isNotEmpty)
                             Positioned.fill(
@@ -1757,6 +1756,7 @@ class _BoardScreenState extends State<BoardScreen> {
                 intervalSec: _model!.sliderIntervalSec,
                 theme: theme,
                 gold18Price: gold18Price,
+                isEcoMode: _isEcoMode,
               ),
             ),
           ),
@@ -1821,6 +1821,7 @@ class _BoardScreenState extends State<BoardScreen> {
                     theme: theme,
                     isHero: index == 0 && row.symbol == 'gold18',
                     isTopRow: true,
+                    isEcoMode: _isEcoMode,
                   ),
                 ),
               );
@@ -1851,6 +1852,7 @@ class _BoardScreenState extends State<BoardScreen> {
                         theme: theme,
                         isHero: false,
                         isTopRow: false,
+                        isEcoMode: _isEcoMode,
                       ),
                     ),
                   );

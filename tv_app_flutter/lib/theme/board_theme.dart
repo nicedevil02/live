@@ -661,7 +661,14 @@ class BoardThemeData {
     unitBadgeBg: Color(0xE6F1F5F9),
     unitBadgeBorder: Color(0x59D97706),
     unitBadgeText: Color(0xFF78350F),
-    orbColors: [],
+    orbColors: [
+      Color(0xFF38BDF8),
+      Color(0xFFF43F5E),
+      Color(0xFFF59E0B),
+      Color(0xFF10B981),
+      Color(0xFF818CF8),
+      Color(0xFFA855F7),
+    ],
   );
 
   // 11. Bing Daily (Obsidian Dark Glass with Amber Accent)
@@ -713,7 +720,14 @@ class BoardThemeData {
     unitBadgeBg: Color(0x660F172A),
     unitBadgeBorder: Color(0x4DFBBF24),
     unitBadgeText: Color(0xFFFDE68A),
-    orbColors: [],
+    orbColors: [
+      Color(0xFFFBBF24),
+      Color(0xFFF59E0B),
+      Color(0xFFFEF08A),
+      Color(0xFFD97706),
+      Color(0xFFFCD34D),
+      Color(0xFFB45309),
+    ],
   );
 
   // 12. Bing Studio (Studio Glass with Indigo & Cyan Accents)
@@ -765,7 +779,14 @@ class BoardThemeData {
     unitBadgeBg: Color(0x661E1B4B),
     unitBadgeBorder: Color(0x59818CF8),
     unitBadgeText: Color(0xFFE0E7FF),
-    orbColors: [],
+    orbColors: [
+      Color(0xFF818CF8),
+      Color(0xFF6366F1),
+      Color(0xFF38BDF8),
+      Color(0xFFC084FC),
+      Color(0xFF0EA5E9),
+      Color(0xFF4F46E5),
+    ],
   );
 
   // 13. Bing Ceramic (Porcelain White Ceramic with Slate & Gold Accents)
@@ -817,7 +838,14 @@ class BoardThemeData {
     unitBadgeBg: Color(0xE6F1F5F9),
     unitBadgeBorder: Color(0x59D97706),
     unitBadgeText: Color(0xFF78350F),
-    orbColors: [],
+    orbColors: [
+      Color(0xFFFDE68A),
+      Color(0xFF93C5FD),
+      Color(0xFFFCA5A5),
+      Color(0xFF86EFAC),
+      Color(0xFFC4B5FD),
+      Color(0xFFFCD34D),
+    ],
   );
 
   static BoardThemeData fromKey(String? key) {
