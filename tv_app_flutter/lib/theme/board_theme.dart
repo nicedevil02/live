@@ -544,30 +544,324 @@ class BoardThemeData {
     orbColors: [], // Orbs completely disabled for OLED pure black
   );
 
+  // 9. Dark Glass (Classic Apple Dark Glass with Indigo & Amber orbs)
+  static const BoardThemeData darkGlass = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF0B1120),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xCC1E293B), Color(0xF20F172A)],
+    ),
+    cardStrokeColor: Color(0x4D64748B),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF0451A03), Color(0xF01E0B02)],
+    ),
+    heroStrokeColor: Color(0xFFFBBF24),
+    heroTextColor: Color(0xFFFEF08A),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFFDE68A), Color(0xFFFACC15)],
+    ),
+    goldPrimary: Color(0xFFF59E0B),
+    goldSecondary: Color(0xFFFBBF24),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFCBD5E1),
+    textMuted: Color(0xFF64748B),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC0F172A),
+    headerBackground: Color(0xCC0B1120),
+    footerBackground: Color(0xCC0B1120),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x661E293B),
+    unitBadgeBorder: Color(0x4DFBBF24),
+    unitBadgeText: Color(0xFFFDE68A),
+    orbColors: [
+      Color(0xFF4F46E5),
+      Color(0xFF7C3AED),
+      Color(0xFFF59E0B),
+    ],
+  );
+
+  // 10. Light Modern (Clean Bright White & Light Slate)
+  static const BoardThemeData lightModern = BoardThemeData(
+    isDark: false,
+    backgroundColor: Color(0xFFF8FAFC),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFFFFF), Color(0xFFF1F5F9)],
+    ),
+    cardStrokeColor: Color(0x40CBD5E1),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFFBEB), Color(0xFFFEF3C7)],
+    ),
+    heroStrokeColor: Color(0xFFD97706),
+    heroTextColor: Color(0xFF78350F),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFB45309), Color(0xFFD97706)],
+    ),
+    goldPrimary: Color(0xFFD97706),
+    goldSecondary: Color(0xFFB45309),
+    textPrimary: Color(0xFF0F172A),
+    textSecondary: Color(0xFF334155),
+    textMuted: Color(0xFF64748B),
+    greenUp: Color(0xFF059669),
+    redDown: Color(0xFFE11D48),
+    tickerBackground: Color(0xE6FFFFFF),
+    headerBackground: Color(0xF2FFFFFF),
+    footerBackground: Color(0xF2FFFFFF),
+    statusLiveBg: Color(0xE6ECFDF5),
+    statusLiveBorder: Color(0x6610B981),
+    statusLiveText: Color(0xFF047857),
+    statusStaleBg: Color(0xE6FFFBEB),
+    statusStaleBorder: Color(0x66F59E0B),
+    statusStaleText: Color(0xFFB45309),
+    pillUpBg: Color(0xE6D1FAE5),
+    pillUpBorder: Color(0x66059669),
+    pillUpText: Color(0xFF065F46),
+    pillDownBg: Color(0xE6FFE4E6),
+    pillDownBorder: Color(0x66E11D48),
+    pillDownText: Color(0xFF9F1239),
+    pillFlatBg: Color(0xE6F1F5F9),
+    pillFlatBorder: Color(0x66CBD5E1),
+    pillFlatText: Color(0xFF475569),
+    unitBadgeBg: Color(0xE6F1F5F9),
+    unitBadgeBorder: Color(0x59D97706),
+    unitBadgeText: Color(0xFF78350F),
+    orbColors: [],
+  );
+
+  // 11. Bing Daily (Obsidian Dark Glass with Amber Accent)
+  static const BoardThemeData bingDaily = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF090D16),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xD90F172A), Color(0xEB020617)],
+    ),
+    cardStrokeColor: Color(0x66F59E0B),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE6451A03), Color(0xF21C0B03)],
+    ),
+    heroStrokeColor: Color(0xFFFBBF24),
+    heroTextColor: Color(0xFFFEF08A),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFFEF08A), Color(0xFFF59E0B)],
+    ),
+    goldPrimary: Color(0xFFF59E0B),
+    goldSecondary: Color(0xFFFBBF24),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFCBD5E1),
+    textMuted: Color(0xFF64748B),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC090D16),
+    headerBackground: Color(0xCC090D16),
+    footerBackground: Color(0xCC090D16),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x660F172A),
+    unitBadgeBorder: Color(0x4DFBBF24),
+    unitBadgeText: Color(0xFFFDE68A),
+    orbColors: [],
+  );
+
+  // 12. Bing Studio (Studio Glass with Indigo & Cyan Accents)
+  static const BoardThemeData bingStudio = BoardThemeData(
+    isDark: true,
+    backgroundColor: Color(0xFF0A0F1D),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xD91E1B4B), Color(0xEB0F172A)],
+    ),
+    cardStrokeColor: Color(0x666366F1),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xE6312E81), Color(0xF21E1B4B)],
+    ),
+    heroStrokeColor: Color(0xFF818CF8),
+    heroTextColor: Color(0xFFE0E7FF),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFFE0E7FF), Color(0xFF818CF8)],
+    ),
+    goldPrimary: Color(0xFF6366F1),
+    goldSecondary: Color(0xFF818CF8),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFC7D2FE),
+    textMuted: Color(0xFF6366F1),
+    greenUp: Color(0xFF34D399),
+    redDown: Color(0xFFFB7185),
+    tickerBackground: Color(0xCC0A0F1D),
+    headerBackground: Color(0xCC0A0F1D),
+    footerBackground: Color(0xCC0A0F1D),
+    statusLiveBg: Color(0x33064E3B),
+    statusLiveBorder: Color(0x5934D399),
+    statusLiveText: Color(0xFF6EE7B7),
+    statusStaleBg: Color(0x3378350F),
+    statusStaleBorder: Color(0x59F59E0B),
+    statusStaleText: Color(0xFFFCD34D),
+    pillUpBg: Color(0x33064E3B),
+    pillUpBorder: Color(0x6634D399),
+    pillUpText: Color(0xFF34D399),
+    pillDownBg: Color(0x33881337),
+    pillDownBorder: Color(0x66FB7185),
+    pillDownText: Color(0xFFFB7185),
+    pillFlatBg: Color(0x331E293B),
+    pillFlatBorder: Color(0x3394A3B8),
+    pillFlatText: Color(0xFF94A3B8),
+    unitBadgeBg: Color(0x661E1B4B),
+    unitBadgeBorder: Color(0x59818CF8),
+    unitBadgeText: Color(0xFFE0E7FF),
+    orbColors: [],
+  );
+
+  // 13. Bing Ceramic (Porcelain White Ceramic with Slate & Gold Accents)
+  static const BoardThemeData bingCeramic = BoardThemeData(
+    isDark: false,
+    backgroundColor: Color(0xFFF1F5F9),
+    cardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xF5FFFFFF), Color(0xEBE2E8F0)],
+    ),
+    cardStrokeColor: Color(0x6694A3B8),
+    heroCardGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFFBEB), Color(0xFFFDE68A)],
+    ),
+    heroStrokeColor: Color(0xFFD97706),
+    heroTextColor: Color(0xFF451A03),
+    titleGradient: LinearGradient(
+      colors: [Color(0xFF334155), Color(0xFF0F172A)],
+    ),
+    goldPrimary: Color(0xFFD97706),
+    goldSecondary: Color(0xFFB45309),
+    textPrimary: Color(0xFF0F172A),
+    textSecondary: Color(0xFF334155),
+    textMuted: Color(0xFF64748B),
+    greenUp: Color(0xFF059669),
+    redDown: Color(0xFFE11D48),
+    tickerBackground: Color(0xE6FFFFFF),
+    headerBackground: Color(0xF2FFFFFF),
+    footerBackground: Color(0xF2FFFFFF),
+    statusLiveBg: Color(0xE6ECFDF5),
+    statusLiveBorder: Color(0x6610B981),
+    statusLiveText: Color(0xFF047857),
+    statusStaleBg: Color(0xE6FFFBEB),
+    statusStaleBorder: Color(0x66F59E0B),
+    statusStaleText: Color(0xFFB45309),
+    pillUpBg: Color(0xE6D1FAE5),
+    pillUpBorder: Color(0x66059669),
+    pillUpText: Color(0xFF065F46),
+    pillDownBg: Color(0xE6FFE4E6),
+    pillDownBorder: Color(0x66E11D48),
+    pillDownText: Color(0xFF9F1239),
+    pillFlatBg: Color(0xE6F1F5F9),
+    pillFlatBorder: Color(0x66CBD5E1),
+    pillFlatText: Color(0xFF475569),
+    unitBadgeBg: Color(0xE6F1F5F9),
+    unitBadgeBorder: Color(0x59D97706),
+    unitBadgeText: Color(0xFF78350F),
+    orbColors: [],
+  );
+
   static BoardThemeData fromKey(String? key) {
     if (key == null) return onyxGold;
     final clean = key.toLowerCase().trim();
 
-    if (clean.contains('pearl') || clean.contains('light')) {
+    // 1. Imperial Onyx
+    if (clean == 'imperial-onyx' || clean == 'onyx-gold') {
+      return onyxGold;
+    }
+    // 2. Imperial Pearl
+    if (clean == 'imperial-pearl') {
       return imperialPearl;
     }
-    if (clean.contains('royal')) {
+    // 3. Gold Royal
+    if (clean == 'gold-royal' || clean.contains('royal')) {
       return goldRoyal;
     }
-    if (clean.contains('emerald')) {
+    // 4. Emerald Night
+    if (clean == 'emerald-night' || clean.contains('emerald')) {
       return emeraldNight;
     }
-    if (clean.contains('blue') || clean.contains('ocean')) {
+    // 5. Blue Ocean
+    if (clean == 'blue-ocean' || clean.contains('ocean')) {
       return blueOcean;
     }
-    if (clean.contains('purple') || clean.contains('haze')) {
+    // 6. Purple Haze
+    if (clean == 'purple-haze' || clean.contains('purple') || clean.contains('haze')) {
       return purpleHaze;
     }
-    if (clean.contains('rose')) {
+    // 7. Rose Dark
+    if (clean == 'rose-dark' || clean.contains('rose')) {
       return roseDark;
     }
-    if (clean.contains('pure') || clean.contains('black')) {
+    // 8. Pure Black
+    if (clean == 'pure-black' || clean.contains('pure') || clean == 'black') {
       return pureBlack;
+    }
+    // 9. Dark Glass
+    if (clean == 'dark-glass' || clean.contains('dark')) {
+      return darkGlass;
+    }
+    // 10. Light Modern
+    if (clean == 'light-modern' || clean == 'light') {
+      return lightModern;
+    }
+    // 11. Bing Daily (Obsidian)
+    if (clean == 'bing-daily' || clean.contains('obsidian')) {
+      return bingDaily;
+    }
+    // 12. Bing Studio
+    if (clean == 'bing-studio' || clean.contains('studio')) {
+      return bingStudio;
+    }
+    // 13. Bing Ceramic
+    if (clean == 'bing-ceramic' || clean.contains('ceramic')) {
+      return bingCeramic;
+    }
+
+    if (clean.contains('light') || clean.contains('pearl')) {
+      return imperialPearl;
     }
     return onyxGold;
   }

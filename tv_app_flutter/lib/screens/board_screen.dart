@@ -42,6 +42,7 @@ class _BoardScreenState extends State<BoardScreen> {
   Timer? _clockTimer;
   Timer? _refreshTimer;
   Timer? _updateCheckTimer;
+  Timer? _updatePeriodicTimer;
 
   static const String _prefKeyWebMode = 'tv_webview_mode';
   static const String _prefKeyZoom = 'talalive_zoom_level';
@@ -74,9 +75,13 @@ class _BoardScreenState extends State<BoardScreen> {
     // Zero-overhead clock timer: updates ValueNotifier only, ZERO root rebuilds!
     _startClockTimer();
 
-    // Check update in background after 12 seconds
+    // Check update in background after 12 seconds, then every 30 minutes
     _updateCheckTimer = Timer(const Duration(seconds: 12), () {
       _checkForUpdate(manual: false);
+      _updatePeriodicTimer?.cancel();
+      _updatePeriodicTimer = Timer.periodic(const Duration(minutes: 30), (_) {
+        _checkForUpdate(manual: false);
+      });
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -386,6 +391,7 @@ class _BoardScreenState extends State<BoardScreen> {
     _clockTimer?.cancel();
     _refreshTimer?.cancel();
     _updateCheckTimer?.cancel();
+    _updatePeriodicTimer?.cancel();
     _zoomFeedbackTimer?.cancel();
     _focusNode.dispose();
     _timeNotifier.dispose();
