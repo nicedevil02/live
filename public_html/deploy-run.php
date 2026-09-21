@@ -334,6 +334,16 @@ if (function_exists('opcache_reset')) {
     }
 }
 
+// 9.5. Clean .trash to free up server disk quota
+$trashDir = "$targetDir/.trash";
+if (is_dir($trashDir)) {
+    if ($shellAllowed) {
+        @shell_exec("/bin/rm -rf " . escapeshellarg($trashDir) . "/* 2>&1");
+    }
+    $log[] = 'Emptied .trash directory to restore disk quota.';
+}
+
+
 // 10. Run Artisan migrations unconditionally & verify tables
 $tableStatus = [];
 $artisanMigrateOutput = '';
