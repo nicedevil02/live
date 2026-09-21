@@ -16,13 +16,19 @@ class ProductController extends Controller
     public function index()
     {
         $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
-        $products = ProductSlide::where('user_id', auth()->id())->with('images')->latest()->get();
+        $products = ProductSlide::where('user_id', auth()->id())->with('images')->orderBy('sort_order', 'asc')->latest()->get();
 
         // اگر درخواست JSON بود (برای Alpine.js)
         if (request()->wantsJson()) {
             $products->transform(function($p) use ($latestGoldPrice) {
                 $base = ($latestGoldPrice * $p->weight_gram);
-                $profit = $p->profit_type === 'percent' ? ($base * ($p->profit_value / 100)) : (float)$p->profit_value;
+                if ($p->profit_type === 'percent') {
+                    $profit = $base * ($p->profit_value / 100);
+                } elseif ($p->profit_type === 'amount_per_gram') {
+                    $profit = (float)$p->profit_value * (float)$p->weight_gram;
+                } else {
+                    $profit = (float)$p->profit_value;
+                }
                 $p->final_price = round($base + $profit);
                 return $p;
             });
@@ -48,14 +54,23 @@ class ProductController extends Controller
             'title'           => 'required|string|max:255',
             'weight_gram'     => 'required|numeric|min:0',
             'profit_value'    => 'required|numeric|min:0',
-            'profit_type'     => 'required|in:percent,amount',
+            'profit_type'     => 'required|in:percent,amount,amount_per_gram',
+            'badge'           => 'nullable|string|in:none,no_wage,best_seller,new_collection,special_discount',
             'image_file'      => 'nullable|image|max:25600',
         ]);
 
         $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
         $base = ($latestGoldPrice * $data['weight_gram']);
-        $profit = $data['profit_type'] === 'percent' ? ($base * ($data['profit_value'] / 100)) : (float)$data['profit_value'];
+        if ($data['profit_type'] === 'percent') {
+            $profit = $base * ($data['profit_value'] / 100);
+        } elseif ($data['profit_type'] === 'amount_per_gram') {
+            $profit = (float)$data['profit_value'] * (float)$data['weight_gram'];
+        } else {
+            $profit = (float)$data['profit_value'];
+        }
         $finalPrice = round($base + $profit);
+
+        $badge = ($data['badge'] ?? 'none') === 'none' ? null : ($data['badge'] ?? null);
 
         $product = ProductSlide::create([
             'id'              => 'p-' . now()->timestamp . rand(10, 99),
@@ -65,6 +80,8 @@ class ProductController extends Controller
             'labor_fee'       => 0,
             'profit_value'    => $data['profit_value'],
             'profit_type'     => $data['profit_type'],
+            'badge'           => $badge,
+            'sort_order'      => $currentCount + 1,
             'base_gold_price' => $latestGoldPrice,
             'final_price'     => $finalPrice,
             'is_visible'      => true,
@@ -98,19 +115,46 @@ class ProductController extends Controller
             'title'        => 'sometimes|string',
             'weight_gram'  => 'sometimes|numeric',
             'profit_value' => 'sometimes|numeric',
-            'profit_type'  => 'sometimes|in:percent,amount',
+            'profit_type'  => 'sometimes|in:percent,amount,amount_per_gram',
+            'badge'        => 'nullable|string|in:none,no_wage,best_seller,new_collection,special_discount',
             'is_visible'   => 'sometimes|boolean',
         ]);
+
+        if (array_key_exists('badge', $data) && $data['badge'] === 'none') {
+            $data['badge'] = null;
+        }
 
         $product->update($data);
 
         // محاسبه مجدد قیمت برای پاسخ JSON
         $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
         $base = ($latestGoldPrice * $product->weight_gram);
-        $profit = $product->profit_type === 'percent' ? ($base * ($product->profit_value / 100)) : (float)$product->profit_value;
+        if ($product->profit_type === 'percent') {
+            $profit = $base * ($product->profit_value / 100);
+        } elseif ($product->profit_type === 'amount_per_gram') {
+            $profit = (float)$product->profit_value * (float)$product->weight_gram;
+        } else {
+            $profit = (float)$product->profit_value;
+        }
         $product->final_price = round($base + $profit);
 
         return response()->json($product->load('images'));
+    }
+
+    public function reorder(Request $request)
+    {
+        $data = $request->validate([
+            'orders' => 'required|array',
+            'orders.*.id' => 'required|string',
+            'orders.*.sort_order' => 'required|integer',
+        ]);
+        $userId = auth()->id();
+        foreach ($data['orders'] as $item) {
+            ProductSlide::where('user_id', $userId)
+                ->where('id', $item['id'])
+                ->update(['sort_order' => $item['sort_order']]);
+        }
+        return response()->json(['ok' => true]);
     }
 
     public function destroy($id)

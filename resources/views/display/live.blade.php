@@ -270,6 +270,17 @@
 
         .animate-fadeInUp { animation: fadeInUp 0.6s ease-out; }
         .animate-slideSwap { animation: slideSwap 0.5s ease-out; }
+        @keyframes kenBurnsEffect {
+            0% { transform: scale(1.0) translate3d(0, 0, 0); }
+            50% { transform: scale(1.08) translate3d(-1.5%, 1%, 0); }
+            100% { transform: scale(1.04) translate3d(1%, -1%, 0); }
+        }
+        .animate-ken-burns {
+            animation: kenBurnsEffect 16s ease-in-out infinite alternate;
+            will-change: transform;
+            backface-visibility: hidden;
+            transform-origin: center center;
+        }
         .animate-float1 { animation: float1 20s ease-in-out infinite; }
         .animate-float2 { animation: float2 25s ease-in-out infinite; }
         .animate-float3 { animation: float3 18s ease-in-out infinite; }
@@ -1827,16 +1838,30 @@
                     <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
                         <div class="absolute inset-0 animate-slideSwap">
                             <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
-                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-[20s] ease-linear group-hover:scale-105">
-                            <!-- نشان لوکس و همیشگی پیشنهاد شگفت‌انگیز در بالای اسلایدر -->
+                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title"
+                                 class="absolute inset-0 w-full h-full object-cover opacity-100"
+                                 :class="!isEcoMode ? 'animate-ken-burns' : ''">
+                            <!-- نشان لوکس داینامیک محصول در بالای اسلایدر -->
                             <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
-                                <div class="relative flex items-center gap-2.5 rounded-full slider-top-badge px-4 py-2.5">
+                                <div class="relative flex items-center gap-2.5 rounded-full px-4 py-2.5 shadow-xl border border-white/20 backdrop-blur-md"
+                                     :class="{
+                                         'slider-top-badge': !activeProduct.badge || activeProduct.badge === 'none',
+                                         'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 shadow-emerald-900/40': activeProduct.badge === 'no_wage',
+                                         'bg-gradient-to-r from-purple-700 via-violet-600 to-pink-600 shadow-purple-900/40': activeProduct.badge === 'best_seller',
+                                         'bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 shadow-blue-900/40': activeProduct.badge === 'new_collection',
+                                         'bg-gradient-to-r from-rose-600 via-red-600 to-amber-600 shadow-rose-900/40': activeProduct.badge === 'special_discount'
+                                     }">
                                     <span class="relative flex h-7 w-7 items-center justify-center rounded-full bg-white/20 shadow-inner">
                                         <span class="h-2 w-2 rounded-full bg-white animate-ping"></span>
                                         <span class="h-2 w-2 rounded-full bg-white"></span>
                                     </span>
-                                    <span class="text-base xl:text-lg font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
-                                        پیشنهاد شگفت‌انگیز
+                                    <span class="text-base xl:text-lg font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
+                                          x-text="{
+                                              'no_wage': 'بدون اجرت / کم‌اجرت',
+                                              'best_seller': 'پرفروش‌ترین ویترین',
+                                              'new_collection': 'کالکشن جدید',
+                                              'special_discount': 'تخفیف ویژه امروز'
+                                          }[activeProduct.badge] || 'پیشنهاد شگفت‌انگیز'">
                                     </span>
                                 </div>
                             </div>
@@ -2463,16 +2488,29 @@
                     if (!this.activeProduct) return 0;
                     if (this.activeProduct.profit_type === 'percent') return this.activeProduct.profit_value;
                     const gold18 = this.snapshotData.priceFeed?.find(p => p.symbol === 'gold18')?.value || this.activeProduct.base_gold_price;
-                    const base = (gold18 * this.activeProduct.weight_gram) + this.activeProduct.labor_fee;
-                    return base > 0 ? (this.activeProduct.profit_value / base * 100) : 0;
+                    const base = (Number(gold18) * Number(this.activeProduct.weight_gram)) + Number(this.activeProduct.labor_fee || 0);
+                    let profitAmount = 0;
+                    if (this.activeProduct.profit_type === 'amount_per_gram') {
+                        profitAmount = Number(this.activeProduct.profit_value) * Number(this.activeProduct.weight_gram);
+                    } else {
+                        profitAmount = Number(this.activeProduct.profit_value);
+                    }
+                    return base > 0 ? (profitAmount / base * 100).toFixed(1) : 0;
                 },
                 get activeProductFinalPrice() {
                     if (!this.activeProduct) return 0;
                     const gold18 = this.snapshotData.priceFeed?.find(p => p.symbol === 'gold18')?.value;
                     // اگر نرخ طلای ۱۸ عیار موجود نباشد، قیمت صفر بازگردانده می‌شود تا نرخ نامعتبر نمایش داده نشود
                     if (!gold18 || Number(gold18) <= 0) return 0;
-                    const base = (Number(gold18) * Number(this.activeProduct.weight_gram)) + Number(this.activeProduct.labor_fee);
-                    const profit = this.activeProduct.profit_type === 'percent' ? base * (Number(this.activeProduct.profit_value) / 100) : Number(this.activeProduct.profit_value);
+                    const base = (Number(gold18) * Number(this.activeProduct.weight_gram)) + Number(this.activeProduct.labor_fee || 0);
+                    let profit = 0;
+                    if (this.activeProduct.profit_type === 'percent') {
+                        profit = base * (Number(this.activeProduct.profit_value) / 100);
+                    } else if (this.activeProduct.profit_type === 'amount_per_gram') {
+                        profit = Number(this.activeProduct.profit_value) * Number(this.activeProduct.weight_gram);
+                    } else {
+                        profit = Number(this.activeProduct.profit_value);
+                    }
                     return Math.round(base + profit);
                 },
                 get weekDay() { return this.now.toLocaleDateString('fa-IR', { weekday: 'long' }); },

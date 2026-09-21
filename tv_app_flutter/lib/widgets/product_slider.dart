@@ -213,51 +213,12 @@ class _ProductSliderState extends State<ProductSlider>
             ),
 
             // =================================================================
-            // 3. Top-Left Badge: «پیشنهاد شگفت‌انگیز» with Pulsing Live Dot
+            // 3. Top-Left Badge: Dynamic Marketing Badge with Pulsing Live Dot
             // =================================================================
             Positioned(
               top: 22,
               left: 22,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFE11D48),
-                      Color(0xFFBE123C),
-                      Color(0xFFB45309),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.white.withOpacity(0.40), width: 1.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFE11D48).withOpacity(0.45),
-                      blurRadius: 18,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PulsingLiveDot(color: Colors.white, size: 8),
-                    SizedBox(width: 9),
-                    Text(
-                      'پیشنهاد شگفت‌انگیز',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: 'Vazirmatn',
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              child: _buildDynamicTopBadge(product),
             ),
 
             // =================================================================
@@ -325,7 +286,13 @@ class _ProductSliderState extends State<ProductSlider>
                               if (product.profitValue != null &&
                                   product.profitValue!.isNotEmpty &&
                                   product.profitValue != '0') ...[
-                                _buildChip('سود:', '${product.profitValue}%'),
+                                if (product.profitType == 'percent') ...[
+                                  _buildChip('سود:', '${product.profitValue}%'),
+                                ] else if (product.profitType == 'amount_per_gram') ...[
+                                  _buildChip('اجرت:', '${PersianUtils.formatPrice(product.profitValue)} ت/گرم'),
+                                ] else ...[
+                                  _buildChip('اجرت:', '${PersianUtils.formatPrice(product.profitValue)} ت'),
+                                ],
                                 const SizedBox(width: 8),
                               ] else if (product.laborFee != null &&
                                   product.laborFee!.isNotEmpty &&
@@ -433,6 +400,71 @@ class _ProductSliderState extends State<ProductSlider>
           }),
         );
       },
+    );
+  }
+
+  Widget _buildDynamicTopBadge(ProductItem product) {
+    String badgeText = 'پیشنهاد شگفت‌انگیز';
+    List<Color> colors = const [
+      Color(0xFFE11D48),
+      Color(0xFFBE123C),
+      Color(0xFFB45309),
+    ];
+    Color shadowColor = const Color(0xFFE11D48);
+
+    if (product.badge == 'no_wage') {
+      badgeText = 'بدون اجرت / کم‌اجرت';
+      colors = const [Color(0xFF059669), Color(0xFF0D9488), Color(0xFFD97706)];
+      shadowColor = const Color(0xFF059669);
+    } else if (product.badge == 'best_seller') {
+      badgeText = 'پرفروش‌ترین ویترین';
+      colors = const [Color(0xFF7C3AED), Color(0xFF6D28D9), Color(0xFFDB2777)];
+      shadowColor = const Color(0xFF7C3AED);
+    } else if (product.badge == 'new_collection') {
+      badgeText = 'کالکشن جدید';
+      colors = const [Color(0xFF0284C7), Color(0xFF2563EB), Color(0xFFF59E0B)];
+      shadowColor = const Color(0xFF0284C7);
+    } else if (product.badge == 'special_discount') {
+      badgeText = 'تخفیف ویژه امروز';
+      colors = const [Color(0xFFE11D48), Color(0xFFDC2626), Color(0xFFB45309)];
+      shadowColor = const Color(0xFFE11D48);
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.white.withOpacity(0.40), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor.withOpacity(0.45),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const PulsingLiveDot(color: Colors.white, size: 8),
+          const SizedBox(width: 9),
+          Text(
+            badgeText,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Vazirmatn',
+              letterSpacing: -0.3,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

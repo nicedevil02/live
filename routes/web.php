@@ -156,6 +156,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     // محصولات (ویترین)
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::post('/products/reorder', [ProductController::class, 'reorder'])->name('products.reorder');
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::post('/products/{product}/images', [ProductController::class, 'addImageUrl'])->name('products.addImageUrl');

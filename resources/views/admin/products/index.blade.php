@@ -73,7 +73,8 @@
         <p class="text-slate-500 dark:text-slate-400">هیچ محصولی ثبت نشده است. اولین محصول را اضافه کنید.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+    <div id="products-grid"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
          x-show="!isLoading && products.length > 0">
         <template x-for="product in products" :key="product.id">
             @include('admin.products.partials.product-card')
@@ -94,6 +95,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 /**
  * تابع بهینه‌سازی و کاهش حجم تصویر در کلاینت بدون افت کیفیت محسوس
@@ -153,6 +155,7 @@ document.addEventListener('alpine:init', () => {
         products: [],
         editingProduct: null,
         isLoading: true,
+        sortableInstance: null,
         sliderInterval: @json(auth()->user()->displaySetting->slider_interval_sec ?? 8),
         isSavingTiming: false,
         toast: { show: false, message: '', type: 'success' },
@@ -189,12 +192,53 @@ document.addEventListener('alpine:init', () => {
             try {
                 const res = await fetch('/admin/products', { headers: { 'Accept': 'application/json' } });
                 this.products = await res.json();
-                this.$nextTick(() => lucide.createIcons());
+                this.$nextTick(() => {
+                    lucide.createIcons();
+                    this.initSortable();
+                });
             } catch (e) {
                 this.showToast(e.message, 'error');
             } finally {
                 this.isLoading = false;
             }
+        },
+
+        initSortable() {
+            const grid = document.getElementById('products-grid');
+            if (!grid || typeof Sortable === 'undefined') return;
+            if (this.sortableInstance) {
+                try { this.sortableInstance.destroy(); } catch (e) {}
+            }
+            this.sortableInstance = new Sortable(grid, {
+                handle: '.drag-handle',
+                animation: 250,
+                ghostClass: 'opacity-40',
+                chosenClass: 'scale-[1.02]',
+                dragClass: 'shadow-2xl',
+                onEnd: async () => {
+                    const itemEls = Array.from(grid.querySelectorAll('[data-product-id]'));
+                    const newOrders = itemEls.map((el, index) => ({
+                        id: el.getAttribute('data-product-id'),
+                        sort_order: index + 1
+                    }));
+
+                    try {
+                        const res = await fetch('/admin/products/reorder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ orders: newOrders })
+                        });
+                        if (!res.ok) throw new Error();
+                        this.showToast('ترتیب نمایش اسلایدرها در تابلو با موفقیت به‌روز شد.', 'success');
+                    } catch (e) {
+                        this.showToast('خطا در ذخیره ترتیب جدید اسلایدرها', 'error');
+                    }
+                }
+            });
         },
 
         showToast(message, type = 'success') {
@@ -212,6 +256,7 @@ document.addEventListener('alpine:init', () => {
                 }
                 this.products = this.products.filter(p => p.id !== id);
                 this.showToast('محصول با موفقیت حذف شد.', 'success');
+                this.$nextTick(() => this.initSortable());
             } catch (e) {
                 this.showToast(e.message || 'خطا در حذف محصول', 'error');
             }
@@ -238,8 +283,11 @@ document.addEventListener('alpine:init', () => {
         },
 
         handleCreated(product) {
-            this.products.unshift(product);
-            this.$nextTick(() => lucide.createIcons());
+            this.products.push(product);
+            this.$nextTick(() => {
+                lucide.createIcons();
+                this.initSortable();
+            });
             this.showToast('محصول با موفقیت ایجاد شد.', 'success');
         },
 
@@ -247,7 +295,10 @@ document.addEventListener('alpine:init', () => {
             const index = this.products.findIndex(p => p.id === product.id);
             if (index !== -1) this.products[index] = product;
             this.editingProduct = null;
-            this.$nextTick(() => lucide.createIcons());
+            this.$nextTick(() => {
+                lucide.createIcons();
+                this.initSortable();
+            });
             this.showToast('محصول با موفقیت ذخیره شد.', 'success');
         }
     }));

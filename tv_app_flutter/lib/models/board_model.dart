@@ -32,6 +32,8 @@ class ProductItem {
   final String? laborFee;
   final String? profitValue;
   final String? profitType;
+  final String? badge;
+  final int? sortOrder;
   final List<String> imageUrls;
 
   const ProductItem({
@@ -42,6 +44,8 @@ class ProductItem {
     this.laborFee,
     this.profitValue,
     this.profitType,
+    this.badge,
+    this.sortOrder,
     required this.imageUrls,
   });
 
@@ -49,10 +53,16 @@ class ProductItem {
     final w = num.tryParse(weightGram ?? '') ?? 0;
     final l = num.tryParse(laborFee ?? '') ?? 0;
     final pv = num.tryParse(profitValue ?? '') ?? 0;
-    final isPercent = profitType == 'percent';
     if (gold18Price > 0 && w > 0) {
       final base = (gold18Price * w) + l;
-      final profit = isPercent ? (base * (pv / 100)) : pv;
+      num profit = 0;
+      if (profitType == 'percent') {
+        profit = base * (pv / 100);
+      } else if (profitType == 'amount_per_gram') {
+        profit = pv * w;
+      } else {
+        profit = pv;
+      }
       final calc = (base + profit).round();
       if (calc > 0) return calc.toString();
     }
@@ -291,6 +301,8 @@ class BoardModel {
           final labor = pMap['labor_fee']?.toString();
           final profitVal = pMap['profit_value']?.toString();
           final profitTyp = pMap['profit_type']?.toString();
+          final badge = pMap['badge']?.toString();
+          final sortOrder = _parseInt(pMap['sort_order'], 0);
 
           final imgList = <String>[];
           // 1. Eloquent 'images' relationship: [{url: "..."}, ...]
@@ -332,6 +344,8 @@ class BoardModel {
             laborFee: labor,
             profitValue: profitVal,
             profitType: profitTyp,
+            badge: badge,
+            sortOrder: sortOrder,
             imageUrls: imgList,
           ));
         }

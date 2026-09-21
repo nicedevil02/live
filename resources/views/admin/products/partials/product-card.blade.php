@@ -1,7 +1,35 @@
 <div class="relative group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm transition-all hover:shadow-md"
+     :data-product-id="product.id"
      :class="{ 'opacity-60': !product.is_visible }">
     {{-- Image --}}
     <div class="relative h-48 bg-slate-100 dark:bg-slate-800">
+        {{-- Drag Handle --}}
+        <div class="absolute top-3 left-3 z-20">
+            <button type="button" class="drag-handle cursor-grab active:cursor-grabbing p-1.5 rounded-xl bg-black/40 hover:bg-black/70 text-white backdrop-blur-md transition-all shadow-md" title="کشیدن برای تغییر اولویت اسلاید در تابلو">
+                <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        {{-- Badge Chip --}}
+        <template x-if="product.badge && product.badge !== 'none'">
+            <div class="absolute top-3 right-3 z-20">
+                <span class="text-[11px] font-black px-2.5 py-1 rounded-full shadow-lg text-white backdrop-blur-md flex items-center gap-1 border border-white/20"
+                      :class="{
+                          'bg-emerald-600/90': product.badge === 'no_wage',
+                          'bg-purple-600/90': product.badge === 'best_seller',
+                          'bg-amber-600/90': product.badge === 'new_collection',
+                          'bg-rose-600/90': product.badge === 'special_discount'
+                      }">
+                    <span x-text="{
+                        'no_wage': '🏷️ کم‌اجرت',
+                        'best_seller': '🔥 پرفروش',
+                        'new_collection': '✨ کالکشن جدید',
+                        'special_discount': '🎁 تخفیف ویژه'
+                    }[product.badge]"></span>
+                </span>
+            </div>
+        </template>
+
         <template x-if="product.images && product.images.length > 0">
             <img :src="product.images[0].url" :alt="product.title" class="absolute inset-0 w-full h-full object-cover">
         </template>
@@ -23,7 +51,11 @@
 
             <div class="text-slate-500 dark:text-slate-400">سود و اجرت:</div>
             <div class="text-left font-bold" :class="product.profit_type === 'percent' ? 'text-blue-600' : 'text-emerald-600'"
-                 x-text="product.profit_value + (product.profit_type === 'percent' ? '%' : ' ت')"></div>
+                 x-text="product.profit_type === 'percent'
+                     ? product.profit_value + '%'
+                     : (product.profit_type === 'amount_per_gram'
+                         ? new Intl.NumberFormat('fa-IR').format(product.profit_value) + ' ت/گرم'
+                         : new Intl.NumberFormat('fa-IR').format(product.profit_value) + ' ت')"></div>
         </div>
 
         <div class="flex flex-col gap-1">

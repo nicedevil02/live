@@ -6,6 +6,7 @@
         weight_gram: '',
         profit_value: '',
         profit_type: 'percent',
+        badge: 'none',
         base_gold_price: {{ $latestGoldPrice }}
     },
     imageUrl: '',
@@ -15,7 +16,14 @@
     isCreating: false,
     get finalPrice() {
         const base = (this.form.base_gold_price * this.form.weight_gram);
-        const profit = this.form.profit_type === 'percent' ? (base * (this.form.profit_value / 100)) : Number(this.form.profit_value);
+        let profit = 0;
+        if (this.form.profit_type === 'percent') {
+            profit = base * (this.form.profit_value / 100);
+        } else if (this.form.profit_type === 'amount_per_gram') {
+            profit = Number(this.form.profit_value) * Number(this.form.weight_gram);
+        } else {
+            profit = Number(this.form.profit_value);
+        }
         return Math.round(base + profit);
     }
 }">
@@ -61,7 +69,8 @@
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">نوع سود و اجرت</label>
                 <select x-model="form.profit_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     <option value="percent">درصد سود و اجرت (%)</option>
-                    <option value="amount">مبلغ ثابت سود و اجرت (تومان)</option>
+                    <option value="amount">مبلغ ثابت کل سود و اجرت (تومان)</option>
+                    <option value="amount_per_gram">مبلغ ثابت به ازای هر گرم (تومان)</option>
                 </select>
             </div>
 
@@ -69,6 +78,31 @@
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">مقدار سود و اجرت</label>
                 <input type="number" x-model="form.profit_value" :class="errors.profit_value ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="وارد کردن سود الزامی است">
                 <template x-if="errors.profit_value"><span class="text-red-500 text-xs mt-1" x-text="errors.profit_value[0]"></span></template>
+            </div>
+
+            {{-- Marketing Badges --}}
+            <div class="md:col-span-3">
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                    نشان بازاریابی در تابلو
+                    <span class="text-xs font-normal text-slate-400 mr-1">(اختیاری)</span>
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                    <template x-for="b in [
+                        { id: 'none', label: 'پیشنهاد شگفت‌انگیز' },
+                        { id: 'no_wage', label: '🏷️ کم‌اجرت / بی‌اجرت' },
+                        { id: 'best_seller', label: '🔥 پرفروش‌ترین' },
+                        { id: 'new_collection', label: '✨ کالکشن جدید' },
+                        { id: 'special_discount', label: '🎁 تخفیف ویژه' }
+                    ]" :key="b.id">
+                        <button type="button" @click="form.badge = b.id"
+                                class="flex items-center justify-center text-center p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer"
+                                :class="form.badge === b.id
+                                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 ring-2 ring-blue-500/20 shadow-sm'
+                                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/50'">
+                            <span x-text="b.label"></span>
+                        </button>
+                    </template>
+                </div>
             </div>
 
             <div class="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -161,7 +195,7 @@
                         return;
                     }
                     $dispatch('product-created', result);
-                    form = { title: '', weight_gram: '', profit_value: '', profit_type: 'percent', base_gold_price: {{ $latestGoldPrice }} };
+                    form = { title: '', weight_gram: '', profit_value: '', profit_type: 'percent', badge: 'none', base_gold_price: {{ $latestGoldPrice }} };
                     imageUrl = ''; imageFile = null; previewUrl = null; open = false;
                     if ($refs.createFileInput) $refs.createFileInput.value = '';
                 } catch(e) { alert('خطا در ارتباط با سرور'); }

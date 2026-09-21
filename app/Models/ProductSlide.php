@@ -21,6 +21,8 @@ class ProductSlide extends Model
         'profit_type',
         'base_gold_price',
         'final_price',
+        'badge',
+        'sort_order',
         'is_visible',
     ];
 

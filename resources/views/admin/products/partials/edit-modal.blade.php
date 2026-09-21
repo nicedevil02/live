@@ -25,13 +25,39 @@
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">نوع سود و اجرت</label>
                 <select x-model="form.profit_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                     <option value="percent">درصد سود و اجرت (%)</option>
-                    <option value="amount">مبلغ ثابت سود و اجرت (تومان)</option>
+                    <option value="amount">مبلغ ثابت کل سود و اجرت (تومان)</option>
+                    <option value="amount_per_gram">مبلغ ثابت به ازای هر گرم (تومان)</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">مقدار سود و اجرت</label>
                 <input type="number" x-model="form.profit_value" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+
+            {{-- Marketing Badges --}}
+            <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                    نشان بازاریابی در تابلو
+                    <span class="text-xs font-normal text-slate-400 mr-1">(اختیاری)</span>
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                    <template x-for="b in [
+                        { id: 'none', label: 'پیشنهاد شگفت‌انگیز' },
+                        { id: 'no_wage', label: '🏷️ کم‌اجرت / بی‌اجرت' },
+                        { id: 'best_seller', label: '🔥 پرفروش‌ترین' },
+                        { id: 'new_collection', label: '✨ کالکشن جدید' },
+                        { id: 'special_discount', label: '🎁 تخفیف ویژه' }
+                    ]" :key="b.id">
+                        <button type="button" @click="form.badge = b.id"
+                                class="flex items-center justify-center text-center p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer"
+                                :class="(form.badge || 'none') === b.id
+                                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 ring-2 ring-blue-500/20 shadow-sm'
+                                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/50'">
+                            <span x-text="b.label"></span>
+                        </button>
+                    </template>
+                </div>
             </div>
         </div>
 
@@ -107,7 +133,7 @@
 function editProductForm() {
     return {
         id: '',
-        form: { title: '', weight_gram: 0, profit_value: 0, profit_type: 'percent', base_gold_price: {{ $latestGoldPrice }} },
+        form: { title: '', weight_gram: 0, profit_value: 0, profit_type: 'percent', badge: 'none', base_gold_price: {{ $latestGoldPrice }} },
         localProduct: { images: [] },
         imageUrl: '',
         isUploading: false,
@@ -115,7 +141,14 @@ function editProductForm() {
 
         get finalPrice() {
             const base = (this.form.base_gold_price * this.form.weight_gram);
-            const profit = this.form.profit_type === 'percent' ? (base * (this.form.profit_value / 100)) : Number(this.form.profit_value);
+            let profit = 0;
+            if (this.form.profit_type === 'percent') {
+                profit = base * (this.form.profit_value / 100);
+            } else if (this.form.profit_type === 'amount_per_gram') {
+                profit = Number(this.form.profit_value) * Number(this.form.weight_gram);
+            } else {
+                profit = Number(this.form.profit_value);
+            }
             return Math.round(base + profit);
         },
 
@@ -127,6 +160,7 @@ function editProductForm() {
                 weight_gram: product.weight_gram,
                 profit_value: product.profit_value,
                 profit_type: product.profit_type,
+                badge: product.badge || 'none',
                 base_gold_price: {{ $latestGoldPrice }},
             };
             this.localProduct = JSON.parse(JSON.stringify(product));
