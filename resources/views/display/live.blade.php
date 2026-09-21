@@ -111,6 +111,25 @@
             window.addEventListener('error', function(e) {
                 console.warn('TalaLive handled legacy browser event:', e ? e.message : 'unknown');
             });
+
+            @if($isTv ?? false)
+            (function() {
+                var mouseTimer = null;
+                function onUserMouseMove() {
+                    if (!document.documentElement.classList.contains('tv-mouse-active')) {
+                        document.documentElement.classList.add('tv-mouse-active');
+                    }
+                    if (mouseTimer) clearTimeout(mouseTimer);
+                    mouseTimer = setTimeout(function() {
+                        document.documentElement.classList.remove('tv-mouse-active');
+                    }, 3500);
+                }
+                window.addEventListener('mousemove', onUserMouseMove, { passive: true });
+                window.addEventListener('pointermove', onUserMouseMove, { passive: true });
+                window.addEventListener('mousedown', onUserMouseMove, { passive: true });
+                window.addEventListener('wheel', onUserMouseMove, { passive: true });
+            })();
+            @endif
         })();
     </script>
     <script defer src="{{ asset('vendor/alpinejs.min.js') }}"></script>
@@ -127,7 +146,15 @@
             user-select: none !important;
         }
         @if($isTv ?? false)
-        html, body { cursor: none !important; }
+        html.tv-mouse-active, html.tv-mouse-active body, html.tv-mouse-active * {
+            cursor: default !important;
+        }
+        html.tv-mouse-active a, html.tv-mouse-active button, html.tv-mouse-active [role="button"], html.tv-mouse-active .cursor-pointer {
+            cursor: pointer !important;
+        }
+        html:not(.tv-mouse-active), html:not(.tv-mouse-active) body, html:not(.tv-mouse-active) * {
+            cursor: none !important;
+        }
         @endif
         @if($isApp ?? false)
         /* بهینه‌سازی پردازش گرافیکی اختصاصی داخل اپلیکیشن بدون کوچکترین تاثیر روی مرورگر */
