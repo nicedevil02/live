@@ -209,6 +209,7 @@ class PublicDisplayController extends Controller
         $resolved = $this->resolveGalleryCityInfo($user, $settings);
 
         \App\Http\Controllers\Admin\DisplaySettingController::ensureEmptyShowcaseColumnsExist();
+        \App\Http\Controllers\Admin\DisplaySettingController::ensureAllThemesUpdatedToLightModernOnce();
 
         $settingsData = $settings->toArray();
         $settingsData['city_slug'] = $resolved['citySlug'];

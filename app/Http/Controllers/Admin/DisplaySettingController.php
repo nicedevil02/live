@@ -14,6 +14,7 @@ class DisplaySettingController extends Controller
      */
     public function index()
     {
+        self::ensureAllThemesUpdatedToLightModernOnce();
         $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()], [
             'theme_mode' => 'light-modern',
             'slider_interval_sec' => 8,
@@ -156,6 +157,7 @@ class DisplaySettingController extends Controller
     public function shopProfile()
     {
         $this->ensureCityColumnsExist();
+        self::ensureAllThemesUpdatedToLightModernOnce();
         $user = auth()->user()->fresh();
         $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id], [
             'theme_mode'          => 'light-modern',
@@ -309,6 +311,56 @@ class DisplaySettingController extends Controller
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('ensureEmptyShowcaseColumnsExist error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * تغییر یک‌باره تم همه کاربران فعلی به «روشن مدرن» با ثبت دائمی در جدول migrations
+     * این متد فقط یک‌بار در دیتابیس اجرا می‌شود و تنظیمات کاربران پس از تغییر مجدد هرگز اوررایت نخواهد شد.
+     */
+    public static function ensureAllThemesUpdatedToLightModernOnce(): void
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('display_settings')) {
+                return;
+            }
+
+            $migrationName = '2026_09_21_140000_update_all_existing_themes_to_light_modern';
+
+            if (\Illuminate\Support\Facades\Schema::hasTable('migrations')) {
+                $alreadyRun = \Illuminate\Support\Facades\DB::table('migrations')
+                    ->where('migration', $migrationName)
+                    ->exists();
+
+                if ($alreadyRun) {
+                    return;
+                }
+
+                // ۱. به‌روزرسانی تم همه کاربران فعلی به 'light-modern'
+                \Illuminate\Support\Facades\DB::table('display_settings')->update([
+                    'theme_mode' => 'light-modern',
+                ]);
+
+                // ۲. ثبت شناسه مایگریشن در جدول migrations تا هرگز دوباره اجرا نشود
+                $lastBatch = (int)(\Illuminate\Support\Facades\DB::table('migrations')->max('batch') ?? 1);
+                \Illuminate\Support\Facades\DB::table('migrations')->insert([
+                    'migration' => $migrationName,
+                    'batch'     => $lastBatch + 1,
+                ]);
+
+                \Illuminate\Support\Facades\Log::info('Successfully migrated all existing display_settings themes to light-modern once.');
+            } else {
+                // فال‌بک در صورت عدم وجود جدول migrations
+                $flagKey = 'migrated_all_themes_to_light_modern_done';
+                if (!\Illuminate\Support\Facades\Cache::has($flagKey)) {
+                    \Illuminate\Support\Facades\DB::table('display_settings')->update([
+                        'theme_mode' => 'light-modern',
+                    ]);
+                    \Illuminate\Support\Facades\Cache::forever($flagKey, true);
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureAllThemesUpdatedToLightModernOnce error: ' . $e->getMessage());
         }
     }
 
