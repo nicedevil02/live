@@ -65,9 +65,9 @@
           ],
           "address" => [
             "@type" => "PostalAddress",
-            "addressLocality" => "همدان",
+            "addressLocality" => "کبودرآهنگ",
             "addressRegion" => "همدان",
-            "streetAddress" => "راسته مظفریه",
+            "streetAddress" => "خیابان مطهری، پاساژ علاءالدین",
             "addressCountry" => "IR"
           ],
           "contactPoint" => [
@@ -80,7 +80,7 @@
             ],
             [
               "@type" => "ContactPoint",
-              "telephone" => "+988135223847",
+              "telephone" => "+988135229063",
               "contactType" => "technical support",
               "areaServed" => "IR",
               "availableLanguage" => ["Persian"]
@@ -603,7 +603,7 @@
                         <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
                             <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
                             &nbsp;&middot;&nbsp;
-                            <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
+                            <a href="tel:08135229063" class="hover:underline">081 3522 9063</a>
                         </p>
                         <div class="pt-0.5 flex items-center justify-center gap-2 flex-wrap">
                             <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی در پیام‌رسان:</span>

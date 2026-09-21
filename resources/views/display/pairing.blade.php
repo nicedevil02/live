@@ -111,7 +111,7 @@
             ],
             [
               "@type" => "ContactPoint",
-              "telephone" => "+988135223847",
+              "telephone" => "+988135229063",
               "contactType" => "technical support",
               "areaServed" => "IR",
               "availableLanguage" => ["Persian"]
@@ -569,7 +569,7 @@
                     <p class="text-amber-600 dark:text-amber-400 font-black text-sm tracking-wider" dir="ltr">
                         <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
                         &nbsp;&middot;&nbsp;
-                        <a href="tel:08135223847" class="hover:underline">081 3522 3847</a>
+                        <a href="tel:08135229063" class="hover:underline">081 3522 9063</a>
                     </p>
                     <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
                         <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
@@ -1769,7 +1769,7 @@
                     </p>
                     <p class="text-slate-300">
                         <span class="text-slate-400">تلفن ثابت دفتر:</span>
-                        <a href="tel:08135223847" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">081 3522 3847</a>
+                        <a href="tel:08135229063" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">081 3522 9063</a>
                     </p>
                     <div class="pt-1">
                         <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">

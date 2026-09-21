@@ -24,7 +24,7 @@
             <p class="text-xs text-slate-500">پاسخگویی روزهای کاری از ساعت ۹ الی ۲۱</p>
             <div class="space-y-2 pt-2 text-sm font-bold">
                 <div>موبایل: <a href="tel:09187009064" class="text-amber-500 dir-ltr inline-block">۰۹۱۸ ۷۰۰ ۹۰۶۴</a></div>
-                <div>تلفن ثابت: <a href="tel:08135223847" class="text-amber-500 dir-ltr inline-block">۰۸۱-۳۵۲۲۳۸۴۷</a></div>
+                <div>تلفن ثابت: <a href="tel:08135229063" class="text-amber-500 dir-ltr inline-block">۰۸۱-۳۵۲۲۹۰۶۳</a></div>
             </div>
         </div>
 
@@ -35,6 +35,15 @@
             <div class="space-y-2 pt-2 text-sm font-bold">
                 <div>واتساپ و ایتا: <span class="text-amber-500 dir-ltr inline-block">۰۹۱۸ ۷۰۰ ۹۰۶۴</span></div>
                 <div>وبسایت: <span class="text-amber-500">talalive.ir</span></div>
+            </div>
+        </div>
+
+        <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 sm:col-span-2">
+            <span class="text-3xl">📍</span>
+            <h3 class="font-black text-slate-900 dark:text-white text-lg">نشانی و دفتر</h3>
+            <p class="text-xs text-slate-500">پذیرش حضوری با هماهنگی قبلی</p>
+            <div class="pt-2 text-sm font-bold text-slate-700 dark:text-slate-300">
+                همدان، کبودرآهنگ، خیابان مطهری، پاساژ علاءالدین
             </div>
         </div>
     </div>

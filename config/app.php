@@ -134,13 +134,13 @@ return [
             'https://rubika.ir/talalive',
         ],
         'address' => [
-            'locality' => 'همدان',
+            'locality' => 'کبودرآهنگ',
             'region' => 'همدان',
-            'street' => 'راسته مظفریه',
+            'street' => 'خیابان مطهری، پاساژ علاءالدین',
             'country' => 'IR',
         ],
         'phone_support' => '+989187009064',
-        'phone_tech' => '+988135223847',
+        'phone_tech' => '+988135229063',
     ],
 
 ];

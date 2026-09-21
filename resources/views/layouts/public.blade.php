@@ -100,9 +100,9 @@
           "sameAs": @json(config('app.organization.same_as', ['https://rubika.ir/talalive'])),
           "address": {
             "@@type": "PostalAddress",
-            "addressLocality": "{{ config('app.organization.address.locality', 'همدان') }}",
+            "addressLocality": "{{ config('app.organization.address.locality', 'کبودرآهنگ') }}",
             "addressRegion": "{{ config('app.organization.address.region', 'همدان') }}",
-            "streetAddress": "{{ config('app.organization.address.street', 'راسته مظفریه') }}",
+            "streetAddress": "{{ config('app.organization.address.street', 'خیابان مطهری، پاساژ علاءالدین') }}",
             "addressCountry": "{{ config('app.organization.address.country', 'IR') }}"
           },
           "foundingDate": "2024",
@@ -117,7 +117,7 @@
             },
             {
               "@@type": "ContactPoint",
-              "telephone": "+988135223847",
+              "telephone": "+988135229063",
               "contactType": "technical support",
               "areaServed": "IR",
               "availableLanguage": ["Persian"]
@@ -491,11 +491,18 @@
                 <div class="space-y-2 text-[11px] text-slate-400 border-t border-slate-900 pt-3">
                     <div class="flex items-center gap-2">
                         <span class="text-amber-400">📍</span>
-                        <span>همدان، بازار مظفریه، راسته زرگرها</span>
+                        <span>همدان، کبودرآهنگ، خیابان مطهری، پاساژ علاءالدین</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-amber-400">📞</span>
-                        <a href="tel:09187009064" class="hover:text-amber-300 font-mono" dir="ltr">0918 700 9064</a>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-amber-400">📱</span>
+                            <a href="tel:09187009064" class="hover:text-amber-300 font-mono" dir="ltr">0918 700 9064</a>
+                        </div>
+                        <span class="text-slate-600">&middot;</span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-amber-400">☎️</span>
+                            <a href="tel:08135229063" class="hover:text-amber-300 font-mono" dir="ltr">081 3522 9063</a>
+                        </div>
                     </div>
                 </div>
                 <div class="pt-1">
