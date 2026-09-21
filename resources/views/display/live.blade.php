@@ -194,7 +194,7 @@
             100% { transform: scale(1.08) translate3d(-1.5%, 1%, 0); }
         }
         .animate-ken-burns {
-            animation: ken-burns var(--ken-burns-duration, 8s) ease-out forwards;
+            animation: ken-burns var(--ken-burns-duration, 8s) linear forwards;
             will-change: transform;
             backface-visibility: hidden;
             transform-origin: center center;
@@ -1828,47 +1828,16 @@
                 <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
                     <template x-if="activeProduct">
                         <div class="absolute inset-0">
-                            <!-- لایه تصویر قبلی برای ترنزیشن فید متقاطع واقعی (True Cross-Fade) -->
-                            <div class="absolute inset-0 z-0 overflow-hidden" x-show="prevImageUrl">
-                                <img :src="prevImageUrl" 
-                                     class="absolute inset-0 w-full h-full object-cover" 
-                                     alt="">
-                            </div>
-
-                            <!-- لایه تصویر جدید با انیمیشن ورود و زوم پیوسته کن‌برنز (Ken Burns) -->
-                            <div class="absolute inset-0 z-10 overflow-hidden animate-crossFade" 
-                                 :key="activeIndex + '-' + productImageIndex">
-                                <img :src="activeProductImageUrl" 
-                                     x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title"
-                                     class="absolute inset-0 w-full h-full object-cover"
-                                     :class="!ecoMode ? 'animate-ken-burns' : ''"
-                                     :style="'--ken-burns-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
-                            </div>
-
-                            <!-- نوار پیشرفت استوری اینستاگرام در گوشه بالا راست (Segmented Story Progress Bar) -->
-                            <template x-if="products.length > 1">
-                                <div class="absolute top-5 right-5 z-30 flex items-center gap-1.5 bg-black/30 dark:bg-black/40 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/15 shadow-lg select-none" dir="rtl">
-                                    <template x-for="(prod, idx) in products" :key="idx">
-                                        <button type="button" 
-                                                @click.stop="goToSlide(idx)"
-                                                class="relative h-1.5 rounded-full overflow-hidden transition-all duration-300 cursor-pointer"
-                                                :class="[
-                                                    products.length > 8 ? 'w-5' : (products.length > 4 ? 'w-8' : 'w-11'),
-                                                    idx === activeIndex ? 'ring-1 ring-amber-400/50' : ''
-                                                ]"
-                                                :title="prod.title || ('محصول ' + (idx + 1))">
-                                            <!-- پس‌زمینه مسیر اسلاید -->
-                                            <div class="absolute inset-0 bg-white/25 rounded-full"></div>
-                                            <!-- پر شدن پیوسته نوار همگام با زمان اسلاید -->
-                                            <div class="absolute inset-y-0 right-0 bg-gradient-to-l from-amber-300 via-amber-400 to-amber-200 rounded-full shadow-sm"
-                                                 :class="{
-                                                     'w-full': idx < activeIndex,
-                                                     'w-0': idx > activeIndex
-                                                 }"
-                                                 :style="idx === activeIndex ? ('animation: story-progress-anim ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;') : ''">
-                                            </div>
-                                        </button>
-                                    </template>
+                            <!-- لایه‌های دوگانه پینگ‌پنگ جهت ترنزیشن فید متقاطع واقعی و ری‌استارت پیوسته کن‌برنز -->
+                            <template x-for="(slot, sIdx) in slots" :key="slot.key">
+                                <div class="absolute inset-0 transition-opacity duration-700 ease-in-out overflow-hidden"
+                                     :class="slot.active ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'">
+                                    <img :src="slot.url || activeProductImageUrl" 
+                                         x-on:error="$event.target.src = '/icons/icon-512x512.png'"
+                                         :alt="activeProduct?.title || ''"
+                                         class="absolute inset-0 w-full h-full object-cover"
+                                         :class="slot.active && !ecoMode ? 'animate-ken-burns' : ''"
+                                         :style="'--ken-burns-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
                                 </div>
                             </template>
 
@@ -2246,25 +2215,27 @@
                         </div>
                     </template>
                     <!-- نوارهای پیشرفت استوری در بالای اسلایدر (Instagram / Telegram Story Bars) -->
-                    <div class="absolute top-6 right-6 flex items-center gap-1.5 z-20 select-none pointer-events-auto" 
+                    <div class="absolute top-6 right-8 flex items-center gap-1.5 z-30 select-none pointer-events-auto px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg" 
+                         :class="isLightTheme ? 'bg-white/85 border border-slate-900/10 shadow-slate-900/5' : 'bg-black/40 border border-white/15 shadow-black/40'"
                          x-show="products.length > 1"
-                         dir="ltr">
+                         dir="rtl">
                         <template x-for="(prod, i) in products" :key="i">
-                            <div class="h-1.5 rounded-full overflow-hidden transition-all duration-300 backdrop-blur-md cursor-pointer shadow-sm"
+                            <div class="h-1.5 rounded-full overflow-hidden transition-all duration-300 cursor-pointer"
                                  :style="{
-                                     width: products.length > 8 ? '20px' : (products.length > 5 ? '32px' : '44px')
+                                     width: products.length > 8 ? '18px' : (products.length > 5 ? '28px' : '38px')
                                  }"
-                                 :class="isLightTheme ? 'bg-slate-900/25 border border-slate-900/10' : 'bg-white/25 border border-white/20'"
-                                 @click="activeIndex = i; productImageIndex = 0; startSlider()">
+                                 :class="isLightTheme ? 'bg-slate-900/15' : 'bg-white/20'"
+                                 @click="goToSlide(i)"
+                                 :title="prod.title || ('محصول ' + (i + 1))">
                                 <!-- نوار پر شونده نرم زمانی -->
-                                <div class="h-full rounded-full"
-                                     :class="isLightTheme ? 'bg-slate-900 shadow-sm' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
+                                <div class="h-full rounded-full transition-none"
+                                     :class="isLightTheme ? 'bg-slate-900' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
                                      :style="i < activeIndex 
                                          ? 'width: 100%;' 
                                          : (i > activeIndex 
                                              ? 'width: 0%;' 
                                              : 'animation: story-progress-anim ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;')"
-                                     :key="activeIndex + '-' + productImageIndex">
+                                     :key="'story-' + i + '-' + slideKey">
                                 </div>
                             </div>
                         </template>
@@ -2755,6 +2726,12 @@
                 emptyGuideIndex: 0,
                 productImageIndex: 0,
                 prevImageUrl: '',
+                activeSlotIndex: 0,
+                slideKey: 1,
+                slots: [
+                    { url: '', active: true, key: 1 },
+                    { url: '', active: false, key: 2 }
+                ],
                 sliderTimer: null,
                 now: new Date(),
                 refreshTimer: null,
@@ -2888,7 +2865,6 @@
                     const intervalSec = Number(this.settings?.slider_interval_sec) || 8;
                     this.sliderTimer = setInterval(() => {
                         if (this.products.length > 0) {
-                            this.prevImageUrl = this.activeProductImageUrl;
                             // چرخش تصاویر در صورتی که محصول چند تصویر داشته باشد
                             if (this.activeProduct && this.activeProduct.images && this.activeProduct.images.length > 1) {
                                 this.productImageIndex++;
@@ -2900,6 +2876,7 @@
                                 this.activeIndex = (this.activeIndex + 1) % this.products.length;
                                 this.productImageIndex = 0;
                             }
+                            this.transitionToNextSlide();
                         } else {
                             // چرخش خودکار اسلایدهای راهنمای ویترین در حالت بدون محصول
                             this.emptyGuideIndex = (this.emptyGuideIndex + 1) % 3;
@@ -2907,11 +2884,21 @@
                     }, Math.max(intervalSec, 3) * 1000);
                 },
 
+                transitionToNextSlide() {
+                    this.slideKey++;
+                    const nextSlot = 1 - this.activeSlotIndex;
+                    this.slots[nextSlot].url = this.activeProductImageUrl;
+                    this.slots[nextSlot].key = this.slideKey;
+                    this.slots[nextSlot].active = true;
+                    this.slots[this.activeSlotIndex].active = false;
+                    this.activeSlotIndex = nextSlot;
+                },
+
                 goToSlide(index) {
                     if (this.products.length <= 1) return;
-                    this.prevImageUrl = this.activeProductImageUrl;
                     this.activeIndex = index % this.products.length;
                     this.productImageIndex = 0;
+                    this.transitionToNextSlide();
                     this.startSlider();
                 },
 
@@ -3209,6 +3196,7 @@
                     document.documentElement.className = (this.isLightTheme ? 'light' : 'dark');
 
                     // شروع هوشمند اسلایدر با قابلیت تنظیم داینامیک
+                    this.slots[0].url = this.activeProductImageUrl;
                     this.startSlider();
                     this.$watch('settings.slider_interval_sec', () => this.startSlider());
 
