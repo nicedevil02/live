@@ -795,14 +795,14 @@ class PublicDisplayController extends Controller
 
         return response()->json([
             'success'            => true,
-            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.5'),
-            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 7),
+            'version'            => $tvConfig['latest_version'] ?? env('TV_LATEST_VERSION', '1.0.6'),
+            'version_code'       => (int) ($tvConfig['latest_version_code'] ?? 8),
             'min_version_code'   => (int) ($tvConfig['min_version_code'] ?? 2),
             'download_url'       => $tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'),
-            'file_size'          => $tvConfig['file_size'] ?? '46.3 MB',
+            'file_size'          => $tvConfig['file_size'] ?? '46.4 MB',
             'mandatory'          => false,
             'title'              => 'نسخه جدید طلالایو TV موجود است',
-            'changelog'          => "• پیاده‌سازی کاشی‌های کریستالی اپل (Apple Glass) با خط بازتاب نور افقی (Specular Highlight)\n• هماهنگی ۱۰۰٪ با تمامی ۱۳ تم لوکس پنل مدیریت و گوی‌های نورانی شناور\n• انیمیشن روان تغییر قیمت و بهینه‌سازی حداکثری عملکرد برای سخت‌افزارهای تلویزیون",
+            'changelog'          => "• حذف عنوان هاردکد شده و هماهنگی کامل نام مغازه با پنل مدیریت\n• راه‌اندازی تصاویر پس‌زمینه روز بینگ (Bing Wallpapers) در تم‌های بینگ\n• ارتقا و درخشان‌سازی حباب‌های امبینت پس‌زمینه و شفافیت کریستالی کاشی‌ها\n• افزودن دکمه حالت سبک / روان (Eco Mode) به فوتر جهت اجرای فوق‌روان روی همه تلویزیون‌ها",
             'released_at'        => now()->toDateString(),
         ]);
     }

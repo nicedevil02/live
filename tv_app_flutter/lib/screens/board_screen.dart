@@ -46,9 +46,9 @@ class _BoardScreenState extends State<BoardScreen> {
 
   static const String _prefKeyWebMode = 'tv_webview_mode';
   static const String _prefKeyZoom = 'talalive_zoom_level';
-  static const String _prefKeyDarkMode = 'tv_dark_mode_override';
+  static const String _prefKeyEcoMode = 'tv_eco_mode';
   double _zoomLevel = 1.0;
-  bool? _isDarkModeOverride;
+  bool _isEcoMode = false;
 
   String _installedVersion = '1.0.0';
   UpdateInfo? _availableUpdate;
@@ -69,7 +69,7 @@ class _BoardScreenState extends State<BoardScreen> {
     _loadInstalledVersion();
     _loadSavedMode();
     _loadSavedZoom();
-    _loadSavedThemeMode();
+    _loadSavedEcoMode();
     _fetchData();
 
     // Zero-overhead clock timer: updates ValueNotifier only, ZERO root rebuilds!
@@ -274,28 +274,24 @@ class _BoardScreenState extends State<BoardScreen> {
     }
   }
 
-  void _loadSavedThemeMode() async {
+  void _loadSavedEcoMode() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(_prefKeyDarkMode)) {
-      final saved = prefs.getBool(_prefKeyDarkMode);
-      if (mounted) {
-        setState(() {
-          _isDarkModeOverride = saved;
-        });
-      }
+    final saved = prefs.getBool(_prefKeyEcoMode) ?? false;
+    if (mounted) {
+      setState(() {
+        _isEcoMode = saved;
+      });
     }
   }
 
-  void _toggleDarkMode() async {
-    final currentIsDark = _isDarkModeOverride ??
-        (_model != null ? BoardThemeData.fromMode(_model!.themeMode).isDark : true);
-    final newMode = !currentIsDark;
+  void _toggleEcoMode() async {
+    final newMode = !_isEcoMode;
     setState(() {
-      _isDarkModeOverride = newMode;
+      _isEcoMode = newMode;
     });
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefKeyDarkMode, newMode);
-    _showZoomFeedback(newMode ? 'حالت تاریک فعال شد' : 'حالت روشن فعال شد');
+    await prefs.setBool(_prefKeyEcoMode, newMode);
+    _showZoomFeedback(newMode ? 'حالت سبک فعال شد (روان)' : 'حالت سبک غیرفعال شد');
   }
 
   void _zoomIn() async {
@@ -1526,9 +1522,7 @@ class _BoardScreenState extends State<BoardScreen> {
     // =========================================================================
     // 2. High-Fidelity Native Flutter Board Mode
     // =========================================================================
-    final theme = _isDarkModeOverride != null
-        ? (_isDarkModeOverride! ? BoardThemeData.onyxGold : BoardThemeData.imperialPearl)
-        : BoardThemeData.fromKey(_model?.themeMode);
+    final theme = BoardThemeData.fromKey(_model?.themeMode);
 
     return KeyboardListener(
       focusNode: _focusNode,
@@ -1545,85 +1539,138 @@ class _BoardScreenState extends State<BoardScreen> {
                   scale: _zoomLevel,
                   child: FittedBox(
                     fit: BoxFit.contain,
-                    child: Container(
+                    child: SizedBox(
                       width: 1920,
                       height: 1080,
-                      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
                       child: Stack(
                         children: [
-                          // 12 Ambient Background Glow Orbs (GPU-accelerated, zero redraw penalty)
-                          Positioned.fill(
-                            child: AmbientOrbsBackground(
-                              orbColors: theme.orbColors,
-                            ),
-                          ),
-
-                  // Main Content
-                  _isLoading
-                      ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(color: theme.goldPrimary),
-                              const SizedBox(height: 20),
-                              Text(
-                                'در حال دریافت مظنه‌های لحظه‌ای طلالایو...',
-                                style: TextStyle(color: theme.textSecondary, fontSize: 20),
-                              ),
-                            ],
-                          ),
-                        )
-                      : _model == null
-                          ? Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                          // 1. Bing Wallpaper Background (if active)
+                          if (theme.isBingTheme &&
+                              _model?.bingWallpaperUrl != null &&
+                              _model!.bingWallpaperUrl!.isNotEmpty)
+                            Positioned.fill(
+                              child: Stack(
                                 children: [
-                                  Text(
-                                    'خطا در دریافت اطلاعات (${widget.username}). اتصال اینترنت را بررسی فرمایید.',
-                                    style: TextStyle(color: theme.redDown, fontSize: 22),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() => _isLoading = true);
-                                      _fetchData();
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: theme.goldPrimary,
-                                      foregroundColor: Colors.black,
+                                  Positioned.fill(
+                                    child: Image.network(
+                                      _model!.bingWallpaperUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
                                     ),
-                                    child: const Text('تلاش مجدد'),
                                   ),
+                                  // Scrims matching web live.blade.php
+                                  if (theme.themeKey == 'bing-daily')
+                                    Positioned.fill(
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                            colors: [
+                                              Color(0xE6020617), // 90% slate-950
+                                              Color(0xA6020617), // 65% slate-950
+                                              Color(0x80020617), // 50% slate-950
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  else if (theme.themeKey == 'bing-studio')
+                                    Positioned.fill(
+                                      child: Container(
+                                        color: const Color(0x80020617), // 50% slate-950
+                                      ),
+                                    )
+                                  else if (theme.themeKey == 'bing-ceramic')
+                                    Positioned.fill(
+                                      child: Container(
+                                        color: const Color(0x33020617), // 20% slate-950
+                                      ),
+                                    ),
                                 ],
                               ),
-                            )
-                          : Column(
-                              children: [
-                                // 1. Header (zero-overhead clock)
-                                BoardHeader(
-                                  model: _model!,
-                                  theme: theme,
-                                  timeNotifier: _timeNotifier,
-                                  isOffline: _isOffline,
-                                ),
-                                const SizedBox(height: 14),
-
-                                // 2. Main Body (Right: Slider 35%, Left: All Cards Grid 65%)
-                                Expanded(
-                                  child: _buildBody(theme),
-                                ),
-                                const SizedBox(height: 12),
-
-                                // 3. Footer
-                                _buildFooter(theme),
-                              ],
                             ),
-                    ],
+
+                          // 2. 12 Ambient Background Glow Orbs (GPU-accelerated, hidden in eco mode, bing themes, or pure-black)
+                          if (!_isEcoMode &&
+                              !theme.isBingTheme &&
+                              theme.themeKey != 'pure-black' &&
+                              theme.orbColors.isNotEmpty)
+                            Positioned.fill(
+                              child: AmbientOrbsBackground(
+                                orbColors: theme.orbColors,
+                              ),
+                            ),
+
+                          // 3. Main Padded Content
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+                            child: _isLoading
+                                ? Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(color: theme.goldPrimary),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                          'در حال دریافت مظنه‌های لحظه‌ای طلالایو...',
+                                          style: TextStyle(color: theme.textSecondary, fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : _model == null
+                                    ? Center(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'خطا در دریافت اطلاعات (${widget.username}). اتصال اینترنت را بررسی فرمایید.',
+                                              style: TextStyle(color: theme.redDown, fontSize: 22),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() => _isLoading = true);
+                                                _fetchData();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: theme.goldPrimary,
+                                                foregroundColor: Colors.black,
+                                              ),
+                                              child: const Text('تلاش مجدد'),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Column(
+                                        children: [
+                                          // 1. Header (zero-overhead clock)
+                                          BoardHeader(
+                                            model: _model!,
+                                            theme: theme,
+                                            timeNotifier: _timeNotifier,
+                                            isOffline: _isOffline,
+                                          ),
+                                          const SizedBox(height: 14),
+
+                                          // 2. Main Body (Right: Slider 35%, Left: All Cards Grid 65%)
+                                          Expanded(
+                                            child: _buildBody(theme),
+                                          ),
+                                          const SizedBox(height: 12),
+
+                                          // 3. Footer
+                                          _buildFooter(theme),
+                                        ],
+                                      ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
 
           // Zoom Feedback HUD in Native Mode
           if (_zoomFeedbackText != null)
@@ -1958,28 +2005,43 @@ class _BoardScreenState extends State<BoardScreen> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Dark / Light Mode Toggle button
+              // Eco / Lite Mode Toggle button (مشابه تابلوی وب)
               InkWell(
-                onTap: _toggleDarkMode,
+                onTap: _toggleEcoMode,
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: (theme.isDark ? const Color(0xFFF59E0B) : const Color(0xFF3B82F6)).withOpacity(0.15),
+                    color: _isEcoMode
+                        ? const Color(0xFF10B981).withOpacity(0.20)
+                        : (theme.isDark ? Colors.white : Colors.black).withOpacity(0.06),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: (theme.isDark ? const Color(0xFFF59E0B) : const Color(0xFF3B82F6)).withOpacity(0.35),
+                      color: _isEcoMode
+                          ? const Color(0xFF10B981).withOpacity(0.60)
+                          : (theme.isDark ? Colors.white : Colors.black).withOpacity(0.12),
                     ),
+                    boxShadow: _isEcoMode
+                        ? [
+                            BoxShadow(
+                              color: const Color(0xFF10B981).withOpacity(0.35),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(theme.isDark ? '☀️' : '🌙', style: const TextStyle(fontSize: 12)),
+                      const Text('⚡', style: TextStyle(fontSize: 12)),
                       const SizedBox(width: 4),
                       Text(
-                        theme.isDark ? 'حالت روشن' : 'حالت تاریک',
+                        'حالت سبک',
                         style: TextStyle(
-                          color: theme.isDark ? theme.goldPrimary : const Color(0xFF2563EB),
+                          color: _isEcoMode
+                              ? const Color(0xFF34D399)
+                              : theme.textSecondary,
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
                           fontFamily: 'Vazirmatn',

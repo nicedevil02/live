@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class BoardThemeData {
+  final String themeKey;
   final bool isDark;
   final Color backgroundColor;
+
+  bool get isBingTheme => themeKey.startsWith('bing-');
   final LinearGradient cardGradient;
   final Color cardStrokeColor;
   final LinearGradient heroCardGradient;
@@ -48,6 +51,7 @@ class BoardThemeData {
   final List<Color> orbColors;
 
   const BoardThemeData({
+    this.themeKey = 'imperial-onyx',
     required this.isDark,
     required this.backgroundColor,
     required this.cardGradient,
@@ -89,12 +93,13 @@ class BoardThemeData {
 
   // 1. Imperial Onyx (Default Luxury 24K Gold Dark Mode)
   static const BoardThemeData onyxGold = BoardThemeData(
+    themeKey: 'imperial-onyx',
     isDark: true,
     backgroundColor: Color(0xFF05070C),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xE6161C2A), Color(0xF20A0E17)],
+      colors: [Color(0xB8161C2A), Color(0xCC0A0E17)],
     ),
     cardStrokeColor: Color(0x66FBBF24), // 40% amber-400
     heroCardGradient: LinearGradient(
@@ -147,6 +152,7 @@ class BoardThemeData {
 
   // 2. Imperial Pearl (Luxurious Champagne Light Mode)
   static const BoardThemeData imperialPearl = BoardThemeData(
+    themeKey: 'imperial-pearl',
     isDark: false,
     backgroundColor: Color(0xFFF6F7FB),
     cardGradient: LinearGradient(
@@ -205,12 +211,13 @@ class BoardThemeData {
 
   // 3. Gold Royal (Rich Amber Gold)
   static const BoardThemeData goldRoyal = BoardThemeData(
+    themeKey: 'gold-royal',
     isDark: true,
     backgroundColor: Color(0xFF0A0702),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xE6241708), Color(0xF2150D03)],
+      colors: [Color(0xB8241708), Color(0xCC150D03)],
     ),
     cardStrokeColor: Color(0x80F59E0B),
     heroCardGradient: LinearGradient(
@@ -263,12 +270,13 @@ class BoardThemeData {
 
   // 4. Emerald Night (Deep Emerald, Mint & Jade)
   static const BoardThemeData emeraldNight = BoardThemeData(
+    themeKey: 'emerald-night',
     isDark: true,
     backgroundColor: Color(0xFF02130E),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xE6062C21), Color(0xF2031B14)],
+      colors: [Color(0xB8062C21), Color(0xCC031B14)],
     ),
     cardStrokeColor: Color(0x8010B981),
     heroCardGradient: LinearGradient(
@@ -321,12 +329,13 @@ class BoardThemeData {
 
   // 5. Blue Ocean (Sapphire, Deep Oceanic Cyan & Azure)
   static const BoardThemeData blueOcean = BoardThemeData(
+    themeKey: 'blue-ocean',
     isDark: true,
     backgroundColor: Color(0xFF030D1A),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xE60A2540), Color(0xF2051628)],
+      colors: [Color(0xB80A2540), Color(0xCC051628)],
     ),
     cardStrokeColor: Color(0x8006B6D4),
     heroCardGradient: LinearGradient(
@@ -379,12 +388,13 @@ class BoardThemeData {
 
   // 6. Purple Haze (Royal Amethyst, Neon Violet & Fuchsia)
   static const BoardThemeData purpleHaze = BoardThemeData(
+    themeKey: 'purple-haze',
     isDark: true,
     backgroundColor: Color(0xFF10051C),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xE6260D3E), Color(0xF2160624)],
+      colors: [Color(0xB8260D3E), Color(0xCC160624)],
     ),
     cardStrokeColor: Color(0x80C026D3),
     heroCardGradient: LinearGradient(
@@ -437,12 +447,13 @@ class BoardThemeData {
 
   // 7. Rose Dark (Ruby Crimson & Dark Garnet)
   static const BoardThemeData roseDark = BoardThemeData(
+    themeKey: 'rose-dark',
     isDark: true,
     backgroundColor: Color(0xFF17030A),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xE6380B1B), Color(0xF220040E)],
+      colors: [Color(0xB8380B1B), Color(0xCC20040E)],
     ),
     cardStrokeColor: Color(0x80F43F5E),
     heroCardGradient: LinearGradient(
@@ -495,6 +506,7 @@ class BoardThemeData {
 
   // 8. Pure Black (AMOLED Pure Black & Titanium Silver)
   static const BoardThemeData pureBlack = BoardThemeData(
+    themeKey: 'pure-black',
     isDark: true,
     backgroundColor: Color(0xFF000000),
     cardGradient: LinearGradient(
@@ -546,12 +558,13 @@ class BoardThemeData {
 
   // 9. Dark Glass (Classic Apple Dark Glass with Indigo & Amber orbs)
   static const BoardThemeData darkGlass = BoardThemeData(
+    themeKey: 'dark-glass',
     isDark: true,
     backgroundColor: Color(0xFF0B1120),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xCC1E293B), Color(0xF20F172A)],
+      colors: [Color(0xB31E293B), Color(0xCC0F172A)],
     ),
     cardStrokeColor: Color(0x4D64748B),
     heroCardGradient: LinearGradient(
@@ -601,6 +614,7 @@ class BoardThemeData {
 
   // 10. Light Modern (Clean Bright White & Light Slate)
   static const BoardThemeData lightModern = BoardThemeData(
+    themeKey: 'light-modern',
     isDark: false,
     backgroundColor: Color(0xFFF8FAFC),
     cardGradient: LinearGradient(
@@ -652,12 +666,13 @@ class BoardThemeData {
 
   // 11. Bing Daily (Obsidian Dark Glass with Amber Accent)
   static const BoardThemeData bingDaily = BoardThemeData(
+    themeKey: 'bing-daily',
     isDark: true,
     backgroundColor: Color(0xFF090D16),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xD90F172A), Color(0xEB020617)],
+      colors: [Color(0xB30F172A), Color(0xD9020617)],
     ),
     cardStrokeColor: Color(0x66F59E0B),
     heroCardGradient: LinearGradient(
@@ -703,12 +718,13 @@ class BoardThemeData {
 
   // 12. Bing Studio (Studio Glass with Indigo & Cyan Accents)
   static const BoardThemeData bingStudio = BoardThemeData(
+    themeKey: 'bing-studio',
     isDark: true,
     backgroundColor: Color(0xFF0A0F1D),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xD91E1B4B), Color(0xEB0F172A)],
+      colors: [Color(0xB31E1B4B), Color(0xD90F172A)],
     ),
     cardStrokeColor: Color(0x666366F1),
     heroCardGradient: LinearGradient(
@@ -754,12 +770,13 @@ class BoardThemeData {
 
   // 13. Bing Ceramic (Porcelain White Ceramic with Slate & Gold Accents)
   static const BoardThemeData bingCeramic = BoardThemeData(
+    themeKey: 'bing-ceramic',
     isDark: false,
     backgroundColor: Color(0xFFF1F5F9),
     cardGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xF5FFFFFF), Color(0xEBE2E8F0)],
+      colors: [Color(0xEBFFFFFF), Color(0xD9E2E8F0)],
     ),
     cardStrokeColor: Color(0x6694A3B8),
     heroCardGradient: LinearGradient(

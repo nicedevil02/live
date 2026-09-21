@@ -97,6 +97,7 @@ class BoardModel {
   final String? cityFullDisplay;
   final String? cityName;
   final String? galleryDisplayName;
+  final String? bingWallpaperUrl;
   final String themeMode;
   final int sliderIntervalSec;
   final String customMessage;
@@ -121,6 +122,7 @@ class BoardModel {
     this.cityFullDisplay,
     this.cityName,
     this.galleryDisplayName,
+    this.bingWallpaperUrl,
     required this.themeMode,
     required this.sliderIntervalSec,
     required this.customMessage,
@@ -143,12 +145,24 @@ class BoardModel {
     final rawSettings = json['settings'];
     final settings = rawSettings is Map ? Map<String, dynamic>.from(rawSettings) : null;
     final shopName = json['shopName']?.toString().trim().isNotEmpty == true
-        ? json['shopName'].toString()
+        ? json['shopName'].toString().trim()
         : (settings?['shop_name']?.toString().trim().isNotEmpty == true
-            ? settings!['shop_name'].toString()
-            : 'گالری طلا و جواهر طلالایو');
-    final galleryDisplayName = json['galleryDisplayName']?.toString() ??
-        (shopName.startsWith('گالری') ? shopName : 'گالری $shopName');
+            ? settings!['shop_name'].toString().trim()
+            : 'طلا و جواهر طلالایو');
+    final galleryDisplayName = json['galleryDisplayName']?.toString().trim().isNotEmpty == true
+        ? json['galleryDisplayName'].toString().trim()
+        : shopName;
+
+    String? bingWallpaperUrl;
+    final rawBing = json['bingWallpaper'];
+    if (rawBing is Map) {
+      final url = rawBing['url']?.toString();
+      if (url != null && url.isNotEmpty) {
+        bingWallpaperUrl = url.startsWith('/') ? 'https://talalive.ir$url' : url;
+      }
+    } else if (rawBing is String && rawBing.isNotEmpty) {
+      bingWallpaperUrl = rawBing.startsWith('/') ? 'https://talalive.ir$rawBing' : rawBing;
+    }
     final subtitle = settings?['subtitle']?.toString() ?? 'تابلوی رسمی نرخ لحظه‌ای طلا، سکه و ارز';
     final phone = settings?['phone']?.toString() ?? '';
     final instagram = settings?['instagram']?.toString();
@@ -337,6 +351,7 @@ class BoardModel {
       cityFullDisplay: cityFullDisplay,
       cityName: cityName,
       galleryDisplayName: galleryDisplayName,
+      bingWallpaperUrl: bingWallpaperUrl,
       themeMode: themeMode,
       sliderIntervalSec: sliderInterval,
       customMessage: customMessage,
