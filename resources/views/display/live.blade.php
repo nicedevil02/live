@@ -1851,9 +1851,9 @@
                                          'bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 shadow-blue-900/40': activeProduct.badge === 'new_collection',
                                          'bg-gradient-to-r from-rose-600 via-red-600 to-amber-600 shadow-rose-900/40': activeProduct.badge === 'special_discount'
                                      }">
-                                    <span class="relative flex h-7 w-7 items-center justify-center rounded-full bg-white/20 shadow-inner">
-                                        <span class="h-2 w-2 rounded-full bg-white animate-ping"></span>
-                                        <span class="h-2 w-2 rounded-full bg-white"></span>
+                                    <span class="relative flex h-6 w-6 items-center justify-center rounded-full bg-white/20 shadow-inner">
+                                        <span class="animate-ping absolute inline-flex h-3.5 w-3.5 rounded-full bg-white opacity-80"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-white shadow-sm"></span>
                                     </span>
                                     <span class="text-base xl:text-lg font-black leading-tight tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
                                           x-text="{
@@ -2214,10 +2214,28 @@
                             </template>
                         </div>
                     </template>
-                    <div class="absolute top-6 right-6 flex gap-2 z-20" x-show="products.length > 1">
-                        <template x-for="(dot, i) in products" :key="i">
-                            <div class="h-1.5 rounded-full transition-all duration-300" 
-                                 :class="isLightTheme ? (i === activeIndex ? 'w-10 bg-slate-800' : 'w-3 bg-slate-400/40') : (i === activeIndex ? 'w-10 bg-white' : 'w-3 bg-white/30')"></div>
+                    <!-- نوارهای پیشرفت استوری در بالای اسلایدر (Instagram / Telegram Story Bars) -->
+                    <div class="absolute top-6 right-6 flex items-center gap-1.5 z-20 select-none pointer-events-auto" 
+                         x-show="products.length > 1"
+                         dir="ltr">
+                        <template x-for="(prod, i) in products" :key="i">
+                            <div class="h-1.5 rounded-full overflow-hidden transition-all duration-300 backdrop-blur-md cursor-pointer shadow-sm"
+                                 :style="{
+                                     width: products.length > 8 ? '20px' : (products.length > 5 ? '32px' : '44px')
+                                 }"
+                                 :class="isLightTheme ? 'bg-slate-900/25 border border-slate-900/10' : 'bg-white/25 border border-white/20'"
+                                 @click="activeIndex = i; productImageIndex = 0; startSlider()">
+                                <!-- نوار پر شونده نرم زمانی -->
+                                <div class="h-full rounded-full"
+                                     :class="isLightTheme ? 'bg-slate-900 shadow-sm' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
+                                     :style="i < activeIndex 
+                                         ? 'width: 100%;' 
+                                         : (i > activeIndex 
+                                             ? 'width: 0%;' 
+                                             : 'animation: story-progress-anim ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;')"
+                                     :key="activeIndex + '-' + productImageIndex">
+                                </div>
+                            </div>
                         </template>
                     </div>
                 </section>
