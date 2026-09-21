@@ -181,7 +181,11 @@ class PublicDisplayController extends Controller
     {
         $settings = DisplaySetting::where('user_id', $user->id)->firstOrFail();
         $items    = DisplayItem::where('user_id', $user->id)->orderBy('order')->get();
-        $products = ProductSlide::where('user_id', $user->id)->with('images')->where('is_visible', true)->orderBy('sort_order', 'asc')->latest()->get();
+        $productsQuery = ProductSlide::where('user_id', $user->id)->with('images')->where('is_visible', true);
+        if (Schema::hasColumn('product_slide', 'sort_order')) {
+            $productsQuery->orderBy('sort_order', 'asc');
+        }
+        $products = $productsQuery->latest()->get();
         $priceFeed = $this->marketService->getPriceFeed($user);
 
         $lastFetch = \App\Models\MarketCache::max('fetched_at');

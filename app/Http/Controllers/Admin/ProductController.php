@@ -9,14 +9,53 @@ use App\Models\AuditLog;
 use App\Models\MarketCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    /**
+     * اطمینان خودکار از وجود ستون‌های جدید در دیتابیس سرور برای جلوگیری از ارور ۵۰۰
+     */
+    protected function ensureColumnsExist(): void
+    {
+        if (!Schema::hasColumn('product_slide', 'sort_order') || !Schema::hasColumn('product_slide', 'badge')) {
+            try {
+                Artisan::call('migrate', ['--force' => true]);
+            } catch (\Throwable $e) {
+                Log::warning('Artisan migrate failed in ProductController: ' . $e->getMessage());
+            }
+
+            try {
+                if (!Schema::hasColumn('product_slide', 'sort_order') || !Schema::hasColumn('product_slide', 'badge')) {
+                    Schema::table('product_slide', function ($table) {
+                        if (!Schema::hasColumn('product_slide', 'badge')) {
+                            $table->string('badge')->nullable()->after('final_price');
+                        }
+                        if (!Schema::hasColumn('product_slide', 'sort_order')) {
+                            $table->unsignedInteger('sort_order')->default(0)->after('badge');
+                        }
+                    });
+                }
+            } catch (\Throwable $e2) {
+                Log::error('Direct schema addition failed: ' . $e2->getMessage());
+            }
+        }
+    }
+
     public function index()
     {
+        $this->ensureColumnsExist();
+
         $latestGoldPrice = MarketCache::where('symbol', 'gold18')->first()->value ?? 0;
-        $products = ProductSlide::where('user_id', auth()->id())->with('images')->orderBy('sort_order', 'asc')->latest()->get();
+        
+        $query = ProductSlide::where('user_id', auth()->id())->with('images');
+        if (Schema::hasColumn('product_slide', 'sort_order')) {
+            $query->orderBy('sort_order', 'asc');
+        }
+        $products = $query->latest()->get();
 
         // اگر درخواست JSON بود (برای Alpine.js)
         if (request()->wantsJson()) {
