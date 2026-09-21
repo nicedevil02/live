@@ -147,12 +147,12 @@
                         {{-- دکمه‌های دانلود --}}
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- دانلود مستقیم APK برای تلویزیون -->
-                            <a href="/downloads/talalive-tv.apk?v=1.0.7" 
+                            <a href="/downloads/talalive-tv.apk?v=1.0.8" 
                                 class="app-badge-btn flex items-center gap-3.5 px-5 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-2xl font-black shadow-lg shadow-amber-500/20 text-right border border-amber-400/50 group">
                                 <span class="text-3xl group-hover:scale-110 transition-transform">📺</span>
                                 <div class="min-w-0 flex-1">
                                     <span class="block text-[11px] font-bold text-slate-900 opacity-90">دانلود مستقیم اپلیکیشن تلویزیون</span>
-                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۷)</span>
+                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۸)</span>
                                     <span class="block text-[10px] text-slate-900 font-medium">حجم ۴۶ مگابایت • اندروید تی‌وی، اندروید باکس و موبایل</span>
                                 </div>
                             </a>
