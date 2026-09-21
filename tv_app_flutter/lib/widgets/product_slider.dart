@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../models/board_model.dart';
@@ -27,6 +28,8 @@ class ProductSlider extends StatefulWidget {
 class _ProductSliderState extends State<ProductSlider>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
+  int _emptyGuideIndex = 0;
+  Timer? _emptyGuideTimer;
   late AnimationController _progressController;
   late AnimationController _kenBurnsController;
   late Animation<double> _kenBurnsScale;
@@ -67,7 +70,23 @@ class _ProductSliderState extends State<ProductSlider>
       }
     });
 
-    _startSlide();
+    if (widget.products.isEmpty) {
+      _startEmptyGuideTimer();
+    } else {
+      _startSlide();
+    }
+  }
+
+  void _startEmptyGuideTimer() {
+    _emptyGuideTimer?.cancel();
+    if (widget.products.isEmpty) {
+      _emptyGuideTimer = Timer.periodic(const Duration(seconds: 8), (timer) {
+        if (!mounted) return;
+        setState(() {
+          _emptyGuideIndex = (_emptyGuideIndex + 1) % 3;
+        });
+      });
+    }
   }
 
   void _startSlide() {
@@ -92,6 +111,13 @@ class _ProductSliderState extends State<ProductSlider>
   @override
   void didUpdateWidget(covariant ProductSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.products.isEmpty) {
+      if (_emptyGuideTimer == null) _startEmptyGuideTimer();
+    } else {
+      _emptyGuideTimer?.cancel();
+      _emptyGuideTimer = null;
+    }
+
     if (oldWidget.intervalSec != widget.intervalSec) {
       final newDuration = Duration(seconds: widget.intervalSec.clamp(3, 120));
       _progressController.duration = newDuration;
@@ -107,6 +133,7 @@ class _ProductSliderState extends State<ProductSlider>
 
   @override
   void dispose() {
+    _emptyGuideTimer?.cancel();
     _progressController.dispose();
     _kenBurnsController.dispose();
     super.dispose();
@@ -138,7 +165,7 @@ class _ProductSliderState extends State<ProductSlider>
           borderRadius: BorderRadius.circular(40),
           border: Border.all(color: widget.theme.cardStrokeColor, width: 1.5),
         ),
-        child: _buildPlaceholder(),
+        child: _buildEmptyShowcaseGuide(),
       );
       return ClipRRect(
         borderRadius: BorderRadius.circular(40),
@@ -616,6 +643,391 @@ class _ProductSliderState extends State<ProductSlider>
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyShowcaseGuide() {
+    return Container(
+      color: widget.theme.isDark ? const Color(0xFF0B0F19) : const Color(0xFFF8FAFC),
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Top Bar: Badge + Progress Indicators
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: widget.theme.goldPrimary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: widget.theme.goldPrimary.withOpacity(0.25),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PulsingLiveDot(
+                      color: widget.theme.goldPrimary,
+                      size: 7,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '✨ راهنمای هوشمند ویترین طلا',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: widget.theme.isDark
+                            ? widget.theme.goldPrimary
+                            : const Color(0xFF78350F),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(3, (i) {
+                  final isActive = i == _emptyGuideIndex;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    margin: const EdgeInsets.only(left: 5),
+                    width: isActive ? 26 : 6,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? widget.theme.goldPrimary
+                          : (widget.theme.isDark
+                              ? Colors.white24
+                              : Colors.black12),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // 2. Main Multi-Slide Content
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              child: _buildEmptyGuideSlide(_emptyGuideIndex),
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // 3. Footer Bar
+          Container(
+            padding: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: widget.theme.cardStrokeColor.withOpacity(0.4),
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'ثبت و ویرایش محصولات: پنل کاربری طلالایو',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: widget.theme.textSecondary.withOpacity(0.8),
+                  ),
+                ),
+                const Text(
+                  'talalive.ir/admin',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFFD97706),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyGuideSlide(int index) {
+    switch (index) {
+      case 0:
+        return _buildEmptySlideOverview();
+      case 1:
+        return _buildEmptySlideSteps();
+      case 2:
+      default:
+        return _buildEmptySlideTips();
+    }
+  }
+
+  Widget _buildEmptySlideOverview() {
+    return Column(
+      key: const ValueKey<int>(0),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildGuideHeader(
+          icon: Icon(
+            Icons.diamond_rounded,
+            color: widget.theme.goldPrimary,
+            size: 26,
+          ),
+          title: 'ویترین هوشمند گالری چیست؟',
+          subtitle: 'نمایشگر دیجیتال زیورآلات متصل به بازار لحظه‌ای طلا',
+        ),
+        _buildGuideCard(
+          leading: Text('⚡', style: TextStyle(fontSize: 18, color: widget.theme.goldPrimary)),
+          title: 'محاسبه آنلاین قیمت فروش',
+          desc: 'مبلغ نهایی هر کار بر اساس وزن، اجرت و آخرین نرخ ثانیه‌ای طلا ۱۸ عیار اتحادیه خودکار آپدیت می‌شود.',
+        ),
+        _buildGuideCard(
+          leading: const Text('🏷️', style: TextStyle(fontSize: 18)),
+          title: 'برچسب‌های جذاب بازاریابی',
+          desc: 'نشان‌های «بدون اجرت»، «پرفروش‌ترین»، «کالکشن جدید» و «تخفیف ویژه» جهت جلب توجه خریداران.',
+        ),
+        _buildGuideCard(
+          leading: const Text('✨', style: TextStyle(fontSize: 18)),
+          title: 'افکت‌های سینمایی متحرک',
+          desc: 'چرخش خودکار اسلایدر و جلوه زوم آرام (Ken Burns) تصاویر طلا با کیفیت بالا.',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptySlideSteps() {
+    return Column(
+      key: const ValueKey<int>(1),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildGuideHeader(
+          icon: Icon(
+            Icons.smartphone_rounded,
+            color: widget.theme.goldPrimary,
+            size: 26,
+          ),
+          title: 'چگونه محصول اضافه کنیم؟',
+          subtitle: 'فعال‌سازی در کمتر از ۱ دقیقه با ۳ مرحله ساده',
+        ),
+        _buildGuideCard(
+          leading: Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: widget.theme.goldPrimary,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                '۱',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          title: 'ورود به پنل مدیریت',
+          desc: 'با گوشی یا رایانه وارد آدرس talalive.ir/admin شوید.',
+        ),
+        _buildGuideCard(
+          leading: Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: widget.theme.goldPrimary,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                '۲',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          title: 'انتخاب «ویترین طلا (اسلایدر)»',
+          desc: 'از منوی کناری، روی گزینه ویترین طلا کلیک کنید.',
+        ),
+        _buildGuideCard(
+          leading: Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: widget.theme.goldPrimary,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                '۳',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          title: 'افزودن عکس، وزن و اجرت',
+          desc: 'عکس زیورآلات را انتخاب و مشخصات را ثبت کنید (حجم عکس خودکار بهینه می‌شود).',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptySlideTips() {
+    return Column(
+      key: const ValueKey<int>(2),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildGuideHeader(
+          icon: Icon(
+            Icons.star_rounded,
+            color: widget.theme.goldPrimary,
+            size: 26,
+          ),
+          title: 'افزایش فروش با ویترین هوشمند',
+          subtitle: 'راهکارهایی برای بهره‌وری حداکثری از تابلوی مغازه',
+        ),
+        _buildGuideCard(
+          leading: const Text('📸', style: TextStyle(fontSize: 18)),
+          title: 'عکاسی با موبایل زیر نور مغازه',
+          desc: 'عکسبرداری روی استند یا مانکن زیر نور ویترین جلوه لوکسی روی تلویزیون ایجاد می‌کند.',
+        ),
+        _buildGuideCard(
+          leading: const Text('🔥', style: TextStyle(fontSize: 18)),
+          title: 'معرفی کارهای کم‌اجرت و بدون اجرت',
+          desc: 'با نشان «بدون اجرت»، کارهای مناسب سرمایه‌گذاری را سریع‌تر به فروش برسانید.',
+        ),
+        _buildGuideCard(
+          leading: const Text('🔄', style: TextStyle(fontSize: 18)),
+          title: 'تنوع تا ۱۰ اسلایدر همزمان',
+          desc: 'می‌توانید تا ۱۰ محصول مختلف را ثبت کنید تا مشتریان در مغازه مجموعه‌ای از کارهایتان را ببینند.',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGuideHeader({
+    required Widget icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: widget.theme.goldPrimary.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: widget.theme.goldPrimary.withOpacity(0.35),
+              ),
+            ),
+            child: Center(child: icon),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: widget.theme.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: widget.theme.textSecondary.withOpacity(0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGuideCard({
+    required Widget leading,
+    required String title,
+    required String desc,
+  }) {
+    final isDark = widget.theme.isDark;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0x1AFFFFFF) : const Color(0x0A000000),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: widget.theme.cardStrokeColor.withOpacity(0.4),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          leading,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w900,
+                    color: widget.theme.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  desc,
+                  style: TextStyle(
+                    fontSize: 11,
+                    height: 1.35,
+                    fontWeight: FontWeight.w500,
+                    color: widget.theme.textSecondary.withOpacity(0.85),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
