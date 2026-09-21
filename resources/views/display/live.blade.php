@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="TalaLive">
-    <meta name="robots" content="{{ ($isExpired ?? false) ? 'noindex, follow' : 'index, follow, max-image-preview:large' }}">
+    <meta name="robots" content="{{ (($isExpired ?? false) || ($isTv ?? false) || ($isApp ?? false) || request()->has('tv') || request()->has('app')) ? 'noindex, follow' : 'index, follow, max-image-preview:large' }}">
     <title>{{ $pageTitle ?? ("قیمت لحظه‌ای طلا و سکه — " . ($galleryDisplayName ?? 'گالری طلا') . " در " . ($cityFullDisplay ?? $cityName ?? 'ایران') . " | طلالایو") }}</title>
     <meta name="description" content="{{ $metaDescription ?? ("مشاهده آنلاین قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در " . ($galleryDisplayName ?? 'گالری طلا') . " " . ($cityFullDisplay ?? $cityName ?? '') . ". نرخ‌های بروزرسانی شده متصل به شبکه ابری طلالایو.") }}">
     <link rel="canonical" href="{{ url('/' . ($username ?? '')) }}">

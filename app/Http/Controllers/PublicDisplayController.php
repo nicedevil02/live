@@ -57,7 +57,9 @@ class PublicDisplayController extends Controller
         $galleryIntro = "تابلوی اعلام قیمت لحظه‌ای طلا، مسکوکات و ارز {$galleryDisplayName} واقع در {$cityFullDisplay}. نرخ‌ها به صورت خودکار و برخط مطابق آخرین نوسانات بازار طلا و اتحادیه به‌روزرسانی می‌شوند.";
         $phone = $user->displaySetting?->phone ?? '';
 
-        return view('display.live', [
+        $isNoIndex = $isExpired || $request->has('tv') || $request->has('app');
+
+        $response = response()->view('display.live', [
             'snapshot'           => $snapshot,
             'username'           => $username,
             'user'               => $user,
@@ -75,7 +77,14 @@ class PublicDisplayController extends Controller
             'isExpired'          => $isExpired,
             'isTv'               => $request->boolean('tv'),
             'isApp'              => $request->boolean('app'),
+            'isNoIndex'          => $isNoIndex,
         ]);
+
+        if ($isNoIndex) {
+            $response->header('X-Robots-Tag', 'noindex, follow');
+        }
+
+        return $response;
     }
 
     public function publicTicker()
