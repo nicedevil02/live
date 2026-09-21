@@ -140,7 +140,7 @@
 <script>
 function displayControlPage() {
     return {
-        settings: { theme_mode: 'dark-glass', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
+        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
         items: [],
         message: { text: '', type: '' },
         isSaving: false,

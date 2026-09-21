@@ -434,7 +434,7 @@ class PublicPageController extends Controller
             'phone' => '۰۹۱۸۷۰۰۹۰۶۴',
             'instagram' => 'talalive.ir',
             'rubika' => 'talalive',
-            'theme_mode' => 'dark-glass',
+            'theme_mode' => 'light-modern',
             'slider_interval_sec' => 8,
             'show_weight' => true,
             'show_labor' => true,

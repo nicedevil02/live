@@ -552,7 +552,7 @@ class AuthController extends Controller
         // ایجاد تنظیمات پیش‌فرض برای مغازه جدید
         \App\Models\DisplaySetting::create([
             'user_id'             => $user->id,
-            'theme_mode'          => 'dark-glass',
+            'theme_mode'          => 'light-modern',
             'slider_interval_sec' => 8,
             'show_weight'         => true,
             'show_labor'          => true,

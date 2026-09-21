@@ -849,7 +849,7 @@ class BoardThemeData {
   );
 
   static BoardThemeData fromKey(String? key) {
-    if (key == null) return onyxGold;
+    if (key == null) return lightModern;
     final clean = key.toLowerCase().trim();
 
     // 1. Imperial Onyx
@@ -908,7 +908,7 @@ class BoardThemeData {
     if (clean.contains('light') || clean.contains('pearl')) {
       return imperialPearl;
     }
-    return onyxGold;
+    return lightModern;
   }
 
   static BoardThemeData fromMode(String mode) {

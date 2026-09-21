@@ -200,7 +200,7 @@ class BoardModel {
     final cityName = (rawCityName != null && rawCityName.trim().isNotEmpty && rawCityName.trim() != 'null')
         ? PersianUtils.resolveCityName(rawCityName.trim())
         : PersianUtils.resolveCityName(rawCitySlug);
-    final themeMode = settings?['theme_mode']?.toString() ?? 'luxury-dark';
+    final themeMode = settings?['theme_mode']?.toString() ?? 'light-modern';
     final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??
         'به سامانه تابلوی هوشمند نرخ لحظه‌ای طلالایو خوش آمدید • نمایش دقیق و لحظه‌ای مظنه طلا، سکه و مسکوکات';

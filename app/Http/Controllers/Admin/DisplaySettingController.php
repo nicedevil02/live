@@ -15,7 +15,7 @@ class DisplaySettingController extends Controller
     public function index()
     {
         $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()], [
-            'theme_mode' => 'dark-glass',
+            'theme_mode' => 'light-modern',
             'slider_interval_sec' => 8,
             'show_weight' => true,
             'show_labor' => true,
@@ -158,7 +158,7 @@ class DisplaySettingController extends Controller
         $this->ensureCityColumnsExist();
         $user = auth()->user()->fresh();
         $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id], [
-            'theme_mode'          => 'dark-glass',
+            'theme_mode'          => 'light-modern',
             'slider_interval_sec' => 8,
             'show_weight'         => true,
             'show_labor'          => true,

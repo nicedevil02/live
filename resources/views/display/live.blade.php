@@ -1871,7 +1871,7 @@
                             
                             <!-- داک شیشه‌ای اطلاعات محصول در پایین اسلایدر (کاملاً هماهنگ با تم فعال و متریال شیشه‌ای) -->
                             <div class="slider-glass-dock">
-                                <div :class="[theme.headerBg || theme.card || 'neu-card-dark-glass', 'slider-info-card-adaptive']"
+                                <div :class="[theme.headerBg || theme.card || 'neu-card-light-modern', 'slider-info-card-adaptive']"
                                      class="relative overflow-hidden border shadow-2xl">
                                     <div class="flex flex-row items-end justify-between gap-3">
                                         <div class="min-w-0 flex-1">
@@ -2773,7 +2773,7 @@
                 get isBingTheme() { return this.themeKey === 'bing-daily' || this.themeKey === 'bing-studio' || this.themeKey === 'bing-ceramic'; },
                 get bingWallpaper() { return this.snapshotData?.bingWallpaper || { url: '/images/bing/today.jpg', title: 'عکس روز بینگ', copyright: 'Bing Daily Wallpaper' }; },
                 get bingWallpaperUrl() { return this.bingWallpaper?.url || '/images/bing/today.jpg'; },
-                get themeKey() { return this.settings.theme_mode && THEMES[this.settings.theme_mode] ? this.settings.theme_mode : 'dark-glass'; },
+                get themeKey() { return this.settings.theme_mode && THEMES[this.settings.theme_mode] ? this.settings.theme_mode : 'light-modern'; },
                 get theme() { return THEMES[this.themeKey]; },
                 get activeProductProfitPercent() {
                     if (!this.activeProduct) return 0;
