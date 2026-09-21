@@ -208,11 +208,17 @@ class PublicDisplayController extends Controller
         // استخراج نام، شهر و مشخصات گالری
         $resolved = $this->resolveGalleryCityInfo($user, $settings);
 
+        \App\Http\Controllers\Admin\DisplaySettingController::ensureEmptyShowcaseColumnsExist();
+
         $settingsData = $settings->toArray();
         $settingsData['city_slug'] = $resolved['citySlug'];
         $settingsData['city_name'] = $resolved['cityName'];
         $settingsData['city_full_display'] = $resolved['cityFullDisplay'];
         $settingsData['gallery_display_name'] = $resolved['galleryDisplayName'];
+        $settingsData['empty_showcase_mode'] = $settings->empty_showcase_mode ?? 'guide';
+        $settingsData['empty_showcase_title'] = $settings->empty_showcase_title ?? '';
+        $settingsData['empty_showcase_text'] = $settings->empty_showcase_text ?? '';
+        $settingsData['empty_showcase_theme'] = $settings->empty_showcase_theme ?? 'gold';
 
         return [
             'username'               => $user->username,

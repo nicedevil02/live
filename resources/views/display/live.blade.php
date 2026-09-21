@@ -1920,215 +1920,298 @@
                         </div>
                     </template>
                     <template x-if="!activeProduct">
-                        <div class="relative w-full h-full flex flex-col justify-between p-6 xl:p-8 overflow-hidden select-none animate-fadeIn">
-                            <!-- نورپردازی پس‌زمینه ملایم لوکس -->
-                            <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-20"
-                                 :class="isLightTheme ? 'bg-amber-400' : 'bg-amber-500'"></div>
-                            <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-15"
-                                 :class="isLightTheme ? 'bg-amber-500' : 'bg-amber-400'"></div>
+                        <div class="relative w-full h-full overflow-hidden select-none">
+                            {{-- حالت ۱: بنر تبریک یا پیام اختصاصی مغازه --}}
+                            <template x-if="settings.empty_showcase_mode === 'custom_message'">
+                                <div class="relative w-full h-full flex flex-col justify-between p-7 xl:p-9 overflow-hidden select-none animate-fadeIn text-center">
+                                    <!-- افکت نور پس‌زمینه هماهنگ با تم بنر -->
+                                    <div class="absolute inset-0 pointer-events-none opacity-20 blur-3xl"
+                                         :class="{
+                                             'bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-600': !settings.empty_showcase_theme || settings.empty_showcase_theme === 'gold',
+                                             'bg-gradient-to-tr from-purple-600 via-pink-500 to-rose-600': settings.empty_showcase_theme === 'celebration',
+                                             'bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-500': settings.empty_showcase_theme === 'royal',
+                                             'bg-gradient-to-tr from-emerald-600 via-teal-500 to-amber-500': settings.empty_showcase_theme === 'special_offer'
+                                         }"></div>
 
-                            <!-- هدر راهنما: نشان بالا و نقاط وضعیت اسلایدها -->
-                            <div class="relative z-10 flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-sm backdrop-blur-md"
-                                     :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/20 text-amber-900' : 'bg-amber-500/15 border-amber-500/30 text-amber-300'">
-                                    <span class="relative flex h-2 w-2">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                                    </span>
-                                    <span class="text-xs xl:text-sm font-black tracking-wide">✨ راهنمای هوشمند ویترین طلا</span>
-                                </div>
-                                <div class="flex items-center gap-1.5" dir="ltr">
-                                    <template x-for="i in [0, 1, 2]" :key="i">
-                                        <div class="h-1.5 rounded-full transition-all duration-500"
-                                             :class="isLightTheme 
-                                                ? (i === emptyGuideIndex ? 'w-8 bg-amber-600' : 'w-2 bg-slate-300') 
-                                                : (i === emptyGuideIndex ? 'w-8 bg-amber-400' : 'w-2 bg-white/20')"></div>
-                                    </template>
-                                </div>
-                            </div>
+                                    <!-- هدر بنر: نشان تزیینی ستاره‌ها -->
+                                    <div class="relative z-10 flex items-center justify-between gap-3">
+                                        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-md backdrop-blur-md"
+                                             :class="{
+                                                 'bg-amber-500/15 border-amber-500/30 text-amber-300': !settings.empty_showcase_theme || settings.empty_showcase_theme === 'gold',
+                                                 'bg-purple-500/15 border-purple-500/30 text-purple-300': settings.empty_showcase_theme === 'celebration',
+                                                 'bg-sky-500/15 border-sky-500/30 text-sky-300': settings.empty_showcase_theme === 'royal',
+                                                 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300': settings.empty_showcase_theme === 'special_offer'
+                                             }">
+                                            <span class="text-sm">✦</span>
+                                            <span class="text-xs xl:text-sm font-black tracking-wide">پیام ویژه گالری</span>
+                                            <span class="text-sm">✦</span>
+                                        </div>
 
-                            <!-- اسلاید ۱: معرفی ویترین هوشمند چیست -->
-                            <div x-show="emptyGuideIndex === 0"
-                                 x-transition:enter="transition ease-out duration-500"
-                                 x-transition:enter-start="opacity-0 translate-y-4 scale-98"
-                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                                 x-transition:leave="transition ease-in duration-300"
-                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                 x-transition:leave-end="opacity-0 -translate-y-4"
-                                 class="relative z-10 flex-1 flex flex-col justify-center my-auto py-4">
-                                <div class="flex items-center gap-3.5 mb-3">
-                                    <div class="w-12 h-12 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-2xl xl:text-3xl shadow-lg border"
-                                         :class="isLightTheme ? 'bg-amber-100 border-amber-300 text-amber-900 shadow-amber-500/10' : 'bg-amber-500/20 border-amber-400/40 text-amber-300 shadow-amber-500/20'">
-                                        💎
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xl xl:text-2xl font-black leading-tight" :class="theme.textPrimary">
-                                            ویترین هوشمند گالری چیست؟
-                                        </h3>
-                                        <p class="text-xs xl:text-sm font-bold mt-0.5 opacity-80" :class="theme.textSecondary">
-                                            نمایشگر دیجیتال زیورآلات متصل به بازار لحظه‌ای طلا
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-2.5 mt-2">
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-start gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="text-base xl:text-lg shrink-0 mt-0.5">⚡</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">محاسبه آنلاین قیمت فروش</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 leading-relaxed opacity-80" :class="theme.textSecondary">
-                                                مبلغ نهایی هر کار بر اساس وزن، اجرت و آخرین نرخ ثانیه‌ای طلای ۱۸ عیار به صورت خودکار آپدیت می‌شود.
-                                            </p>
+                                        <div class="flex items-center gap-1.5 opacity-75 text-xs xl:text-sm font-bold" :class="theme.textSecondary">
+                                            <span>✨</span>
+                                            <span x-text="galleryDisplayName || 'گالری طلا'"></span>
                                         </div>
                                     </div>
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-start gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="text-base xl:text-lg shrink-0 mt-0.5">🏷️</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">برچسب‌های جذاب بازاریابی</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 leading-relaxed opacity-80" :class="theme.textSecondary">
-                                                نشان‌های «بدون اجرت»، «پرفروش‌ترین»، «کالکشن جدید» و «تخفیف ویژه» جهت جلب توجه خریداران.
-                                            </p>
+
+                                    <!-- بخش میانی: آیکون بزرگ، عنوان درشت و متن پیام با فونت خوانا -->
+                                    <div class="relative z-10 flex-1 flex flex-col justify-center items-center my-auto py-5 max-w-xl mx-auto">
+                                        <div class="w-18 h-18 xl:w-22 xl:h-22 rounded-3xl flex items-center justify-center text-3xl xl:text-5xl shadow-2xl border mb-4 backdrop-blur-md"
+                                             :class="{
+                                                 'bg-amber-500/20 border-amber-400/50 shadow-amber-500/20 text-amber-300': !settings.empty_showcase_theme || settings.empty_showcase_theme === 'gold',
+                                                 'bg-purple-500/20 border-purple-400/50 shadow-purple-500/20 text-pink-300': settings.empty_showcase_theme === 'celebration',
+                                                 'bg-sky-500/20 border-sky-400/50 shadow-sky-500/20 text-sky-300': settings.empty_showcase_theme === 'royal',
+                                                 'bg-emerald-500/20 border-emerald-400/50 shadow-emerald-500/20 text-emerald-300': settings.empty_showcase_theme === 'special_offer'
+                                             }">
+                                            <span x-text="{
+                                                'gold': '💎',
+                                                'celebration': '🌸',
+                                                'royal': '👑',
+                                                'special_offer': '🎁'
+                                            }[settings.empty_showcase_theme] || '✨'"></span>
                                         </div>
+
+                                        <h2 class="text-2xl xl:text-3xl 2xl:text-4xl font-black leading-tight tracking-tight drop-shadow-md mb-3"
+                                            :class="isLightTheme ? 'text-slate-950' : 'text-white'"
+                                            x-text="settings.empty_showcase_title || 'خوش‌آمدگویی به مشتریان محترم گالری'"></h2>
+
+                                        <div class="w-24 h-1 rounded-full mx-auto my-2"
+                                             :class="{
+                                                 'bg-gradient-to-r from-transparent via-amber-400 to-transparent': !settings.empty_showcase_theme || settings.empty_showcase_theme === 'gold',
+                                                 'bg-gradient-to-r from-transparent via-pink-400 to-transparent': settings.empty_showcase_theme === 'celebration',
+                                                 'bg-gradient-to-r from-transparent via-sky-400 to-transparent': settings.empty_showcase_theme === 'royal',
+                                                 'bg-gradient-to-r from-transparent via-emerald-400 to-transparent': settings.empty_showcase_theme === 'special_offer'
+                                             }"></div>
+
+                                        <p class="text-sm xl:text-base 2xl:text-lg font-bold leading-loose opacity-90 mt-2 max-w-lg"
+                                           :class="isLightTheme ? 'text-slate-700' : 'text-slate-200'"
+                                           x-text="settings.empty_showcase_text || 'به گالری طلا و جواهر ما خوش آمدید. افتخار ما همراهی با شما در انتخاب زیباترین زیورآلات و طلا با بهترین کیفیت و مناسب‌ترین اجرت است.'"></p>
                                     </div>
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-start gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="text-base xl:text-lg shrink-0 mt-0.5">✨</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">افکت‌های سینمایی متحرک</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 leading-relaxed opacity-80" :class="theme.textSecondary">
-                                                چرخش خودکار اسلایدر و جلوه زوم آرام (Ken Burns) تصاویر طلا با کیفیت بالا.
-                                            </p>
+
+                                    <!-- فوتر بنر -->
+                                    <div class="relative z-10 pt-3 border-t flex items-center justify-between gap-3"
+                                         :class="isLightTheme ? 'border-slate-200 text-slate-600' : 'border-white/10 text-slate-300'">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                            <span class="text-xs xl:text-sm font-black" x-text="galleryDisplayName"></span>
                                         </div>
+                                        <span class="text-xs xl:text-sm font-bold opacity-75">خرید و مشاوره حضوری در مغازه</span>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
 
-                            <!-- اسلاید ۲: راهنمای ۳ مرحله‌ای افزودن محصول -->
-                            <div x-show="emptyGuideIndex === 1"
-                                 x-transition:enter="transition ease-out duration-500"
-                                 x-transition:enter-start="opacity-0 translate-y-4 scale-98"
-                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                                 x-transition:leave="transition ease-in duration-300"
-                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                 x-transition:leave-end="opacity-0 -translate-y-4"
-                                 class="relative z-10 flex-1 flex flex-col justify-center my-auto py-4">
-                                <div class="flex items-center gap-3.5 mb-3">
-                                    <div class="w-12 h-12 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-2xl xl:text-3xl shadow-lg border"
-                                         :class="isLightTheme ? 'bg-amber-100 border-amber-300 text-amber-900 shadow-amber-500/10' : 'bg-amber-500/20 border-amber-400/40 text-amber-300 shadow-amber-500/20'">
-                                        📲
+                            {{-- حالت ۲: راهنمای هوشمند ویترین (با فونت درشت و خوانا) --}}
+                            <template x-if="settings.empty_showcase_mode !== 'custom_message'">
+                                <div class="relative w-full h-full flex flex-col justify-between p-6 xl:p-8 overflow-hidden select-none animate-fadeIn">
+                                    <!-- نورپردازی پس‌زمینه ملایم لوکس -->
+                                    <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-20"
+                                         :class="isLightTheme ? 'bg-amber-400' : 'bg-amber-500'"></div>
+                                    <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-15"
+                                         :class="isLightTheme ? 'bg-amber-500' : 'bg-amber-400'"></div>
+
+                                    <!-- هدر راهنما: نشان بالا و نقاط وضعیت اسلایدها -->
+                                    <div class="relative z-10 flex items-center justify-between gap-3">
+                                        <div class="flex items-center gap-2 px-4 py-2 rounded-full border shadow-sm backdrop-blur-md"
+                                             :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/20 text-amber-900' : 'bg-amber-500/15 border-amber-500/30 text-amber-300'">
+                                            <span class="relative flex h-2.5 w-2.5">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                                            </span>
+                                            <span class="text-xs xl:text-sm font-black tracking-wide">✨ راهنمای هوشمند ویترین طلا</span>
+                                        </div>
+                                        <div class="flex items-center gap-1.5" dir="ltr">
+                                            <template x-for="i in [0, 1, 2]" :key="i">
+                                                <div class="h-2 rounded-full transition-all duration-500"
+                                                     :class="isLightTheme 
+                                                        ? (i === emptyGuideIndex ? 'w-9 bg-amber-600' : 'w-2.5 bg-slate-300') 
+                                                        : (i === emptyGuideIndex ? 'w-9 bg-amber-400' : 'w-2.5 bg-white/20')"></div>
+                                            </template>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 class="text-xl xl:text-2xl font-black leading-tight" :class="theme.textPrimary">
-                                            چگونه محصول اضافه کنیم؟
-                                        </h3>
-                                        <p class="text-xs xl:text-sm font-bold mt-0.5 opacity-80" :class="theme.textSecondary">
-                                            فعال‌سازی در کمتر از ۱ دقیقه با ۳ مرحله ساده
-                                        </p>
+
+                                    <!-- اسلاید ۱: معرفی ویترین هوشمند چیست -->
+                                    <div x-show="emptyGuideIndex === 0"
+                                         x-transition:enter="transition ease-out duration-500"
+                                         x-transition:enter-start="opacity-0 translate-y-4 scale-98"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-300"
+                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                         x-transition:leave-end="opacity-0 -translate-y-4"
+                                         class="relative z-10 flex-1 flex flex-col justify-center my-auto py-3">
+                                        <div class="flex items-center gap-3.5 mb-3">
+                                            <div class="w-13 h-13 xl:w-16 xl:h-16 rounded-2xl flex items-center justify-center text-2xl xl:text-3xl shadow-lg border shrink-0"
+                                                 :class="isLightTheme ? 'bg-amber-100 border-amber-300 text-amber-900 shadow-amber-500/10' : 'bg-amber-500/20 border-amber-400/40 text-amber-300 shadow-amber-500/20'">
+                                                💎
+                                            </div>
+                                            <div>
+                                                <h3 class="text-xl xl:text-2xl 2xl:text-3xl font-black leading-tight" :class="theme.textPrimary">
+                                                    ویترین هوشمند گالری چیست؟
+                                                </h3>
+                                                <p class="text-xs xl:text-sm font-bold mt-1 opacity-85" :class="theme.textSecondary">
+                                                    نمایشگر دیجیتال زیورآلات متصل به بازار لحظه‌ای طلا
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-3 mt-2">
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-start gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="text-lg xl:text-2xl shrink-0 mt-0.5">⚡</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">محاسبه آنلاین قیمت فروش</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-1 leading-relaxed opacity-90" :class="theme.textSecondary">
+                                                        مبلغ نهایی هر کار بر اساس وزن، اجرت و آخرین نرخ ثانیه‌ای طلای ۱۸ عیار خودکار محاسبه می‌شود.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-start gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="text-lg xl:text-2xl shrink-0 mt-0.5">🏷️</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">برچسب‌های جذاب بازاریابی</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-1 leading-relaxed opacity-90" :class="theme.textSecondary">
+                                                        نشان‌های «بدون اجرت»، «پرفروش‌ترین»، «کالکشن جدید» و «تخفیف ویژه» جهت جلب توجه خریداران.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-start gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="text-lg xl:text-2xl shrink-0 mt-0.5">✨</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">افکت‌های سینمایی متحرک</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-1 leading-relaxed opacity-90" :class="theme.textSecondary">
+                                                        چرخش خودکار اسلایدر و جلوه زوم آرام (Ken Burns) تصاویر طلا با کیفیت بالا.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- اسلاید ۲: راهنمای ۳ مرحله‌ای افزودن محصول -->
+                                    <div x-show="emptyGuideIndex === 1"
+                                         x-transition:enter="transition ease-out duration-500"
+                                         x-transition:enter-start="opacity-0 translate-y-4 scale-98"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-300"
+                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                         x-transition:leave-end="opacity-0 -translate-y-4"
+                                         class="relative z-10 flex-1 flex flex-col justify-center my-auto py-3">
+                                        <div class="flex items-center gap-3.5 mb-3">
+                                            <div class="w-13 h-13 xl:w-16 xl:h-16 rounded-2xl flex items-center justify-center text-2xl xl:text-3xl shadow-lg border shrink-0"
+                                                 :class="isLightTheme ? 'bg-amber-100 border-amber-300 text-amber-900 shadow-amber-500/10' : 'bg-amber-500/20 border-amber-400/40 text-amber-300 shadow-amber-500/20'">
+                                                📲
+                                            </div>
+                                            <div>
+                                                <h3 class="text-xl xl:text-2xl 2xl:text-3xl font-black leading-tight" :class="theme.textPrimary">
+                                                    چگونه محصول اضافه کنیم؟
+                                                </h3>
+                                                <p class="text-xs xl:text-sm font-bold mt-1 opacity-85" :class="theme.textSecondary">
+                                                    فعال‌سازی در کمتر از ۱ دقیقه با ۳ مرحله ساده
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-3 mt-2">
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-center gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="w-8 h-8 xl:w-9 xl:h-9 rounded-full flex items-center justify-center text-sm font-black shrink-0 bg-amber-500 text-slate-950">۱</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">ورود به پنل مدیریت</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-0.5 opacity-90" :class="theme.textSecondary">
+                                                        با گوشی یا رایانه وارد آدرس <span class="font-mono font-bold text-amber-500">talalive.ir/admin</span> شوید.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-center gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="w-8 h-8 xl:w-9 xl:h-9 rounded-full flex items-center justify-center text-sm font-black shrink-0 bg-amber-500 text-slate-950">۲</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">انتخاب «ویترین طلا (اسلایدر)»</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-0.5 opacity-90" :class="theme.textSecondary">
+                                                        از منوی کناری، روی گزینه ویترین طلا کلیک کنید.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-center gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="w-8 h-8 xl:w-9 xl:h-9 rounded-full flex items-center justify-center text-sm font-black shrink-0 bg-amber-500 text-slate-950">۳</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">افزودن عکس، وزن و اجرت</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-0.5 opacity-90" :class="theme.textSecondary">
+                                                        عکس زیورآلات را انتخاب و مشخصات را ثبت کنید (حجم عکس خودکار بهینه می‌شود).
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- اسلاید ۳: نکات طلایی فروش و بازاریابی -->
+                                    <div x-show="emptyGuideIndex === 2"
+                                         x-transition:enter="transition ease-out duration-500"
+                                         x-transition:enter-start="opacity-0 translate-y-4 scale-98"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-300"
+                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                         x-transition:leave-end="opacity-0 -translate-y-4"
+                                         class="relative z-10 flex-1 flex flex-col justify-center my-auto py-3">
+                                        <div class="flex items-center gap-3.5 mb-3">
+                                            <div class="w-13 h-13 xl:w-16 xl:h-16 rounded-2xl flex items-center justify-center text-2xl xl:text-3xl shadow-lg border shrink-0"
+                                                 :class="isLightTheme ? 'bg-amber-100 border-amber-300 text-amber-900 shadow-amber-500/10' : 'bg-amber-500/20 border-amber-400/40 text-amber-300 shadow-amber-500/20'">
+                                                ⭐
+                                            </div>
+                                            <div>
+                                                <h3 class="text-xl xl:text-2xl 2xl:text-3xl font-black leading-tight" :class="theme.textPrimary">
+                                                    افزایش فروش با ویترین هوشمند
+                                                </h3>
+                                                <p class="text-xs xl:text-sm font-bold mt-1 opacity-85" :class="theme.textSecondary">
+                                                    راهکارهایی برای بهره‌وری حداکثری از تابلوی مغازه
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-3 mt-2">
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-start gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="text-lg xl:text-2xl shrink-0 mt-0.5">📸</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">عکاسی با موبایل زیر نور مغازه</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-1 leading-relaxed opacity-90" :class="theme.textSecondary">
+                                                        عکسبرداری روی استند مخمل یا چرمی جلوه لوکسی روی نمایشگر بزرگ تلویزیون ایجاد می‌کند.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-start gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="text-lg xl:text-2xl shrink-0 mt-0.5">🔥</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">معرفی کارهای کم‌اجرت و بدون اجرت</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-1 leading-relaxed opacity-90" :class="theme.textSecondary">
+                                                        با نشان «بدون اجرت»، کارهای مناسب پس‌انداز و سرمایه‌گذاری را سریع‌تر به فروش برسانید.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="p-3.5 xl:p-4 rounded-2xl border backdrop-blur-sm flex items-start gap-3.5"
+                                                 :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
+                                                <span class="text-lg xl:text-2xl shrink-0 mt-0.5">🔄</span>
+                                                <div class="min-w-0 flex-1 text-right">
+                                                    <p class="text-sm xl:text-base font-black" :class="theme.textPrimary">تنوع تا ۱۰ اسلایدر همزمان</p>
+                                                    <p class="text-xs xl:text-sm font-semibold mt-1 leading-relaxed opacity-90" :class="theme.textSecondary">
+                                                        می‌توانید تا ۱۰ محصول مختلف را ثبت کنید تا مشتریان در مغازه مجموعه‌ای از کارهایتان را ببینند.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- نوار فوتر کارت راهنما -->
+                                    <div class="relative z-10 pt-3 border-t flex items-center justify-between gap-2"
+                                         :class="isLightTheme ? 'border-slate-200 text-slate-600' : 'border-white/10 text-slate-300'">
+                                        <span class="text-xs xl:text-sm font-bold opacity-85">
+                                            ثبت و ویرایش محصولات: <span class="text-amber-500 font-black">پنل کاربری طلالایو</span>
+                                        </span>
+                                        <span class="text-xs xl:text-sm font-mono opacity-70">talalive.ir/admin</span>
                                     </div>
                                 </div>
-
-                                <div class="space-y-2.5 mt-2">
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-center gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 bg-amber-500 text-slate-950">۱</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">ورود به پنل مدیریت</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 opacity-80" :class="theme.textSecondary">
-                                                با گوشی یا رایانه وارد آدرس <span class="font-mono font-bold text-amber-500">talalive.ir/admin</span> شوید.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-center gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 bg-amber-500 text-slate-950">۲</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">انتخاب «ویترین طلا (اسلایدر)»</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 opacity-80" :class="theme.textSecondary">
-                                                از منوی کناری، روی گزینه ویترین طلا کلیک کنید.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-center gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 bg-amber-500 text-slate-950">۳</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">افزودن عکس، وزن و اجرت</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 opacity-80" :class="theme.textSecondary">
-                                                عکس زیورآلات را انتخاب و مشخصات را ثبت کنید (حجم عکس خودکار بهینه می‌شود).
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- اسلاید ۳: نکات طلایی فروش و بازاریابی -->
-                            <div x-show="emptyGuideIndex === 2"
-                                 x-transition:enter="transition ease-out duration-500"
-                                 x-transition:enter-start="opacity-0 translate-y-4 scale-98"
-                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                                 x-transition:leave="transition ease-in duration-300"
-                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                 x-transition:leave-end="opacity-0 -translate-y-4"
-                                 class="relative z-10 flex-1 flex flex-col justify-center my-auto py-4">
-                                <div class="flex items-center gap-3.5 mb-3">
-                                    <div class="w-12 h-12 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center text-2xl xl:text-3xl shadow-lg border"
-                                         :class="isLightTheme ? 'bg-amber-100 border-amber-300 text-amber-900 shadow-amber-500/10' : 'bg-amber-500/20 border-amber-400/40 text-amber-300 shadow-amber-500/20'">
-                                        ⭐
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xl xl:text-2xl font-black leading-tight" :class="theme.textPrimary">
-                                            افزایش فروش با ویترین هوشمند
-                                        </h3>
-                                        <p class="text-xs xl:text-sm font-bold mt-0.5 opacity-80" :class="theme.textSecondary">
-                                            راهکارهایی برای بهره‌وری حداکثری از تابلوی مغازه
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-2.5 mt-2">
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-start gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="text-base xl:text-lg shrink-0 mt-0.5">📸</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">عکاسی با موبایل زیر نور مغازه</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 leading-relaxed opacity-80" :class="theme.textSecondary">
-                                                عکسبرداری روی استند مخمل یا چرمی جلوه لوکسی روی نمایشگر بزرگ تلویزیون ایجاد می‌کند.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-start gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="text-base xl:text-lg shrink-0 mt-0.5">🔥</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">معرفی کارهای کم‌اجرت و بدون اجرت</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 leading-relaxed opacity-80" :class="theme.textSecondary">
-                                                با نشان «بدون اجرت»، کارهای مناسب پس‌انداز و سرمایه‌گذاری را سریع‌تر به فروش برسانید.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="p-3 xl:p-3.5 rounded-2xl border backdrop-blur-sm flex items-start gap-3"
-                                         :class="isLightTheme ? 'bg-white/80 border-slate-200/80 shadow-sm' : 'bg-slate-900/60 border-white/10'">
-                                        <span class="text-base xl:text-lg shrink-0 mt-0.5">🔄</span>
-                                        <div class="min-w-0 flex-1 text-right">
-                                            <p class="text-xs xl:text-sm font-black" :class="theme.textPrimary">تنوع تا ۱۰ اسلایدر همزمان</p>
-                                            <p class="text-[11px] xl:text-xs font-medium mt-0.5 leading-relaxed opacity-80" :class="theme.textSecondary">
-                                                می‌توانید تا ۱۰ محصول مختلف را ثبت کنید تا مشتریان در مغازه مجموعه‌ای از کارهایتان را ببینند.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- نوار فوتر کارت راهنما -->
-                            <div class="relative z-10 pt-3 border-t flex items-center justify-between gap-2"
-                                 :class="isLightTheme ? 'border-slate-200 text-slate-600' : 'border-white/10 text-slate-300'">
-                                <span class="text-[11px] xl:text-xs font-bold opacity-80">
-                                    ثبت و ویرایش محصولات: <span class="text-amber-500 font-black">پنل کاربری طلالایو</span>
-                                </span>
-                                <span class="text-[10px] xl:text-[11px] font-mono opacity-60">talalive.ir/admin</span>
-                            </div>
+                            </template>
                         </div>
                     </template>
                     <div class="absolute top-6 right-6 flex gap-2 z-20" x-show="products.length > 1">

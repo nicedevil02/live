@@ -1708,7 +1708,6 @@ class _BoardScreenState extends State<BoardScreen> {
 }
 
   Widget _buildBody(BoardThemeData theme) {
-    final hasProducts = _model!.products.isNotEmpty;
     final allRows = _model!.rows;
 
     final gold18Row = allRows.firstWhere(
@@ -1747,27 +1746,30 @@ class _BoardScreenState extends State<BoardScreen> {
         // =====================================================================
         // 1. RIGHT SIDE: Product Slider (35% width in RTL)
         // =====================================================================
-        if (hasProducts) ...[
-          Expanded(
-            flex: 7, // 35% of total width
-            child: RepaintBoundary(
-              child: ProductSlider(
-                products: _model!.products,
-                intervalSec: _model!.sliderIntervalSec,
-                theme: theme,
-                gold18Price: gold18Price,
-                isEcoMode: _isEcoMode,
-              ),
+        Expanded(
+          flex: 7, // 35% of total width
+          child: RepaintBoundary(
+            child: ProductSlider(
+              products: _model!.products,
+              intervalSec: _model!.sliderIntervalSec,
+              theme: theme,
+              gold18Price: gold18Price,
+              isEcoMode: _isEcoMode,
+              emptyShowcaseMode: _model!.emptyShowcaseMode,
+              emptyShowcaseTitle: _model!.emptyShowcaseTitle,
+              emptyShowcaseText: _model!.emptyShowcaseText,
+              emptyShowcaseTheme: _model!.emptyShowcaseTheme,
+              shopName: _model!.galleryDisplayName ?? _model!.shopName,
             ),
           ),
-          const SizedBox(width: 16),
-        ],
+        ),
+        const SizedBox(width: 16),
 
         // =====================================================================
-        // 2. LEFT SIDE: ALL Cards Grid (65% width, or 100% if no products)
+        // 2. LEFT SIDE: ALL Cards Grid (65% width)
         // =====================================================================
         Expanded(
-          flex: hasProducts ? 13 : 20, // 65% or 100%
+          flex: 13, // 65% width
           child: RepaintBoundary(
             child: _buildPriceGrid(allRows, theme),
           ),

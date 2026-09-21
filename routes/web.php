@@ -173,6 +173,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/shop-profile', [DisplaySettingController::class, 'shopProfile'])->name('shop-profile');
     Route::put('/shop-profile', [DisplaySettingController::class, 'updateShopProfile'])->name('shop-profile.update');
     Route::put('/slider-timing', [DisplaySettingController::class, 'updateSliderTiming'])->name('slider-timing.update');
+    Route::put('/empty-showcase', [DisplaySettingController::class, 'updateEmptyShowcase'])->name('empty-showcase.update');
     Route::get('/display-control', [DisplaySettingController::class, 'index'])->name('display-control');
     Route::put('/display-settings', [DisplaySettingController::class, 'update'])->name('display-settings.update');
     Route::post('/publish', [DisplaySettingController::class, 'publish'])->name('publish');

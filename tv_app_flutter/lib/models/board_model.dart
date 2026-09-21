@@ -111,6 +111,10 @@ class BoardModel {
   final String themeMode;
   final int sliderIntervalSec;
   final String customMessage;
+  final String emptyShowcaseMode;
+  final String emptyShowcaseTitle;
+  final String emptyShowcaseText;
+  final String emptyShowcaseTheme;
   final List<PriceRow> rows;
   final List<ProductItem> products;
   final String updatedAtText;
@@ -136,6 +140,10 @@ class BoardModel {
     required this.themeMode,
     required this.sliderIntervalSec,
     required this.customMessage,
+    this.emptyShowcaseMode = 'guide',
+    this.emptyShowcaseTitle = '',
+    this.emptyShowcaseText = '',
+    this.emptyShowcaseTheme = 'gold',
     required this.rows,
     required this.products,
     required this.updatedAtText,
@@ -196,6 +204,10 @@ class BoardModel {
     final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??
         'به سامانه تابلوی هوشمند نرخ لحظه‌ای طلالایو خوش آمدید • نمایش دقیق و لحظه‌ای مظنه طلا، سکه و مسکوکات';
+    final emptyShowcaseMode = settings?['empty_showcase_mode']?.toString() ?? 'guide';
+    final emptyShowcaseTitle = settings?['empty_showcase_title']?.toString() ?? '';
+    final emptyShowcaseText = settings?['empty_showcase_text']?.toString() ?? '';
+    final emptyShowcaseTheme = settings?['empty_showcase_theme']?.toString() ?? 'gold';
 
     // 1. PriceFeed map
     final priceFeedMap = <String, Map<String, dynamic>>{};
@@ -369,6 +381,10 @@ class BoardModel {
       themeMode: themeMode,
       sliderIntervalSec: sliderInterval,
       customMessage: customMessage,
+      emptyShowcaseMode: emptyShowcaseMode,
+      emptyShowcaseTitle: emptyShowcaseTitle,
+      emptyShowcaseText: emptyShowcaseText,
+      emptyShowcaseTheme: emptyShowcaseTheme,
       rows: rows,
       products: products,
       updatedAtText: updatedAt,

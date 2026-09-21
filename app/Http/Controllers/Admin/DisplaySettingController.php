@@ -292,4 +292,53 @@ class DisplaySettingController extends Controller
             'slider_interval_sec' => $settings->slider_interval_sec,
         ]);
     }
+
+    /**
+     * اطمینان از وجود ستون‌های حالت ویترین خالی در جدول display_settings
+     */
+    public static function ensureEmptyShowcaseColumnsExist(): void
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'empty_showcase_mode')) {
+                \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) {
+                    $table->string('empty_showcase_mode', 30)->default('guide');
+                    $table->string('empty_showcase_title', 150)->nullable();
+                    $table->text('empty_showcase_text')->nullable();
+                    $table->string('empty_showcase_theme', 30)->default('gold');
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureEmptyShowcaseColumnsExist error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * به‌روزرسانی تنظیمات ویترین در حالت بدون محصول (راهنما vs پیام اختصاصی)
+     */
+    public function updateEmptyShowcase(Request $request)
+    {
+        self::ensureEmptyShowcaseColumnsExist();
+        $validated = $request->validate([
+            'empty_showcase_mode'  => 'required|string|in:guide,custom_message',
+            'empty_showcase_title' => 'nullable|string|max:150',
+            'empty_showcase_text'  => 'nullable|string|max:500',
+            'empty_showcase_theme' => 'nullable|string|in:gold,celebration,special_offer,royal',
+        ]);
+
+        $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()]);
+        $settings->empty_showcase_mode  = $validated['empty_showcase_mode'];
+        $settings->empty_showcase_title = $validated['empty_showcase_title'] ?? '';
+        $settings->empty_showcase_text  = $validated['empty_showcase_text'] ?? '';
+        $settings->empty_showcase_theme = $validated['empty_showcase_theme'] ?? 'gold';
+        $settings->published_at = now();
+        $settings->save();
+
+        return response()->json([
+            'message'              => 'تنظیمات ویترین با موفقیت ذخیره شد و روی تابلو اعمال گردید.',
+            'empty_showcase_mode'  => $settings->empty_showcase_mode,
+            'empty_showcase_title' => $settings->empty_showcase_title,
+            'empty_showcase_text'  => $settings->empty_showcase_text,
+            'empty_showcase_theme' => $settings->empty_showcase_theme,
+        ]);
+    }
 }

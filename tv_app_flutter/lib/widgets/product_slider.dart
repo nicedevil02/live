@@ -11,6 +11,11 @@ class ProductSlider extends StatefulWidget {
   final BoardThemeData theme;
   final num gold18Price;
   final bool isEcoMode;
+  final String emptyShowcaseMode;
+  final String emptyShowcaseTitle;
+  final String emptyShowcaseText;
+  final String emptyShowcaseTheme;
+  final String shopName;
 
   const ProductSlider({
     super.key,
@@ -19,6 +24,11 @@ class ProductSlider extends StatefulWidget {
     required this.theme,
     this.gold18Price = 0,
     this.isEcoMode = false,
+    this.emptyShowcaseMode = 'guide',
+    this.emptyShowcaseTitle = '',
+    this.emptyShowcaseText = '',
+    this.emptyShowcaseTheme = 'gold',
+    this.shopName = 'طلا و جواهر طلالایو',
   });
 
   @override
@@ -71,7 +81,9 @@ class _ProductSliderState extends State<ProductSlider>
     });
 
     if (widget.products.isEmpty) {
-      _startEmptyGuideTimer();
+      if (widget.emptyShowcaseMode != 'custom_message') {
+        _startEmptyGuideTimer();
+      }
     } else {
       _startSlide();
     }
@@ -79,7 +91,7 @@ class _ProductSliderState extends State<ProductSlider>
 
   void _startEmptyGuideTimer() {
     _emptyGuideTimer?.cancel();
-    if (widget.products.isEmpty) {
+    if (widget.products.isEmpty && widget.emptyShowcaseMode != 'custom_message') {
       _emptyGuideTimer = Timer.periodic(const Duration(seconds: 8), (timer) {
         if (!mounted) return;
         setState(() {
@@ -112,7 +124,12 @@ class _ProductSliderState extends State<ProductSlider>
   void didUpdateWidget(covariant ProductSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.products.isEmpty) {
-      if (_emptyGuideTimer == null) _startEmptyGuideTimer();
+      if (widget.emptyShowcaseMode == 'custom_message') {
+        _emptyGuideTimer?.cancel();
+        _emptyGuideTimer = null;
+      } else if (_emptyGuideTimer == null) {
+        _startEmptyGuideTimer();
+      }
     } else {
       _emptyGuideTimer?.cancel();
       _emptyGuideTimer = null;
@@ -647,6 +664,10 @@ class _ProductSliderState extends State<ProductSlider>
   }
 
   Widget _buildEmptyShowcaseGuide() {
+    if (widget.emptyShowcaseMode == 'custom_message') {
+      return _buildCustomMessageBanner();
+    }
+
     return Container(
       color: widget.theme.isDark ? const Color(0xFF0B0F19) : const Color(0xFFF8FAFC),
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
@@ -658,7 +679,7 @@ class _ProductSliderState extends State<ProductSlider>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
                   color: widget.theme.goldPrimary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(20),
@@ -671,13 +692,13 @@ class _ProductSliderState extends State<ProductSlider>
                   children: [
                     PulsingLiveDot(
                       color: widget.theme.goldPrimary,
-                      size: 7,
+                      size: 8,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       '✨ راهنمای هوشمند ویترین طلا',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 13.5,
                         fontWeight: FontWeight.w900,
                         color: widget.theme.isDark
                             ? widget.theme.goldPrimary
@@ -693,9 +714,9 @@ class _ProductSliderState extends State<ProductSlider>
                   final isActive = i == _emptyGuideIndex;
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 400),
-                    margin: const EdgeInsets.only(left: 5),
-                    width: isActive ? 26 : 6,
-                    height: 5,
+                    margin: const EdgeInsets.only(left: 6),
+                    width: isActive ? 30 : 7,
+                    height: 6,
                     decoration: BoxDecoration(
                       color: isActive
                           ? widget.theme.goldPrimary
@@ -722,11 +743,11 @@ class _ProductSliderState extends State<ProductSlider>
             ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           // 3. Footer Bar
           Container(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 12),
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
@@ -740,18 +761,264 @@ class _ProductSliderState extends State<ProductSlider>
                 Text(
                   'ثبت و ویرایش محصولات: پنل کاربری طلالایو',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: widget.theme.textSecondary.withOpacity(0.8),
+                    color: widget.theme.textSecondary.withOpacity(0.85),
                   ),
                 ),
                 const Text(
                   'talalive.ir/admin',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 13,
                     fontFamily: 'monospace',
                     fontWeight: FontWeight.w800,
                     color: Color(0xFFD97706),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomMessageBanner() {
+    final isDark = widget.theme.isDark;
+
+    // Theme configurations
+    final String themeKey = widget.emptyShowcaseTheme;
+    final Color accentColor;
+    final Color glowColor;
+    final List<Color> bgGradientColors;
+    final String emoji;
+
+    switch (themeKey) {
+      case 'celebration':
+        accentColor = const Color(0xFFEC4899);
+        glowColor = const Color(0xFFEC4899).withOpacity(0.25);
+        bgGradientColors = isDark
+            ? [const Color(0xFF200B1A), const Color(0xFF100612), const Color(0xFF240D1D)]
+            : [const Color(0xFFFDF2F8), const Color(0xFFFCE7F3), const Color(0xFFFFF1F2)];
+        emoji = '🌸';
+        break;
+      case 'royal':
+        accentColor = const Color(0xFF38BDF8);
+        glowColor = const Color(0xFF0284C7).withOpacity(0.25);
+        bgGradientColors = isDark
+            ? [const Color(0xFF0B172E), const Color(0xFF070C18), const Color(0xFF0C1830)]
+            : [const Color(0xFFF0F9FF), const Color(0xFFE0F2FE), const Color(0xFFF8FAFC)];
+        emoji = '👑';
+        break;
+      case 'special_offer':
+        accentColor = const Color(0xFF10B981);
+        glowColor = const Color(0xFF059669).withOpacity(0.25);
+        bgGradientColors = isDark
+            ? [const Color(0xFF092418), const Color(0xFF05130D), const Color(0xFF0A261A)]
+            : [const Color(0xFFECFDF5), const Color(0xFFD1FAE5), const Color(0xFFF8FAFC)];
+        emoji = '🎁';
+        break;
+      case 'gold':
+      default:
+        accentColor = widget.theme.goldPrimary;
+        glowColor = widget.theme.goldPrimary.withOpacity(0.25);
+        bgGradientColors = isDark
+            ? [const Color(0xFF1F180B), const Color(0xFF0E0D0A), const Color(0xFF1C150A)]
+            : [const Color(0xFFFFFBEB), const Color(0xFFFEF3C7), const Color(0xFFF8FAFC)];
+        emoji = '💎';
+        break;
+    }
+
+    final title = widget.emptyShowcaseTitle.trim().isNotEmpty
+        ? widget.emptyShowcaseTitle.trim()
+        : 'خوش‌آمدگویی به مشتریان محترم گالری';
+
+    final text = widget.emptyShowcaseText.trim().isNotEmpty
+        ? widget.emptyShowcaseText.trim()
+        : 'به گالری طلا و جواهر ما خوش آمدید. افتخار ما همراهی با شما در انتخاب زیباترین زیورآلات و طلا با بهترین کیفیت و مناسب‌ترین اجرت است.';
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: bgGradientColors,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Top Bar: Special Message Badge + Shop Name
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                decoration: BoxDecoration(
+                  color: accentColor.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: accentColor.withOpacity(0.4),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('✦', style: TextStyle(color: accentColor, fontSize: 13, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 6),
+                    Text(
+                      'پیام ویژه گالری',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? accentColor : const Color(0xFF1E293B),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text('✦', style: TextStyle(color: accentColor, fontSize: 13, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('✨', style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 6),
+                  Text(
+                    widget.shopName,
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w700,
+                      color: widget.theme.textSecondary.withOpacity(0.85),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // 2. Middle Content: Centered Big Icon, Prominent Title & Large Message
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Ornate Theme Icon Container
+                    Container(
+                      width: 84,
+                      height: 84,
+                      decoration: BoxDecoration(
+                        color: accentColor.withOpacity(0.18),
+                        borderRadius: BorderRadius.circular(26),
+                        border: Border.all(
+                          color: accentColor.withOpacity(0.5),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: glowColor,
+                            blurRadius: 24,
+                            spreadRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          emoji,
+                          style: const TextStyle(fontSize: 42),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Big Title
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
+                        color: widget.theme.textPrimary,
+                        height: 1.35,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Decorative Divider
+                    Container(
+                      width: 140,
+                      height: 3,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.transparent,
+                            accentColor,
+                            Colors.transparent,
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Message Text (Significantly Enlarged for TV Visibility)
+                    Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.5,
+                        height: 1.8,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF334155),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // 3. Footer Bar
+          Container(
+            padding: const EdgeInsets.only(top: 14),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: widget.theme.cardStrokeColor.withOpacity(0.4),
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const PulsingLiveDot(
+                      color: Color(0xFF10B981),
+                      size: 8,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      widget.shopName,
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w900,
+                        color: widget.theme.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'خرید و مشاوره حضوری در مغازه',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: widget.theme.textSecondary.withOpacity(0.85),
                   ),
                 ),
               ],
@@ -784,23 +1051,23 @@ class _ProductSliderState extends State<ProductSlider>
           icon: Icon(
             Icons.diamond_rounded,
             color: widget.theme.goldPrimary,
-            size: 26,
+            size: 30,
           ),
           title: 'ویترین هوشمند گالری چیست؟',
           subtitle: 'نمایشگر دیجیتال زیورآلات متصل به بازار لحظه‌ای طلا',
         ),
         _buildGuideCard(
-          leading: Text('⚡', style: TextStyle(fontSize: 18, color: widget.theme.goldPrimary)),
+          leading: Text('⚡', style: TextStyle(fontSize: 22, color: widget.theme.goldPrimary)),
           title: 'محاسبه آنلاین قیمت فروش',
           desc: 'مبلغ نهایی هر کار بر اساس وزن، اجرت و آخرین نرخ ثانیه‌ای طلا ۱۸ عیار اتحادیه خودکار آپدیت می‌شود.',
         ),
         _buildGuideCard(
-          leading: const Text('🏷️', style: TextStyle(fontSize: 18)),
+          leading: const Text('🏷️', style: TextStyle(fontSize: 22)),
           title: 'برچسب‌های جذاب بازاریابی',
           desc: 'نشان‌های «بدون اجرت»، «پرفروش‌ترین»، «کالکشن جدید» و «تخفیف ویژه» جهت جلب توجه خریداران.',
         ),
         _buildGuideCard(
-          leading: const Text('✨', style: TextStyle(fontSize: 18)),
+          leading: const Text('✨', style: TextStyle(fontSize: 22)),
           title: 'افکت‌های سینمایی متحرک',
           desc: 'چرخش خودکار اسلایدر و جلوه زوم آرام (Ken Burns) تصاویر طلا با کیفیت بالا.',
         ),
@@ -818,15 +1085,15 @@ class _ProductSliderState extends State<ProductSlider>
           icon: Icon(
             Icons.smartphone_rounded,
             color: widget.theme.goldPrimary,
-            size: 26,
+            size: 30,
           ),
           title: 'چگونه محصول اضافه کنیم؟',
           subtitle: 'فعال‌سازی در کمتر از ۱ دقیقه با ۳ مرحله ساده',
         ),
         _buildGuideCard(
           leading: Container(
-            width: 24,
-            height: 24,
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
               color: widget.theme.goldPrimary,
               shape: BoxShape.circle,
@@ -835,7 +1102,7 @@ class _ProductSliderState extends State<ProductSlider>
               child: Text(
                 '۱',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w900,
                   color: Colors.black,
                 ),
@@ -847,8 +1114,8 @@ class _ProductSliderState extends State<ProductSlider>
         ),
         _buildGuideCard(
           leading: Container(
-            width: 24,
-            height: 24,
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
               color: widget.theme.goldPrimary,
               shape: BoxShape.circle,
@@ -857,7 +1124,7 @@ class _ProductSliderState extends State<ProductSlider>
               child: Text(
                 '۲',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w900,
                   color: Colors.black,
                 ),
@@ -869,8 +1136,8 @@ class _ProductSliderState extends State<ProductSlider>
         ),
         _buildGuideCard(
           leading: Container(
-            width: 24,
-            height: 24,
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
               color: widget.theme.goldPrimary,
               shape: BoxShape.circle,
@@ -879,7 +1146,7 @@ class _ProductSliderState extends State<ProductSlider>
               child: Text(
                 '۳',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w900,
                   color: Colors.black,
                 ),
@@ -903,23 +1170,23 @@ class _ProductSliderState extends State<ProductSlider>
           icon: Icon(
             Icons.star_rounded,
             color: widget.theme.goldPrimary,
-            size: 26,
+            size: 30,
           ),
           title: 'افزایش فروش با ویترین هوشمند',
           subtitle: 'راهکارهایی برای بهره‌وری حداکثری از تابلوی مغازه',
         ),
         _buildGuideCard(
-          leading: const Text('📸', style: TextStyle(fontSize: 18)),
+          leading: const Text('📸', style: TextStyle(fontSize: 22)),
           title: 'عکاسی با موبایل زیر نور مغازه',
           desc: 'عکسبرداری روی استند یا مانکن زیر نور ویترین جلوه لوکسی روی تلویزیون ایجاد می‌کند.',
         ),
         _buildGuideCard(
-          leading: const Text('🔥', style: TextStyle(fontSize: 18)),
+          leading: const Text('🔥', style: TextStyle(fontSize: 22)),
           title: 'معرفی کارهای کم‌اجرت و بدون اجرت',
           desc: 'با نشان «بدون اجرت»، کارهای مناسب سرمایه‌گذاری را سریع‌تر به فروش برسانید.',
         ),
         _buildGuideCard(
-          leading: const Text('🔄', style: TextStyle(fontSize: 18)),
+          leading: const Text('🔄', style: TextStyle(fontSize: 22)),
           title: 'تنوع تا ۱۰ اسلایدر همزمان',
           desc: 'می‌توانید تا ۱۰ محصول مختلف را ثبت کنید تا مشتریان در مغازه مجموعه‌ای از کارهایتان را ببینند.',
         ),
@@ -933,22 +1200,22 @@ class _ProductSliderState extends State<ProductSlider>
     required String subtitle,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
               color: widget.theme.goldPrimary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: widget.theme.goldPrimary.withOpacity(0.35),
               ),
             ),
             child: Center(child: icon),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -957,18 +1224,18 @@ class _ProductSliderState extends State<ProductSlider>
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 19,
                     fontWeight: FontWeight.w900,
                     color: widget.theme.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 3),
                 Text(
                   subtitle,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w600,
-                    color: widget.theme.textSecondary.withOpacity(0.8),
+                    color: widget.theme.textSecondary.withOpacity(0.85),
                   ),
                 ),
               ],
@@ -986,11 +1253,11 @@ class _ProductSliderState extends State<ProductSlider>
   }) {
     final isDark = widget.theme.isDark;
     return Container(
-      margin: const EdgeInsets.only(bottom: 7),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isDark ? const Color(0x1AFFFFFF) : const Color(0x0A000000),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: widget.theme.cardStrokeColor.withOpacity(0.4),
         ),
@@ -999,7 +1266,7 @@ class _ProductSliderState extends State<ProductSlider>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           leading,
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1008,19 +1275,19 @@ class _ProductSliderState extends State<ProductSlider>
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 12.5,
+                    fontSize: 15.5,
                     fontWeight: FontWeight.w900,
                     color: widget.theme.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 3),
                 Text(
                   desc,
                   style: TextStyle(
-                    fontSize: 11,
-                    height: 1.35,
-                    fontWeight: FontWeight.w500,
-                    color: widget.theme.textSecondary.withOpacity(0.85),
+                    fontSize: 13.5,
+                    height: 1.4,
+                    fontWeight: FontWeight.w600,
+                    color: widget.theme.textSecondary.withOpacity(0.9),
                   ),
                 ),
               ],

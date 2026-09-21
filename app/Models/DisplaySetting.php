@@ -21,6 +21,10 @@ class DisplaySetting extends Model
         'qr_link',
         'qr_label',
         'qr_desc',
+        'empty_showcase_mode',
+        'empty_showcase_title',
+        'empty_showcase_text',
+        'empty_showcase_theme',
         'published_at',
     ];
     protected $casts = [
