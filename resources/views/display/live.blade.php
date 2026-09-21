@@ -190,14 +190,20 @@
         @keyframes crossFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; will-change: opacity; }
         @keyframes ken-burns {
-            0% { transform: scale(1.0) translate3d(0, 0, 0); }
-            100% { transform: scale(1.08) translate3d(-1.5%, 1%, 0); }
+            0% {
+                transform: scale3d(1, 1, 1);
+            }
+            100% {
+                transform: scale3d(1.08, 1.08, 1);
+            }
         }
         .animate-ken-burns {
-            animation: ken-burns var(--ken-burns-duration, 8s) linear forwards;
+            animation: ken-burns var(--ken-burns-duration, 8s) cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
             will-change: transform;
+            transform-origin: 53% 47%;
             backface-visibility: hidden;
-            transform-origin: center center;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
         }
         @keyframes story-progress-anim {
             from { width: 0%; }
@@ -1836,7 +1842,7 @@
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                          :alt="activeProduct?.title || ''"
                                          class="absolute inset-0 w-full h-full object-cover"
-                                         :class="slot.active && !ecoMode ? 'animate-ken-burns' : ''"
+                                         :class="!ecoMode ? 'animate-ken-burns' : ''"
                                          :style="'--ken-burns-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
                                 </div>
                             </template>
@@ -2214,22 +2220,21 @@
                             </template>
                         </div>
                     </template>
-                    <!-- نوارهای پیشرفت استوری در بالای اسلایدر (Instagram / Telegram Story Bars) -->
-                    <div class="absolute top-6 right-8 flex items-center gap-1.5 z-30 select-none pointer-events-auto px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg" 
-                         :class="isLightTheme ? 'bg-white/85 border border-slate-900/10 shadow-slate-900/5' : 'bg-black/40 border border-white/15 shadow-black/40'"
+                    <!-- نوارهای پیشرفت استوری در بالای اسلایدر (طراحی مینیمال، پرمیوم، بدون کادر و حاشیه) -->
+                    <div class="absolute top-6 right-8 flex items-center gap-1.5 z-30 select-none pointer-events-auto" 
                          x-show="products.length > 1"
                          dir="rtl">
                         <template x-for="(prod, i) in products" :key="i">
-                            <div class="h-1.5 rounded-full overflow-hidden transition-all duration-300 cursor-pointer"
+                            <div class="h-1 rounded-full overflow-hidden transition-all duration-300 cursor-pointer drop-shadow-[0_1px_3px_rgba(0,0,0,0.45)]"
                                  :style="{
-                                     width: products.length > 8 ? '18px' : (products.length > 5 ? '28px' : '38px')
+                                     width: products.length > 8 ? '20px' : (products.length > 5 ? '32px' : '44px')
                                  }"
-                                 :class="isLightTheme ? 'bg-slate-900/15' : 'bg-white/20'"
+                                 :class="isLightTheme ? 'bg-slate-900/25' : 'bg-white/30'"
                                  @click="goToSlide(i)"
                                  :title="prod.title || ('محصول ' + (i + 1))">
                                 <!-- نوار پر شونده نرم زمانی -->
                                 <div class="h-full rounded-full transition-none"
-                                     :class="isLightTheme ? 'bg-slate-900' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
+                                     :class="isLightTheme ? 'bg-slate-900 shadow-sm' : 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]'"
                                      :style="i < activeIndex 
                                          ? 'width: 100%;' 
                                          : (i > activeIndex 
