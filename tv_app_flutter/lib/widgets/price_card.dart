@@ -122,7 +122,27 @@ class _PriceCardState extends State<PriceCard> with TickerProviderStateMixin {
           // 1. Shimmer Beam Animation for Gold 18
           if (isGold18) _buildShimmerBeam(),
 
-          // 2. Main Content
+          // 2. Apple Glass Specular Top Edge Highlight
+          Positioned(
+            top: 0,
+            left: 24,
+            right: 24,
+            height: 1.5,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    (isGold18 ? const Color(0xFFFEF08A) : Colors.white)
+                        .withOpacity(theme.isDark ? 0.35 : 0.65),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // 3. Main Content
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: isTopRow ? 20 : 16,
