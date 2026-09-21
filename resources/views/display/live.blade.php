@@ -187,15 +187,17 @@
     <style>
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.03) translate3d(0,0,0); } 100% { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
+        @keyframes crossFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; will-change: opacity; }
         @keyframes ken-burns {
-            0% { transform: scale(1) translate3d(0, 0, 0); }
-            50% { transform: scale(1.04) translate3d(-0.8%, -0.8%, 0); }
-            100% { transform: scale(1) translate3d(0, 0, 0); }
+            0% { transform: scale(1.0) translate3d(0, 0, 0); }
+            100% { transform: scale(1.08) translate3d(-1.5%, 1%, 0); }
         }
         .animate-ken-burns {
-            animation: ken-burns 22s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+            animation: ken-burns var(--ken-burns-duration, 8s) ease-out forwards;
             will-change: transform;
             backface-visibility: hidden;
+            transform-origin: center center;
         }
         @keyframes story-progress-anim {
             from { width: 0%; }
@@ -270,17 +272,6 @@
 
         .animate-fadeInUp { animation: fadeInUp 0.6s ease-out; }
         .animate-slideSwap { animation: slideSwap 0.5s ease-out; }
-        @keyframes kenBurnsEffect {
-            0% { transform: scale(1.0) translate3d(0, 0, 0); }
-            50% { transform: scale(1.08) translate3d(-1.5%, 1%, 0); }
-            100% { transform: scale(1.04) translate3d(1%, -1%, 0); }
-        }
-        .animate-ken-burns {
-            animation: kenBurnsEffect 16s ease-in-out infinite alternate;
-            will-change: transform;
-            backface-visibility: hidden;
-            transform-origin: center center;
-        }
         .animate-float1 { animation: float1 20s ease-in-out infinite; }
         .animate-float2 { animation: float2 25s ease-in-out infinite; }
         .animate-float3 { animation: float3 18s ease-in-out infinite; }
@@ -1835,12 +1826,52 @@
             <div class="flex flex-1 flex-row gap-3 min-h-0">
                 {{-- Product Slider --}}
                 <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
-                    <template x-if="activeProduct" x-key="activeIndex + '-' + productImageIndex">
-                        <div class="absolute inset-0 animate-slideSwap">
-                            <img :src="(activeProduct.images && activeProduct.images.length > 0) ? (activeProduct.images[productImageIndex % activeProduct.images.length]?.url || '/icons/icon-512x512.png') : '/icons/icon-512x512.png'" 
-                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title"
-                                 class="absolute inset-0 w-full h-full object-cover opacity-100"
-                                 :class="!isEcoMode ? 'animate-ken-burns' : ''">
+                    <template x-if="activeProduct">
+                        <div class="absolute inset-0">
+                            <!-- لایه تصویر قبلی برای ترنزیشن فید متقاطع واقعی (True Cross-Fade) -->
+                            <div class="absolute inset-0 z-0 overflow-hidden" x-show="prevImageUrl">
+                                <img :src="prevImageUrl" 
+                                     class="absolute inset-0 w-full h-full object-cover" 
+                                     alt="">
+                            </div>
+
+                            <!-- لایه تصویر جدید با انیمیشن ورود و زوم پیوسته کن‌برنز (Ken Burns) -->
+                            <div class="absolute inset-0 z-10 overflow-hidden animate-crossFade" 
+                                 :key="activeIndex + '-' + productImageIndex">
+                                <img :src="activeProductImageUrl" 
+                                     x-on:error="$event.target.src = '/icons/icon-512x512.png'" :alt="activeProduct.title"
+                                     class="absolute inset-0 w-full h-full object-cover"
+                                     :class="!ecoMode ? 'animate-ken-burns' : ''"
+                                     :style="'--ken-burns-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
+                            </div>
+
+                            <!-- نوار پیشرفت استوری اینستاگرام در گوشه بالا راست (Segmented Story Progress Bar) -->
+                            <template x-if="products.length > 1">
+                                <div class="absolute top-5 right-5 z-30 flex items-center gap-1.5 bg-black/30 dark:bg-black/40 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/15 shadow-lg select-none" dir="rtl">
+                                    <template x-for="(prod, idx) in products" :key="idx">
+                                        <button type="button" 
+                                                @click.stop="goToSlide(idx)"
+                                                class="relative h-1.5 rounded-full overflow-hidden transition-all duration-300 cursor-pointer"
+                                                :class="[
+                                                    products.length > 8 ? 'w-5' : (products.length > 4 ? 'w-8' : 'w-11'),
+                                                    idx === activeIndex ? 'ring-1 ring-amber-400/50' : ''
+                                                ]"
+                                                :title="prod.title || ('محصول ' + (idx + 1))">
+                                            <!-- پس‌زمینه مسیر اسلاید -->
+                                            <div class="absolute inset-0 bg-white/25 rounded-full"></div>
+                                            <!-- پر شدن پیوسته نوار همگام با زمان اسلاید -->
+                                            <div class="absolute inset-y-0 right-0 bg-gradient-to-l from-amber-300 via-amber-400 to-amber-200 rounded-full shadow-sm"
+                                                 :class="{
+                                                     'w-full': idx < activeIndex,
+                                                     'w-0': idx > activeIndex
+                                                 }"
+                                                 :style="idx === activeIndex ? ('animation: story-progress-anim ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's linear forwards;') : ''">
+                                            </div>
+                                        </button>
+                                    </template>
+                                </div>
+                            </template>
+
                             <!-- نشان لوکس داینامیک محصول در بالای اسلایدر -->
                             <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
                                 <div class="relative flex items-center gap-2.5 rounded-full px-4 py-2.5 shadow-xl border border-white/20 backdrop-blur-md"
@@ -2723,6 +2754,7 @@
                 activeIndex: 0,
                 emptyGuideIndex: 0,
                 productImageIndex: 0,
+                prevImageUrl: '',
                 sliderTimer: null,
                 now: new Date(),
                 refreshTimer: null,
@@ -2768,6 +2800,14 @@
                 get settings() { return this.snapshotData?.settings || {}; },
                 get products() { return this.snapshotData?.products || []; },
                 get activeProduct() { return this.products[this.activeIndex] || null; },
+                get activeProductImageUrl() {
+                    if (!this.activeProduct) return '/icons/icon-512x512.png';
+                    const imgs = this.activeProduct.images;
+                    if (imgs && imgs.length > 0) {
+                        return imgs[this.productImageIndex % imgs.length]?.url || '/icons/icon-512x512.png';
+                    }
+                    return '/icons/icon-512x512.png';
+                },
                 get orderedMetrics() {
                     const items = this.snapshotData?.displayItems || [];
                     const feed = this.snapshotData?.priceFeed || [];
@@ -2848,6 +2888,7 @@
                     const intervalSec = Number(this.settings?.slider_interval_sec) || 8;
                     this.sliderTimer = setInterval(() => {
                         if (this.products.length > 0) {
+                            this.prevImageUrl = this.activeProductImageUrl;
                             // چرخش تصاویر در صورتی که محصول چند تصویر داشته باشد
                             if (this.activeProduct && this.activeProduct.images && this.activeProduct.images.length > 1) {
                                 this.productImageIndex++;
@@ -2864,6 +2905,14 @@
                             this.emptyGuideIndex = (this.emptyGuideIndex + 1) % 3;
                         }
                     }, Math.max(intervalSec, 3) * 1000);
+                },
+
+                goToSlide(index) {
+                    if (this.products.length <= 1) return;
+                    this.prevImageUrl = this.activeProductImageUrl;
+                    this.activeIndex = index % this.products.length;
+                    this.productImageIndex = 0;
+                    this.startSlider();
                 },
 
                 scheduleSnapshotRefresh() {
