@@ -32,6 +32,9 @@ if (!empty($_GET['sync_blade']) || !empty($_GET['sync_files']) || !empty($_GET['
         'resources/views/display/live.blade.php',
         'config/tv.php',
         'app/Http/Controllers/PublicDisplayController.php',
+        'app/Http/Controllers/Admin/AuthController.php',
+        'app/Services/MarketService.php',
+        'app/Http/Controllers/PublicPageController.php',
         'public_html/downloads/talalive-tv.json',
         'public_html/deploy-run.php',
     ];
@@ -415,6 +418,19 @@ if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/boo
 
         $tableStatus['tv_devices'] = \Illuminate\Support\Facades\Schema::hasTable('tv_devices');
         $tableStatus['tv_sessions'] = \Illuminate\Support\Facades\Schema::hasTable('tv_sessions');
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('display_items')) {
+            $purgedItems = \Illuminate\Support\Facades\DB::table('display_items')->whereIn('key', ['silver999', 'silver925'])->delete();
+            if ($purgedItems > 0) {
+                $log[] = "Purged $purgedItems silver item records from display_items table.";
+            }
+        }
+        if (\Illuminate\Support\Facades\Schema::hasTable('market_cache')) {
+            $purgedCache = \Illuminate\Support\Facades\DB::table('market_cache')->whereIn('symbol', ['silver999', 'silver925'])->delete();
+            if ($purgedCache > 0) {
+                $log[] = "Purged $purgedCache silver item records from market_cache table.";
+            }
+        }
     } catch (\Throwable $e) {
         $log[] = 'In-process bootstrap error: ' . $e->getMessage();
     }

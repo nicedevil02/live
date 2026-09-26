@@ -455,7 +455,6 @@ class PublicPageController extends Controller
             ['symbol' => 'coin_gerami', 'name' => 'سکه گرمی', 'value' => $ratesData['rates']['coin_gerami'] ?: 7200000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'ounce', 'name' => 'انس جهانی طلا', 'value' => $ratesData['rates']['ons'] ?: 2720, 'unit' => 'دلار', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'usd', 'name' => 'دلار آزاد', 'value' => $ratesData['rates']['dollar'] ?: 68500, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
-            ['symbol' => 'silver999', 'name' => 'هر گرم نقره ۹۹۹', 'value' => 84500, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
         ];
 
         $demoItems = [
@@ -468,7 +467,6 @@ class PublicPageController extends Controller
             ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'enabled' => true, 'order' => 7],
             ['key' => 'ounce', 'label' => 'انس جهانی طلا', 'enabled' => true, 'order' => 8],
             ['key' => 'usd', 'label' => 'دلار آزاد', 'enabled' => true, 'order' => 9],
-            ['key' => 'silver999', 'label' => 'هر گرم نقره ۹۹۹', 'enabled' => true, 'order' => 10],
         ];
 
         $snapshot = [
