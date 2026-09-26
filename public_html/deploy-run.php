@@ -145,6 +145,13 @@ if (function_exists('shell_exec')) {
         $shellAllowed = true;
         $targetBranch = preg_replace('/[^a-zA-Z0-9_\-\/]/', '', $_GET['branch'] ?? 'master');
         if (empty($targetBranch)) $targetBranch = 'master';
+
+        // Check if $sourceDir has .git, if not initialize it
+        if (!is_dir("$sourceDir/.git")) {
+            $log[] = "Notice: $sourceDir is missing .git. Attempting git init and remote configuration...";
+            @shell_exec('cd ' . escapeshellarg($sourceDir) . ' && git init 2>&1 && git remote add origin https://github.com/nicedevil02/live.git 2>&1');
+        }
+
         $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout ' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
@@ -161,14 +168,33 @@ if (function_exists('shell_exec')) {
     $log[] = 'Notice: shell_exec function does not exist.';
 }
 
-// Fallback: If git pull did not run and no zip was extracted, download latest live.blade.php directly from GitHub
-if (!$shellAllowed && !$zipExtracted) {
-    $rawUrl = 'https://raw.githubusercontent.com/nicedevil02/live/master/resources/views/display/live.blade.php?t=' . time();
-    $ctx = stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: Mozilla/5.0\r\n"]]);
-    $newBlade = @file_get_contents($rawUrl, false, $ctx);
-    if ($newBlade && strlen($newBlade) > 10000) {
-        @file_put_contents("$targetDir/resources/views/display/live.blade.php", $newBlade);
-        $log[] = 'Directly downloaded latest live.blade.php from GitHub repository!';
+// Fallback: If git pull failed or did not run and no zip was extracted, download critical files directly from GitHub
+$gitSuccess = !empty($headCommit) && stripos($headCommit, 'fatal:') === false;
+if (!$gitSuccess && !$zipExtracted) {
+    $log[] = 'Notice: Git pull was not successful. Executing automatic GitHub direct fallback synchronization...';
+    $filesToSyncFromGitHub = [
+        'resources/views/pages/app.blade.php',
+        'resources/views/display/live.blade.php',
+        'config/tv.php',
+        'app/Http/Controllers/PublicDisplayController.php',
+        'app/Http/Controllers/Admin/AuthController.php',
+        'app/Services/MarketService.php',
+        'app/Http/Controllers/PublicPageController.php',
+        'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
+        'public_html/downloads/talalive-tv.json',
+        'public_html/deploy-run.php',
+    ];
+    $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
+    foreach ($filesToSyncFromGitHub as $relPath) {
+        $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
+        $content = @file_get_contents($rawUrl, false, $ctx);
+        if ($content !== false && strlen($content) > 5) {
+            $dest = "$targetDir/$relPath";
+            @mkdir(dirname($dest), 0755, true);
+            @file_put_contents($dest, $content);
+            $copiedFiles++;
+            $log[] = "Fallback: Successfully downloaded latest $relPath from GitHub.";
+        }
     }
 }
 
