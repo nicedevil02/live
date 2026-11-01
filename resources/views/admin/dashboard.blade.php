@@ -23,6 +23,157 @@
             </a>
         </div>
     @endif
+
+    @if(session('success'))
+        <div class="rounded-2xl px-5 py-3.5 border border-emerald-300 dark:border-emerald-800/70 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-2.5">
+                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-black shrink-0">✓</span>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button type="button" onclick="window.openTalaliveGuide && window.openTalaliveGuide('welcome')"
+                    class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black whitespace-nowrap cursor-pointer shrink-0">
+                🎓 مشاهده راهنما
+            </button>
+        </div>
+    @endif
+
+    {{-- چک‌لیست هوشمند راه‌اندازی ۴ مرحله‌ای گالری طلا --}}
+    @if(!auth()->user()->is_super_admin && isset($onboardingChecklist) && !$onboardingChecklist['is_all_done'])
+        <div x-data="{ hideChecklist: localStorage.getItem('talalive_hide_checklist_{{ auth()->id() }}') === '1' }"
+             x-show="!hideChecklist"
+             x-cloak
+             class="rounded-3xl p-5 sm:p-6 bg-white dark:bg-slate-900 border-2 border-amber-500/35 shadow-md space-y-4">
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-800">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <span class="text-lg">🚀</span>
+                        <h2 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                            راهنمای شروع سریع و راه‌اندازی تابلوی گالری
+                        </h2>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                            {{ $onboardingChecklist['completed_count'] }} از {{ $onboardingChecklist['total_count'] }} تکمیل شده ({{ $onboardingChecklist['progress_percent'] }}٪)
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        با تکمیل این ۴ گام کوتاه، بیشترین بازدهی و زیبایی را روی تلویزیون ویترین یا سالن مغازه خواهید داشت.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap shrink-0">
+                    <button type="button"
+                            onclick="window.startTalaliveSpotlightTour && window.startTalaliveSpotlightTour()"
+                            class="px-3 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
+                        <span>✨</span>
+                        <span>تور نوری منوها</span>
+                    </button>
+                    <button type="button"
+                            onclick="window.openTalaliveGuide && window.openTalaliveGuide('panel')"
+                            class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
+                        <span>🎓</span>
+                        <span>آموزش کامل پنل</span>
+                    </button>
+                    <button type="button"
+                            @click="hideChecklist = true; localStorage.setItem('talalive_hide_checklist_{{ auth()->id() }}', '1')"
+                            title="مخفی کردن چک‌لیست"
+                            class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            {{-- نوار پیشرفت --}}
+            <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div class="h-full bg-gradient-to-l from-emerald-500 to-amber-500 rounded-full transition-all duration-500"
+                     style="width: {{ $onboardingChecklist['progress_percent'] }}%;"></div>
+            </div>
+
+            {{-- کارت‌های ۴ گام راه‌اندازی --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+                {{-- گام ۱: ساخت حساب --}}
+                <div class="p-4 rounded-2xl border bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50 flex flex-col justify-between gap-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
+                            <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">انجام شد</span>
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۱. ساخت تابلوی اختصاصی</h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">تابلوی نرخ‌های زنده گالری شما فعال و آماده پخش است.</p>
+                    </div>
+                </div>
+
+                {{-- گام ۲: اتصال تلویزیون مغازه --}}
+                <div class="p-4 rounded-2xl border {{ $onboardingChecklist['tv_connected'] ? 'bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-50 dark:bg-slate-950/70 border-slate-200 dark:border-slate-800' }} flex flex-col justify-between gap-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            @if($onboardingChecklist['tv_connected'])
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
+                                <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">متصل شد</span>
+                            @else
+                                <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 text-xs font-black flex items-center justify-center">۲</span>
+                                <span class="text-[10px] font-bold text-amber-600 dark:text-amber-400">گام مهم</span>
+                            @endif
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۲. اتصال تلویزیون مغازه</h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">اتصال تلویزیون هوشمند یا تی‌وی‌باکس با کد ۶ رقمی.</p>
+                    </div>
+                    @if(!$onboardingChecklist['tv_connected'])
+                        <button type="button"
+                                onclick="window.openTalaliveGuide && window.openTalaliveGuide('tv')"
+                                class="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition-all cursor-pointer text-center shadow-xs">
+                            📺 آموزش و اتصال تلویزیون
+                        </button>
+                    @endif
+                </div>
+
+                {{-- گام ۳: افزودن محصول به ویترین --}}
+                <div class="p-4 rounded-2xl border {{ $onboardingChecklist['product_added'] ? 'bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-50 dark:bg-slate-950/70 border-slate-200 dark:border-slate-800' }} flex flex-col justify-between gap-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            @if($onboardingChecklist['product_added'])
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
+                                <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">ثبت شد</span>
+                            @else
+                                <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-black flex items-center justify-center">۳</span>
+                                <span class="text-[10px] font-bold text-slate-400">پیشنهادی</span>
+                            @endif
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۳. افزودن طلا به ویترین</h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">نمایش عکس و قیمت لحظه‌ای کارهای طلا در کنار نرخ‌ها.</p>
+                    </div>
+                    @if(!$onboardingChecklist['product_added'])
+                        <a href="{{ route('admin.products.index') }}"
+                           class="w-full py-2 px-3 rounded-xl bg-white dark:bg-slate-900 hover:border-amber-500 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all text-center">
+                            💍 افزودن اولین محصول &larr;
+                        </a>
+                    @endif
+                </div>
+
+                {{-- گام ۴: تنظیم پروفایل و QR شبکه اجتماعی --}}
+                <div class="p-4 rounded-2xl border {{ $onboardingChecklist['profile_customized'] ? 'bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-50 dark:bg-slate-950/70 border-slate-200 dark:border-slate-800' }} flex flex-col justify-between gap-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            @if($onboardingChecklist['profile_customized'])
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
+                                <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">تنظیم شد</span>
+                            @else
+                                <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-black flex items-center justify-center">۴</span>
+                                <span class="text-[10px] font-bold text-slate-400">برندینگ</span>
+                            @endif
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۴. بارکد QR و پوسته گالری</h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">ثبت اینستاگرام یا روبیکا جهت نمایش QR کد روی تلویزیون.</p>
+                    </div>
+                    @if(!$onboardingChecklist['profile_customized'])
+                        <a href="{{ route('admin.shop-profile') }}"
+                           class="w-full py-2 px-3 rounded-xl bg-white dark:bg-slate-900 hover:border-amber-500 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all text-center">
+                            🏪 تنظیم پروفایل و QR &larr;
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
     {{-- نوار وضعیت اشتراک / دوره آزمایشی (مخصوص گالری‌های غیر سوپرادمین) --}}
     @if(!auth()->user()->is_super_admin && auth()->user()->expires_at)
         @php
@@ -552,6 +703,10 @@ function dashboardPage() {
         },
 
         openWizard() {
+            if (typeof window.openTalaliveGuide === 'function') {
+                window.openTalaliveGuide('tv');
+                return;
+            }
             this.isWizardOpen = true;
             this.$nextTick(() => {
                 if (typeof lucide !== 'undefined' && lucide.createIcons) {
@@ -587,7 +742,7 @@ function dashboardPage() {
                     this.isWizardOpen = false;
                     alert('🎉 ' + (data.message || 'تلویزیون با موفقیت متصل شد!'));
                     this.pairCode = '';
-                    await this.loadData();
+                    window.location.reload();
                 } else {
                     alert((data && data.message) ? data.message : 'کد فعال‌سازی نامعتبر است یا منقضی شده است. لطفا تلویزیون را رفرش فرمایید.');
                 }

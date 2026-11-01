@@ -45,6 +45,7 @@ Route::prefix('admin')->name('admin.')->middleware('noindex')->group(function ()
     // ثبت نام طلافروشی جدید
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register/send-otp', [AuthController::class, 'sendRegisterOtp'])->name('register.send-otp')->middleware('throttle:5,1');
+    Route::post('/register/verify-otp', [AuthController::class, 'verifyRegisterOtp'])->name('register.verify-otp')->middleware('throttle:10,1');
     Route::post('/register', [AuthController::class, 'register']);
 });
 Route::redirect('/login', '/admin/login');

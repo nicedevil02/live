@@ -456,6 +456,10 @@ function devicesPage() {
         },
 
         openWizard() {
+            if (typeof window.openTalaliveGuide === 'function') {
+                window.openTalaliveGuide('tv');
+                return;
+            }
             this.isWizardOpen = true;
             this.$nextTick(() => {
                 if (typeof lucide !== 'undefined' && lucide.createIcons) {

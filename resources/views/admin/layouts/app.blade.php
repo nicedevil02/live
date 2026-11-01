@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" x-data="adminThemeHandler()" :class="{ 'dark': darkMode }">
+<html lang="fa" dir="rtl" x-data="adminThemeHandler()" :class="{ 'dark': darkMode }" @talalive-toggle-sidebar.window="mobileMenu = Boolean($event.detail && $event.detail.open)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,13 +77,13 @@
             <nav class="flex-1 overflow-y-auto p-4 space-y-2">
                 @php
                     $links = [
-                        ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard'],
-                        ['r' => 'admin.shop-profile', 'l' => 'اطلاعات فروشگاه و QR', 'i' => 'store'],
-                        ['r' => 'admin.products.index', 'l' => 'ویترین طلا (اسلایدر)', 'i' => 'gem'],
-                        ['r' => 'admin.display-control', 'l' => 'تنظیمات پوسته و نمایش', 'i' => 'sliders-horizontal'],
-                        ['r' => 'admin.formulas', 'l' => 'فرمول‌های محاسبه', 'i' => 'variable'],
-                        ['r' => 'admin.devices.index', 'l' => 'تلویزیون‌های من', 'i' => 'tv'],
-                        ['r' => 'admin.subscription.index', 'l' => 'خرید و تمدید اشتراک', 'i' => 'crown'],
+                        ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard', 'tour' => 'dashboard'],
+                        ['r' => 'admin.shop-profile', 'l' => 'اطلاعات فروشگاه و QR', 'i' => 'store', 'tour' => 'shop-profile'],
+                        ['r' => 'admin.products.index', 'l' => 'ویترین طلا (اسلایدر)', 'i' => 'gem', 'tour' => 'products'],
+                        ['r' => 'admin.display-control', 'l' => 'تنظیمات پوسته و نمایش', 'i' => 'sliders-horizontal', 'tour' => 'display-control'],
+                        ['r' => 'admin.formulas', 'l' => 'فرمول‌های محاسبه', 'i' => 'variable', 'tour' => 'formulas'],
+                        ['r' => 'admin.devices.index', 'l' => 'تلویزیون‌های من', 'i' => 'tv', 'tour' => 'devices'],
+                        ['r' => 'admin.subscription.index', 'l' => 'خرید و تمدید اشتراک', 'i' => 'crown', 'tour' => 'subscription'],
                         ['r' => 'admin.transactions.index', 'l' => 'تراکنش‌ها و مالی', 'i' => 'wallet', 'super_only' => true],
                         ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],
                         ['r' => 'admin.sms-status', 'l' => 'درگاه پیامک (s.api.ir)', 'i' => 'message-square', 'super_only' => true],
@@ -94,6 +94,7 @@
                 @foreach($links as $link)
                     @if(!isset($link['super_only']) || auth()->user()->is_super_admin)
                         <a href="{{ route($link['r']) }}"
+                           @if(!empty($link['tour'])) data-tour-id="{{ $link['tour'] }}" @endif
                            class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all
                                   {{ request()->routeIs($link['r'] . '*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                             <i data-lucide="{{ $link['i'] }}" class="w-5 h-5"></i>
@@ -145,12 +146,22 @@
                     <h1 class="text-sm font-black text-slate-800 dark:text-white">@yield('title', 'داشبورد')</h1>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    {{-- دکمه راهنما و آموزش پنل و اتصال تلویزیون --}}
+                    <button onclick="window.openTalaliveGuide && window.openTalaliveGuide('panel')"
+                            type="button"
+                            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-500/35 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs font-black transition-all cursor-pointer shadow-sm"
+                            title="آموزش بخش‌های پنل و راهنمای اتصال تلویزیون">
+                        <span>🎓</span>
+                        <span class="hidden md:inline">راهنما و آموزش</span>
+                        <span class="inline md:hidden">راهنما</span>
+                    </button>
+
                     {{-- دکمه نصب اپلیکیشن PWA --}}
                     <button onclick="triggerPwaInstall()"
                             type="button"
                             id="header-pwa-btn"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all cursor-pointer shadow-sm"
+                            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all cursor-pointer shadow-sm"
                             title="نصب وب‌اپلیکیشن طلالایو روی دستگاه">
                         <span>📱</span>
                         <span class="hidden sm:inline">نصب اپلیکیشن</span>
@@ -212,6 +223,9 @@
         window.addEventListener('alpine:initialized', renderLucideIcons);
     </script>
 
+    {{-- مودال جامع خوش‌آمدگویی، آموزش پنل و اتصال تلویزیون + تور نوری منوها --}}
+    @include('admin.partials.onboarding-guide')
+
     {{-- اعلان هوشمند و زیبا برای نصب وب‌اپلیکیشن PWA ویژه پنل حساب کاربری --}}
     <div id="pwa-install-toast"
          style="display: none; position: fixed; bottom: 20px; left: 20px; z-index: 99999;"
@@ -270,6 +284,9 @@
             });
 
             function showPwaToast() {
+                if (window.__TALALIVE_SHOW_ONBOARDING || window.__TALALIVE_GUIDE_ACTIVE) {
+                    return;
+                }
                 const dismissedUntil = localStorage.getItem('talalive_pwa_dismissed_until');
                 if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
                     return;

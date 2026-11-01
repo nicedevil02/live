@@ -26,30 +26,52 @@ if (!is_dir($targetDir)) {
     $targetDir = dirname(__DIR__);
 }
 
+$criticalSyncFiles = [
+    'routes/web.php',
+    'config/tv.php',
+    'app/Http/Controllers/PublicDisplayController.php',
+    'app/Http/Controllers/PublicPageController.php',
+    'app/Http/Controllers/Admin/AuthController.php',
+    'app/Http/Controllers/Admin/DashboardController.php',
+    'app/Services/MarketService.php',
+    'resources/views/pages/app.blade.php',
+    'resources/views/display/live.blade.php',
+    'resources/views/admin/auth.blade.php',
+    'resources/views/admin/login.blade.php',
+    'resources/views/admin/register.blade.php',
+    'resources/views/admin/partials/onboarding-guide.blade.php',
+    'resources/views/admin/layouts/app.blade.php',
+    'resources/views/admin/dashboard.blade.php',
+    'resources/views/admin/devices/index.blade.php',
+    'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
+    'public_html/build/manifest.json',
+    'public_html/build/assets/app-CH_h4sEu.css',
+    'public_html/build/assets/app-34mOoJaZ.js',
+    'public_html/downloads/talalive-tv.json',
+    'public_html/deploy-run.php',
+];
+
 if (!empty($_GET['sync_blade']) || !empty($_GET['sync_files']) || !empty($_GET['sync_all'])) {
-    $filesToFetch = [
-        'resources/views/pages/app.blade.php',
-        'resources/views/display/live.blade.php',
-        'config/tv.php',
-        'app/Http/Controllers/PublicDisplayController.php',
-        'app/Http/Controllers/Admin/AuthController.php',
-        'app/Services/MarketService.php',
-        'app/Http/Controllers/PublicPageController.php',
-        'public_html/downloads/talalive-tv.json',
-        'public_html/deploy-run.php',
-    ];
     $synced = [];
     $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
-    
-    foreach ($filesToFetch as $relPath) {
+
+    foreach ($criticalSyncFiles as $relPath) {
         $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
         $content = @file_get_contents($rawUrl, false, $ctx);
-        if ($content !== false && strlen($content) > 10) {
+        $isJsChunk = substr($relPath, -3) === '.js';
+        if ($content !== false && ($isJsChunk || strlen($content) > 5)) {
             $dest = "$targetDir/$relPath";
             $destDir = dirname($dest);
             if (!is_dir($destDir)) @mkdir($destDir, 0755, true);
             @file_put_contents($dest, $content);
             $synced[] = $relPath;
+
+            if (strpos($relPath, 'public_html/') === 0 && is_dir("$targetDir/public")) {
+                $pubRel = substr($relPath, strlen('public_html/'));
+                $pubDest = "$targetDir/public/$pubRel";
+                if (!is_dir(dirname($pubDest))) @mkdir(dirname($pubDest), 0755, true);
+                @file_put_contents($pubDest, $content);
+            }
 
             // Also sync to repositories if present
             $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
@@ -68,8 +90,10 @@ if (!empty($_GET['sync_blade']) || !empty($_GET['sync_files']) || !empty($_GET['
     if (is_dir($vDir)) {
         foreach (glob("$vDir/*.php") as $vf) { @unlink($vf); }
     }
-    $cCache = "$targetDir/bootstrap/cache/config.php";
-    if (file_exists($cCache)) { @unlink($cCache); }
+    foreach (['config.php', 'routes-v7.php', 'events.php', 'packages.php', 'services.php'] as $bf) {
+        $bCache = "$targetDir/bootstrap/cache/$bf";
+        if (file_exists($bCache)) { @unlink($bCache); }
+    }
     if (function_exists('opcache_reset')) { @opcache_reset(); }
 
     header('Content-Type: application/json; charset=utf-8');
@@ -150,9 +174,11 @@ if (function_exists('shell_exec')) {
         if (!is_dir("$sourceDir/.git")) {
             $log[] = "Notice: $sourceDir is missing .git. Attempting git init and remote configuration...";
             @shell_exec('cd ' . escapeshellarg($sourceDir) . ' && git init 2>&1 && git remote add origin https://github.com/nicedevil02/live.git 2>&1');
+        } else {
+            @shell_exec('cd ' . escapeshellarg($sourceDir) . ' && git remote set-url origin https://github.com/nicedevil02/live.git 2>&1');
         }
 
-        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout ' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1';
+        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout -f -B ' . escapeshellarg($targetBranch) . ' origin/' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
             $log[] = 'Git sync output: ' . trim($gitOutput);
@@ -168,30 +194,34 @@ if (function_exists('shell_exec')) {
     $log[] = 'Notice: shell_exec function does not exist.';
 }
 
+$copiedFiles = 0;
+$copiedDirs = 0;
+
 // Fallback: If git pull failed or did not run and no zip was extracted, download critical files directly from GitHub
 $gitSuccess = !empty($headCommit) && stripos($headCommit, 'fatal:') === false;
 if (!$gitSuccess && !$zipExtracted) {
     $log[] = 'Notice: Git pull was not successful. Executing automatic GitHub direct fallback synchronization...';
-    $filesToSyncFromGitHub = [
-        'resources/views/pages/app.blade.php',
-        'resources/views/display/live.blade.php',
-        'config/tv.php',
-        'app/Http/Controllers/PublicDisplayController.php',
-        'app/Http/Controllers/Admin/AuthController.php',
-        'app/Services/MarketService.php',
-        'app/Http/Controllers/PublicPageController.php',
-        'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
-        'public_html/downloads/talalive-tv.json',
-        'public_html/deploy-run.php',
-    ];
     $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
-    foreach ($filesToSyncFromGitHub as $relPath) {
+    foreach ($criticalSyncFiles as $relPath) {
         $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
         $content = @file_get_contents($rawUrl, false, $ctx);
-        if ($content !== false && strlen($content) > 5) {
+        $isJsChunk = substr($relPath, -3) === '.js';
+        if ($content !== false && ($isJsChunk || strlen($content) > 5)) {
+            $srcDest = "$sourceDir/$relPath";
+            @mkdir(dirname($srcDest), 0755, true);
+            @file_put_contents($srcDest, $content);
+
             $dest = "$targetDir/$relPath";
             @mkdir(dirname($dest), 0755, true);
             @file_put_contents($dest, $content);
+
+            if (strpos($relPath, 'public_html/') === 0 && is_dir("$targetDir/public")) {
+                $pubRel = substr($relPath, strlen('public_html/'));
+                $pubDest = "$targetDir/public/$pubRel";
+                @mkdir(dirname($pubDest), 0755, true);
+                @file_put_contents($pubDest, $content);
+            }
+
             $copiedFiles++;
             $log[] = "Fallback: Successfully downloaded latest $relPath from GitHub.";
         }
@@ -213,9 +243,6 @@ if ($shellAllowed) {
 }
 
 // 5. High-speed file synchronization matching .cpanel.yml
-$copiedFiles = 0;
-$copiedDirs = 0;
-
 if ($shellAllowed) {
     $cpCmd = "
         /bin/cp -Rf " . escapeshellarg($sourceDir . '/app') . " " . escapeshellarg($targetDir . '/') . " 2>&1
@@ -420,7 +447,6 @@ if (is_dir($trashDir)) {
     $log[] = 'Emptied .trash directory to restore disk quota.';
 }
 
-
 // 10. Run Artisan migrations unconditionally & verify tables
 $tableStatus = [];
 $artisanMigrateOutput = '';
@@ -493,4 +519,4 @@ echo json_encode([
     'recent_log_tail' => array_map('trim', $recentErrors),
     'git' => $gitOutput ? trim($gitOutput) : 'Synchronized from master repository',
     'timestamp' => date('Y-m-d H:i:s T')
-], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

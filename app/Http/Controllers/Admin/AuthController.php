@@ -12,9 +12,24 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    public static function normalizeOtpDigits(?string $value): string
+    {
+        if (!$value) {
+            return '';
+        }
+        $fa = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $converted = str_replace($fa, $en, trim($value));
+        return preg_replace('/[^\d]/', '', $converted);
+    }
+
     public function showLoginForm()
     {
-        return view('admin.login');
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+        $initialTab = request('tab') === 'register' ? 'register' : 'login';
+        return view('admin.auth', compact('initialTab'));
     }
 
     public function login(Request $request)
@@ -51,17 +66,17 @@ class AuthController extends Controller
 
         if ($user && Hash::check($password, $user->password)) {
             if (!$user->isAdmin()) {
-                return back()->withErrors(['email' => 'این حساب کاربری دسترسی به پنل مدیریت ندارد.']);
+                return back()->withInput($request->only('email'))->withErrors(['email' => 'این حساب کاربری دسترسی به پنل مدیریت ندارد.']);
             }
 
             // بررسی تایید بودن اکانت
             if (!$user->is_approved && !$user->is_super_admin) {
-                return back()->withErrors(['email' => 'حساب کاربری شما در انتظار تأیید است. جهت فعال‌سازی فوری با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
+                return back()->withInput($request->only('email'))->withErrors(['email' => 'حساب کاربری شما در انتظار تأیید است. جهت فعال‌سازی فوری با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
             }
 
             // بررسی انقضای حساب کاربری
             if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
-                return back()->withErrors(['email' => 'اعتبار حساب کاربری شما به پایان رسیده است. جهت تمدید اشتراک با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
+                return back()->withInput($request->only('email'))->withErrors(['email' => 'اعتبار حساب کاربری شما به پایان رسیده است. جهت تمدید اشتراک با پشتیبانی فنی طلالایو تماس بگیرید: ۰۹۱۸۷۰۰۹۰۶۴']);
             }
 
             Auth::login($user, $request->boolean('remember'));
@@ -74,7 +89,7 @@ class AuthController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        return back()->withErrors(['email' => 'اطلاعات ورود (شماره موبایل، نام کاربری یا رمز عبور) اشتباه است.']);
+        return back()->withInput($request->only('email'))->withErrors(['email' => 'اطلاعات ورود (شماره موبایل، نام کاربری یا رمز عبور) اشتباه است.']);
     }
 
     public function logout(Request $request)
@@ -177,10 +192,14 @@ class AuthController extends Controller
     public function loginWithOtp(Request $request)
     {
         $inputPhone = $request->input('phone');
-        $code = trim($request->input('otp', ''));
+        $code = self::normalizeOtpDigits($request->input('otp', ''));
         $newPassword = $request->input('password');
 
         $phone = SmsService::normalizeMobile((string) $inputPhone);
+        $request->merge([
+            'phone' => $phone,
+            'otp'   => $code,
+        ]);
 
         $request->validate([
             'phone'    => ['required', 'string'],
@@ -317,7 +336,11 @@ class AuthController extends Controller
      */
     public function showRegisterForm()
     {
-        return view('admin.register');
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+        $initialTab = request('tab') === 'login' ? 'login' : 'register';
+        return view('admin.auth', compact('initialTab'));
     }
 
     /**
@@ -338,7 +361,12 @@ class AuthController extends Controller
         // بررسی یکتایی شماره
         if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'phone')) {
             if (\App\Models\User::where('phone', $phone)->exists()) {
-                return response()->json(['success' => false, 'message' => 'این شماره موبایل قبلاً در سامانه ثبت شده است. لطفاً از فرم ورود استفاده کنید.'], 422);
+                return response()->json([
+                    'success'            => false,
+                    'already_registered' => true,
+                    'phone'              => $phone,
+                    'message'            => 'این شماره موبایل قبلاً در سامانه ثبت شده است. لطفاً وارد پنل شوید.',
+                ], 422);
             }
         }
 
@@ -392,6 +420,77 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'کد تأیید ۵ رقمی به شماره شما پیامک شد.',
             'ttl'     => 120,
+        ]);
+    }
+
+    /**
+     * اعتبارسنجی کد ۵ رقمی در گام اول ثبت‌نام دو مرحله‌ای (بدون مصرف نهایی تا زمان ثبت گالری)
+     */
+    public function verifyRegisterOtp(Request $request)
+    {
+        $phone = SmsService::normalizeMobile((string) $request->input('phone', ''));
+        $code  = self::normalizeOtpDigits($request->input('otp', ''));
+
+        if (!preg_match('/^09[0-9]{9}$/', $phone)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'شماره موبایل نامعتبر است.',
+            ], 422);
+        }
+
+        if (strlen($code) !== 5) {
+            return response()->json([
+                'success' => false,
+                'message' => 'کد تأیید باید ۵ رقم باشد.',
+            ], 422);
+        }
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'phone')) {
+            if (\App\Models\User::where('phone', $phone)->exists()) {
+                return response()->json([
+                    'success'            => false,
+                    'already_registered' => true,
+                    'phone'              => $phone,
+                    'message'            => 'این شماره موبایل قبلاً در سامانه ثبت شده است. لطفاً وارد پنل شوید.',
+                ], 422);
+            }
+        }
+
+        if (!\Illuminate\Support\Facades\Schema::hasTable('otp_verifications')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'کد تأیید یافت نشد. لطفاً مجدداً درخواست کد دهید.',
+            ], 422);
+        }
+
+        $validOtp = DB::table('otp_verifications')
+            ->where('phone', $phone)
+            ->where('code', $code)
+            ->where('expires_at', '>', now())
+            ->latest()
+            ->first();
+
+        if (!$validOtp) {
+            return response()->json([
+                'success' => false,
+                'message' => 'کد تأیید واردشده اشتباه است یا زمان آن منقضی شده است.',
+            ], 422);
+        }
+
+        // تمدید فرصت تکمیل گام دوم (نام گالری، شهر و رمز عبور) به مدت ۱۵ دقیقه
+        DB::table('otp_verifications')
+            ->where('id', $validOtp->id)
+            ->update([
+                'expires_at' => now()->addMinutes(15),
+                'updated_at' => now(),
+            ]);
+
+        session(['verified_register_phone' => $phone]);
+
+        return response()->json([
+            'success' => true,
+            'phone'   => $phone,
+            'message' => 'شماره موبایل شما با موفقیت تأیید شد.',
         ]);
     }
 
@@ -467,8 +566,11 @@ class AuthController extends Controller
             $password = substr($normalizedPhone, -4) ?: '1234';
         }
 
+        $normalizedOtp = self::normalizeOtpDigits($request->input('otp', ''));
+
         $request->merge([
             'phone'    => $normalizedPhone,
+            'otp'      => $normalizedOtp,
             'username' => $slug,
             'password' => $password,
         ]);
@@ -617,14 +719,19 @@ class AuthController extends Controller
         ]);
 
         // ورود خودکار طلافروش به پنل بدون معطلی
+        session()->forget('verified_register_phone');
         Auth::login($user);
         $request->session()->regenerate();
 
         if ($this->handlePendingPairing($user)) {
-            return redirect()->route('admin.dashboard')->with('success_pair', 'ثبت‌نام با موفقیت انجام شد و تلویزیون مغازه شما متصل گردید! 🎉');
+            return redirect()->route('admin.dashboard')
+                ->with('show_onboarding_tour', true)
+                ->with('success_pair', 'ثبت‌نام با موفقیت انجام شد و تلویزیون مغازه شما متصل گردید! 🎉');
         }
 
-        return redirect()->route('admin.dashboard')->with('success', 'به سامانه طلالایو خوش آمدید! دوره آزمایشی ۱۴ روزه گالری شما با موفقیت فعال شد.');
+        return redirect()->route('admin.dashboard')
+            ->with('show_onboarding_tour', true)
+            ->with('success', 'به سامانه طلالایو خوش آمدید! دوره آزمایشی ۱۴ روزه گالری شما با موفقیت فعال شد.');
     }
 
     /**
