@@ -34,6 +34,63 @@ $criticalSyncFiles = [
     'app/Http/Controllers/Admin/AuthController.php',
     'app/Http/Controllers/Admin/DashboardController.php',
     'app/Services/MarketService.php',
+    'resources/views/layouts/public.blade.php',
+    'resources/views/components/ui-icon.blade.php',
+    'resources/views/partials/nav-desktop.blade.php',
+    'resources/views/partials/nav-mobile.blade.php',
+    'resources/views/partials/rate-ticker.blade.php',
+    'resources/views/partials/breadcrumb.blade.php',
+    'resources/views/partials/cta-inline.blade.php',
+    'resources/views/partials/related-links.blade.php',
+    'resources/views/partials/schema-article.blade.php',
+    'resources/views/partials/schema-service.blade.php',
+    'resources/views/partials/ui-icon.blade.php',
+    'resources/views/pages/home.blade.php',
+    'resources/views/pages/about.blade.php',
+    'resources/views/pages/pricing.blade.php',
+    'resources/views/pages/contact.blade.php',
+    'resources/views/pages/privacy.blade.php',
+    'resources/views/pages/terms.blade.php',
+    'resources/views/pages/api-docs.blade.php',
+    'resources/views/pages/demo.blade.php',
+    'resources/views/pages/tv-setup-guide.blade.php',
+    'resources/views/pages/guides-index.blade.php',
+    'resources/views/pages/smart-gold-board.blade.php',
+    'resources/views/pages/android-tv-gold-board.blade.php',
+    'resources/views/pages/currency-exchange-board.blade.php',
+    'resources/views/pages/digital-rate-board.blade.php',
+    'resources/views/pages/gold-board-without-device.blade.php',
+    'resources/views/pages/online-gold-price-board.blade.php',
+    'resources/views/pages/silver-bullion-board.blade.php',
+    'resources/views/pages/led-vs-smart-board.blade.php',
+    'resources/views/pages/gold-calculator.blade.php',
+    'resources/views/pages/widget.blade.php',
+    'resources/views/pages/widget-embed.blade.php',
+    'resources/views/pages/cities/index.blade.php',
+    'resources/views/pages/cities/hub.blade.php',
+    'resources/views/pages/tools/coin-bubble.blade.php',
+    'resources/views/pages/tools/gold-price-calculator.blade.php',
+    'resources/views/pages/tools/karat-converter.blade.php',
+    'resources/views/pages/tools/melted-gold.blade.php',
+    'resources/views/pages/tools/mesghal.blade.php',
+    'resources/views/pages/tools/second-hand-gold.blade.php',
+    'resources/views/pages/tools/wage-calculator.blade.php',
+    'resources/views/pages/compare/tabangohar.blade.php',
+    'resources/views/pages/compare/tablotala.blade.php',
+    'resources/views/pages/compare/tgju-tv.blade.php',
+    'resources/views/pages/guides/best-tv-for-jewelry-shop.blade.php',
+    'resources/views/pages/guides/coin-bubble-calculation.blade.php',
+    'resources/views/pages/guides/gold-hallmark-inquiry.blade.php',
+    'resources/views/pages/guides/gold-price-formula.blade.php',
+    'resources/views/pages/guides/gold-tax-regulations.blade.php',
+    'resources/views/pages/guides/goldsmith-legal-profit.blade.php',
+    'resources/views/pages/guides/led-board-price-1405.blade.php',
+    'resources/views/pages/guides/lg-webos-gold-board.blade.php',
+    'resources/views/pages/guides/mazaneh-fardaei.blade.php',
+    'resources/views/pages/guides/motefareghe-18.blade.php',
+    'resources/views/pages/guides/samsung-tizen-gold-board.blade.php',
+    'resources/views/errors/404.blade.php',
+    'resources/views/errors/500.blade.php',
     'resources/views/pages/app.blade.php',
     'resources/views/display/live.blade.php',
     'resources/views/admin/auth.blade.php',
@@ -204,7 +261,8 @@ if (function_exists('shell_exec')) {
             @shell_exec('cd ' . escapeshellarg($sourceDir) . ' && git remote set-url origin https://github.com/nicedevil02/live.git 2>&1');
         }
 
-        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git checkout -f -B ' . escapeshellarg($targetBranch) . ' origin/' . escapeshellarg($targetBranch) . ' 2>&1 && git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1';
+        @shell_exec('cd ' . escapeshellarg($sourceDir) . ' && git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" 2>&1');
+        $cmd = 'cd ' . escapeshellarg($sourceDir) . ' && git fetch origin ' . escapeshellarg($targetBranch) . ' 2>&1 && git clean -fd 2>&1 && (git reset --hard FETCH_HEAD 2>&1 || git reset --hard origin/' . escapeshellarg($targetBranch) . ' 2>&1) && git clean -fd 2>&1 && (git checkout -f -B ' . escapeshellarg($targetBranch) . ' FETCH_HEAD 2>&1 || git checkout -f -B ' . escapeshellarg($targetBranch) . ' origin/' . escapeshellarg($targetBranch) . ' 2>&1)';
         $gitOutput = @shell_exec($cmd);
         if ($gitOutput) {
             $log[] = 'Git sync output: ' . trim($gitOutput);
@@ -261,13 +319,13 @@ if (!$gitSuccess && !$zipExtracted) {
 // 4. Trigger cPanel VersionControl UAPI deployment (registers deployment in cPanel GUI)
 $uapiOutput = '';
 if ($shellAllowed) {
-    $uapiCmd = 'uapi VersionControl deployment create repository_root=' . escapeshellarg($sourceDir) . ' 2>&1';
+    $uapiCmd = 'uapi VersionControlDeployment create repository_root=' . escapeshellarg($sourceDir) . ' 2>&1';
     $uapiOutput = @shell_exec($uapiCmd);
     if (empty($uapiOutput) || stripos($uapiOutput, 'not found') !== false) {
-        $altUapi = '/usr/local/cpanel/bin/uapi VersionControl deployment create repository_root=' . escapeshellarg($sourceDir) . ' 2>&1';
+        $altUapi = '/usr/local/cpanel/bin/uapi VersionControlDeployment create repository_root=' . escapeshellarg($sourceDir) . ' 2>&1';
         $uapiOutput = @shell_exec($altUapi);
     }
-    if ($uapiOutput) {
+    if ($uapiOutput && stripos($uapiOutput, 'errors:') === false) {
         $log[] = 'cPanel UAPI Deployment: ' . trim($uapiOutput);
     }
 }
