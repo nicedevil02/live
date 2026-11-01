@@ -54,7 +54,7 @@
 @endsection
 
 @section('content')
-<div class="py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-10">
+<div class="py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-10 relative">
 
     @include('partials.breadcrumb', [
         'items' => [
@@ -63,24 +63,30 @@
         ]
     ])
 
-    {{-- هدر صفحه --}}
-    <div class="text-center space-y-4 max-w-2xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold">
+    {{-- هدر صفحه با هاله نور طلایی --}}
+    <div class="relative text-center space-y-4 max-w-2xl mx-auto">
+        <div class="tl-ambient-gold -top-24 left-1/2 -translate-x-1/2 w-80 h-80 opacity-60"></div>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full tl-glass-badge text-amber-700 dark:text-amber-400 text-xs font-bold">
+            <x-ui-icon name="bullion" class="w-3.5 h-3.5" />
             <span>ابزار استاندارد معاملات بنکداری و کیفی‌های طلا • سال ۱۴۰۵</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white leading-tight">
             محاسبه‌گر آنلاین طلای آب شده و آبشده نقدی <br>
-            <span class="text-amber-600 dark:text-amber-400">تبدیل عیار انگ به وزن شرطی ۱۸ عیار (۷۵۰)</span>
+            <span class="text-amber-700 dark:text-amber-400">تبدیل عیار انگ به وزن شرطی ۱۸ عیار (۷۵۰)</span>
         </h1>
         <p class="text-stone-600 dark:text-stone-400 text-sm">
             محاسبه آنی ارزش ریالی بر اساس نرخ روز طلای ۱۸ عیار و تابلوی بازار بنکداران
         </p>
-        <p class="text-xs text-stone-500 dark:text-stone-400">
-            نرخ تابلوی هر گرم طلای ۱۸ عیار: <strong class="text-amber-700 dark:text-amber-400 font-mono">{{ number_format($rates['gold18']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})
-        </p>
+        <div class="pt-2">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-300">
+                <span>نرخ تابلوی هر گرم طلای ۱۸ عیار:</span>
+                <strong class="text-amber-700 dark:text-amber-400 font-mono font-bold">{{ number_format($rates['gold18']) }} تومان</strong>
+                <span class="text-stone-400 text-[11px]">(بروزرسانی: {{ $lastUpdated }})</span>
+            </span>
+        </div>
     </div>
 
-    {{-- ویجت آلپاین طلای آبشده --}}
+    {{-- ویجت آلپاین طلای آبشده با شاسی نئومورفیک --}}
     <div x-data="{
         rawWeight: 50.25,
         engKarat: 735,
@@ -96,37 +102,38 @@
         formatNumber(num) {
             return (num || 0).toLocaleString('fa-IR');
         }
-    }" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-10 shadow-sm space-y-8">
+    }" class="tl-neu-card rounded-3xl p-6 sm:p-10 space-y-8">
         
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="space-y-2">
                 <label for="raw-weight-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">وزن ترازوی آبشده (گرم):</label>
-                <input id="raw-weight-input" type="number" step="0.01" min="0.01" x-model.number="rawWeight" class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                <input id="raw-weight-input" type="number" step="0.01" min="0.01" x-model.number="rawWeight" class="min-h-11 w-full px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
             </div>
 
             <div class="space-y-2">
                 <label for="eng-karat-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">عیار انگ ری‌گیری (مثلاً ۷۳۵ یا ۷۶۰):</label>
-                <input id="eng-karat-input" type="number" step="1" min="100" max="1000" x-model.number="engKarat" class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                <input id="eng-karat-input" type="number" step="1" min="100" max="1000" x-model.number="engKarat" class="min-h-11 w-full px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
             </div>
 
             <div class="space-y-2">
                 <label for="gold18-rate-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">قیمت هر گرم ۱۸ عیار (تومان):</label>
-                <input id="gold18-rate-input" type="number" step="1000" min="10000" x-model.number="gold18Rate" class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                <input id="gold18-rate-input" type="number" step="1000" min="10000" x-model.number="gold18Rate" class="min-h-11 w-full px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
             </div>
         </div>
 
-        {{-- خروجی محاسبات آبشده --}}
-        <div class="p-6 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/60 space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="p-4 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-                    <span class="text-xs text-stone-500">وزن شرطی (معادل طلای ۱۸ عیار ۷۵۰):</span>
-                    <div class="text-xl font-black text-amber-700 dark:text-amber-400 mt-1 font-mono tabular-nums">
+        {{-- خروجی محاسبات آبشده با نمایشگر OLED و انعکاس نور --}}
+        <div class="rounded-3xl tl-oled-readout p-6 sm:p-8 space-y-4 relative overflow-hidden">
+            <div class="tl-screen-glare"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+                <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
+                    <span class="text-xs text-stone-400">وزن شرطی (معادل طلای ۱۸ عیار ۷۵۰):</span>
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400 mt-2 font-mono tabular-nums">
                         <span x-text="conditionalWeight"></span> گرم
                     </div>
                 </div>
-                <div class="p-4 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
-                    <span class="text-xs text-stone-500">ارزش کل قطعه آبشده:</span>
-                    <div class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1 font-mono tabular-nums">
+                <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
+                    <span class="text-xs text-stone-400">ارزش کل قطعه آبشده:</span>
+                    <div class="text-2xl sm:text-3xl font-black text-emerald-400 mt-2 font-mono tabular-nums">
                         <span x-text="formatNumber(totalValue)"></span> تومان
                     </div>
                 </div>
@@ -140,13 +147,13 @@
             <h2 class="text-2xl font-black text-stone-900 dark:text-white">
                 مفهوم «آبشده نقدی» و نسبتش با نرخ مصوب اتحادیه
             </h2>
-            <p class="text-stone-500 dark:text-stone-400 text-xs sm:text-sm max-w-3xl mx-auto">
+            <p class="text-stone-600 dark:text-stone-400 text-xs sm:text-sm max-w-3xl mx-auto">
                 در بازار طلا دو نرخ برای طلای آبشده مطرح است: نرخ تابلوی اعلامی اتحادیه و نرخ آبشده نقدی سبزه میدان؛ تفاوت این دو مفهوم در چیست؟
             </p>
         </div>
 
         <div class="grid sm:grid-cols-2 gap-6">
-            <div class="p-6 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+            <div class="p-6 rounded-3xl tl-neu-card space-y-3">
                 <span class="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-[11px] font-bold">معاملات زنده سبزه میدان</span>
                 <h3 class="text-base font-black text-stone-900 dark:text-white">آبشده نقدی چیست؟</h3>
                 <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
@@ -154,7 +161,7 @@
                 </p>
             </div>
 
-            <div class="p-6 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+            <div class="p-6 rounded-3xl tl-neu-card space-y-3">
                 <span class="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-[11px] font-bold">نرخ رسمی پایگاه اتحادیه</span>
                 <h3 class="text-base font-black text-stone-900 dark:text-white">نسبت با نرخ اتحادیه</h3>
                 <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
@@ -169,7 +176,7 @@
         <h3 class="text-lg font-black text-stone-900 dark:text-white">
             جدول مقایسه آبشده نقدی، آبشده شرطی و شمش استاندارد
         </h3>
-        <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
+        <div class="overflow-x-auto rounded-3xl tl-neu-card">
             <table class="w-full text-right text-xs sm:text-sm">
                 <thead class="bg-stone-100 dark:bg-stone-800/80 text-stone-900 dark:text-white font-bold border-b border-stone-200 dark:border-stone-800">
                     <tr>
@@ -183,23 +190,23 @@
                 <tbody class="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
                     <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
                         <td class="p-4 sm:p-5 font-bold">آبشده نقدی</td>
-                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">دارای کد انگ رسمی و جواب قطعی</td>
+                        <td class="p-4 sm:p-5 text-emerald-700 dark:text-emerald-400 font-bold">دارای کد انگ رسمی و جواب قطعی</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">تسویه آنی طبق نرخ زنده سبزه میدان</td>
-                        <td class="p-4 sm:p-5 text-xs text-emerald-600 dark:text-emerald-400 font-bold">معاف از اجرت و ۹٪ ارزش افزوده</td>
+                        <td class="p-4 sm:p-5 text-xs text-emerald-700 dark:text-emerald-400 font-bold">معاف از اجرت و ۹٪ ارزش افزوده</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">پشتوانه ویترین و دادوستد بنکداری</td>
                     </tr>
                     <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
                         <td class="p-4 sm:p-5 font-bold">آبشده شرطی</td>
                         <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">فاقد انگ یا مشکوک به ناهمگنی</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">تسویه موقت بر مبنای عیار ۷۵۰ تا دریافت جواب</td>
-                        <td class="p-4 sm:p-5 text-xs text-emerald-600 dark:text-emerald-400 font-bold">معاف از اجرت و مالیات</td>
+                        <td class="p-4 sm:p-5 text-xs text-emerald-700 dark:text-emerald-400 font-bold">معاف از اجرت و مالیات</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">خرید طلای ضایعاتی از همکاران صنف</td>
                     </tr>
                     <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
                         <td class="p-4 sm:p-5 font-bold">شمش استاندارد ۲۴ عیار</td>
                         <td class="p-4 sm:p-5 text-stone-900 dark:text-stone-100 font-bold">شمش وکیوم ۹۹۹.۹ دارای سرتیفیکیت</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">قیمت بر مبنای انس جهانی و دلار آزاد</td>
-                        <td class="p-4 sm:p-5 text-xs text-emerald-600 dark:text-emerald-400 font-bold">معاف از ارزش افزوده اصل طلا</td>
+                        <td class="p-4 sm:p-5 text-xs text-emerald-700 dark:text-emerald-400 font-bold">معاف از ارزش افزوده اصل طلا</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">سرمایه‌گذاری کلان و ذخیره دارایی</td>
                     </tr>
                 </tbody>
@@ -207,8 +214,8 @@
         </div>
     </section>
 
-    {{-- راهنمای فرمول و لینک‌ها --}}
-    <div class="p-6 sm:p-10 rounded-3xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 space-y-4 text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+    {{-- راهنمای فرمول و لینک‌ها با کارت نئومورفیک --}}
+    <div class="p-6 sm:p-10 rounded-3xl tl-neu-card space-y-4 text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
         <h3 class="font-black text-stone-900 dark:text-white text-base flex items-center gap-2">
             <x-ui-icon name="calculator" class="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0" />
             <span>فرمول محاسبه آنلاین طلای آب‌شده و وزن شرطی</span>
@@ -216,7 +223,7 @@
         <p>
             فرمول تبدیل وزن ترازوی طلای آب شده به وزن شرطی ۷۵۰ (معادل ۱۸ عیار استاندارد) عبارت است از:
         </p>
-        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 font-mono text-center font-bold text-amber-700 dark:text-amber-300 dir-ltr">
+        <div class="p-4 rounded-2xl tl-neu-inset font-mono text-center font-bold text-amber-700 dark:text-amber-400 dir-ltr">
             وزن شرطی ۱۸ عیار = (وزن ترازو × عیار انگ) ÷ ۷۵۰
         </div>
         <p>

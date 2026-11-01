@@ -349,16 +349,19 @@
         })();
     </script>
 
-    {{-- بخش ۱: هیرو سکشن لندینگ تجاری طلالایو --}}
-    <section class="relative min-h-[calc(100vh-80px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-10 lg:py-16 bg-stone-50 dark:bg-stone-950">
+    {{-- بخش ۱: هیرو سکشن لندینگ تجاری طلالایو با متریال شیشه‌ای اپل و ویترین سخت‌افزاری --}}
+    <section class="relative min-h-[calc(100vh-116px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-8 lg:py-14 overflow-hidden">
+        {{-- هاله نوری استودیویی ۱۸ عیار پس‌زمینه جهت شکست نور طبیعی در شیشه اپل --}}
+        <div class="tl-ambient-gold absolute top-8 right-1/4 w-[26rem] h-[20rem] rounded-full opacity-65" aria-hidden="true"></div>
+
         <div class="w-full max-w-7xl mx-auto flex flex-col z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center w-full">
                 
-                {{-- ستون سمت راست: ارزش محصول، تیتر و پنل تبدیل یکپارچه (۷ ستون) --}}
+                {{-- ستون سمت راست: ارزش محصول، تیتر و پنل شیشه‌ای تبدیل یکپارچه (۷ ستون) --}}
                 <div class="lg:col-span-7 text-right space-y-6 w-full">
                     
-                    {{-- برچسب دسته‌بندی محصول --}}
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-semibold">
+                    {{-- برچسب شیشه‌ای دسته‌بندی محصول --}}
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                         <span>سامانه ابری نمایش نرخ لحظه‌ای و ویترین طلا</span>
                     </div>
@@ -379,74 +382,79 @@
                         </p>
                     </div>
 
-                    {{-- پنل یکپارچه تبدیل و ثبت‌نام سریع --}}
-                    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+                    {{-- دک شیشه‌ای تبدیل و ثبت‌نام سریع (Apple Liquid Glass Deck + Neumorphic Inset Well) --}}
+                    <div class="tl-glass-deck rounded-3xl p-5 sm:p-7 space-y-4">
                         <div class="flex items-center justify-between flex-wrap gap-2">
-                            <div class="flex items-center gap-2">
-                                @include('partials.ui-icon', ['name' => 'gift', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
+                            <div class="flex items-center gap-2.5">
+                                <span class="tl-neu-icon-orb w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                                    @include('partials.ui-icon', ['name' => 'gift', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                                </span>
                                 <span class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100">
                                     شروع تست رایگان ۱۴ روزه طلالایو (ویژه طلافروشان)
                                 </span>
                             </div>
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                            <span class="text-xs font-semibold px-3 py-1 rounded-xl tl-neu-inset text-stone-700 dark:text-stone-300">
                                 بدون نیاز به کارت بانکی یا پیش‌پرداخت
                             </span>
                         </div>
 
-                        {{-- فرم ورود شماره همراه --}}
+                        {{-- فرم ورود شماره همراه با شیار حکاکی‌شده نئومورفیک --}}
                         <form action="{{ route('admin.register') }}" method="GET" class="flex flex-col sm:flex-row items-center gap-3 w-full">
                             <div class="relative flex-1 w-full" dir="ltr">
                                 <label for="heroPhoneInput" class="sr-only">شماره موبایل طلافروش</label>
                                 <input id="heroPhoneInput" type="tel" name="phone" maxlength="11" placeholder="شماره موبایل: 09xxxxxxxxx" required
-                                       class="w-full min-h-11 bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-2.5 text-base text-center font-mono font-bold tracking-wider text-stone-900 dark:text-stone-50 placeholder:font-sans placeholder:text-xs placeholder:text-stone-500 dark:placeholder:text-stone-400 focus:outline-none focus:border-amber-600 dark:focus:border-amber-400 focus-visible:ring-2 focus-visible:ring-amber-600/30 dark:focus-visible:ring-amber-400/30 transition-colors">
+                                       class="w-full min-h-12 tl-neu-inset rounded-xl px-4 py-2.5 text-base text-center font-mono font-bold tracking-wider text-stone-900 dark:text-stone-50 placeholder:font-sans placeholder:text-xs placeholder:text-stone-500 dark:placeholder:text-stone-400 focus:outline-none">
                             </div>
                             <button type="submit" 
-                                    class="w-full sm:w-auto min-h-11 px-7 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0">
+                                    class="w-full sm:w-auto min-h-12 px-7 py-2.5 rounded-xl tl-btn-bullion font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shrink-0">
                                 <span>دریافت کد و شروع رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
                             </button>
                         </form>
 
                         {{-- نوار هدایت به دموی زنده و اتصال تلویزیون --}}
-                        <div class="pt-3 border-t border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                            <div class="flex items-center gap-2 text-stone-600 dark:text-stone-400">
-                                @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-stone-500'])
+                        <div class="pt-3.5 border-t border-stone-300/60 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                            <div class="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-medium">
+                                @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                                 <span>می‌خواهید تابلوی زنده را بدون ثبت‌نام مشاهده کنید؟</span>
                             </div>
                             <div class="flex items-center gap-2 flex-wrap">
-                                <a href="{{ url('/demo') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 font-semibold border border-stone-300 dark:border-stone-700 transition-colors shrink-0">
+                                <a href="{{ url('/demo') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold shrink-0">
                                     <span>مشاهده دموی زنده تابلو (/demo)</span>
                                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                                 </a>
-                                <a href="{{ route('display.tv') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold border border-stone-300 dark:border-stone-700 transition-colors shrink-0">
+                                <a href="{{ route('display.tv') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-200 hover:text-amber-800 dark:hover:text-amber-300 font-semibold shrink-0">
                                     <span>اتصال تلویزیون (/tv)</span>
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    {{-- نوار شاخص‌های اعتماد صنفی --}}
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 pt-1 text-xs text-stone-700 dark:text-stone-300 font-semibold">
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
-                            @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                    {{-- نوار شاخص‌های اعتماد صنفی نئومورفیک --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs text-stone-800 dark:text-stone-200 font-semibold">
+                        <div class="flex items-center gap-2.5 tl-neu-card px-3.5 py-2.5 rounded-2xl">
+                            @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0'])
                             <span class="truncate">راه‌اندازی در کمتر از ۳ دقیقه</span>
                         </div>
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
-                            @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400'])
+                        <div class="flex items-center gap-2.5 tl-neu-card px-3.5 py-2.5 rounded-2xl">
+                            @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
                             <span class="truncate">پایداری کامل در حالت آفلاین</span>
                         </div>
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
-                            @include('partials.ui-icon', ['name' => 'sliders', 'class' => 'w-4 h-4 text-stone-600 dark:text-stone-300'])
+                        <div class="flex items-center gap-2.5 tl-neu-card px-3.5 py-2.5 rounded-2xl">
+                            @include('partials.ui-icon', ['name' => 'sliders', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0'])
                             <span class="truncate">فرمول سود و اجرت دلخواه</span>
                         </div>
                     </div>
                 </div>
 
-                {{-- ستون سمت چپ: قاب پیش‌نمایش تابلوی تلویزیون (۵ ستون) --}}
+                {{-- ستون سمت چپ: شاسی تیتانیومی تلویزیون هوشمند با نور مخفی استودیویی ۱۸ عیار (۵ ستون) --}}
                 <div class="lg:col-span-5 flex flex-col gap-4 w-full max-w-[460px] mx-auto lg:mr-auto lg:ml-0" style="max-width: 460px; width: 100%;">
                     <div class="relative w-full">
-                        {{-- قاب تلویزیون هوشمند با مرز ساختاری سنگی --}}
-                        <div class="relative rounded-2xl p-2 bg-stone-900 border border-stone-800 shadow-xl">
+                        {{-- نور مخفی طلایی پشت تلویزیون (Studio Bias Backlight) --}}
+                        <div class="tl-ambient-gold absolute -inset-5 rounded-[40px]" aria-hidden="true"></div>
+
+                        {{-- قاب تیتانیومی برس‌خورده تلویزیون هوشمند --}}
+                        <div class="relative rounded-[26px] p-2.5 sm:p-3 tl-tv-titanium">
                             @php
                                 $previewImage = null;
                                 $potentialPreviewPaths = [
@@ -469,7 +477,8 @@
                             @endphp
 
                             @if($previewImage)
-                                <div class="relative rounded-xl bg-stone-950 overflow-hidden border border-stone-800 aspect-[16/10] flex items-center justify-center select-none">
+                                <div class="relative rounded-2xl bg-stone-950 overflow-hidden border border-white/10 aspect-[16/10] flex items-center justify-center select-none">
+                                    <div class="tl-screen-glare absolute inset-0 z-10" aria-hidden="true"></div>
                                     <img src="{{ asset($previewImage) }}" 
                                          alt="اسکرین‌شات تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو روی تلویزیون مغازه" 
                                          width="1600" height="1000"
@@ -477,9 +486,10 @@
                                          class="w-full h-full object-cover object-center">
                                 </div>
                             @else
-                                <div class="relative rounded-xl bg-stone-950 overflow-hidden border border-stone-800 text-stone-50 aspect-[16/10] flex flex-col justify-between p-3 sm:p-4 select-none">
+                                <div class="relative rounded-2xl bg-stone-950 overflow-hidden border border-white/10 text-stone-50 aspect-[16/10] flex flex-col justify-between p-3 sm:p-4 select-none">
+                                    <div class="tl-screen-glare absolute inset-0 z-10" aria-hidden="true"></div>
                                     {{-- هدر تابلوی تلویزیون --}}
-                                    <div class="flex items-center justify-between border-b border-stone-800 pb-2">
+                                    <div class="relative z-20 flex items-center justify-between border-b border-stone-800 pb-2">
                                         <div class="flex items-center gap-2">
                                             <div class="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 font-bold text-xs flex items-center justify-center">
                                                 زر
@@ -491,7 +501,7 @@
                                         </div>
 
                                         <div class="flex items-center gap-2">
-                                            <div class="flex items-center gap-1.5 bg-stone-800 border border-stone-700 px-2 py-0.5 rounded-full text-emerald-400 text-[10px] font-semibold">
+                                            <div class="flex items-center gap-1.5 bg-stone-900 border border-emerald-500/30 px-2 py-0.5 rounded-full text-emerald-400 text-[10px] font-semibold">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                                                 <span>نرخ زنده</span>
                                             </div>
@@ -502,8 +512,8 @@
                                     </div>
 
                                     {{-- ۴ کارت نرخ در صفحه نمایشگر --}}
-                                    <div class="grid grid-cols-2 gap-2 my-auto">
-                                        <div class="bg-stone-900 border border-amber-500/40 rounded-xl p-2 text-right space-y-0.5">
+                                    <div class="relative z-20 grid grid-cols-2 gap-2 my-auto">
+                                        <div class="bg-stone-900/95 border border-amber-500/40 rounded-xl p-2 text-right space-y-0.5">
                                             <div class="flex items-center justify-between">
                                                 <span class="text-[10px] text-amber-300 font-semibold">طلای ۱۸ عیار (گرم)</span>
                                                 <span class="text-[8px] px-1 rounded bg-amber-500/20 text-amber-300 font-semibold">شاخص</span>
@@ -517,7 +527,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="bg-stone-900 border border-stone-800 rounded-xl p-2 text-right space-y-0.5">
+                                        <div class="bg-stone-900/95 border border-stone-800 rounded-xl p-2 text-right space-y-0.5">
                                             <div class="text-[10px] text-stone-300 font-semibold">سکه بهار آزادی (امامی)</div>
                                             <div class="text-sm sm:text-base font-bold text-stone-100 font-mono tracking-wider tabular-nums" dir="ltr">
                                                 {{ !empty($rates['coin_emami']) && $rates['coin_emami'] > 0 ? number_format($rates['coin_emami']) : '۵۲,۸۰۰,۰۰۰' }}
@@ -525,7 +535,7 @@
                                             <div class="text-[9px] text-stone-400">تومان</div>
                                         </div>
 
-                                        <div class="bg-stone-900 border border-stone-800 rounded-xl p-2 text-right space-y-0.5">
+                                        <div class="bg-stone-900/95 border border-stone-800 rounded-xl p-2 text-right space-y-0.5">
                                             <div class="text-[10px] text-stone-300 font-semibold">نیم سکه بهار آزادی</div>
                                             <div class="text-xs sm:text-sm font-bold text-stone-100 font-mono tracking-wider tabular-nums" dir="ltr">
                                                 {{ !empty($rates['coin_nim']) && $rates['coin_nim'] > 0 ? number_format($rates['coin_nim']) : '۲۸,۴۰۰,۰۰۰' }}
@@ -533,7 +543,7 @@
                                             <div class="text-[9px] text-stone-400">تومان</div>
                                         </div>
 
-                                        <div class="bg-stone-900 border border-stone-800 rounded-xl p-2 text-right space-y-0.5">
+                                        <div class="bg-stone-900/95 border border-stone-800 rounded-xl p-2 text-right space-y-0.5">
                                             <div class="text-[10px] text-stone-300 font-semibold">انس جهانی طلا</div>
                                             <div class="text-xs sm:text-sm font-bold text-stone-100 font-mono tracking-wider tabular-nums" dir="ltr">
                                                 {{ !empty($rates['ons']) && $rates['ons'] > 0 ? '$ ' . number_format($rates['ons'], 1) : '$ ۲,۷۳۵.۵' }}
@@ -543,7 +553,7 @@
                                     </div>
 
                                     {{-- نوار متحرک ویترین در زیر صفحه --}}
-                                    <div class="border-t border-stone-800 pt-1.5 flex items-center justify-between text-[9px] text-stone-400">
+                                    <div class="relative z-20 border-t border-stone-800 pt-1.5 flex items-center justify-between text-[9px] text-stone-400">
                                         <span class="truncate text-stone-300">جدیدترین کالکشن النگو و سرویس‌های طلا</span>
                                         <span class="font-mono text-amber-400 shrink-0 font-semibold">TalaLive.ir</span>
                                     </div>
@@ -552,14 +562,14 @@
 
                             {{-- نشانگر استندبای تلویزیون --}}
                             <div class="flex items-center justify-center gap-1.5 mt-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                <span class="text-[9px] font-mono text-stone-400 tracking-wider">OLED 4K DISPLAY</span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.75)]"></span>
+                                <span class="text-[9px] font-mono text-stone-300 tracking-widest">OLED 4K STUDIO DISPLAY</span>
                             </div>
                         </div>
                     </div>
 
                     {{-- برچسب سازگاری تلویزیون --}}
-                    <div class="text-center space-y-1">
+                    <div class="text-center space-y-1 relative z-10">
                         <p class="text-xs font-semibold text-stone-800 dark:text-stone-200">
                             سازگار با انواع تلویزیون هوشمند
                         </p>
@@ -568,17 +578,17 @@
                         </p>
                     </div>
 
-                    {{-- کادر ارتباط با پشتیبانی فنی --}}
-                    <div class="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-center text-xs space-y-2 shadow-xs">
-                        <p class="text-stone-600 dark:text-stone-400 font-semibold text-[11px]">پشتیبانی و راه‌اندازی فوری تابلوی طلافروشی:</p>
-                        <p class="text-amber-700 dark:text-amber-400 font-bold text-sm tracking-wider font-mono tabular-nums" dir="ltr">
+                    {{-- کادر شیشه‌ای ارتباط با پشتیبانی فنی --}}
+                    <div class="relative z-10 w-full tl-glass-deck rounded-2xl p-4 text-center text-xs space-y-2">
+                        <p class="text-stone-700 dark:text-stone-300 font-semibold text-[11px]">پشتیبانی و راه‌اندازی فوری تابلوی طلافروشی:</p>
+                        <p class="text-amber-800 dark:text-amber-400 font-bold text-sm tracking-wider font-mono tabular-nums" dir="ltr">
                             <a href="tel:09187009064" class="hover:underline">0918 700 9064</a>
                             &nbsp;&middot;&nbsp;
                             <a href="tel:08135229063" class="hover:underline">081 3522 9063</a>
                         </p>
                         <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
                             <span class="text-stone-700 dark:text-stone-300 font-semibold text-[11px]">پشتیبانی در پیام‌رسان:</span>
-                            <a href="https://rubika.ir/talalive" target="_blank" class="min-h-11 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-semibold transition-colors">
+                            <a href="https://rubika.ir/talalive" target="_blank" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-semibold">
                                 <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="14" height="14" loading="lazy" decoding="async" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
                                 <span>پشتیبانی روبیکا</span>
                             </a>
@@ -590,37 +600,37 @@
         </div>
     </section>
 
-    {{-- بخش ۲: نوار شاخص‌های ارزش و اعتماد --}}
-    <section class="border-y border-stone-200 dark:border-stone-800 bg-stone-100/60 dark:bg-stone-900/40 py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div class="space-y-1">
+    {{-- بخش ۲: نوار شاخص‌های ارزش و اعتماد نئومورفیک --}}
+    <section class="py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
+            <div class="tl-neu-card rounded-2xl p-5 space-y-1">
                 <div class="text-2xl lg:text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۰ تومان</div>
-                <div class="text-xs font-semibold text-stone-800 dark:text-stone-200">هزینه سخت‌افزار یا مینی‌کیس</div>
+                <div class="text-xs font-semibold text-stone-900 dark:text-stone-100">هزینه سخت‌افزار یا مینی‌کیس</div>
                 <div class="text-[11px] text-stone-600 dark:text-stone-400">راه‌اندازی با مرورگر انواع تلویزیون</div>
             </div>
-            <div class="space-y-1">
+            <div class="tl-neu-card rounded-2xl p-5 space-y-1">
                 <div class="text-2xl lg:text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۶۰ ثانیه</div>
-                <div class="text-xs font-semibold text-stone-800 dark:text-stone-200">سرعت نصب و راه‌اندازی</div>
+                <div class="text-xs font-semibold text-stone-900 dark:text-stone-100">سرعت نصب و راه‌اندازی</div>
                 <div class="text-[11px] text-stone-600 dark:text-stone-400">فقط با یکبار اسکن بارکد QR</div>
             </div>
-            <div class="space-y-1">
+            <div class="tl-neu-card rounded-2xl p-5 space-y-1">
                 <div class="text-2xl lg:text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۱۰۰٪</div>
-                <div class="text-xs font-semibold text-stone-800 dark:text-stone-200">تاب‌آوری آفلاین هوشمند</div>
+                <div class="text-xs font-semibold text-stone-900 dark:text-stone-100">تاب‌آوری آفلاین هوشمند</div>
                 <div class="text-[11px] text-stone-600 dark:text-stone-400">حفظ نمایش تابلو در قطعی موقت اینترنت</div>
             </div>
-            <div class="space-y-1">
+            <div class="tl-neu-card rounded-2xl p-5 space-y-1">
                 <div class="text-2xl lg:text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono">لحظه‌ای</div>
-                <div class="text-xs font-semibold text-stone-800 dark:text-stone-200">بروزرسانی خودکار نرخ‌ها</div>
+                <div class="text-xs font-semibold text-stone-900 dark:text-stone-100">بروزرسانی خودکار نرخ‌ها</div>
                 <div class="text-[11px] text-stone-600 dark:text-stone-400">اتصال به مراجع معتبر بازار طلا</div>
             </div>
         </div>
     </section>
 
-    {{-- بخش ۳: آموزش سریع پیدا کردن مرورگر تلویزیون (کارت‌های کلیک‌خور برندها) --}}
-    <section class="py-14 px-4 sm:px-6 lg:px-8 bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800">
+    {{-- بخش ۳: آموزش سریع پیدا کردن مرورگر تلویزیون (کارت‌های تعاملی نئومورفیک برندها) --}}
+    <section class="py-14 px-4 sm:px-6 lg:px-8 border-b border-stone-300/60 dark:border-white/10">
         <div class="max-w-6xl mx-auto space-y-10">
             <div class="text-center space-y-3">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                     @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                     <span>راهنمای سریع ریموت کنترل تلویزیون</span>
                 </div>
@@ -632,13 +642,13 @@
                 </p>
             </div>
 
-            {{-- کارت‌های پیونددار برندهای تلویزیون (R-26: رفع کنترل‌های مرده) --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {{-- کارت‌های پیونددار برندهای تلویزیون --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {{-- سامسونگ --}}
-                <a href="{{ route('public.guides.show', 'samsung-tizen-gold-board') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 shadow-xs hover:border-amber-500/60 transition-colors block group">
-                    <div class="flex items-center justify-between">
+                <a href="{{ route('public.guides.show', 'samsung-tizen-gold-board') }}" class="tl-neu-card-interactive rounded-2xl p-5 space-y-3 block group">
+                    <div class="flex items-center justify-between gap-2">
                         <span class="text-xs font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">سامسونگ (Samsung)</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-mono">Tizen</span>
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-lg tl-neu-inset text-stone-700 dark:text-stone-300 font-mono">Tizen</span>
                     </div>
                     <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
                         دکمه Home روی ریموت را بزنید و برنامه Internet را باز کنید.
@@ -650,10 +660,10 @@
                 </a>
 
                 {{-- ال‌جی --}}
-                <a href="{{ route('public.guides.show', 'lg-webos-gold-board') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 shadow-xs hover:border-amber-500/60 transition-colors block group">
-                    <div class="flex items-center justify-between">
+                <a href="{{ route('public.guides.show', 'lg-webos-gold-board') }}" class="tl-neu-card-interactive rounded-2xl p-5 space-y-3 block group">
+                    <div class="flex items-center justify-between gap-2">
                         <span class="text-xs font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">ال‌جی (LG)</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-mono">webOS</span>
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-lg tl-neu-inset text-stone-700 dark:text-stone-300 font-mono">webOS</span>
                     </div>
                     <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
                         دکمه Home کنترل جادویی را بزنید و برنامه Web Browser را باز کنید.
@@ -665,10 +675,10 @@
                 </a>
 
                 {{-- اندروید تی‌وی و سونی --}}
-                <a href="{{ route('public.android-tv-gold-board') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 shadow-xs hover:border-amber-500/60 transition-colors block group">
-                    <div class="flex items-center justify-between">
+                <a href="{{ route('public.android-tv-gold-board') }}" class="tl-neu-card-interactive rounded-2xl p-5 space-y-3 block group">
+                    <div class="flex items-center justify-between gap-2">
                         <span class="text-xs font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">سونی، اسنوا، دوو، شیائومی</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-mono">Android TV</span>
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-lg tl-neu-inset text-stone-700 dark:text-stone-300 font-mono">Android TV</span>
                     </div>
                     <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
                         در منوی برنامه‌ها، مرورگر Chrome یا Browser اختصاصی را باز کنید.
@@ -680,10 +690,10 @@
                 </a>
 
                 {{-- راهنمای عمومی اتصال --}}
-                <a href="{{ route('public.tv-setup-guide') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 shadow-xs hover:border-amber-500/60 transition-colors block group">
-                    <div class="flex items-center justify-between">
+                <a href="{{ route('public.tv-setup-guide') }}" class="tl-neu-card-interactive rounded-2xl p-5 space-y-3 block group">
+                    <div class="flex items-center justify-between gap-2">
                         <span class="text-xs font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">انواع تلویزیون و اندروید باکس</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-mono">HDMI / باکس</span>
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-lg tl-neu-inset text-stone-700 dark:text-stone-300 font-mono">HDMI / باکس</span>
                     </div>
                     <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
                         با اتصال اندروید باکس یا باز کردن مرورگر، هر تلویزیونی آماده پخش است.
@@ -695,11 +705,13 @@
                 </a>
             </div>
 
-            {{-- بنر پشتیبانی و راهنمایی تلفنی --}}
-            <div class="rounded-2xl p-6 sm:p-8 bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex flex-col md:flex-row items-center justify-between gap-6">
+            {{-- بنر پشتیبانی و راهنمایی تلفنی با کارت طلایی نئومورفیک --}}
+            <div class="rounded-3xl p-6 sm:p-8 tl-neu-card-gold flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="space-y-2 text-right">
-                    <div class="flex items-center gap-2">
-                        @include('partials.ui-icon', ['name' => 'phone', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
+                    <div class="flex items-center gap-2.5">
+                        <span class="tl-neu-icon-orb w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
+                            @include('partials.ui-icon', ['name' => 'phone', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
+                        </span>
                         <h3 class="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-50">
                             به راهنمایی برای تنظیم تلویزیون نیاز دارید؟
                         </h3>
@@ -710,11 +722,11 @@
                 </div>
 
                 <div class="flex items-center gap-3 shrink-0 flex-wrap justify-center">
-                    <a href="tel:09187009064" class="min-h-11 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors flex items-center gap-2 cursor-pointer">
+                    <a href="tel:09187009064" class="min-h-11 px-5 py-2.5 rounded-xl tl-btn-bullion font-bold text-xs flex items-center gap-2 cursor-pointer">
                         <span>تماس مستقیم با پشتیبانی:</span>
                         <span class="font-mono text-sm tabular-nums" dir="ltr">0918 700 9064</span>
                     </a>
-                    <a href="https://rubika.ir/talalive" target="_blank" class="min-h-11 px-4 py-2.5 rounded-xl bg-white hover:bg-stone-100 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 font-semibold text-xs transition-colors flex items-center gap-2 cursor-pointer">
+                    <a href="https://rubika.ir/talalive" target="_blank" class="min-h-11 px-4 py-2.5 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold text-xs flex items-center gap-2 cursor-pointer">
                         <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="16" height="16" loading="lazy" decoding="async" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
                         <span>پشتیبانی در روبیکا</span>
                     </a>
@@ -723,10 +735,10 @@
         </div>
     </section>
 
-    {{-- بخش ۴: امکانات و ویژگی‌های تخصصی طلالایو --}}
+    {{-- بخش ۴: امکانات و ویژگی‌های تخصصی طلالایو با کارت‌ها و گوی‌های نئومورفیک --}}
     <section id="features" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="text-center space-y-3 mb-12">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                 @include('partials.ui-icon', ['name' => 'gem', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                 <span>مزایای فنی تابلوی هوشمند طلالایو</span>
             </div>
@@ -739,8 +751,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-7 space-y-4 shadow-xs">
-                <div class="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25 text-amber-700 dark:text-amber-400 flex items-center justify-center">
+            <div class="tl-neu-card rounded-3xl p-6 sm:p-7 space-y-4">
+                <div class="w-12 h-12 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اتصال فوری بدون کیس و سیم‌کشی</h3>
@@ -749,8 +761,8 @@
                 </p>
             </div>
 
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-7 space-y-4 shadow-xs">
-                <div class="w-11 h-11 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+            <div class="tl-neu-card rounded-3xl p-6 sm:p-7 space-y-4">
+                <div class="w-12 h-12 rounded-2xl tl-neu-icon-orb text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">فناوری ضد قطعی اینترنت (آفلاین)</h3>
@@ -759,8 +771,8 @@
                 </p>
             </div>
 
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-7 space-y-4 shadow-xs">
-                <div class="w-11 h-11 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200 flex items-center justify-center">
+            <div class="tl-neu-card rounded-3xl p-6 sm:p-7 space-y-4">
+                <div class="w-12 h-12 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'sliders', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">فرمول‌ساز سود و اجرت شخصی</h3>
@@ -771,10 +783,12 @@
         </div>
 
         {{-- پنل پشتیبانی از نرخ ارز، شمش و نقره --}}
-        <div class="mt-8 p-6 sm:p-8 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="mt-8 p-6 sm:p-8 rounded-3xl tl-neu-card flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="space-y-2 text-right">
-                <div class="flex items-center gap-2">
-                    @include('partials.ui-icon', ['name' => 'currency', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
+                <div class="flex items-center gap-2.5">
+                    <span class="tl-neu-icon-orb w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
+                        @include('partials.ui-icon', ['name' => 'currency', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
+                    </span>
                     <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
                         پوشش کامل نرخ انواع ارز، نقره و شمش در کنار طلا و سکه
                     </h3>
@@ -784,11 +798,11 @@
                 </p>
             </div>
             <div class="flex items-center gap-3 shrink-0 flex-wrap">
-                <a href="/currency-exchange-board" class="min-h-11 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors shadow-xs inline-flex items-center gap-1.5">
+                <a href="/currency-exchange-board" class="min-h-11 px-4 py-2.5 rounded-xl tl-btn-bullion font-bold text-xs inline-flex items-center gap-1.5">
                     <span>تابلو صرافی و نرخ ارز</span>
                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                 </a>
-                <a href="/silver-bullion-board" class="min-h-11 px-4 py-2.5 rounded-xl bg-white hover:bg-stone-100 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 border border-stone-300 dark:border-stone-700 font-semibold text-xs transition-colors inline-flex items-center gap-1.5">
+                <a href="/silver-bullion-board" class="min-h-11 px-4 py-2.5 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold text-xs inline-flex items-center gap-1.5">
                     <span>تابلو نقره و شمش</span>
                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                 </a>
@@ -797,10 +811,10 @@
     </section>
 
     {{-- بخش ۵: مقایسه جامع تابلوی هوشمند با تابلوهای سنتی روان LED --}}
-    <section id="comparison" class="py-16 px-4 sm:px-6 lg:px-8 bg-stone-100/60 dark:bg-stone-900/30 border-y border-stone-200 dark:border-stone-800">
+    <section id="comparison" class="py-16 px-4 sm:px-6 lg:px-8 border-y border-stone-300/60 dark:border-white/10">
         <div class="max-w-5xl mx-auto space-y-10">
             <div class="text-center space-y-3">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                     <span>مقایسه فناوری و هزینه</span>
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
@@ -811,17 +825,17 @@
                 </p>
             </div>
 
-            {{-- کانتینر اسکرول استاندارد موبایل برای جدول --}}
-            <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs bg-white dark:bg-stone-900">
+            {{-- کانتینر اسکرول استاندارد موبایل برای جدول با سطح نئومورفیک --}}
+            <div class="overflow-x-auto rounded-3xl tl-neu-card">
                 <table class="w-full text-right text-xs sm:text-sm">
-                    <thead class="bg-stone-100 dark:bg-stone-800 border-b border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-50 font-bold">
+                    <thead class="bg-stone-200/55 dark:bg-white/[0.04] border-b border-stone-300/60 dark:border-white/10 text-stone-900 dark:text-stone-50 font-bold">
                         <tr>
                             <th class="p-4 sm:p-5">ویژگی و امکانات</th>
                             <th class="p-4 sm:p-5 text-amber-700 dark:text-amber-400">سامانه ابری طلالایو (تلویزیون هوشمند)</th>
                             <th class="p-4 sm:p-5 text-stone-500">تابلوهای سنتی روان LED</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-stone-200 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
+                    <tbody class="divide-y divide-stone-300/50 dark:divide-white/10 text-stone-700 dark:text-stone-300">
                         <tr>
                             <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">کیفیت و جذابیت بصری</td>
                             <td class="p-4 sm:p-5 text-emerald-700 dark:text-emerald-400 font-semibold">وضوح بالا با کیفیت 4K و خوانایی عالی در ویترین</td>
@@ -852,7 +866,7 @@
             </div>
 
             <div class="mt-8 text-center">
-                <a href="{{ route('public.led-vs-smart-board') }}" class="min-h-11 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold text-xs sm:text-sm transition-colors shadow-xs">
+                <a href="{{ route('public.led-vs-smart-board') }}" class="min-h-11 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold text-xs sm:text-sm">
                     <span>مشاهده بررسی کامل و مقایسه جامع طلالایو با تابلوهای LED روان</span>
                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
                 </a>
@@ -860,12 +874,12 @@
         </div>
     </section>
 
-    {{-- بخش ۶: تعرفه‌ها و بسته‌های اشتراک (Pricing Table) --}}
-    <section id="pricing" x-data="{ mobilePlan: '12m' }" class="py-16 px-4 sm:px-6 lg:px-8 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950">
+    {{-- بخش ۶: تعرفه‌ها و بسته‌های اشتراک با سگمنت اپل و کارت‌های نئومورفیک (Pricing Table) --}}
+    <section id="pricing" x-data="{ mobilePlan: '12m' }" class="py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto space-y-12">
             
             <div class="text-center space-y-3 max-w-2xl mx-auto">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-semibold">
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                     @include('partials.ui-icon', ['name' => 'receipt', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                     <span>تعرفه‌های شفاف و بدون هزینه پنهان</span>
                 </div>
@@ -877,46 +891,46 @@
                 </p>
             </div>
 
-            {{-- ۱. نمای موبایل: سوئیچر کارتی --}}
-            <div class="md:hidden space-y-5">
-                <div class="bg-stone-200 dark:bg-stone-900 p-1 rounded-xl border border-stone-300 dark:border-stone-800 flex items-center justify-between gap-1 max-w-md mx-auto select-none">
+            {{-- ۱. نمای موبایل: سوئیچر سگمنت نئومورفیک اپل --}}
+            <div class="md:hidden space-y-6">
+                <div class="tl-neu-track p-1.5 rounded-2xl flex items-center justify-between gap-1 max-w-md mx-auto select-none">
                     <button type="button"
                             @click="mobilePlan = '1m'"
-                            class="flex-1 min-h-11 py-2 px-1 rounded-lg text-xs font-semibold transition-colors text-center cursor-pointer"
-                            :class="mobilePlan === '1m' ? 'bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 shadow-xs' : 'text-stone-600 dark:text-stone-400'">
+                            class="flex-1 min-h-11 py-2 px-1 rounded-xl text-xs font-semibold transition-all text-center cursor-pointer"
+                            :class="mobilePlan === '1m' ? 'tl-neu-pill-active text-stone-900 dark:text-stone-50 font-bold' : 'text-stone-600 dark:text-stone-400'">
                         <span>۱ ماهه</span>
                     </button>
                     <button type="button"
                             @click="mobilePlan = '3m'"
-                            class="flex-1 min-h-11 py-2 px-1 rounded-lg text-xs font-semibold transition-colors text-center cursor-pointer"
-                            :class="mobilePlan === '3m' ? 'bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 shadow-xs' : 'text-stone-600 dark:text-stone-400'">
+                            class="flex-1 min-h-11 py-2 px-1 rounded-xl text-xs font-semibold transition-all text-center cursor-pointer"
+                            :class="mobilePlan === '3m' ? 'tl-neu-pill-active text-stone-900 dark:text-stone-50 font-bold' : 'text-stone-600 dark:text-stone-400'">
                         <span>۳ ماهه</span>
                     </button>
                     <button type="button"
                             @click="mobilePlan = '6m'"
-                            class="flex-1 min-h-11 py-2 px-1 rounded-lg text-xs font-semibold transition-colors text-center cursor-pointer"
-                            :class="mobilePlan === '6m' ? 'bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 shadow-xs' : 'text-stone-600 dark:text-stone-400'">
+                            class="flex-1 min-h-11 py-2 px-1 rounded-xl text-xs font-semibold transition-all text-center cursor-pointer"
+                            :class="mobilePlan === '6m' ? 'tl-neu-pill-active text-stone-900 dark:text-stone-50 font-bold' : 'text-stone-600 dark:text-stone-400'">
                         <span>۶ ماهه</span>
                     </button>
                     <button type="button"
                             @click="mobilePlan = '12m'"
-                            class="flex-1 min-h-11 py-2 px-1 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer"
-                            :class="mobilePlan === '12m' ? 'bg-amber-500 text-stone-950 shadow-xs' : 'text-amber-700 dark:text-amber-400'">
+                            class="flex-1 min-h-11 py-2 px-1 rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
+                            :class="mobilePlan === '12m' ? 'tl-btn-bullion' : 'text-amber-700 dark:text-amber-400'">
                         <span>۱ ساله ★</span>
                     </button>
                 </div>
 
                 <div class="max-w-md mx-auto">
                     {{-- تب ۱: ۱ ماهه --}}
-                    <div x-show="mobilePlan === '1m'" x-cloak x-transition.opacity.duration.150ms class="rounded-2xl p-6 border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs space-y-6">
+                    <div x-show="mobilePlan === '1m'" x-cloak x-transition.opacity.duration.150ms class="rounded-3xl p-6 tl-neu-card space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک ۱ ماهه</h3>
                                 <p class="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">مناسب بررسی اولیه امکانات</p>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">۳۰ روز</span>
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-semibold tl-neu-inset text-stone-700 dark:text-stone-300">۳۰ روز</span>
                         </div>
-                        <div class="bg-stone-100/80 dark:bg-stone-800/60 p-4 rounded-xl border border-stone-200 dark:border-stone-700 flex items-baseline justify-between">
+                        <div class="tl-neu-inset p-4 rounded-2xl flex items-baseline justify-between">
                             <span class="text-xs text-stone-600 dark:text-stone-400">هزینه دوره:</span>
                             <div class="flex items-baseline gap-1.5">
                                 <span class="text-3xl font-bold text-stone-900 dark:text-stone-50 font-mono tabular-nums">۶۹۰,۰۰۰</span>
@@ -942,12 +956,12 @@
                             </li>
                         </ul>
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 text-stone-50 dark:text-stone-900 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>انتخاب و خرید آنلاین</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 text-stone-50 dark:text-stone-900 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>شروع ۱۴ روز تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -955,15 +969,15 @@
                     </div>
 
                     {{-- تب ۲: ۳ ماهه --}}
-                    <div x-show="mobilePlan === '3m'" x-cloak x-transition.opacity.duration.150ms class="rounded-2xl p-6 border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs space-y-6">
+                    <div x-show="mobilePlan === '3m'" x-cloak x-transition.opacity.duration.150ms class="rounded-3xl p-6 tl-neu-card space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک ۳ ماهه</h3>
                                 <p class="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">پلن فصلی با ثبات نرخ</p>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">۹۰ روز</span>
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-semibold tl-neu-inset text-stone-700 dark:text-stone-300">۹۰ روز</span>
                         </div>
-                        <div class="bg-stone-100/80 dark:bg-stone-800/60 p-4 rounded-xl border border-stone-200 dark:border-stone-700 flex items-baseline justify-between">
+                        <div class="tl-neu-inset p-4 rounded-2xl flex items-baseline justify-between">
                             <span class="text-xs text-stone-600 dark:text-stone-400">مبلغ ۳ ماه:</span>
                             <div class="text-left">
                                 <div class="flex items-baseline gap-1.5">
@@ -988,12 +1002,12 @@
                             </li>
                         </ul>
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-white dark:bg-stone-800 hover:bg-stone-100 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>انتخاب و خرید آنلاین</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-white dark:bg-stone-800 hover:bg-stone-100 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>شروع ۱۴ روز تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1001,15 +1015,15 @@
                     </div>
 
                     {{-- تب ۳: ۶ ماهه --}}
-                    <div x-show="mobilePlan === '6m'" x-cloak x-transition.opacity.duration.150ms class="rounded-2xl p-6 border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs space-y-6">
+                    <div x-show="mobilePlan === '6m'" x-cloak x-transition.opacity.duration.150ms class="rounded-3xl p-6 tl-neu-card space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک ۶ ماهه</h3>
                                 <p class="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">پلن نیم‌سال با تخفیف ویژه</p>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">۱۸۰ روز</span>
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-semibold tl-neu-inset text-stone-700 dark:text-stone-300">۱۸۰ روز</span>
                         </div>
-                        <div class="bg-stone-100/80 dark:bg-stone-800/60 p-4 rounded-xl border border-stone-200 dark:border-stone-700 flex items-baseline justify-between">
+                        <div class="tl-neu-inset p-4 rounded-2xl flex items-baseline justify-between">
                             <span class="text-xs text-stone-600 dark:text-stone-400">مبلغ ۶ ماه:</span>
                             <div class="text-left">
                                 <div class="flex items-baseline gap-1.5">
@@ -1034,12 +1048,12 @@
                             </li>
                         </ul>
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-white dark:bg-stone-800 hover:bg-stone-100 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>انتخاب و خرید آنلاین</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-white dark:bg-stone-800 hover:bg-stone-100 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>شروع ۱۴ روز تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1047,8 +1061,8 @@
                     </div>
 
                     {{-- تب ۴: ۱۲ ماهه (پیشنهاد برگزیده طلالایو) --}}
-                    <div x-show="mobilePlan === '12m'" x-transition.opacity.duration.150ms class="relative rounded-2xl p-6 border-2 border-amber-500 bg-white dark:bg-stone-900 shadow-md space-y-6">
-                        <div class="absolute -top-3.5 right-6 px-3 py-0.5 rounded-full text-xs font-bold bg-amber-500 text-stone-950">
+                    <div x-show="mobilePlan === '12m'" x-transition.opacity.duration.150ms class="relative rounded-3xl p-6 tl-neu-card-gold space-y-6">
+                        <div class="absolute -top-3.5 right-6 px-3.5 py-0.5 rounded-full text-xs font-bold tl-btn-bullion">
                             محبوب‌ترین انتخاب طلافروشان ★
                         </div>
                         <div class="flex items-center justify-between pt-1">
@@ -1056,9 +1070,9 @@
                                 <h3 class="text-xl font-bold text-stone-900 dark:text-stone-50">اشتراک سالانه (۱۲ ماه)</h3>
                                 <p class="text-xs text-amber-700 dark:text-amber-400 font-semibold mt-0.5">بیشترین صرفه‌جویی اقتصادی</p>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">۳۶۵ روز</span>
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold tl-glass-badge text-amber-900 dark:text-amber-300">۳۶۵ روز</span>
                         </div>
-                        <div class="bg-stone-100/80 dark:bg-stone-800/60 p-4 rounded-xl border border-stone-200 dark:border-stone-700 flex items-baseline justify-between">
+                        <div class="tl-neu-inset p-4 rounded-2xl flex items-baseline justify-between">
                             <span class="text-xs text-stone-600 dark:text-stone-400">مبلغ یک سال کامل:</span>
                             <div class="text-left">
                                 <div class="flex items-baseline gap-1.5">
@@ -1068,7 +1082,7 @@
                                 <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5 font-mono tabular-nums">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
                             </div>
                         </div>
-                        <ul class="space-y-2.5 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-stone-800 pt-4">
+                        <ul class="space-y-2.5 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-4">
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0'])
                                 <span class="font-bold text-stone-900 dark:text-stone-100">پخش نامحدود 4K بدون قطعی در طول سال</span>
@@ -1091,12 +1105,12 @@
                             </li>
                         </ul>
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3.5 px-4 rounded-xl tl-btn-bullion text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
                                 <span>خرید سالانه و فعال‌سازی آنی</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3.5 px-4 rounded-xl tl-btn-bullion text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
                                 <span>ثبت‌نام و شروع ۱۴ روز تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1105,15 +1119,15 @@
                 </div>
             </div>
 
-            {{-- ۲. نمای دسکتاپ و تبلت: گرید ۴ پلن هم‌تراز --}}
+            {{-- ۲. نمای دسکتاپ و تبلت: گرید ۴ پلن نئومورفیک هم‌تراز --}}
             <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch pt-2">
                 
                 {{-- پلن ۱: ۱ ماهه --}}
-                <div class="rounded-2xl p-6 sm:p-7 border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs flex flex-col justify-between">
+                <div class="rounded-3xl p-6 sm:p-7 tl-neu-card flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک ۱ ماهه</h3>
-                            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">کوتاه‌مدت</span>
+                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold tl-neu-inset text-stone-700 dark:text-stone-300">کوتاه‌مدت</span>
                         </div>
                         <div class="mb-4">
                             <div class="flex items-baseline gap-1.5">
@@ -1125,7 +1139,7 @@
                         <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">
                             مناسب جهت بررسی اولیه و تست امکانات تابلوی هوشمند مغازه.
                         </p>
-                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-stone-800 pt-5">
+                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-5">
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
                                 <span>پخش زنده تلویزیون 4K</span>
@@ -1146,12 +1160,12 @@
                     </div>
                     <div class="mt-8 pt-4">
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>انتخاب و تمدید آنلاین</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>شروع با تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1160,11 +1174,11 @@
                 </div>
 
                 {{-- پلن ۲: ۳ ماهه --}}
-                <div class="rounded-2xl p-6 sm:p-7 border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs flex flex-col justify-between">
+                <div class="rounded-3xl p-6 sm:p-7 tl-neu-card flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک ۳ ماهه</h3>
-                            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">۱۵٪ صرفه‌جویی</span>
+                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold tl-neu-inset text-stone-700 dark:text-stone-300">۱۵٪ صرفه‌جویی</span>
                         </div>
                         <div class="mb-4">
                             <div class="flex items-baseline gap-1.5">
@@ -1176,7 +1190,7 @@
                         <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">
                             انتخاب فصلی با ثبات نرخ و دسترسی کامل به کلیه قابلیت‌ها.
                         </p>
-                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-stone-800 pt-5">
+                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-5">
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
                                 <span>پخش زنده تلویزیون 4K</span>
@@ -1197,12 +1211,12 @@
                     </div>
                     <div class="mt-8 pt-4">
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>انتخاب و تمدید آنلاین</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>شروع با تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1211,11 +1225,11 @@
                 </div>
 
                 {{-- پلن ۳: ۶ ماهه --}}
-                <div class="rounded-2xl p-6 sm:p-7 border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-xs flex flex-col justify-between">
+                <div class="rounded-3xl p-6 sm:p-7 tl-neu-card flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک ۶ ماهه</h3>
-                            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">۳۰٪ صرفه‌جویی</span>
+                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold tl-neu-inset text-stone-700 dark:text-stone-300">۳۰٪ صرفه‌جویی</span>
                         </div>
                         <div class="mb-4">
                             <div class="flex items-baseline gap-1.5">
@@ -1227,7 +1241,7 @@
                         <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">
                             پلن نیم‌سال با تخفیف ویژه و پایداری تضمین‌شده سرورها.
                         </p>
-                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-stone-800 pt-5">
+                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-5">
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
                                 <span>پخش زنده تلویزیون 4K</span>
@@ -1248,12 +1262,12 @@
                     </div>
                     <div class="mt-8 pt-4">
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>انتخاب و تمدید آنلاین</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 border border-stone-300 dark:border-stone-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5">
                                 <span>شروع با تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1261,16 +1275,16 @@
                     </div>
                 </div>
 
-                {{-- پلن ۴: ۱۲ ماهه (پیشنهاد برگزیده - HERO PLAN) --}}
-                <div class="relative rounded-2xl p-6 sm:p-7 border-2 border-amber-500 bg-white dark:bg-stone-900 shadow-md flex flex-col justify-between -translate-y-2">
-                    <div class="absolute -top-3.5 right-1/2 translate-x-1/2 px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-stone-950 shadow-xs whitespace-nowrap">
+                {{-- پلن ۴: ۱۲ ماهه (پیشنهاد برگزیده طلایی - HERO PLAN) --}}
+                <div class="relative rounded-3xl p-6 sm:p-7 tl-neu-card-gold flex flex-col justify-between -translate-y-2">
+                    <div class="absolute -top-3.5 right-1/2 translate-x-1/2 px-3.5 py-1 rounded-full text-xs font-bold tl-btn-bullion whitespace-nowrap">
                         محبوب‌ترین انتخاب طلافروشان ★
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-4 pt-2">
                             <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک سالانه (۱۲ ماه)</h3>
-                            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">بیش از ۵۰٪ تخفیف</span>
+                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-bold tl-glass-badge text-amber-900 dark:text-amber-300">بیش از ۵۰٪ تخفیف</span>
                         </div>
                         <div class="mb-4">
                             <div class="flex items-baseline gap-1.5">
@@ -1282,7 +1296,7 @@
                         <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">
                             بیشترین صرفه اقتصادی برای یک سال کامل بدون دغدغه نوسان قیمت، همراه با اولویت پشتیبانی.
                         </p>
-                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-200 dark:border-stone-800 pt-5">
+                        <ul class="space-y-3 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-5">
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0'])
                                 <span class="font-bold text-stone-900 dark:text-stone-100">پخش زنده تلویزیون 4K نامحدود</span>
@@ -1307,12 +1321,12 @@
                     </div>
                     <div class="mt-8 pt-4">
                         @auth
-                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                            <a href="{{ route('admin.subscription.index') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-btn-bullion text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
                                 <span>خرید سالانه و فعال‌سازی آنی</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
                         @else
-                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                            <a href="{{ route('admin.register') }}" class="w-full min-h-11 py-3 px-4 rounded-xl tl-btn-bullion text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
                                 <span>ثبت‌نام و شروع ۱۴ روز تست رایگان</span>
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                             </a>
@@ -1322,10 +1336,10 @@
 
             </div>
 
-            {{-- بنر ضمانت و امنیت پرداخت --}}
-            <div class="rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+            {{-- بنر ضمانت و امنیت پرداخت نئومورفیک --}}
+            <div class="rounded-3xl tl-neu-card p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <div class="w-11 h-11 rounded-2xl tl-neu-icon-orb text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0">
                         @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-5 h-5'])
                     </div>
                     <div>
@@ -1347,11 +1361,11 @@
         </div>
     </section>
 
-    {{-- بخش ۷: سوالات متداول طلافروشان (FAQ با details بومی) --}}
-    <section id="faq" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-stone-50 dark:bg-stone-950 border-t border-stone-200 dark:border-stone-800">
+    {{-- بخش ۷: سوالات متداول طلافروشان (FAQ با details بومی و سطح نئومورفیک) --}}
+    <section id="faq" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-stone-300/60 dark:border-white/10">
         <div class="max-w-4xl mx-auto space-y-8">
             <div class="text-center space-y-3">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                     <span>پاسخ به ابهامات متداول</span>
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
@@ -1359,13 +1373,13 @@
                 </h2>
             </div>
 
-            <div class="divide-y divide-stone-200 dark:divide-stone-800 border border-stone-200 dark:border-stone-800 rounded-2xl bg-white dark:bg-stone-900 shadow-xs">
+            <div class="divide-y divide-stone-300/60 dark:divide-white/10 rounded-3xl tl-neu-card overflow-hidden">
                 <details class="group p-5 sm:p-6">
                     <summary class="flex items-center justify-between gap-4 cursor-pointer font-bold text-sm text-stone-900 dark:text-stone-50 list-none">
                         <span>سامانه طلا لایو (طلالایو) چیست و چه کاربردی برای مغازه طلافروشی دارد؟</span>
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5 text-stone-500 transition-transform duration-150 group-open:rotate-180 shrink-0'])
                     </summary>
-                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-200 dark:border-stone-800 pt-3">
+                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-300/50 dark:border-white/10 pt-3">
                         سامانه طلا لایو (طلالایو - TalaLive) پلتفرم ابری هوشمند مدیریت و نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز ویژه تلویزیون‌های مغازه طلافروشی است که بدون نیاز به خرید مینی‌کیس، کامپیوتر یا دانگل واسط، تابلوی نرخ رسمی، فرمول‌ساز سود قانونی و ویترین دیجیتال گالری را فعال می‌کند.
                     </p>
                 </details>
@@ -1375,7 +1389,7 @@
                         <span>آیا برای راه‌اندازی تابلوی طلالایو نیاز به خرید کامپیوتر یا دستگاه جداگانه در مغازه هست؟</span>
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5 text-stone-500 transition-transform duration-150 group-open:rotate-180 shrink-0'])
                     </summary>
-                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-200 dark:border-stone-800 pt-3">
+                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-300/50 dark:border-white/10 pt-3">
                         خیر، هیچ نیازی به خرید مینی‌کیس، کامپیوتر یا دانگل اضافه نیست. شما می‌توانید تنها با استفاده از مرورگر وب داخلی هر نوع تلویزیون هوشمند (سامسونگ، ال‌جی، سونی، اسنوا، دوو یا اندروید تی‌وی) و اسکن یکبار QR کد، تابلوی اختصاصی طلافروشی خود را بدون سیم‌کشی راه‌اندازی کنید.
                     </p>
                 </details>
@@ -1385,7 +1399,7 @@
                         <span>نرخ‌های طلا، سکه و ارز از چه مراجعی بروزرسانی می‌شوند؟</span>
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5 text-stone-500 transition-transform duration-150 group-open:rotate-180 shrink-0'])
                     </summary>
-                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-200 dark:border-stone-800 pt-3">
+                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-300/50 dark:border-white/10 pt-3">
                         نرخ‌ها به صورت خودکار و لحظه‌ای از مراجع معتبر و منتخب بازار طلا و جواهر کشور، اتحادیه‌های طلا و سکه و مراجع رسمی انس جهانی دریافت می‌شوند و به صورت بلادرنگ روی تابلوی شما آپدیت می‌گردند.
                     </p>
                 </details>
@@ -1395,7 +1409,7 @@
                         <span>در صورت قطعی موقت اینترنت در طلافروشی چه اتفاقی می‌افتد؟</span>
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5 text-stone-500 transition-transform duration-150 group-open:rotate-180 shrink-0'])
                     </summary>
-                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-200 dark:border-stone-800 pt-3">
+                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-300/50 dark:border-white/10 pt-3">
                         طلالایو مجهز به فناوری کش هوشمند آفلاین است. در صورت قطعی اینترنت، تابلوی شما هرگز متوقف نمی‌شود؛ بلکه آخرین نرخ‌های دریافتی معتبر را با برچسب ساعت آخرین بروزرسانی همراه با ویترین محصولات به نمایش مداوم ادامه می‌دهد.
                     </p>
                 </details>
@@ -1405,7 +1419,7 @@
                         <span>چگونه می‌توان فرمول سود، اجرت یا مظنه را برای طلافروشی شخصی‌سازی کرد؟</span>
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5 text-stone-500 transition-transform duration-150 group-open:rotate-180 shrink-0'])
                     </summary>
-                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-200 dark:border-stone-800 pt-3">
+                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-300/50 dark:border-white/10 pt-3">
                         از طریق پنل مدیریت موبایل یا کامپیوتر، بخش فرمول‌ساز هوشمند در اختیارتان قرار دارد که می‌توانید درصد سود فروش، حاشیه خرید، مالیات و تخفیف‌ها را به ازای هر گرم یا نوع سکه اختصاصی‌سازی کنید تا نرخ‌ها مطابق با سیاست مالی گالری شما محاسبه و نمایش یابند.
                     </p>
                 </details>
@@ -1415,7 +1429,7 @@
                         <span>آیا اتصال تلویزیون پس از هر بار خاموش و روشن شدن مغازه قطع می‌شود؟</span>
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5 text-stone-500 transition-transform duration-150 group-open:rotate-180 shrink-0'])
                     </summary>
-                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-200 dark:border-stone-800 pt-3">
+                    <p class="mt-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed border-t border-stone-300/50 dark:border-white/10 pt-3">
                         خیر، اطلاعات اتصال تلویزیون شما در حافظه پایدار مرورگر تلویزیون به صورت خودکار ذخیره می‌شود و با روشن شدن تلویزیون، صفحه بدون نیاز به اسکن مجدد فوراً باز شده و به تابلوی زنده شما متصل می‌گردد.
                     </p>
                 </details>
@@ -1434,15 +1448,15 @@
                     مقالات تخصصی نحوه محاسبه اجرت، عیار، سود مغازه و حباب انواع سکه
                 </p>
             </div>
-            <a href="{{ route('public.guides') }}" class="min-h-11 inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline">
+            <a href="{{ route('public.guides') }}" class="min-h-11 px-4 py-2 rounded-xl tl-neu-btn inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300">
                 <span>مشاهده تمام مقالات و آموزش‌ها</span>
                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
             </a>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/60 transition-colors shadow-xs group block">
-                <div class="w-9 h-9 rounded-xl bg-stone-100 dark:bg-stone-800 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold text-sm">
+            <a href="{{ route('public.guides.show', 'gold-price-formula-18k') }}" class="tl-neu-card-interactive rounded-3xl p-5 space-y-3.5 group block">
+                <div class="w-10 h-10 rounded-xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'calculator', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors leading-snug">
@@ -1453,8 +1467,8 @@
                 </p>
             </a>
 
-            <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/60 transition-colors shadow-xs group block">
-                <div class="w-9 h-9 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center font-bold text-sm">
+            <a href="{{ route('public.guides.show', 'how-to-calculate-coin-bubble') }}" class="tl-neu-card-interactive rounded-3xl p-5 space-y-3.5 group block">
+                <div class="w-10 h-10 rounded-xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'coin', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors leading-snug">
@@ -1465,8 +1479,8 @@
                 </p>
             </a>
 
-            <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/60 transition-colors shadow-xs group block">
-                <div class="w-9 h-9 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center font-bold text-sm">
+            <a href="{{ route('public.guides.show', 'best-tv-for-jewelry-shop') }}" class="tl-neu-card-interactive rounded-3xl p-5 space-y-3.5 group block">
+                <div class="w-10 h-10 rounded-xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors leading-snug">
@@ -1477,8 +1491,8 @@
                 </p>
             </a>
 
-            <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 space-y-3 hover:border-amber-500/60 transition-colors shadow-xs group block">
-                <div class="w-9 h-9 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center font-bold text-sm">
+            <a href="{{ route('public.guides.show', 'gold-tax-regulations') }}" class="tl-neu-card-interactive rounded-3xl p-5 space-y-3.5 group block">
+                <div class="w-10 h-10 rounded-xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center">
                     @include('partials.ui-icon', ['name' => 'book', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors leading-snug">

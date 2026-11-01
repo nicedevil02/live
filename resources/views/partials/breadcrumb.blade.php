@@ -1,6 +1,6 @@
-{{-- بردکرامب دیداری و اسکیمای ساخت‌یافته BreadcrumbList گوگل --}}
+{{-- بردکرامب دیداری حکاکی‌شده نئومورفیک و اسکیمای ساخت‌یافته BreadcrumbList گوگل --}}
 @if(!empty($items) && is_array($items))
-<nav aria-label="مسیر راهنما" class="py-2.5 px-4 my-4 rounded-xl bg-stone-100/80 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs text-stone-600 dark:text-stone-400">
+<nav aria-label="مسیر راهنما" class="py-2.5 px-4 my-4 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-400">
     <ol class="flex items-center flex-wrap gap-2">
         <li class="inline-flex items-center gap-1.5">
             <a href="{{ url('/') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">

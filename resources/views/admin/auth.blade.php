@@ -81,14 +81,16 @@
         }
     </style>
 </head>
-<body class="tl-public bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 flex flex-col justify-between min-h-screen p-4 sm:p-6 transition-colors duration-150"
+<body class="tl-public text-stone-900 dark:text-stone-100 flex flex-col justify-between min-h-screen p-4 sm:p-6 transition-colors duration-200"
       x-data="unifiedAuthApp()">
 
-    {{-- ۱. سربرگ بالا --}}
-    <header class="w-full max-w-md mx-auto pt-1 sm:pt-2 shrink-0">
+    {{-- ۱. سربرگ بالا با دکمه‌های نئومورفیک --}}
+    <header class="w-full max-w-md mx-auto pt-1 sm:pt-2 shrink-0 relative z-20">
         <div class="flex items-center justify-between gap-3 px-1">
             <a href="/" class="flex items-center gap-2.5 group shrink-0">
-                <img src="{{ asset('images/logo.png') }}?v=2" width="40" height="40" class="h-10 w-10 object-contain rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-1.5 shadow-xs" alt="طلالایو">
+                <span class="tl-neu-icon-orb h-10 w-10 rounded-xl p-1.5 flex items-center justify-center shrink-0">
+                    <img src="{{ asset('images/logo.png') }}?v=2" width="36" height="36" class="h-full w-full object-contain" alt="طلالایو">
+                </span>
                 <div>
                     <span class="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">طلالایو &middot; TalaLive</span>
                     <span class="block text-xs text-stone-600 dark:text-stone-400">سامانه تابلوی هوشمند طلافروشی</span>
@@ -97,12 +99,12 @@
 
             <div class="flex items-center gap-2">
                 <button type="button" @click="toggleTheme()" aria-label="تغییر تم"
-                        class="w-11 h-11 rounded-xl flex items-center justify-center border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-700 dark:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors shadow-xs cursor-pointer">
+                        class="w-11 h-11 rounded-xl tl-neu-btn flex items-center justify-center text-stone-700 dark:text-amber-400 cursor-pointer">
                     <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </button>
 
-                <a href="/" class="text-xs font-semibold text-stone-700 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition-colors flex items-center gap-1.5 min-h-11 px-3 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xs">
+                <a href="/" class="text-xs font-semibold text-stone-800 dark:text-stone-200 hover:text-amber-800 dark:hover:text-amber-300 flex items-center gap-1.5 min-h-11 px-3.5 py-2 rounded-xl tl-neu-btn">
                     <span>صفحه اصلی</span>
                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                 </a>
@@ -110,13 +112,16 @@
         </div>
     </header>
 
-    {{-- ۲. کارت یکپارچه ورود و ثبت‌نام ۲ مرحله‌ای --}}
-    <main class="w-full max-w-md mx-auto my-auto py-4 sm:py-6 flex-1 flex flex-col justify-center">
-        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-7 shadow-lg space-y-5 transition-colors overflow-visible">
+    {{-- ۲. کارت شیشه‌ای اپل یکپارچه ورود و ثبت‌نام ۲ مرحله‌ای --}}
+    <main class="relative w-full max-w-md mx-auto my-auto py-4 sm:py-6 flex-1 flex flex-col justify-center">
+        {{-- هاله نور استودیویی ۱۸ عیار پشت دک شیشه‌ای --}}
+        <div class="tl-ambient-gold absolute -inset-4 rounded-[44px] opacity-80" aria-hidden="true"></div>
+
+        <div class="relative z-10 tl-glass-deck rounded-3xl p-6 sm:p-7 space-y-5 overflow-visible">
 
             {{-- اعلان جفت‌سازی خودکار تلویزیون در صورت اسکن QR قبل از ورود --}}
             @if (session('pending_pair_code'))
-                <div class="bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 rounded-xl p-3.5 text-xs flex items-center gap-2.5">
+                <div class="bg-emerald-50/90 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 rounded-2xl p-3.5 text-xs flex items-center gap-2.5">
                     @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-5 h-5 text-emerald-700 dark:text-emerald-400 shrink-0'])
                     <div class="leading-relaxed text-emerald-900 dark:text-emerald-200">
                         آماده اتصال تلویزیون با کد <strong class="font-mono px-1.5 py-0.5 rounded bg-emerald-500/20" dir="ltr">{{ session('pending_pair_code') }}</strong>؛ کافیست وارد شوید یا ثبت‌نام کنید.
@@ -124,23 +129,23 @@
                 </div>
             @endif
 
-            {{-- تب سوییچر کپسولی: ورود به پنل | ثبت‌نام گالری جدید --}}
-            <div class="bg-stone-100 dark:bg-stone-950 p-1.5 rounded-xl grid grid-cols-2 gap-1.5 border border-stone-200 dark:border-stone-800">
+            {{-- ریل سگمنت نئومورفیک اپل: ورود به پنل | ثبت‌نام گالری جدید --}}
+            <div class="tl-neu-track p-1.5 rounded-2xl grid grid-cols-2 gap-1.5">
                 <button type="button"
                         @click="switchTab('login')"
                         :class="activeTab === 'login'
-                            ? 'bg-white dark:bg-stone-800 text-stone-900 dark:text-white shadow-xs font-bold border border-stone-200 dark:border-stone-700'
+                            ? 'tl-neu-pill-active text-stone-900 dark:text-white font-bold'
                             : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 font-semibold'"
-                        class="min-h-11 rounded-lg text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+                        class="min-h-11 rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
                     <span>ورود به پنل</span>
                 </button>
 
                 <button type="button"
                         @click="switchTab('register')"
                         :class="activeTab === 'register'
-                            ? 'bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-xs font-bold'
+                            ? 'tl-btn-bullion font-bold'
                             : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 font-semibold'"
-                        class="min-h-11 rounded-lg text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+                        class="min-h-11 rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
                     <span>ثبت‌نام گالری</span>
                     <span :class="activeTab === 'register' ? 'bg-stone-950/15 text-stone-950' : 'bg-amber-500/15 text-amber-800 dark:text-amber-300'"
                           class="text-xs font-bold px-1.5 py-0.5 rounded-md">رایگان</span>
@@ -232,13 +237,13 @@
                 {{-- گام ۱ ثبت‌نام: شماره تماس و کد تأیید پیامکی --}}
                 <div x-show="regStep === 1" class="space-y-4">
 
-                    {{-- بنر هدیه ۱۴ روز تست رایگان --}}
-                    <div class="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25 rounded-xl p-3.5 flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-800 dark:text-amber-300 flex items-center justify-center text-base shrink-0">
+                    {{-- بنر شیشه‌ای هدیه ۱۴ روز تست رایگان --}}
+                    <div class="tl-glass-badge rounded-2xl p-3.5 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl tl-neu-icon-orb text-amber-800 dark:text-amber-300 flex items-center justify-center text-base shrink-0">
                             @include('partials.ui-icon', ['name' => 'gift', 'class' => 'w-5 h-5'])
                         </div>
                         <div>
-                            <h2 class="text-xs font-bold text-amber-800 dark:text-amber-300">۱۴ روز استفاده آزمایشی کاملاً رایگان</h2>
+                            <h2 class="text-xs font-bold text-amber-900 dark:text-amber-300">۱۴ روز استفاده آزمایشی کاملاً رایگان</h2>
                             <p class="text-xs text-stone-700 dark:text-stone-300 leading-relaxed mt-0.5">
                                 بدون نیاز به پرداخت، تابلوی زنده گالری خود را در کمتر از ۱ دقیقه روی تلویزیون روشن کنید.
                             </p>
@@ -262,13 +267,13 @@
                                    inputmode="numeric"
                                    autocomplete="tel"
                                    placeholder="09123456789"
-                                   class="w-full min-h-12 bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl px-4 text-lg text-stone-900 dark:text-white font-mono text-center font-bold tracking-widest placeholder:text-stone-400 focus:outline-none focus:border-amber-600 dark:focus:border-amber-400 focus-visible:ring-2 focus-visible:ring-amber-600/30 dark:focus-visible:ring-amber-400/30 transition-colors">
+                                   class="w-full min-h-12 tl-neu-inset rounded-xl px-4 text-lg text-stone-900 dark:text-white font-mono text-center font-bold tracking-widest placeholder:text-stone-400 focus:outline-none">
                         </div>
 
                         <button type="button"
                                 @click="sendRegOtp()"
                                 :disabled="isSendingRegOtp"
-                                class="w-full min-h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base shadow-xs transition-colors cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2">
+                                class="w-full min-h-12 rounded-xl tl-btn-bullion font-bold text-sm sm:text-base cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2">
                             <span x-text="isSendingRegOtp ? 'در حال ارسال کد پیامکی...' : 'دریافت کد تأیید پیامکی'"></span>
                             <span x-show="!isSendingRegOtp">
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
@@ -278,7 +283,7 @@
 
                     {{-- وضعیت ۱-ب: ورود کد ۵ رقمی پیامک‌شده --}}
                     <div x-show="regOtpSent" x-cloak class="space-y-4 pt-1">
-                        <div class="flex items-center justify-between bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl px-3.5 py-2.5 text-xs">
+                        <div class="flex items-center justify-between tl-neu-inset rounded-xl px-3.5 py-2.5 text-xs">
                             <div class="flex items-center gap-1.5 text-stone-700 dark:text-stone-300">
                                 <span>کد پیامک‌شده به</span>
                                 <strong class="font-mono text-stone-900 dark:text-white text-sm tabular-nums" dir="ltr" x-text="regPhone"></strong>
@@ -314,13 +319,13 @@
                                    inputmode="numeric"
                                    autocomplete="one-time-code"
                                    placeholder="-----"
-                                   class="w-full min-h-14 bg-white dark:bg-stone-950 border-2 border-amber-600 dark:border-amber-400 rounded-xl px-4 text-center text-3xl font-bold tracking-[0.35em] text-amber-700 dark:text-amber-300 font-mono placeholder:text-stone-300 dark:placeholder:text-stone-700 focus:outline-none focus:border-amber-700 dark:focus:border-amber-300 focus-visible:ring-2 focus-visible:ring-amber-600/30 transition-colors">
+                                   class="w-full min-h-14 tl-neu-inset rounded-xl px-4 text-center text-3xl font-bold tracking-[0.35em] text-amber-700 dark:text-amber-300 font-mono placeholder:text-stone-400 dark:placeholder:text-stone-600 focus:outline-none">
                         </div>
 
                         <button type="button"
                                 @click="verifyRegOtp()"
                                 :disabled="isVerifyingRegOtp || regOtp.length !== 5"
-                                class="w-full min-h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base shadow-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2">
+                                class="w-full min-h-12 rounded-xl tl-btn-bullion font-bold text-sm sm:text-base cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2">
                             <span x-text="isVerifyingRegOtp ? 'در حال بررسی کد...' : 'تأیید و ادامه به مشخصات گالری'"></span>
                             <span x-show="!isVerifyingRegOtp">
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
@@ -381,13 +386,13 @@
 
                         <div class="relative w-full">
                             <button type="button" @click="toggleDropdown()"
-                                    class="w-full min-h-12 bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl px-4 text-sm sm:text-base font-semibold text-stone-900 dark:text-white focus:outline-none focus:border-amber-600 dark:focus:border-amber-400 focus-visible:ring-2 focus-visible:ring-amber-600/30 transition-colors flex items-center justify-between gap-2 cursor-pointer">
+                                    class="w-full min-h-12 tl-neu-inset rounded-xl px-4 text-sm sm:text-base font-semibold text-stone-900 dark:text-white focus:outline-none flex items-center justify-between gap-2 cursor-pointer">
                                 <div class="flex items-center gap-2.5 truncate">
                                     <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
                                     <span class="truncate" x-text="selectedLabel"></span>
                                 </div>
                                 <div class="flex items-center gap-2 shrink-0">
-                                    <span class="text-xs px-2.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-medium" x-text="selectedProvinceNameOnly"></span>
+                                    <span class="text-xs px-2.5 py-0.5 rounded-lg tl-neu-btn text-stone-700 dark:text-stone-300 font-medium" x-text="selectedProvinceNameOnly"></span>
                                     @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-4 h-4 text-stone-500 transition-transform duration-150'])
                                 </div>
                             </button>
@@ -399,7 +404,7 @@
                                  x-transition:enter="transition ease-out duration-150"
                                  x-transition:enter-start="opacity-0 translate-y-1"
                                  x-transition:enter-end="opacity-100 translate-y-0"
-                                 class="absolute right-0 left-0 top-full mt-2 z-50 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl shadow-lg overflow-hidden">
+                                 class="absolute right-0 left-0 top-full mt-2 z-50 tl-neu-card rounded-2xl overflow-hidden">
 
                                 <div class="p-2.5 bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800">
                                     <div class="relative flex items-center">
@@ -495,7 +500,7 @@
 
                     <button type="submit"
                             :disabled="isSubmittingReg"
-                            class="w-full min-h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base shadow-xs transition-colors cursor-pointer disabled:opacity-60 mt-2 flex items-center justify-center gap-2">
+                            class="w-full min-h-12 rounded-xl tl-btn-bullion font-bold text-sm sm:text-base cursor-pointer disabled:opacity-60 mt-2 flex items-center justify-center gap-2">
                         <span x-text="isSubmittingReg ? 'در حال ساخت تابلوی گالری شما...' : 'تکمیل ثبت‌نام و ورود فوری به پنل'"></span>
                         <span x-show="!isSubmittingReg">
                             @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
@@ -530,7 +535,7 @@
                                dir="ltr"
                                autocomplete="username"
                                placeholder="09123456789 یا نام کاربری"
-                               class="w-full min-h-12 bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl px-4 text-base font-semibold text-stone-900 dark:text-white placeholder:text-stone-400 focus:outline-none focus:border-amber-600 dark:focus:border-amber-400 focus-visible:ring-2 focus-visible:ring-amber-600/30 transition-colors text-left">
+                               class="w-full min-h-12 tl-neu-inset rounded-xl px-4 text-base font-semibold text-stone-900 dark:text-white placeholder:text-stone-400 focus:outline-none text-left">
                     </div>
 
                     <div class="space-y-1.5">
@@ -554,7 +559,7 @@
                                    autocomplete="current-password"
                                    placeholder="رمز عبور شما"
                                    style="padding-right: 48px;"
-                                   class="w-full min-h-12 bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl pl-4 text-base font-semibold text-stone-900 dark:text-white placeholder:text-stone-400 focus:outline-none focus:border-amber-600 dark:focus:border-amber-400 focus-visible:ring-2 focus-visible:ring-amber-600/30 transition-colors text-left font-mono">
+                                   class="w-full min-h-12 tl-neu-inset rounded-xl pl-4 text-base font-semibold text-stone-900 dark:text-white placeholder:text-stone-400 focus:outline-none text-left font-mono">
                             <button type="button" @click="showLoginPass = !showLoginPass" aria-label="نمایش رمز"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 p-2 cursor-pointer">
                                 <svg x-show="!showLoginPass" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -565,7 +570,7 @@
 
                     <button type="submit"
                             :disabled="isSubmittingLogin"
-                            class="w-full min-h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base shadow-xs transition-colors cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 mt-2">
+                            class="w-full min-h-12 rounded-xl tl-btn-bullion font-bold text-sm sm:text-base cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 mt-2">
                         <span x-text="isSubmittingLogin ? 'در حال ورود...' : 'ورود به پنل کاربری تابلو'"></span>
                         <span x-show="!isSubmittingLogin">
                             @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
@@ -610,7 +615,7 @@
                             <button type="button"
                                     @click="sendLoginOtpRequest()"
                                     :disabled="isSendingLoginOtp || loginCountdown > 0"
-                                    class="min-h-12 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs whitespace-nowrap transition-colors cursor-pointer disabled:opacity-50 shrink-0">
+                                    class="min-h-12 px-4 rounded-xl tl-btn-bullion font-bold text-xs whitespace-nowrap cursor-pointer disabled:opacity-50 shrink-0">
                                 <span x-text="isSendingLoginOtp ? 'ارسال...' : (loginCountdown > 0 ? (loginCountdown + ' ثانیه') : (loginOtpSent ? 'ارسال مجدد' : 'ارسال کد'))"></span>
                             </button>
                         </div>
@@ -632,7 +637,7 @@
                                    inputmode="numeric"
                                    autocomplete="one-time-code"
                                    placeholder="-----"
-                                   class="w-full min-h-14 bg-white dark:bg-stone-950 border-2 border-amber-600 dark:border-amber-400 rounded-xl px-4 text-center text-2xl font-bold tracking-[0.35em] text-amber-700 dark:text-amber-300 font-mono focus:outline-none focus:border-amber-700">
+                                   class="w-full min-h-14 tl-neu-inset rounded-xl px-4 text-center text-2xl font-bold tracking-[0.35em] text-amber-700 dark:text-amber-300 font-mono focus:outline-none">
                         </div>
 
                         <div class="space-y-1.5">
@@ -649,7 +654,7 @@
                                        autocomplete="new-password"
                                        placeholder="رمز جدید (حداقل ۴ کاراکتر)"
                                        style="padding-right: 48px;"
-                                       class="w-full min-h-12 bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl pl-4 text-base font-semibold text-stone-900 dark:text-white placeholder:text-stone-400 text-left font-mono focus:outline-none focus:border-amber-600">
+                                       class="w-full min-h-12 tl-neu-inset rounded-xl pl-4 text-base font-semibold text-stone-900 dark:text-white placeholder:text-stone-400 text-left font-mono focus:outline-none">
                                 <button type="button" @click="showNewPass = !showNewPass"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-2 cursor-pointer">
                                     <svg x-show="!showNewPass" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -660,7 +665,7 @@
 
                         <button type="submit"
                                 :disabled="isSubmittingOtpLogin"
-                                class="w-full min-h-12 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm sm:text-base shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2">
+                                class="w-full min-h-12 rounded-xl tl-btn-bullion font-bold text-sm sm:text-base cursor-pointer flex items-center justify-center gap-2">
                             <span x-text="isSubmittingOtpLogin ? 'در حال ثبت رمز جدید...' : 'تغییر رمز عبور و ورود به پنل'"></span>
                             <span x-show="!isSubmittingOtpLogin">
                                 @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])

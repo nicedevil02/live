@@ -52,11 +52,21 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
+<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12 relative">
 
-    {{-- هدر صفحه با تعریف صریح موضوع --}}
-    <div class="text-center space-y-4 max-w-3xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
+    {{-- خرده‌نان ناوبری --}}
+    @include('partials.breadcrumb', [
+        'items' => [
+            ['title' => 'ابزارهای طلا', 'url' => route('public.gold-calculator')],
+            ['title' => 'قیمت‌گذاری طلای دست دوم']
+        ]
+    ])
+
+    {{-- هدر صفحه با تعریف صریح موضوع و هاله نور ملایم طلایی --}}
+    <div class="relative text-center space-y-4 max-w-3xl mx-auto">
+        <div class="tl-ambient-gold -top-24 left-1/2 -translate-x-1/2 w-80 h-80 opacity-60"></div>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full tl-glass-badge text-amber-700 dark:text-amber-400 text-xs font-bold">
+            <x-ui-icon name="refresh" class="w-3.5 h-3.5" />
             <span>فرمول استاندارد بازار و اتحادیه طلا و جواهر • سال ۱۴۰۵</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white leading-tight">
@@ -65,12 +75,16 @@
         <p class="text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed text-justify sm:text-center">
             قیمت‌گذاری طلای دست دوم فرآیند تعیین بهای وزنی مصنوعات کارکرده یا مستعمل بر مبنای نرخ خام طلای ۱۸ عیار روز پس از اعمال کسر افت، ناخالصی نگین و عیارسنجی کارگاهی است.
         </p>
-        <p class="text-stone-500 dark:text-stone-400 text-xs">
-            نرخ مبنای طلای ۱۸ عیار در تابلو: <strong class="text-amber-600 dark:text-amber-400 tabular-nums">{{ number_format($rates['gold18']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})
-        </p>
+        <div class="pt-2">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-300">
+                <span>نرخ مبنای طلای ۱۸ عیار در تابلو:</span>
+                <strong class="text-amber-700 dark:text-amber-400 tabular-nums font-black">{{ number_format($rates['gold18']) }} تومان</strong>
+                <span class="text-stone-400 text-[11px]">(بروزرسانی: {{ $lastUpdated }})</span>
+            </span>
+        </div>
     </div>
 
-    {{-- ویجت محاسبه‌گر طلای دست دوم آلپاین --}}
+    {{-- ویجت محاسبه‌گر طلای دست دوم آلپاین با شاسی نئومورفیک --}}
     <div x-data="{
         grossWeight: 7.8,
         karat: 750,
@@ -111,7 +125,7 @@
         formatNumber(num) {
             return (num || 0).toLocaleString('fa-IR');
         }
-    }" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-10 shadow-sm space-y-8">
+    }" class="tl-neu-card rounded-3xl p-6 sm:p-10 space-y-8">
 
         <div>
             <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white mb-2">
@@ -126,13 +140,13 @@
             {{-- وزن کل روی ترازو --}}
             <div class="space-y-2">
                 <label for="second-hand-gross-weight" class="block text-xs font-bold text-stone-700 dark:text-stone-300">وزن کل روی ترازو (گرم):</label>
-                <input id="second-hand-gross-weight" type="number" step="0.01" min="0.01" x-model.number="grossWeight" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="second-hand-gross-weight" type="number" step="0.01" min="0.01" x-model.number="grossWeight" class="w-full min-h-11 px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
             </div>
 
             {{-- عیار قطعه --}}
             <div class="space-y-2">
                 <label for="second-hand-karat" class="block text-xs font-bold text-stone-700 dark:text-stone-300">عیار کارشناسی قطعه طلا:</label>
-                <select id="second-hand-karat" x-model.number="karat" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors">
+                <select id="second-hand-karat" x-model.number="karat" class="w-full min-h-11 px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all">
                     <option value="750">۱۸ عیار استاندارد رسمی (۷۵۰)</option>
                     <option value="740">طلای متفرقه سبک کارگاهی (۷۴۰)</option>
                     <option value="705">طلای متفرقه قدیمی یا هندی (۷۰۵)</option>
@@ -143,24 +157,24 @@
             {{-- کسر افت ناخالصی و نگین --}}
             <div class="space-y-2">
                 <label for="second-hand-waste-weight" class="block text-xs font-bold text-stone-700 dark:text-stone-300">کسر افت ناخالصی، نگین و چسب (گرم):</label>
-                <input id="second-hand-waste-weight" type="number" step="0.01" min="0" x-model.number="wasteWeight" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="second-hand-waste-weight" type="number" step="0.01" min="0" x-model.number="wasteWeight" class="w-full min-h-11 px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
                 <span class="text-[10px] text-stone-400">برای کار بدون نگین معمولاً ۰.۰۵ تا ۰.۱ گرم کسر می‌شود</span>
             </div>
 
             {{-- قیمت هر گرم طلای ۱۸ عیار روز --}}
             <div class="space-y-2">
                 <label for="second-hand-rate" class="block text-xs font-bold text-stone-700 dark:text-stone-300">نرخ تابلوی هر گرم طلای ۱۸ عیار (تومان):</label>
-                <input id="second-hand-rate" type="number" step="1000" min="10000" x-model.number="ratePerGram" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="second-hand-rate" type="number" step="1000" min="10000" x-model.number="ratePerGram" class="w-full min-h-11 px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
             </div>
 
-            {{-- مدل حاشیه کسر خرید متفرقه --}}
+            {{-- مدل حاشیه کسر خرید متفرقه با ترک کوپرتینویی --}}
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-stone-700 dark:text-stone-300">حاشیه خرید طلافروش:</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <button type="button" @click="discountType = 'fixed'" :class="discountType === 'fixed' ? 'bg-amber-500 text-stone-950 font-black' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'" class="min-h-11 px-3 py-2.5 rounded-2xl text-xs transition-colors cursor-pointer text-center flex items-center justify-center">
+                <div class="tl-neu-track p-1 rounded-2xl grid grid-cols-2 gap-1">
+                    <button type="button" @click="discountType = 'fixed'" :class="discountType === 'fixed' ? 'tl-btn-bullion shadow-sm' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'" class="min-h-10 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center flex items-center justify-center">
                         تومان زیر تابلو
                     </button>
-                    <button type="button" @click="discountType = 'percent'" :class="discountType === 'percent' ? 'bg-amber-500 text-stone-950 font-black' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'" class="min-h-11 px-3 py-2.5 rounded-2xl text-xs transition-colors cursor-pointer text-center flex items-center justify-center">
+                    <button type="button" @click="discountType = 'percent'" :class="discountType === 'percent' ? 'tl-btn-bullion shadow-sm' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'" class="min-h-10 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center flex items-center justify-center">
                         درصدی (%)
                     </button>
                 </div>
@@ -169,54 +183,55 @@
             {{-- مقدار کسر خرید --}}
             <div class="space-y-2" x-show="discountType === 'fixed'">
                 <label for="second-hand-fixed-discount" class="block text-xs font-bold text-stone-700 dark:text-stone-300">کسر هر گرم زیر تابلو (تومان):</label>
-                <input id="second-hand-fixed-discount" type="number" step="5000" min="0" x-model.number="fixedDiscountPerGram" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="second-hand-fixed-discount" type="number" step="5000" min="0" x-model.number="fixedDiscountPerGram" class="w-full min-h-11 px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
                 <span class="text-[10px] text-stone-400">عرف بازار: ۲۰,۰۰۰ تا ۵۰,۰۰۰ تومان زیر تابلو</span>
             </div>
 
             <div class="space-y-2" x-show="discountType === 'percent'">
                 <label for="second-hand-percent-discount" class="block text-xs font-bold text-stone-700 dark:text-stone-300">درصد کسر خرید متفرقه (%):</label>
-                <input id="second-hand-percent-discount" type="number" step="0.5" min="0" max="10" x-model.number="percentDiscount" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="second-hand-percent-discount" type="number" step="0.5" min="0" max="10" x-model.number="percentDiscount" class="w-full min-h-11 px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
                 <span class="text-[10px] text-stone-400">عرف بازار: ۱٪ تا ۲٪ ارزش طلا</span>
             </div>
         </div>
 
-        {{-- کادر نتایج تسویه نقدی --}}
-        <div class="mt-8 rounded-3xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 p-6 sm:p-8 space-y-6">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stone-200 dark:border-stone-700">
+        {{-- کادر نتایج تسویه نقدی با استایل نمایشگر OLED و انعکاس نور --}}
+        <div class="mt-8 rounded-3xl tl-oled-readout p-6 sm:p-8 space-y-6 relative overflow-hidden">
+            <div class="tl-screen-glare"></div>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/10 relative z-10">
                 <div>
-                    <span class="text-xs text-amber-600 dark:text-amber-400 font-bold">مبلغ خالص تسویه به مشتری</span>
-                    <h3 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white">ارزش نهایی خرید طلای مستعمل</h3>
+                    <span class="text-xs text-amber-400 font-bold">مبلغ خالص تسویه به مشتری</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-white">ارزش نهایی خرید طلای مستعمل</h3>
                 </div>
                 <div class="text-left sm:text-right">
-                    <div class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 tabular-nums" x-text="formatNumber(finalPayoutTotal) + ' تومان'"></div>
-                    <div class="text-[11px] text-stone-500 dark:text-stone-400 mt-1">
-                        میانگین دریافتی هر گرم ناخالص: <span class="font-bold text-stone-700 dark:text-stone-200 tabular-nums" x-text="formatNumber(effectivePricePerGram) + ' تومان'"></span>
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400 tabular-nums" x-text="formatNumber(finalPayoutTotal) + ' تومان'"></div>
+                    <div class="text-[11px] text-stone-300 mt-1">
+                        میانگین دریافتی هر گرم ناخالص: <span class="font-bold text-white tabular-nums" x-text="formatNumber(effectivePricePerGram) + ' تومان'"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">وزن خالص معادل ۱۸ عیار:</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="netKarat750Weight + ' گرم'"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <span class="text-xs text-stone-400">وزن خالص معادل ۱۸ عیار:</span>
+                    <div class="text-base sm:text-lg font-black text-white mt-1 tabular-nums" x-text="netKarat750Weight + ' گرم'"></div>
                     <span class="text-[10px] text-stone-400">پس از کسر افت و تبدیل عیار</span>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">ارزش خام بر مبنای تابلو:</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="formatNumber(baseBoardValue) + ' تومان'"></div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <span class="text-xs text-stone-400">ارزش خام بر مبنای تابلو:</span>
+                    <div class="text-base sm:text-lg font-black text-white mt-1 tabular-nums" x-text="formatNumber(baseBoardValue) + ' تومان'"></div>
                     <span class="text-[10px] text-stone-400">وزن خالص × نرخ تابلوی مغازه</span>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">حاشیه سود خرید طلافروش:</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="formatNumber(shopMarginTotal) + ' تومان'"></div>
-                    <span class="text-[10px] text-rose-500">کسر بابت ریسک ذوب و تبدیل</span>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <span class="text-xs text-stone-400">حاشیه سود خرید طلافروش:</span>
+                    <div class="text-base sm:text-lg font-black text-rose-300 mt-1 tabular-nums" x-text="formatNumber(shopMarginTotal) + ' تومان'"></div>
+                    <span class="text-[10px] text-rose-400">کسر بابت ریسک ذوب و تبدیل</span>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">کسر افت وزنی ناخالصی:</span>
-                    <div class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 mt-1 tabular-nums" x-text="wasteWeight + ' گرم'"></div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <span class="text-xs text-stone-400">کسر افت وزنی ناخالصی:</span>
+                    <div class="text-base sm:text-lg font-black text-amber-400 mt-1 tabular-nums" x-text="wasteWeight + ' گرم'"></div>
                     <span class="text-[10px] text-stone-400">وزن نگین، چسب و رسوبات</span>
                 </div>
             </div>
@@ -234,12 +249,12 @@
             </p>
         </div>
 
-        <div class="overflow-x-auto rounded-3xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
+        <div class="overflow-x-auto rounded-3xl tl-neu-card">
             <table class="w-full text-right text-xs sm:text-sm">
                 <thead class="bg-stone-50 dark:bg-stone-800/80 text-stone-900 dark:text-white font-black border-b border-stone-200 dark:border-stone-800">
                     <tr>
                         <th class="p-4 sm:p-5">نوع مصنوع طلای کارکرده</th>
-                        <th class="p-4 sm:p-5 text-amber-600 dark:text-amber-400">میانگین کسر افت یا ناخالصی</th>
+                        <th class="p-4 sm:p-5 text-amber-700 dark:text-amber-400">میانگین کسر افت یا ناخالصی</th>
                         <th class="p-4 sm:p-5">دلیل فنی کسر افت</th>
                         <th class="p-4 sm:p-5">توصیه به فروشنده</th>
                     </tr>
@@ -247,31 +262,31 @@
                 <tbody class="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">النگو بدون نگین و تراش ساده</td>
-                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">۰.۰۱ تا ۰.۰۵ گرم</td>
+                        <td class="p-4 sm:p-5 text-emerald-700 dark:text-emerald-400 font-bold">۰.۰۱ تا ۰.۰۵ گرم</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">جرم و رسوب صابون و تعریق پوست در لایه‌های داخلی النگو.</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">قبل از فروش با آب گرم و مایع شوینده النگو را شستشو دهید.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">زنجیر و دستبند کارکرده</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۰.۰۵ تا ۰.۱۵ گرم</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۰.۰۵ تا ۰.۱۵ گرم</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">فنر داخل قفل (استیل آهن‌ربایی) و فلز لحیم دانه‌ها.</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">وجود فنر قفل جزو استانداردهای ساخت است و افت آن طبیعی است.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">انگشتر و گوشواره نگین‌دار اتمی</td>
-                        <td class="p-4 sm:p-5 text-rose-500 font-bold">۰.۲ تا ۱.۵ گرم (کسر کامل)</td>
+                        <td class="p-4 sm:p-5 text-rose-700 dark:text-rose-400 font-bold">۰.۲ تا ۱.۵ گرم (کسر کامل)</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">نگین‌های اتمی شیشه‌ای ارزش بازیافت نداشته و وزنشان تماماً کسر می‌شود.</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">از طلافروش بخواهید وزن کسر نگین را متناسب با سنگ‌های فاکتور اصلی کسر کند.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">پلاک‌های چسب‌دار و میناکاری</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۰.۱ تا ۰.۵ گرم</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۰.۱ تا ۰.۵ گرم</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">وزن رنگ‌های لعابی مینا یا رزین و چسب‌های نگهدارنده نگین.</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">این محصولات هنگام خرید اجرت بالا دارند اما هنگام فروش افت زیادی دارند.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">طلای شکسته متفرقه و بدون فاکتور</td>
-                        <td class="p-4 sm:p-5 text-rose-500 font-bold">تبدیل عیار به ۷۴۰ تا ۷۰۵</td>
+                        <td class="p-4 sm:p-5 text-rose-700 dark:text-rose-400 font-bold">تبدیل عیار به ۷۴۰ تا ۷۰۵</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">لحیم‌های زیاد در قطعات شکسته باعث کاهش عیار میانگین قطعه به زیر ۷۵۰ می‌شود.</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">فروش با ری‌گیری کارگاهی به عنوان طلای آبشده در این موارد منصفانه‌تر است.</td>
                     </tr>
@@ -293,9 +308,9 @@
         'secondaryUrl' => route('public.gold-board-without-device'),
     ])
 
-    {{-- مقالات آموزشی کسر افت و عیارسنجی --}}
+    {{-- مقالات آموزشی کسر افت و عیارسنجی با کارت‌های نئومورفیک --}}
     <section class="grid sm:grid-cols-2 gap-8 items-start">
-        <div class="space-y-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm">
+        <div class="space-y-4 p-6 sm:p-8 rounded-3xl tl-neu-card">
             <h2 class="text-xl font-black text-stone-900 dark:text-white">
                 کسر افت طلا چیست و چرا طلافروشان از وزن طلا کسر می‌کنند؟
             </h2>
@@ -303,11 +318,11 @@
                 هنگامی که شما یک زیورآلات کارکرده مانند دستبند یا گردنبند را می‌فروشید، طلافروش آن را به عنوان <strong>طلای مستعمل</strong> یا طلای ضایعاتی می‌خرد تا برای ذوب به آزمایشگاه ری‌گیری ارسال کند. در فرآیند ذوب در کوره بوته، ناخالصی‌ها از جمله چربی، چسب نگین و فنر استیل تبخیر شده و می‌سوزند. بنابراین کسر افت برای جبران همین کاهش وزن واقعی در بوته ذوب اعمال می‌شود.
             </p>
             <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                برای درک بهتر تفاوت خرید متفرقه با تعویض، می‌توانید مقاله تخصصی <a href="{{ route('public.guides.show', 'motefareghe-18') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تعویض و خرید متفرقه ۱۸ چیست؟</a> را مطالعه نمایید.
+                برای درک بهتر تفاوت خرید متفرقه با تعویض، می‌توانید مقاله تخصصی <a href="{{ route('public.guides.show', 'motefareghe-18') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">تعویض و خرید متفرقه ۱۸ چیست؟</a> را مطالعه نمایید.
             </p>
         </div>
 
-        <div class="space-y-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm">
+        <div class="space-y-4 p-6 sm:p-8 rounded-3xl tl-neu-card">
             <h2 class="text-xl font-black text-stone-900 dark:text-white">
                 روش‌های عیارسنجی طلای دست دوم در مغازه (سنگ محک و کوپلاسیون)
             </h2>
@@ -316,16 +331,16 @@
             </p>
             <ul class="space-y-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400">
                 <li class="flex items-start gap-2">
-                    <span class="text-amber-600 dark:text-amber-400 font-bold">۱. آزمون سنگ محک و اسید:</span>
+                    <span class="text-amber-700 dark:text-amber-400 font-bold">۱. آزمون سنگ محک و اسید:</span>
                     <span>خط کشیدن روی سنگ محک سیلیسی و ریختن قطره تیزاب سلطانی؛ در صورتی که اثر طلایی محو نشود عیار ۷۵۰ تأیید می‌شود.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                    <span class="text-amber-600 dark:text-amber-400 font-bold">۲. کوپلاسیون در ری‌گیری:</span>
-                    <span>در صورت حجم بالای طلا، قطعه ذوب شده و در آزمایشگاه‌های رسمی ری‌گیری با دقت یک در هزار انگ زده می‌شود. ابزار <a href="{{ route('public.tools.melted-gold') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">محاسبه‌گر طلای آبشده</a> فرمول این فرآیند را محاسبه می‌کند.</span>
+                    <span class="text-amber-700 dark:text-amber-400 font-bold">۲. کوپلاسیون در ری‌گیری:</span>
+                    <span>در صورت حجم بالای طلا، قطعه ذوب شده و در آزمایشگاه‌های رسمی ری‌گیری با دقت یک در هزار انگ زده می‌شود. ابزار <a href="{{ route('public.tools.melted-gold') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">محاسبه‌گر طلای آبشده</a> فرمول این فرآیند را محاسبه می‌کند.</span>
                 </li>
             </ul>
             <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed pt-2 border-t border-stone-100 dark:border-stone-800">
-                اگر قصد خرید طلای نو با اجرت منصفانه دارید، از ابزار <a href="{{ route('public.tools.wage-calculator') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">محاسبه اجرت طلا</a> برای تفکیک فاکتور بهره بگیرید.
+                اگر قصد خرید طلای نو با اجرت منصفانه دارید، از ابزار <a href="{{ route('public.tools.wage-calculator') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">محاسبه اجرت طلا</a> برای تفکیک فاکتور بهره بگیرید.
             </p>
         </div>
     </section>

@@ -52,29 +52,41 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
+<div class="relative py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12 overflow-hidden">
 
-    {{-- هدر صفحه با تعریف صریح موضوع --}}
-    <div class="text-center space-y-4 max-w-3xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
-            <span>فرمول رسمی اتحادیه طلا و جواهر کشور • سال ۱۴۰۵</span>
-        </div>
-        <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white leading-tight">
-            محاسبه اجرت طلا و تفکیک اجزای فاکتور با فرمول قانونی صنف
-        </h1>
-        <p class="text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed text-justify sm:text-center">
-            محاسبه اجرت طلا فرآیند تعیین هزینه ساخت، تراش و طراحی مصنوعات زینتی علاوه بر ارزش خام طلا است که به‌صورت درصدی یا مبلغ ثابت به ازای هر گرم بر فاکتور خرید افزوده می‌شود.
-        </p>
-        <p class="text-stone-500 dark:text-stone-400 text-xs">
-            نرخ مبنای هر گرم طلای ۱۸ عیار در سامانه: <strong class="text-amber-600 dark:text-amber-400 tabular-nums">{{ number_format($rates['gold18']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})
-        </p>
+    <div class="tl-ambient-gold absolute -top-8 left-1/2 -translate-x-1/2 w-[500px] h-[200px] rounded-full opacity-75" aria-hidden="true"></div>
+
+    <div class="relative z-10">
+        @include('partials.breadcrumb', [
+            'items' => [
+                ['title' => 'ابزارهای طلا', 'url' => route('public.gold-calculator')],
+                ['title' => 'محاسبه اجرت طلا'],
+            ]
+        ])
     </div>
 
-    {{-- ویجت محاسبه‌گر اجرت آلپاین --}}
+    {{-- هدر صفحه با تعریف صریح موضوع --}}
+    <div class="relative z-10 text-center space-y-4 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full tl-glass-badge text-amber-800 dark:text-amber-300 text-xs font-bold">
+            @include('partials.ui-icon', ['name' => 'hammer', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+            <span>فرمول رسمی اتحادیه طلا و جواهر کشور • سال ۱۴۰۵</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-stone-50 leading-tight">
+            محاسبه اجرت طلا و تفکیک اجزای فاکتور با فرمول قانونی صنف
+        </h1>
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed text-justify sm:text-center">
+            محاسبه اجرت طلا فرآیند تعیین هزینه ساخت، تراش و طراحی مصنوعات زینتی علاوه بر ارزش خام طلا است که به‌صورت درصدی یا مبلغ ثابت به ازای هر گرم بر فاکتور خرید افزوده می‌شود.
+        </p>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-300">
+            <span>نرخ مبنای هر گرم طلای ۱۸ عیار در سامانه: <strong class="text-amber-700 dark:text-amber-400 tabular-nums">{{ number_format($rates['gold18']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})</span>
+        </div>
+    </div>
+
+    {{-- شاسی نئومورفیک محاسبه‌گر اجرت آلپاین با نمایشگر OLED --}}
     <div x-data="{
         weight: 5.2,
         ratePerGram: {{ $rates['gold18'] > 0 ? $rates['gold18'] : 4500000 }},
-        wageType: 'percent', // 'percent' or 'fixed'
+        wageType: 'percent',
         wagePercent: 16,
         wageFixedPerGram: 600000,
         profitPercent: 7,
@@ -106,7 +118,6 @@
         },
         get vatTotal() {
             const v = parseFloat(this.vatPercent) || 0;
-            // بر اساس قانون جدید مالیات بر ارزش افزوده، مالیات منحصراً بر مجموع اجرت و سود اعمال می‌شود نه اصل طلا
             return Math.round((this.wageTotal + this.profitTotal) * (v / 100));
         },
         get finalInvoiceTotal() {
@@ -119,10 +130,10 @@
         formatNumber(num) {
             return (num || 0).toLocaleString('fa-IR');
         }
-    }" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-10 shadow-sm space-y-8">
+    }" class="relative z-10 tl-neu-card rounded-3xl p-6 sm:p-10 space-y-8">
 
         <div>
-            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white mb-2">
+            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-stone-50 mb-2">
                 ماشین‌حساب آنلاین محاسبه درصد اجرت ساخت و فاکتور نهایی طلا
             </h2>
             <p class="text-stone-600 dark:text-stone-400 text-xs sm:text-sm">
@@ -134,23 +145,23 @@
             {{-- وزن طلا --}}
             <div class="space-y-2">
                 <label for="wage-weight-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">وزن طلا (گرم):</label>
-                <input id="wage-weight-input" type="number" step="0.01" min="0.01" x-model.number="weight" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="wage-weight-input" type="number" step="0.01" min="0.01" x-model.number="weight" class="w-full min-h-11 px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base focus:outline-none tabular-nums">
             </div>
 
             {{-- قیمت هر گرم طلای ۱۸ عیار --}}
             <div class="space-y-2">
                 <label for="wage-rate-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">قیمت هر گرم طلای ۱۸ عیار (تومان):</label>
-                <input id="wage-rate-input" type="number" step="1000" min="10000" x-model.number="ratePerGram" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="wage-rate-input" type="number" step="1000" min="10000" x-model.number="ratePerGram" class="w-full min-h-11 px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base focus:outline-none tabular-nums">
             </div>
 
-            {{-- روش محاسبه اجرت ساخت --}}
+            {{-- روش محاسبه اجرت ساخت در ریل کوپرتینو --}}
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-stone-700 dark:text-stone-300">روش محاسبه اجرت ساخت:</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <button type="button" @click="wageType = 'percent'" :class="wageType === 'percent' ? 'bg-amber-500 text-stone-950 font-black' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'" class="min-h-11 px-3 py-2.5 rounded-2xl text-xs transition-colors cursor-pointer text-center flex items-center justify-center">
+                <span class="block text-xs font-bold text-stone-700 dark:text-stone-300">روش محاسبه اجرت ساخت:</span>
+                <div class="p-1 rounded-2xl tl-neu-track grid grid-cols-2 gap-1.5">
+                    <button type="button" @click="wageType = 'percent'" :class="wageType === 'percent' ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold'" class="min-h-11 px-3 py-2 rounded-xl text-xs transition-all cursor-pointer text-center flex items-center justify-center">
                         درصدی (%)
                     </button>
-                    <button type="button" @click="wageType = 'fixed'" :class="wageType === 'fixed' ? 'bg-amber-500 text-stone-950 font-black' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'" class="min-h-11 px-3 py-2.5 rounded-2xl text-xs transition-colors cursor-pointer text-center flex items-center justify-center">
+                    <button type="button" @click="wageType = 'fixed'" :class="wageType === 'fixed' ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold'" class="min-h-11 px-3 py-2 rounded-xl text-xs transition-all cursor-pointer text-center flex items-center justify-center">
                         مبلغی (تومان/گرم)
                     </button>
                 </div>
@@ -159,67 +170,69 @@
             {{-- فیلد متغیر اجرت ساخت --}}
             <div class="space-y-2" x-show="wageType === 'percent'">
                 <label for="wage-percent-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">درصد اجرت ساخت (%):</label>
-                <input id="wage-percent-input" type="number" step="0.5" min="0" max="60" x-model.number="wagePercent" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="wage-percent-input" type="number" step="0.5" min="0" max="60" x-model.number="wagePercent" class="w-full min-h-11 px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base focus:outline-none tabular-nums">
             </div>
 
             <div class="space-y-2" x-show="wageType === 'fixed'">
                 <label for="wage-fixed-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">مبلغ اجرت ساخت هر گرم (تومان):</label>
-                <input id="wage-fixed-input" type="number" step="10000" min="0" x-model.number="wageFixedPerGram" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
+                <input id="wage-fixed-input" type="number" step="10000" min="0" x-model.number="wageFixedPerGram" class="w-full min-h-11 px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base focus:outline-none tabular-nums">
             </div>
 
             {{-- سود فروشنده طلا --}}
             <div class="space-y-2">
                 <label for="wage-profit-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">سود مصوب طلافروشی (%):</label>
-                <input id="wage-profit-input" type="number" step="0.5" min="0" max="20" x-model.number="profitPercent" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
-                <span class="text-[10px] text-stone-400">سقف قانونی مصوب اتحادیه: ۷ درصد</span>
+                <input id="wage-profit-input" type="number" step="0.5" min="0" max="20" x-model.number="profitPercent" class="w-full min-h-11 px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base focus:outline-none tabular-nums">
+                <span class="text-[10px] text-stone-600 dark:text-stone-400">سقف قانونی مصوب اتحادیه: ۷ درصد</span>
             </div>
 
             {{-- مالیات ارزش افزوده --}}
             <div class="space-y-2">
                 <label for="wage-vat-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">مالیات بر ارزش افزوده (%):</label>
-                <input id="wage-vat-input" type="number" step="1" min="0" max="15" x-model.number="vatPercent" class="w-full min-h-11 px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-bold text-base focus:outline-none focus:border-amber-500 transition-colors tabular-nums">
-                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">فقط روی اجرت و سود (معافیت اصل طلا)</span>
+                <input id="wage-vat-input" type="number" step="1" min="0" max="15" x-model.number="vatPercent" class="w-full min-h-11 px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base focus:outline-none tabular-nums">
+                <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">فقط روی اجرت و سود (معافیت اصل طلا)</span>
             </div>
         </div>
 
-        {{-- کادر نتایج و فاکتور تفکیکی --}}
-        <div class="mt-8 rounded-3xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 p-6 sm:p-8 space-y-6">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-stone-200 dark:border-stone-700">
-                <div>
-                    <span class="text-xs text-amber-600 dark:text-amber-400 font-bold">فاکتور نهایی شفاف</span>
-                    <h3 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white">مبلغ قابل پرداخت فاکتور خرید طلا</h3>
-                </div>
-                <div class="text-left sm:text-right">
-                    <div class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 tabular-nums" x-text="formatNumber(finalInvoiceTotal) + ' تومان'"></div>
-                    <div class="text-[11px] text-stone-500 dark:text-stone-400 mt-1">
-                        اضافه‌بهای کل نسبت به طلای خام: <span class="font-bold text-amber-600 dark:text-amber-400 tabular-nums" x-text="extraCostPercent + '٪'"></span>
-                    </div>
-                </div>
+        {{-- ۴ شیار تفکیکی فاکتور --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="p-4 rounded-2xl tl-neu-inset">
+                <span class="text-xs text-stone-600 dark:text-stone-400">بهای طلای خام:</span>
+                <div class="text-base sm:text-lg font-black text-stone-900 dark:text-stone-50 mt-1 tabular-nums" x-text="formatNumber(rawGoldTotal) + ' تومان'"></div>
+                <span class="text-[10px] text-stone-600 dark:text-stone-400">وزن × نرخ ۱۸ عیار</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-750">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">بهای طلای خام:</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="formatNumber(rawGoldTotal) + ' تومان'"></div>
-                    <span class="text-[10px] text-stone-400">وزن × نرخ ۱۸ عیار</span>
-                </div>
+            <div class="p-4 rounded-2xl tl-neu-inset">
+                <span class="text-xs text-stone-600 dark:text-stone-400">اجرت ساخت سازنده:</span>
+                <div class="text-base sm:text-lg font-black text-stone-900 dark:text-stone-50 mt-1 tabular-nums" x-text="formatNumber(wageTotal) + ' تومان'"></div>
+                <span class="text-[10px] text-amber-700 dark:text-amber-400 font-bold tabular-nums" x-text="'معادل ' + effectiveWagePercent + '٪ ارزش طلا'"></span>
+            </div>
 
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-750">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">اجرت ساخت سازنده:</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="formatNumber(wageTotal) + ' تومان'"></div>
-                    <span class="text-[10px] text-amber-600 dark:text-amber-400 font-bold tabular-nums" x-text="'معادل ' + effectiveWagePercent + '٪ ارزش طلا'"></span>
-                </div>
+            <div class="p-4 rounded-2xl tl-neu-inset">
+                <span class="text-xs text-stone-600 dark:text-stone-400">سود مصوب فروشنده (۷٪):</span>
+                <div class="text-base sm:text-lg font-black text-stone-900 dark:text-stone-50 mt-1 tabular-nums" x-text="formatNumber(profitTotal) + ' تومان'"></div>
+                <span class="text-[10px] text-stone-600 dark:text-stone-400">محاسبه روی طلا + اجرت</span>
+            </div>
 
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-750">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">سود مصوب فروشنده (۷٪):</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="formatNumber(profitTotal) + ' تومان'"></div>
-                    <span class="text-[10px] text-stone-400">محاسبه روی طلا + اجرت</span>
-                </div>
+            <div class="p-4 rounded-2xl tl-neu-inset">
+                <span class="text-xs text-stone-600 dark:text-stone-400">مالیات بر ارزش افزوده (۹٪):</span>
+                <div class="text-base sm:text-lg font-black text-stone-900 dark:text-stone-50 mt-1 tabular-nums" x-text="formatNumber(vatTotal) + ' تومان'"></div>
+                <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold">۹٪ روی (اجرت + سود)</span>
+            </div>
+        </div>
 
-                <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-750">
-                    <span class="text-xs text-stone-500 dark:text-stone-400">مالیات بر ارزش افزوده (۹٪):</span>
-                    <div class="text-base sm:text-lg font-black text-stone-900 dark:text-white mt-1 tabular-nums" x-text="formatNumber(vatTotal) + ' تومان'"></div>
-                    <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">۹٪ روی (اجرت + سود)</span>
+        {{-- نمایشگر سخت‌افزاری OLED مبلغ قابل پرداخت نهایی --}}
+        <div class="tl-oled-readout rounded-3xl p-6 sm:p-8">
+            <div class="tl-screen-glare absolute inset-0" aria-hidden="true"></div>
+            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs text-amber-400 font-bold">فاکتور نهایی شفاف</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-stone-50 mt-0.5">مبلغ قابل پرداخت فاکتور خرید طلا</h3>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400 tabular-nums" x-text="formatNumber(finalInvoiceTotal) + ' تومان'"></div>
+                    <div class="text-[11px] text-stone-300 mt-1">
+                        اضافه‌بهای کل نسبت به طلای خام: <span class="font-bold text-amber-400 tabular-nums" x-text="extraCostPercent + '٪'"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -236,12 +249,12 @@
             </p>
         </div>
 
-        <div class="overflow-x-auto rounded-3xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
+        <div class="overflow-x-auto rounded-3xl tl-neu-card">
             <table class="w-full text-right text-xs sm:text-sm">
                 <thead class="bg-stone-50 dark:bg-stone-800/80 text-stone-900 dark:text-white font-black border-b border-stone-200 dark:border-stone-800">
                     <tr>
                         <th class="p-4 sm:p-5">نوع مصنوع زینتی طلا</th>
-                        <th class="p-4 sm:p-5 text-amber-600 dark:text-amber-400">محدوده درصد اجرت رایج</th>
+                        <th class="p-4 sm:p-5 text-amber-700 dark:text-amber-400">محدوده درصد اجرت رایج</th>
                         <th class="p-4 sm:p-5">میزان کارمزد و سختی کار</th>
                         <th class="p-4 sm:p-5">توضیحات فنی و دلیل تفاوت نرخ</th>
                     </tr>
@@ -249,37 +262,37 @@
                 <tbody class="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">النگو شرکتی و ماشینی</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۸٪ تا ۱۴٪</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۸٪ تا ۱۴٪</td>
                         <td class="p-4 sm:p-5">پایین (تولید انبوه تمام‌اتوماتیک)</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">به دلیل تولید قالبی در تیراژ بالا، کمترین هدررفت و اجرت را در میان مصنوعات دارد.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">زنجیر، دستبند کارگاهی و کارتیه</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۱۰٪ تا ۱۶٪</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۱۰٪ تا ۱۶٪</td>
                         <td class="p-4 sm:p-5">متوسط</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">بستگی به بافت دستی یا ماشینی دانه‌ها و ظرافت قفل‌ها و اتصالات دارد.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">سرویس و نیم‌ست تراش (بدون نگین)</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۱۵٪ تا ۲۲٪</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۱۵٪ تا ۲۲٪</td>
                         <td class="p-4 sm:p-5">بالا (تراش سی‌ان‌سی و لیزری)</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">پرت و براده‌برداری زیاد در دستگاه‌های تراش الماسه باعث بالا رفتن اجرت ساخت می‌شود.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">سرویس‌های نگین‌دار و پایه‌جواهر</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۲۰٪ تا ۳۰٪</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۲۰٪ تا ۳۰٪</td>
                         <td class="p-4 sm:p-5">بسیار بالا (مخراج‌کاری دستی)</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">دستمزد مخراج‌کار برای سوار کردن اتمی یا برلیان و کسر وزن نگین در فاکتور محاسبه می‌گردد.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">طلای سبک مینیمال و لیزری (زیر ۲ گرم)</td>
-                        <td class="p-4 sm:p-5 text-amber-600 dark:text-amber-400 font-bold">۱۸٪ تا ۲۸٪</td>
+                        <td class="p-4 sm:p-5 text-amber-700 dark:text-amber-400 font-bold">۱۸٪ تا ۲۸٪</td>
                         <td class="p-4 sm:p-5">فوق‌العاده ظریف</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">به علت وزن ناچیز کار، هزینه طراحی و برش لیزری سهم بالایی از کل قیمت را تشکیل می‌دهد.</td>
                     </tr>
                     <tr class="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
                         <td class="p-4 sm:p-5 font-bold">طلای کم‌اجرت و بدون اجرت (کارکرده)</td>
-                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">۰٪ تا ۵٪</td>
+                        <td class="p-4 sm:p-5 text-emerald-700 dark:text-emerald-400 font-bold">۰٪ تا ۵٪</td>
                         <td class="p-4 sm:p-5">فاقد اجرت کارگاهی</td>
                         <td class="p-4 sm:p-5 text-stone-600 dark:text-stone-400 text-xs">طلای مستعمل شسته‌شده که فقط سود جزئی فروشنده بر نرخ خام اعمال می‌گردد.</td>
                     </tr>
@@ -303,14 +316,14 @@
 
     {{-- فرمول دقیق و راهنمای فاکتور --}}
     <section class="grid sm:grid-cols-2 gap-8 items-start">
-        <div class="space-y-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm">
+        <div class="space-y-4 p-6 sm:p-8 rounded-3xl tl-neu-card">
             <h2 class="text-xl font-black text-stone-900 dark:text-white">
                 فرمول دقیق محاسبه فاکتور طلا با اجرت و مالیات قانونی
             </h2>
             <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                 طبق آخرین اصلاحیه قانون مالیات بر ارزش افزوده مصوب مجلس شورای اسلامی، <strong>اصل طلای خام ۱۸ عیار از پرداخت ۹٪ مالیات معاف است</strong>. بنابراین فاکتور استاندارد طلافروشی طبق این رابطه ریاضی تنظیم می‌شود:
             </p>
-            <div class="p-4 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 font-mono text-xs text-amber-600 dark:text-amber-400 leading-loose" dir="ltr">
+            <div class="p-4 rounded-2xl tl-neu-inset font-mono text-xs text-amber-700 dark:text-amber-400 leading-loose" dir="ltr">
                 1. Raw Gold = Weight × Rate18<br>
                 2. Wage = Raw Gold × (Wage% / 100)<br>
                 3. Profit = (Raw Gold + Wage) × 7%<br>
@@ -318,11 +331,11 @@
                 5. Total = Raw Gold + Wage + Profit + VAT
             </div>
             <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                برای مطالعه تحلیل حقوقی و جزئیات سقف سود مجاز طلافروشان می‌توانید مقاله تحلیلی <a href="{{ route('public.guides.show', 'goldsmith-legal-profit') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">سود قانونی طلافروشی چند درصد است؟</a> را بررسی کنید.
+                برای مطالعه تحلیل حقوقی و جزئیات سقف سود مجاز طلافروشان می‌توانید مقاله تحلیلی <a href="{{ route('public.guides.show', 'goldsmith-legal-profit') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">سود قانونی طلافروشی چند درصد است؟</a> را بررسی کنید.
             </p>
         </div>
 
-        <div class="space-y-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm">
+        <div class="space-y-4 p-6 sm:p-8 rounded-3xl tl-neu-card">
             <h2 class="text-xl font-black text-stone-900 dark:text-white">
                 تفاوت اجرت درصدی و اجرت تومانی (مبلغ ثابت) در فاکتور
             </h2>
@@ -331,16 +344,16 @@
             </p>
             <ul class="space-y-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400">
                 <li class="flex items-start gap-2">
-                    <span class="text-amber-600 dark:text-amber-400 font-bold">۱. اجرت درصدی:</span>
+                    <span class="text-amber-700 dark:text-amber-400 font-bold">۱. اجرت درصدی:</span>
                     <span>اجرت ساخت متناسب با قیمت روز طلا بالا و پایین می‌رود (مثلاً ۱۸٪ ارزش طلای خام). کارگاه‌های بزرگ النگو و زیورآلات شرکتی معمولاً از این مدل استفاده می‌کنند.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                    <span class="text-amber-600 dark:text-amber-400 font-bold">۲. اجرت تومانی (ثابت):</span>
+                    <span class="text-amber-700 dark:text-amber-400 font-bold">۲. اجرت تومانی (ثابت):</span>
                     <span>یک مبلغ ریالی مقطوع به ازای هر گرم دریافت می‌شود (مثلاً ۶۰۰,۰۰۰ تومان در هر گرم). با افزایش شدید قیمت طلا، این روش به سود خریدار است چون درصد مؤثر آن کاهش می‌یابد.</span>
                 </li>
             </ul>
             <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed pt-2 border-t border-stone-100 dark:border-stone-800">
-                همچنین می‌توانید از ابزار <a href="{{ route('public.tools.gold-price') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">ماشین حساب محاسبه قیمت طلا با اجرت و مالیات</a> برای محاسبات جامع‌تر بهره بگیرید.
+                همچنین می‌توانید از ابزار <a href="{{ route('public.tools.gold-price') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">ماشین حساب محاسبه قیمت طلا با اجرت و مالیات</a> برای محاسبات جامع‌تر بهره بگیرید.
             </p>
         </div>
     </section>

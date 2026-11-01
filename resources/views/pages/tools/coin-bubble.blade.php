@@ -84,30 +84,34 @@
 @endsection
 
 @section('content')
-<div class="py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-10">
+<div class="relative py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-10 overflow-hidden">
 
-    @include('partials.breadcrumb', [
-        'items' => [
-            ['title' => 'ابزارهای طلا', 'url' => route('public.gold-calculator')],
-            ['title' => 'حباب سنج سکه'],
-        ]
-    ])
+    <div class="tl-ambient-gold absolute -top-8 left-1/2 -translate-x-1/2 w-[520px] h-[200px] rounded-full opacity-75" aria-hidden="true"></div>
+
+    <div class="relative z-10">
+        @include('partials.breadcrumb', [
+            'items' => [
+                ['title' => 'ابزارهای طلا', 'url' => route('public.gold-calculator')],
+                ['title' => 'حباب سنج سکه'],
+            ]
+        ])
+    </div>
 
     {{-- هدر صفحه با تعریف صریح موضوع در ۴۰ کلمه اول --}}
-    <div class="text-center space-y-4 max-w-3xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold">
+    <div class="relative z-10 text-center space-y-4 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full tl-glass-badge text-amber-800 dark:text-amber-300 text-xs font-bold">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>فرمول رسمی اتحادیه طلا و مسکوکات بانک مرکزی • سال ۱۴۰۵</span>
         </div>
-        <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white leading-tight">
+        <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-stone-50 leading-tight">
             حباب سنج سکه و محاسبه‌گر هوشمند ارزش ذاتی انواع سکه طلا
         </h1>
-        <p class="text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed text-justify sm:text-center">
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed text-justify sm:text-center">
             حباب سنج سکه ابزاری برای محاسبه مابه‌التفاوت قیمت معامله‌شده مسکوکات در بازار با ارزش ذاتی طلای خام موجود در آن‌ها بر اساس وزن، عیار ۹۰۰ و نرخ لحظه‌ای طلای ۱۸ عیار است.
         </p>
-        <p class="text-stone-500 dark:text-stone-400 text-xs">
-            نرخ مبنای طلای ۱۸ عیار در تابلوی طلالایو: <strong class="text-amber-700 dark:text-amber-400 font-mono">{{ number_format($rates['gold18']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})
-        </p>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-300">
+            <span>نرخ مبنای طلای ۱۸ عیار در تابلوی طلالایو: <strong class="text-amber-700 dark:text-amber-400 tabular-nums">{{ number_format($rates['gold18']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})</span>
+        </div>
     </div>
 
     {{-- داده‌های محاسباتی سکه‌ها --}}
@@ -158,8 +162,8 @@
         ];
     @endphp
 
-    {{-- کارت‌های ۵ گانه حباب سنج انواع سکه --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {{-- کارت‌های ۵ گانه حباب سنج انواع سکه نئومورفیک --}}
+    <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($coins as $c)
             @php
                 $intrinsic = round($c['equiv18k'] * $gold18Val) + $c['mintCost'];
@@ -167,32 +171,32 @@
                 $bubbleAmount = $market - $intrinsic;
                 $bubblePercent = $intrinsic > 0 ? ($bubbleAmount / $intrinsic) * 100 : 0;
             @endphp
-            <div class="rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 space-y-4 shadow-sm hover:border-amber-500/50 transition-all group">
+            <div class="rounded-3xl {{ $c['id'] === 'emami' ? 'tl-neu-card-gold' : 'tl-neu-card' }} p-6 space-y-4">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-black text-stone-900 dark:text-white text-base">{{ $c['name'] }}</h3>
-                    <span class="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold font-mono">
+                    <h3 class="font-black text-stone-900 dark:text-stone-50 text-base">{{ $c['name'] }}</h3>
+                    <span class="text-xs px-2.5 py-1 rounded-lg tl-neu-inset text-amber-700 dark:text-amber-400 font-bold tabular-nums">
                         {{ $c['weight'] }}g
                     </span>
                 </div>
 
-                <div class="space-y-2.5 pt-2 border-t border-stone-100 dark:border-stone-800 text-xs">
-                    <div class="flex justify-between text-stone-500">
+                <div class="space-y-2.5 pt-3 border-t border-stone-300/60 dark:border-stone-800 text-xs">
+                    <div class="flex justify-between text-stone-600 dark:text-stone-400">
                         <span>قیمت روز معامله در بازار:</span>
-                        <strong class="text-stone-900 dark:text-white text-sm font-mono tabular-nums">{{ number_format($market) }} تومان</strong>
+                        <strong class="text-stone-900 dark:text-stone-50 text-sm tabular-nums">{{ number_format($market) }} تومان</strong>
                     </div>
-                    <div class="flex justify-between text-stone-500">
+                    <div class="flex justify-between text-stone-600 dark:text-stone-400">
                         <span>ارزش ذاتی طلای خالص:</span>
-                        <span class="text-stone-700 dark:text-stone-300 font-medium font-mono tabular-nums">{{ number_format($intrinsic) }} تومان</span>
+                        <span class="text-stone-700 dark:text-stone-300 font-semibold tabular-nums">{{ number_format($intrinsic) }} تومان</span>
                     </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-dashed border-stone-200 dark:border-stone-700">
+                    <div class="flex justify-between items-center pt-2.5 border-t border-dashed border-stone-300/60 dark:border-stone-700">
                         <span class="font-bold text-stone-700 dark:text-stone-300">مبلغ حباب سکه:</span>
-                        <span class="font-black font-mono tabular-nums {{ $bubbleAmount >= 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400' }}">
+                        <span class="font-black tabular-nums {{ $bubbleAmount >= 0 ? 'text-rose-700 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400' }}">
                             {{ $bubbleAmount >= 0 ? '+' : '' }}{{ number_format($bubbleAmount) }} تومان
                         </span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-stone-700 dark:text-stone-300">درصد حباب قیمتی:</span>
-                        <span class="px-2.5 py-1 rounded-xl text-xs font-black font-mono tabular-nums {{ $bubblePercent > 10 ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' }}">
+                        <span class="px-2.5 py-1 rounded-xl text-xs font-black tabular-nums tl-neu-inset {{ $bubblePercent > 10 ? 'text-rose-700 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400' }}">
                             {{ number_format($bubblePercent, 1) }}%
                         </span>
                     </div>
@@ -201,7 +205,7 @@
         @endforeach
     </div>
 
-    {{-- ویجت محاسبه‌گر تعاملی حباب گیر دستی با آلپاین --}}
+    {{-- شاسی نئومورفیک محاسبه‌گر تعاملی حباب گیر دستی با پنل OLED --}}
     <div x-data="{
         gold18Rate: {{ $gold18Val }},
         selectedWeight: 8.133,
@@ -232,43 +236,45 @@
         formatNumber(num) {
             return (num || 0).toLocaleString('fa-IR');
         }
-    }" class="rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 sm:p-10 shadow-sm space-y-8">
+    }" class="relative z-10 rounded-3xl tl-neu-card p-6 sm:p-10 space-y-8">
         
-        <div class="border-b border-stone-200 dark:border-stone-800 pb-4">
-            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white flex items-center gap-2">
-                <x-ui-icon name="calculator" class="w-6 h-6 text-amber-600 dark:text-amber-400 shrink-0" />
+        <div class="border-b border-stone-300/60 dark:border-stone-800 pb-4">
+            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-stone-50 flex items-center gap-2.5">
+                <span class="w-10 h-10 rounded-2xl tl-neu-icon-orb flex items-center justify-center text-amber-700 dark:text-amber-400 shrink-0">
+                    @include('partials.ui-icon', ['name' => 'coin', 'class' => 'w-5 h-5'])
+                </span>
                 <span>ماشین‌حساب هوشمند و حباب گیر دستی انواع سکه طلا</span>
             </h2>
-            <p class="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
+            <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-1.5">
                 سکه مورد نظر خود را انتخاب کرده یا ارقام قیمت بازار را به‌دلخواه تغییر دهید تا کارکرد حباب گیر آنلاین را تجربه کنید:
             </p>
         </div>
 
-        {{-- دکمه‌های سریع انتخاب سکه --}}
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+        {{-- ریل انتخابگر کوپرتینو برای ۵ نوع سکه --}}
+        <div class="p-1.5 rounded-2xl tl-neu-track grid grid-cols-2 sm:grid-cols-5 gap-2">
             <button type="button" @click="setCoin('سکه امامی', 8.133, 200000, {{ $coins[0]['marketPrice'] > 0 ? $coins[0]['marketPrice'] : round((8.133 * 1.2 * $gold18Val) * 1.18) }})"
-                    :class="selectedWeight === 8.133 && coinTitle === 'سکه امامی' ? 'bg-amber-500 text-stone-950 font-black shadow-sm' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'"
-                    class="min-h-11 py-2.5 px-3 rounded-2xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
+                    :class="selectedWeight === 8.133 && coinTitle === 'سکه امامی' ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold hover:text-amber-700 dark:hover:text-amber-400'"
+                    class="min-h-11 py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
                 سکه امامی
             </button>
             <button type="button" @click="setCoin('سکه بهار آزادی', 8.133, 200000, {{ $coins[1]['marketPrice'] > 0 ? $coins[1]['marketPrice'] : round((8.133 * 1.2 * $gold18Val) * 1.08) }})"
-                    :class="selectedWeight === 8.133 && coinTitle === 'سکه بهار آزادی' ? 'bg-amber-500 text-stone-950 font-black shadow-sm' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'"
-                    class="min-h-11 py-2.5 px-3 rounded-2xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
+                    :class="selectedWeight === 8.133 && coinTitle === 'سکه بهار آزادی' ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold hover:text-amber-700 dark:hover:text-amber-400'"
+                    class="min-h-11 py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
                 تمام بهار آزادی
             </button>
             <button type="button" @click="setCoin('نیم سکه', 4.066, 150000, {{ $coins[2]['marketPrice'] > 0 ? $coins[2]['marketPrice'] : round((4.066 * 1.2 * $gold18Val) * 1.22) }})"
-                    :class="selectedWeight === 4.066 ? 'bg-amber-500 text-stone-950 font-black shadow-sm' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'"
-                    class="min-h-11 py-2.5 px-3 rounded-2xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
+                    :class="selectedWeight === 4.066 ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold hover:text-amber-700 dark:hover:text-amber-400'"
+                    class="min-h-11 py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
                 نیم سکه
             </button>
             <button type="button" @click="setCoin('ربع سکه', 2.033, 100000, {{ $coins[3]['marketPrice'] > 0 ? $coins[3]['marketPrice'] : round((2.033 * 1.2 * $gold18Val) * 1.36) }})"
-                    :class="selectedWeight === 2.033 ? 'bg-amber-500 text-stone-950 font-black shadow-sm' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'"
-                    class="min-h-11 py-2.5 px-3 rounded-2xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
+                    :class="selectedWeight === 2.033 ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold hover:text-amber-700 dark:hover:text-amber-400'"
+                    class="min-h-11 py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer inline-flex items-center justify-center">
                 ربع سکه
             </button>
             <button type="button" @click="setCoin('سکه گرمی', 1.016, 80000, {{ $coins[4]['marketPrice'] > 0 ? $coins[4]['marketPrice'] : round((1.016 * 1.2 * $gold18Val) * 1.45) }})"
-                    :class="selectedWeight === 1.016 ? 'bg-amber-500 text-stone-950 font-black shadow-sm' : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold'"
-                    class="min-h-11 py-2.5 px-3 rounded-2xl text-xs transition-all cursor-pointer col-span-2 sm:col-span-1 inline-flex items-center justify-center">
+                    :class="selectedWeight === 1.016 ? 'tl-btn-bullion font-black' : 'text-stone-700 dark:text-stone-300 font-bold hover:text-amber-700 dark:hover:text-amber-400'"
+                    class="min-h-11 py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer col-span-2 sm:col-span-1 inline-flex items-center justify-center">
                 سکه گرمی
             </button>
         </div>
@@ -276,27 +282,30 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="space-y-2">
                 <label for="gold18-rate-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">قیمت هر گرم طلای ۱۸ عیار خام (تومان):</label>
-                <input id="gold18-rate-input" type="number" step="1000" x-model.number="gold18Rate" class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                <input id="gold18-rate-input" type="number" step="1000" x-model.number="gold18Rate" class="min-h-11 w-full px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base tabular-nums focus:outline-none">
             </div>
             <div class="space-y-2">
                 <label for="market-price-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">قیمت معامله سکه در بازار (تومان):</label>
-                <input id="market-price-input" type="number" step="10000" x-model.number="marketPrice" class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                <input id="market-price-input" type="number" step="10000" x-model.number="marketPrice" class="min-h-11 w-full px-4 py-3 rounded-2xl tl-neu-inset text-stone-900 dark:text-stone-50 font-bold text-base tabular-nums focus:outline-none">
             </div>
         </div>
 
-        {{-- نتایج تحلیل زنده حباب گیر --}}
-        <div class="p-6 rounded-2xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            <div class="space-y-1">
-                <div class="text-xs text-stone-500 dark:text-stone-400 font-semibold">ارزش ذاتی طلای سکه:</div>
-                <div class="text-lg font-black text-stone-900 dark:text-white font-mono tabular-nums" x-text="formatNumber(intrinsicValue) + ' تومان'"></div>
-            </div>
-            <div class="space-y-1 border-y sm:border-y-0 sm:border-x border-stone-200 dark:border-stone-700 py-3 sm:py-0">
-                <div class="text-xs text-stone-500 dark:text-stone-400 font-semibold">مبلغ حباب سکه:</div>
-                <div class="text-lg font-black font-mono tabular-nums" :class="bubbleToman >= 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'" x-text="(bubbleToman >= 0 ? '+' : '') + formatNumber(bubbleToman) + ' تومان'"></div>
-            </div>
-            <div class="space-y-1">
-                <div class="text-xs text-stone-500 dark:text-stone-400 font-semibold">درصد حباب بازار:</div>
-                <div class="text-lg font-black font-mono tabular-nums" :class="bubblePercent > 10 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'" x-text="bubblePercent + '%'"></div>
+        {{-- نمایشگر سخت‌افزاری OLED نتایج تحلیل زنده حباب گیر --}}
+        <div class="tl-oled-readout rounded-3xl p-6 sm:p-8">
+            <div class="tl-screen-glare absolute inset-0" aria-hidden="true"></div>
+            <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                <div class="space-y-1.5">
+                    <div class="text-xs text-stone-400 font-semibold">ارزش ذاتی طلای سکه:</div>
+                    <div class="text-xl font-black text-stone-50 tabular-nums" x-text="formatNumber(intrinsicValue) + ' تومان'"></div>
+                </div>
+                <div class="space-y-1.5 border-y sm:border-y-0 sm:border-x border-white/15 py-4 sm:py-0">
+                    <div class="text-xs text-stone-400 font-semibold">مبلغ حباب سکه:</div>
+                    <div class="text-xl font-black tabular-nums" :class="bubbleToman >= 0 ? 'text-rose-400' : 'text-emerald-400'" x-text="(bubbleToman >= 0 ? '+' : '') + formatNumber(bubbleToman) + ' تومان'"></div>
+                </div>
+                <div class="space-y-1.5">
+                    <div class="text-xs text-stone-400 font-semibold">درصد حباب بازار:</div>
+                    <div class="text-2xl font-black tabular-nums" :class="bubblePercent > 10 ? 'text-rose-400' : 'text-emerald-400'" x-text="bubblePercent + '%'"></div>
+                </div>
             </div>
         </div>
 
@@ -387,7 +396,7 @@
     ])
 
     {{-- توضیحات فرمول و راهنمای علمی --}}
-    <div class="bg-stone-50 dark:bg-stone-900 rounded-3xl p-6 sm:p-8 border border-stone-200 dark:border-stone-800 space-y-4 text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+    <div class="tl-neu-card rounded-3xl p-6 sm:p-8 space-y-4 text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
         <h2 class="font-black text-stone-900 dark:text-white text-lg flex items-center gap-2">
             <x-ui-icon name="scale" class="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0" />
             <span>فرمول رسمی محاسبه ارزش ذاتی سکه در بازار زرگران</span>
@@ -395,7 +404,7 @@
         <p>
             عیار تمامی مسکوکات بهار آزادی (تمام، نیم، ربع و گرمی) <strong>۹۰۰ در هزار (۲۱.۶ عیار)</strong> است. از آنجا که پایه نرخ‌گذاری روز در بازار طلا <strong>طلای ۱۸ عیار (۷۵۰ در هزار)</strong> می‌باشد، معادل طلای ۱۸ عیار هر سکه با ضریب تبدیل <code>۹۰۰ ÷ ۷۵۰ = ۱.۲</code> محاسبه می‌شود:
         </p>
-        <div class="p-4 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 font-mono text-xs text-amber-700 dark:text-amber-400 leading-loose" dir="ltr">
+        <div class="p-4 rounded-2xl tl-neu-inset font-mono text-xs text-amber-700 dark:text-amber-400 leading-loose" dir="ltr">
             ارزش ذاتی سکه = (وزن سکه × ۱.۲ × نرخ روز طلای ۱۸ عیار) + حق ضرب بانک مرکزی
         </div>
         <p class="pt-2">
@@ -404,14 +413,14 @@
     </div>
 
     {{-- سوالات متداول درباره حباب سنج --}}
-    <div class="bg-white dark:bg-stone-900 p-6 sm:p-10 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 shadow-sm">
+    <div class="tl-neu-card p-6 sm:p-10 rounded-3xl space-y-4">
         <h2 class="font-black text-stone-900 dark:text-white text-lg flex items-center gap-2">
-            <x-ui-icon name="information-circle" class="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0" />
+            <x-ui-icon name="book" class="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0" />
             <span>پرسش‌های متداول درباره حباب سنج و حباب مسکوکات</span>
         </h2>
         
         <div class="space-y-3 pt-2">
-            <details class="group p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800">
+            <details class="group p-5 rounded-2xl tl-neu-inset">
                 <summary class="font-bold text-stone-900 dark:text-white text-xs sm:text-sm cursor-pointer list-none flex items-center justify-between">
                     <span>حباب گیر سکه دقیقاً چه کاری انجام می‌دهد؟</span>
                     <x-ui-icon name="chevron-down" class="w-4 h-4 text-stone-500 transition-transform group-open:rotate-180" />
@@ -421,7 +430,7 @@
                 </p>
             </details>
 
-            <details class="group p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800">
+            <details class="group p-5 rounded-2xl tl-neu-inset">
                 <summary class="font-bold text-stone-900 dark:text-white text-xs sm:text-sm cursor-pointer list-none flex items-center justify-between">
                     <span>آیا خرید سکه با حباب منفی امکان‌پذیر است؟</span>
                     <x-ui-icon name="chevron-down" class="w-4 h-4 text-stone-500 transition-transform group-open:rotate-180" />
@@ -431,7 +440,7 @@
                 </p>
             </details>
 
-            <details class="group p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800">
+            <details class="group p-5 rounded-2xl tl-neu-inset">
                 <summary class="font-bold text-stone-900 dark:text-white text-xs sm:text-sm cursor-pointer list-none flex items-center justify-between">
                     <span>چگونه نرخ‌های زنده سکه را روی تلویزیون مغازه نمایش دهیم؟</span>
                     <x-ui-icon name="chevron-down" class="w-4 h-4 text-stone-500 transition-transform group-open:rotate-180" />

@@ -2,7 +2,7 @@
     $navGroups = collect(config('navigation.groups'))->keyBy('key');
 @endphp
 
-{{-- دراپ‌داون سامانه‌ها (مگامنوی دو ستونی) --}}
+{{-- دراپ‌داون سامانه‌ها (مگامنوی دو ستونی شیشه‌ای اپل) --}}
 @if(isset($navGroups['products']))
 @php
     $productsGroup = $navGroups['products'];
@@ -23,32 +23,36 @@
             aria-haspopup="true"
             aria-controls="dropdown-products"
             :aria-expanded="isOpen('products') ? 'true' : 'false'"
-            class="flex items-center gap-1 px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-700 dark:hover:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800/70 transition-colors cursor-pointer {{ $isProductsActive ? 'text-amber-700 dark:text-amber-400 bg-stone-100 dark:bg-stone-800/70 shadow-xs' : '' }}">
+            class="flex items-center gap-1 px-3 py-2 rounded-xl whitespace-nowrap transition-all cursor-pointer {{ $isProductsActive ? 'tl-neu-pill-active text-amber-800 dark:text-amber-300 font-bold' : 'hover:text-amber-800 dark:hover:text-amber-300 hover:bg-white/60 dark:hover:bg-white/5' }}">
         <span>{{ $productsGroup['label'] }}</span>
-        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-3.5 h-3.5 transition-transform duration-200'])
+        <span class="transition-transform duration-200" :class="isOpen('products') ? 'rotate-180' : ''">
+            @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-3.5 h-3.5'])
+        </span>
     </button>
 
     <div id="dropdown-products"
          x-show="isOpen('products')" 
          x-cloak
-         x-transition:enter="transition ease-out duration-150"
-         x-transition:enter-start="opacity-0 translate-y-1"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-100"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-1"
-         class="absolute right-0 mt-2 w-[32rem] rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-lg p-3 z-50">
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-y-1.5 scale-[0.98]"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-1 scale-[0.98]"
+         class="absolute right-0 mt-2.5 w-[33rem] rounded-2xl tl-glass-sheet p-3.5 z-50 before:content-[''] before:absolute before:-top-3 before:inset-x-0 before:h-3">
         
-        <div class="grid grid-cols-2 gap-1">
+        <div class="grid grid-cols-2 gap-2">
             {{-- ستون راست: تابلوها و سامانه‌ها --}}
             <div class="space-y-1">
                 @foreach($productsGroup['items'] as $item)
-                    <a href="{{ route($item['route']) }}" class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800/70 group transition-colors">
-                        @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
-                        <div>
-                            <div class="text-xs font-semibold text-stone-800 dark:text-stone-200 group-hover:text-amber-700 dark:group-hover:text-amber-400">{{ $item['title'] }}</div>
+                    <a href="{{ route($item['route']) }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/65 dark:hover:bg-white/[0.06] group transition-colors">
+                        <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+                            @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                        </span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 transition-colors">{{ $item['title'] }}</div>
                             @if(!empty($item['desc']))
-                                <div class="text-[12px] text-stone-600 dark:text-stone-400">{{ $item['desc'] }}</div>
+                                <div class="text-[12px] text-stone-600 dark:text-stone-400 truncate">{{ $item['desc'] }}</div>
                             @endif
                         </div>
                     </a>
@@ -57,15 +61,17 @@
 
             {{-- ستون چپ: مقایسه با رقبا --}}
             @if($compareGroup)
-            <div class="space-y-1 border-r border-stone-200 dark:border-stone-800 pr-2">
-                <div class="text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1 px-2">مقایسه با رقبا</div>
+            <div class="space-y-1 border-r border-stone-300/60 dark:border-white/10 pr-2.5">
+                <div class="text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5 px-2">مقایسه با رقبا</div>
                 @foreach($compareGroup['items'] as $item)
-                    <a href="{{ route($item['route']) }}" class="flex items-center gap-2 p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800/70 group transition-colors">
-                        @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-3.5 h-3.5 text-stone-500 dark:text-stone-400 group-hover:text-amber-700 dark:group-hover:text-amber-400'])
-                        <div>
-                            <div class="text-xs font-semibold text-stone-800 dark:text-stone-200 group-hover:text-amber-700 dark:group-hover:text-amber-400">{{ $item['title'] }}</div>
+                    <a href="{{ route($item['route']) }}" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/65 dark:hover:bg-white/[0.06] group transition-colors">
+                        <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+                            @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-3.5 h-3.5 text-stone-600 dark:text-stone-300 group-hover:text-amber-700 dark:group-hover:text-amber-400'])
+                        </span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 transition-colors">{{ $item['title'] }}</div>
                             @if(!empty($item['desc']))
-                                <div class="text-[12px] text-stone-600 dark:text-stone-400">{{ $item['desc'] }}</div>
+                                <div class="text-[12px] text-stone-600 dark:text-stone-400 truncate">{{ $item['desc'] }}</div>
                             @endif
                         </div>
                     </a>
@@ -75,9 +81,9 @@
         </div>
 
         @if(!empty($productsGroup['footer_items']))
-            <div class="mt-2 pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between px-2">
+            <div class="mt-2.5 pt-2.5 border-t border-stone-300/60 dark:border-white/10 flex items-center justify-between px-2">
                 @foreach($productsGroup['footer_items'] as $fItem)
-                    <a href="{{ route($fItem['route']) }}" class="flex items-center gap-1.5 text-xs font-semibold {{ $fItem['class'] ?? 'text-stone-700 dark:text-stone-300' }} hover:underline">
+                    <a href="{{ route($fItem['route']) }}" class="flex items-center gap-1.5 text-xs font-semibold {{ $fItem['class'] ?? 'text-stone-800 dark:text-stone-200' }} hover:underline">
                         @include('partials.ui-icon', ['name' => $fItem['icon'], 'class' => 'w-3.5 h-3.5'])
                         <span>{{ $fItem['title'] }}</span>
                     </a>
@@ -114,28 +120,32 @@
             aria-haspopup="true"
             aria-controls="dropdown-tools"
             :aria-expanded="isOpen('tools') ? 'true' : 'false'"
-            class="flex items-center gap-1 px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-700 dark:hover:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800/70 transition-colors cursor-pointer {{ $isToolsActive ? 'text-amber-700 dark:text-amber-400 bg-stone-100 dark:bg-stone-800/70 shadow-xs' : '' }}">
+            class="flex items-center gap-1 px-3 py-2 rounded-xl whitespace-nowrap transition-all cursor-pointer {{ $isToolsActive ? 'tl-neu-pill-active text-amber-800 dark:text-amber-300 font-bold' : 'hover:text-amber-800 dark:hover:text-amber-300 hover:bg-white/60 dark:hover:bg-white/5' }}">
         <span>{{ $toolsGroup['label'] }}</span>
-        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-3.5 h-3.5 transition-transform duration-200'])
+        <span class="transition-transform duration-200" :class="isOpen('tools') ? 'rotate-180' : ''">
+            @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-3.5 h-3.5'])
+        </span>
     </button>
 
     <div id="dropdown-tools"
          x-show="isOpen('tools')" 
          x-cloak
-         x-transition:enter="transition ease-out duration-150"
-         x-transition:enter-start="opacity-0 translate-y-1"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-100"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-1"
-         class="absolute right-0 mt-2 w-72 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-lg p-2 z-50 space-y-1">
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-y-1.5 scale-[0.98]"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-1 scale-[0.98]"
+         class="absolute right-0 mt-2.5 w-80 rounded-2xl tl-glass-sheet p-2.5 z-50 space-y-1 before:content-[''] before:absolute before:-top-3 before:inset-x-0 before:h-3">
         @foreach($toolsGroup['items'] as $item)
-            <a href="{{ route($item['route']) }}" class="flex items-center gap-2.5 p-2 rounded-lg {{ !empty($item['highlight']) ? 'bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25' : 'hover:bg-stone-100 dark:hover:bg-stone-800/70' }} group transition-colors">
-                @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
-                <div>
-                    <div class="text-xs font-semibold {{ !empty($item['highlight']) ? 'text-amber-800 dark:text-amber-300' : 'text-stone-800 dark:text-stone-200 group-hover:text-amber-700 dark:group-hover:text-amber-400' }}">{{ $item['title'] }}</div>
+            <a href="{{ route($item['route']) }}" class="flex items-center gap-2.5 p-2 rounded-xl {{ !empty($item['highlight']) ? 'tl-glass-badge' : 'hover:bg-white/65 dark:hover:bg-white/[0.06]' }} group transition-colors">
+                <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+                    @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                </span>
+                <div class="min-w-0">
+                    <div class="text-xs font-semibold {{ !empty($item['highlight']) ? 'text-amber-900 dark:text-amber-300' : 'text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300' }}">{{ $item['title'] }}</div>
                     @if(!empty($item['desc']))
-                        <div class="text-[12px] text-stone-600 dark:text-stone-400">{{ $item['desc'] }}</div>
+                        <div class="text-[12px] text-stone-600 dark:text-stone-400 truncate">{{ $item['desc'] }}</div>
                     @endif
                 </div>
             </a>
@@ -165,28 +175,32 @@
             aria-haspopup="true"
             aria-controls="dropdown-guides"
             :aria-expanded="isOpen('guides') ? 'true' : 'false'"
-            class="flex items-center gap-1 px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-700 dark:hover:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800/70 transition-colors cursor-pointer {{ $isGuidesActive ? 'text-amber-700 dark:text-amber-400 bg-stone-100 dark:bg-stone-800/70 shadow-xs' : '' }}">
+            class="flex items-center gap-1 px-3 py-2 rounded-xl whitespace-nowrap transition-all cursor-pointer {{ $isGuidesActive ? 'tl-neu-pill-active text-amber-800 dark:text-amber-300 font-bold' : 'hover:text-amber-800 dark:hover:text-amber-300 hover:bg-white/60 dark:hover:bg-white/5' }}">
         <span>{{ $guidesGroup['label'] }}</span>
-        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-3.5 h-3.5 transition-transform duration-200'])
+        <span class="transition-transform duration-200" :class="isOpen('guides') ? 'rotate-180' : ''">
+            @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-3.5 h-3.5'])
+        </span>
     </button>
 
     <div id="dropdown-guides"
          x-show="isOpen('guides')" 
          x-cloak
-         x-transition:enter="transition ease-out duration-150"
-         x-transition:enter-start="opacity-0 translate-y-1"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-100"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-1"
-         class="absolute right-0 mt-2 w-64 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-lg p-2 z-50 space-y-1">
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-y-1.5 scale-[0.98]"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 translate-y-1 scale-[0.98]"
+         class="absolute right-0 mt-2.5 w-72 rounded-2xl tl-glass-sheet p-2.5 z-50 space-y-1 before:content-[''] before:absolute before:-top-3 before:inset-x-0 before:h-3">
         @foreach($guidesGroup['items'] as $item)
-            <a href="{{ route($item['route']) }}" class="flex items-center gap-2 p-2 rounded-lg {{ !empty($item['highlight']) ? 'bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25' : 'hover:bg-stone-100 dark:hover:bg-stone-800/70' }} group transition-colors">
-                @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
-                <div>
-                    <div class="text-xs font-semibold text-stone-800 dark:text-stone-200 group-hover:text-amber-700 dark:group-hover:text-amber-400">{{ $item['title'] }}</div>
+            <a href="{{ route($item['route']) }}" class="flex items-center gap-2.5 p-2 rounded-xl {{ !empty($item['highlight']) ? 'tl-glass-badge' : 'hover:bg-white/65 dark:hover:bg-white/[0.06]' }} group transition-colors">
+                <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+                    @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                </span>
+                <div class="min-w-0">
+                    <div class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300">{{ $item['title'] }}</div>
                     @if(!empty($item['desc']))
-                        <div class="text-[12px] text-stone-600 dark:text-stone-400">{{ $item['desc'] }}</div>
+                        <div class="text-[12px] text-stone-600 dark:text-stone-400 truncate">{{ $item['desc'] }}</div>
                     @endif
                 </div>
             </a>
@@ -196,6 +210,6 @@
 @endif
 
 {{-- تعرفه‌ها --}}
-<a href="{{ route('public.pricing') }}" class="px-2.5 py-2 rounded-xl whitespace-nowrap hover:text-amber-700 dark:hover:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800/70 transition-colors {{ request()->routeIs('public.pricing') ? 'text-amber-700 dark:text-amber-400 bg-stone-100 dark:bg-stone-800/70 shadow-xs' : '' }}"{!! request()->routeIs('public.pricing') ? ' aria-current="page"' : '' !!}>
+<a href="{{ route('public.pricing') }}" class="px-3 py-2 rounded-xl whitespace-nowrap transition-all {{ request()->routeIs('public.pricing') ? 'tl-neu-pill-active text-amber-800 dark:text-amber-300 font-bold' : 'hover:text-amber-800 dark:hover:text-amber-300 hover:bg-white/60 dark:hover:bg-white/5' }}"{!! request()->routeIs('public.pricing') ? ' aria-current="page"' : '' !!}>
     تعرفه‌ها
 </a>

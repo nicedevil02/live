@@ -18,39 +18,23 @@
 
 @push('styles')
 <style>
-    .app-badge-btn {
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .app-badge-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 28px -6px rgba(245, 158, 11, 0.25);
-    }
-    .tv-mockup-shadow {
-        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15), 0 0 35px -5px rgba(245, 158, 11, 0.15);
-    }
-    .dark .tv-mockup-shadow {
-        box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 45px -5px rgba(245, 158, 11, 0.25);
-    }
-    /* استایل‌های قطعی و لوکس مودال نصب PWA با لایه پس‌زمینه تیره و z-index بالا */
+    /* استایل‌های قطعی مودال نصب PWA با شیشه زنده اپل و سازگاری کامل تم روشن و تاریک */
     #pwa-install-modal {
         position: fixed !important;
-        top: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        left: 0 !important;
+        inset: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
         z-index: 9999999 !important;
-        background-color: rgba(2, 6, 23, 0.82) !important;
-        -webkit-backdrop-filter: blur(14px) !important;
-        backdrop-filter: blur(14px) !important;
+        background-color: rgba(12, 10, 9, 0.72) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
         display: none;
         align-items: center !important;
         justify-content: center !important;
         padding: 1rem !important;
         box-sizing: border-box !important;
         opacity: 0;
-        transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
     }
     #pwa-install-modal.modal-active {
         display: flex !important;
@@ -59,21 +43,17 @@
         position: relative !important;
         width: 100% !important;
         max-width: 28rem !important;
-        background-color: #ffffff !important;
+        background: var(--tl-glass-sheet-bg) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+        backdrop-filter: blur(24px) saturate(190%) !important;
         border-radius: 1.5rem !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45) !important;
+        border: 1px solid var(--tl-glass-sheet-border) !important;
+        box-shadow: var(--tl-glass-sheet-shadow) !important;
         padding: 1.5rem !important;
-        color: #0f172a !important;
+        color: var(--tl-text) !important;
         text-align: right !important;
         z-index: 10000000 !important;
-        animation: pwaModalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .dark .pwa-modal-box {
-        background-color: #0f172a !important;
-        border-color: #334155 !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85) !important;
-        color: #f8fafc !important;
+        animation: pwaModalScaleUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
     }
     @keyframes pwaModalScaleUp {
         from {
@@ -89,17 +69,20 @@
 @endpush
 
 @section('content')
-<div class="relative w-full overflow-hidden text-stone-800 dark:text-stone-100 transition-colors duration-150">
+<div class="relative w-full overflow-hidden text-stone-800 dark:text-stone-100">
+
+    {{-- هاله نور مخفی استودیویی پشت هیرو --}}
+    <div class="tl-ambient-gold absolute top-6 right-1/4 w-[520px] h-[240px] rounded-full opacity-75" aria-hidden="true"></div>
 
     {{-- ۱. بخش هیرو تمام‌صفحه --}}
     <section class="relative min-h-[calc(100vh-120px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 xl:px-12 py-8 lg:py-14 z-10">
         <div class="w-full max-w-7xl mx-auto flex flex-col">
 
             <!-- Breadcrumb Navigation -->
-            <nav class="flex items-center text-xs sm:text-sm text-stone-600 dark:text-stone-400 mb-6 space-x-2 space-x-reverse" aria-label="مسیر راهنما">
-                <a href="/" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors font-medium">صفحه اصلی</a>
+            <nav class="inline-flex self-start items-center text-xs sm:text-sm text-stone-600 dark:text-stone-400 mb-6 px-3.5 py-2 rounded-2xl tl-neu-inset space-x-2 space-x-reverse" aria-label="مسیر راهنما">
+                <a href="/" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors font-semibold">صفحه اصلی</a>
                 <span class="text-stone-400 dark:text-stone-600">/</span>
-                <span class="text-amber-700 dark:text-amber-400 font-semibold">دانلود اپلیکیشن تابلوی طلافروشی</span>
+                <span class="text-amber-700 dark:text-amber-400 font-bold">دانلود اپلیکیشن تابلوی طلافروشی</span>
             </nav>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center w-full">
@@ -107,15 +90,15 @@
                 {{-- ستون راست: معرفی سئو، ارزش نرم‌افزار و کارت‌های دانلود (۷ ستون) --}}
                 <div class="lg:col-span-7 text-right space-y-6">
                     
-                    {{-- بج نسخه جدید --}}
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold">
+                    {{-- بج نسخه جدید شیشه‌ای --}}
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-stone-800 dark:text-stone-200 text-xs font-bold">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                         <span>نسخه ۱.۰.۸ • مجهز به سیستم بروزرسانی آنلاین (OTA) و کنترل ریموت</span>
                     </div>
 
                     {{-- تیتر اصلی H1 --}}
                     <div class="space-y-4">
-                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 dark:text-stone-50 leading-[1.2] tracking-tight">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 dark:text-stone-50 leading-[1.2] tracking-tight">
                             دانلود مستقیم اپلیکیشن طلالایو
                             <span class="block text-amber-700 dark:text-amber-400 text-2xl sm:text-3xl lg:text-4xl mt-1.5 font-bold">
                                 نرم‌افزار هوشمند تابلوی طلافروشی و تلویزیون
@@ -126,15 +109,17 @@
                         </p>
                     </div>
 
-                    {{-- پنل دانلود و راه‌اندازی سریع --}}
-                    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-7 shadow-xs space-y-5">
+                    {{-- پنل شیشه‌ای دانلود و راه‌اندازی سریع --}}
+                    <div class="tl-glass-deck rounded-3xl p-5 sm:p-7 space-y-5">
                         
-                        <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-stone-200 dark:border-stone-800">
+                        <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-stone-300/60 dark:border-stone-800">
                             <span class="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                                @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                                <span class="w-8 h-8 rounded-xl tl-neu-icon-orb flex items-center justify-center text-amber-700 dark:text-amber-400">
+                                    @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4'])
+                                </span>
                                 <span>دریافت فایل نصبی رسمی تلویزیون و پنل تحت وب:</span>
                             </span>
-                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-emerald-700 dark:text-emerald-400 border border-stone-200 dark:border-stone-700">
+                            <span class="text-[11px] font-bold px-3 py-1 rounded-full tl-glass-badge text-emerald-800 dark:text-emerald-300">
                                 نسخه رسمی و تایید شده
                             </span>
                         </div>
@@ -143,14 +128,14 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- دانلود مستقیم APK برای تلویزیون -->
                             <a href="/downloads/talalive-tv.apk?v=1.0.8" 
-                                class="app-badge-btn min-h-11 flex items-center gap-3.5 px-5 py-4 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-xl font-bold shadow-xs text-right transition-colors group">
+                                class="min-h-11 flex items-center gap-3.5 px-5 py-4 tl-btn-bullion rounded-2xl font-bold text-right group">
                                 <span class="text-stone-950 shrink-0">
                                     @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-7 h-7'])
                                 </span>
                                 <div class="min-w-0 flex-1">
                                     <span class="block text-[11px] font-semibold text-stone-900">دانلود مستقیم اپلیکیشن تلویزیون</span>
-                                    <span class="block text-base font-bold truncate">طلالایو TV (نسخه ۱.۰.۸)</span>
-                                    <span class="block text-[10px] text-stone-800 font-medium">حجم ۴۶ مگابایت • اندروید تی‌وی و باکس</span>
+                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۸)</span>
+                                    <span class="block text-[10px] text-stone-800 font-semibold">حجم ۴۶ مگابایت • اندروید تی‌وی و باکس</span>
                                 </div>
                             </a>
 
@@ -158,18 +143,18 @@
                             <button type="button"
                                  id="pwa-app-card" 
                                  onclick="handlePwaClick(event)"
-                                 class="app-badge-btn min-h-11 w-full flex items-center gap-3.5 px-5 py-4 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 border border-stone-300 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-50 shadow-xs text-right cursor-pointer select-none transition-colors">
+                                 class="min-h-11 w-full flex items-center gap-3.5 px-5 py-4 tl-neu-btn rounded-2xl text-stone-900 dark:text-stone-50 text-right cursor-pointer select-none">
                                 <span class="text-amber-700 dark:text-amber-400 shrink-0">
                                     @include('partials.ui-icon', ['name' => 'smartphone', 'class' => 'w-7 h-7'])
                                 </span>
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between gap-1 mb-0.5">
                                         <span class="block text-[11px] text-stone-600 dark:text-stone-400 font-medium">وب‌اپلیکیشن پیش‌رونده (PWA)</span>
-                                        <span id="pwa-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/25">
+                                        <span id="pwa-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-lg tl-glass-badge text-amber-800 dark:text-amber-300">
                                             نصب مستقیم
                                         </span>
                                     </div>
-                                    <span class="block text-base font-bold text-amber-700 dark:text-amber-400 truncate">نصب PWA و پنل وب</span>
+                                    <span class="block text-base font-black text-amber-700 dark:text-amber-400 truncate">نصب PWA و پنل وب</span>
                                     <span class="block text-[10px] text-stone-600 dark:text-stone-400 font-medium">سازگار با اندروید، آیفون و ویندوز</span>
                                 </div>
                             </button>
@@ -177,12 +162,12 @@
 
                         {{-- لینک‌های کمکی: اتصال سریع و دموی زنده --}}
                         <div class="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs">
-                            <span class="text-stone-600 dark:text-stone-400">نیاز به تست سریع یا اتصال تلویزیون دارید؟</span>
+                            <span class="text-stone-600 dark:text-stone-400 font-medium">نیاز به تست سریع یا اتصال تلویزیون دارید؟</span>
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('display.tv') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 font-semibold border border-stone-300 dark:border-stone-700 transition-colors">
+                                <a href="{{ route('display.tv') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 font-bold">
                                     <span>اتصال با کد ۶ رقمی (/tv)</span>
                                 </a>
-                                <a href="{{ url('/demo') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold border border-stone-300 dark:border-stone-700 transition-colors">
+                                <a href="{{ url('/demo') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-200 font-bold">
                                     <span>مشاهده دموی زنده</span>
                                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
                                 </a>
@@ -190,61 +175,69 @@
                         </div>
                     </div>
 
-                    {{-- نوار شاخص‌های اعتماد ۴‌گانه --}}
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs text-stone-700 dark:text-stone-300 font-semibold">
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
+                    {{-- نوار شاخص‌های اعتماد ۴‌گانه نئومورفیک --}}
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs text-stone-700 dark:text-stone-200 font-bold">
+                        <div class="flex items-center gap-2 tl-neu-card px-3 py-2.5 rounded-2xl">
                             @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                             <span class="truncate">راه‌اندازی در ۶۰ ثانیه</span>
                         </div>
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
-                            @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400'])
+                        <div class="flex items-center gap-2 tl-neu-card px-3 py-2.5 rounded-2xl">
+                            @include('partials.ui-icon', ['name' => 'wifi-off', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400'])
                             <span class="truncate">پایداری ۱۰۰٪ آفلاین</span>
                         </div>
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
-                            @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-stone-600 dark:text-stone-300'])
+                        <div class="flex items-center gap-2 tl-neu-card px-3 py-2.5 rounded-2xl">
+                            @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-stone-700 dark:text-stone-300'])
                             <span class="truncate">انواع تلویزیون هوشمند</span>
                         </div>
-                        <div class="flex items-center gap-2 bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-800 px-3 py-2 rounded-xl">
+                        <div class="flex items-center gap-2 tl-neu-card px-3 py-2.5 rounded-2xl">
                             @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                             <span class="truncate">امضای دیجیتال ۳۰ ساله</span>
                         </div>
                     </div>
                 </div>
 
-                {{-- ستون چپ: شو روم بصری تلویزیون هوشمند (۵ ستون) --}}
+                {{-- ستون چپ: شو روم بصری تلویزیون هوشمند با شاسی تیتانیومی (۵ ستون) --}}
                 <div class="lg:col-span-5 flex flex-col justify-center items-center relative w-full">
-                    <div class="relative w-full rounded-2xl p-2 bg-stone-900 border border-stone-800 shadow-xl group">
-                        <figure class="relative rounded-xl overflow-hidden bg-stone-950 border border-stone-800 shadow-lg m-0">
-                            <picture>
-                                <source srcset="{{ asset('images/tv-preview.webp') }}?v=1.0.1" type="image/webp">
-                                <img src="{{ asset('images/tv-preview.png') }}?v=1.0.1" 
-                                     alt="اسکرین‌شات واقعی تابلوی طلافروشی طلالایو روی تلویزیون هوشمند Android TV با نمایش لحظه‌ای قیمت طلا، سکه و ویترین طلا" 
-                                     title="پیش‌نمایش زنده اپلیکیشن تابلوی طلافروشی طلالایو روی تلویزیون مغازه"
-                                     class="w-full h-auto object-cover block select-none"
-                                     width="1024" 
-                                     height="577" 
-                                     loading="eager"
-                                     fetchpriority="high"
-                                     decoding="async">
-                            </picture>
+                    <div class="relative w-full">
+                        <div class="tl-ambient-gold -inset-5 absolute rounded-[36px] opacity-85" aria-hidden="true"></div>
+                        <div class="relative w-full tl-tv-titanium rounded-[26px] p-2.5 sm:p-3 group">
+                            <figure class="relative rounded-2xl overflow-hidden bg-stone-950 border border-white/10 shadow-2xl m-0">
+                                <picture>
+                                    <source srcset="{{ asset('images/tv-preview.webp') }}?v=1.0.1" type="image/webp">
+                                    <img src="{{ asset('images/tv-preview.png') }}?v=1.0.1" 
+                                         alt="اسکرین‌شات واقعی تابلوی طلافروشی طلالایو روی تلویزیون هوشمند Android TV با نمایش لحظه‌ای قیمت طلا، سکه و ویترین طلا" 
+                                         title="پیش‌نمایش زنده اپلیکیشن تابلوی طلافروشی طلالایو روی تلویزیون مغازه"
+                                         class="w-full h-auto object-cover block select-none"
+                                         width="1024" 
+                                         height="577" 
+                                         loading="eager"
+                                         fetchpriority="high"
+                                         decoding="async">
+                                </picture>
 
-                            <figcaption class="sr-only">اسکرین‌شات واقعی تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو روی تلویزیون هوشمند طلافروشی</figcaption>
+                                {{-- بازتاب ملایم شیشه پنل تلویزیون --}}
+                                <div class="tl-screen-glare absolute inset-0 z-10" aria-hidden="true"></div>
 
-                            {{-- برچسب زنده بودن و اتصال در گوشه تصویر --}}
-                            <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-stone-950/90 border border-stone-700 text-[10px] font-semibold text-stone-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                <span>پیش‌نمایش زنده اپلیکیشن (v1.0.8)</span>
-                            </div>
-                        </figure>
+                                <figcaption class="sr-only">اسکرین‌شات واقعی تابلوی هوشمند نرخ لحظه‌ای طلا و سکه طلالایو روی تلویزیون هوشمند طلافروشی</figcaption>
+
+                                {{-- برچسب زنده بودن و اتصال در گوشه تصویر --}}
+                                <div class="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-950/85 backdrop-blur-md border border-white/15 text-[10px] font-bold text-stone-100">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>پیش‌نمایش زنده اپلیکیشن (v1.0.8)</span>
+                                </div>
+                            </figure>
+                        </div>
                     </div>
 
-                    {{-- کادر راهنمای ریموت کنترل تلویزیون --}}
-                    <div class="mt-4 w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs text-stone-700 dark:text-stone-300 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            @include('partials.ui-icon', ['name' => 'sliders', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                    {{-- کادر شیشه‌ای راهنمای ریموت کنترل تلویزیون --}}
+                    <div class="relative z-10 mt-5 w-full tl-glass-deck rounded-2xl p-3.5 text-xs text-stone-700 dark:text-stone-200 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5 font-semibold">
+                            <span class="w-8 h-8 rounded-xl tl-neu-icon-orb flex items-center justify-center text-amber-700 dark:text-amber-400">
+                                @include('partials.ui-icon', ['name' => 'sliders', 'class' => 'w-4 h-4'])
+                            </span>
                             <span>کنترل کامل بزرگ‌نمایی و تنظیمات با ریموت تلویزیون</span>
                         </div>
-                        <span class="font-mono text-stone-500 font-bold tabular-nums">v1.0.8</span>
+                        <span class="px-2.5 py-1 rounded-lg tl-neu-inset text-stone-600 dark:text-stone-300 font-bold tabular-nums">v1.0.8</span>
                     </div>
                 </div>
 
@@ -255,10 +248,10 @@
     {{-- ۲. شبکه ۴‌ستونه قابلیت‌های تخصصی اپلیکیشن طلالایو --}}
     <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 my-12 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="inline-block px-3 py-1 rounded-md text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 mb-3">
+            <span class="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold tl-glass-badge text-amber-800 dark:text-amber-300 mb-3">
                 ویژگی‌های مهندسی‌شده اپلیکیشن
             </span>
-            <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-50">
                 ویژگی‌های ویژه استفاده دائمی روی تلویزیون مغازه
             </h2>
             <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-2">
@@ -268,8 +261,8 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {{-- کارت ۱ --}}
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 shadow-xs hover:border-amber-500/50 transition-colors">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center mb-4 border border-amber-200 dark:border-amber-500/25">
+            <div class="tl-neu-card rounded-3xl p-6">
+                <div class="w-11 h-11 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center mb-4">
                     @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-base font-bold text-stone-900 dark:text-stone-50 mb-2">روشن شدن خودکار با برق مغازه</h3>
@@ -279,8 +272,8 @@
             </div>
 
             {{-- کارت ۲ --}}
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 shadow-xs hover:border-amber-500/50 transition-colors">
-                <div class="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-4 border border-stone-200 dark:border-stone-700">
+            <div class="tl-neu-card rounded-3xl p-6">
+                <div class="w-11 h-11 rounded-2xl tl-neu-icon-orb text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-4">
                     @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-base font-bold text-stone-900 dark:text-stone-50 mb-2">کارکرد پایدار آفلاین</h3>
@@ -290,8 +283,8 @@
             </div>
 
             {{-- کارت ۳ --}}
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 shadow-xs hover:border-amber-500/50 transition-colors">
-                <div class="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center mb-4 border border-stone-200 dark:border-stone-700">
+            <div class="tl-neu-card rounded-3xl p-6">
+                <div class="w-11 h-11 rounded-2xl tl-neu-icon-orb text-stone-700 dark:text-stone-300 flex items-center justify-center mb-4">
                     @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-base font-bold text-stone-900 dark:text-stone-50 mb-2">محافظت از پنل و ضد سایه</h3>
@@ -301,8 +294,8 @@
             </div>
 
             {{-- کارت ۴ --}}
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 shadow-xs hover:border-amber-500/50 transition-colors">
-                <div class="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center mb-4 border border-stone-200 dark:border-stone-700">
+            <div class="tl-neu-card rounded-3xl p-6">
+                <div class="w-11 h-11 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center mb-4">
                     @include('partials.ui-icon', ['name' => 'smartphone', 'class' => 'w-5 h-5'])
                 </div>
                 <h3 class="text-base font-bold text-stone-900 dark:text-stone-50 mb-2">کنترل بی‌سیم با گوشی موبایل</h3>
@@ -316,10 +309,10 @@
     {{-- ۳. آموزش گام‌به‌گام نصب و راه‌اندازی --}}
     <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 my-16 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="inline-block px-3 py-1 rounded-md text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 mb-3">
+            <span class="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold tl-glass-badge text-amber-800 dark:text-amber-300 mb-3">
                 راهنمای راه‌اندازی
             </span>
-            <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-50">
                 آموزش گام‌به‌گام نصب اپلیکیشن روی تلویزیون طلافروشی
             </h2>
             <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-2">
@@ -330,10 +323,10 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             
             <!-- گام ۱: فعال‌سازی منابع ناشناس -->
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+            <div class="tl-neu-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-base flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/25">
+                        <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 font-black text-base flex items-center justify-center shrink-0">
                             ۱
                         </div>
                         <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
@@ -344,13 +337,13 @@
                         چون اپلیکیشن طلالایو به صورت مستقیم (APK) نصب می‌شود، این مجوز را در تنظیمات فعال کنید:
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                        <div class="p-3.5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">تلویزیون‌های Android TV:</span>
                             <p class="text-xs text-stone-700 dark:text-stone-300 leading-relaxed">
                                 تنظیمات > برنامه‌ها > امنیت > <strong>نصب برنامه‌های ناشناس</strong> را برای مرورگر روی <span class="text-emerald-700 dark:text-emerald-400 font-bold">مجاز (Allow)</span> بگذارید.
                             </p>
                         </div>
-                        <div class="p-3.5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">اندروید باکس‌ها:</span>
                             <p class="text-xs text-stone-700 dark:text-stone-300 leading-relaxed">
                                 تنظیمات (Settings) > امنیت (Security) > تیک گزینه <strong>منابع ناشناخته (Unknown Sources)</strong> را فعال نمایید.
@@ -361,10 +354,10 @@
             </div>
 
             <!-- گام ۲: روش‌های انتقال فایل به تلویزیون -->
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+            <div class="tl-neu-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-base flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/25">
+                        <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 font-black text-base flex items-center justify-center shrink-0">
                             ۲
                         </div>
                         <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
@@ -375,15 +368,15 @@
                         می‌توانید از یکی از روش‌های ساده زیر برای رساندن فایل نصبی به تلویزیون یا باکس استفاده کنید:
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-right">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset text-right">
                             <strong class="text-xs font-bold text-stone-900 dark:text-stone-50 block mb-0.5">روش اول: فلش مموری</strong>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">دانلود فایل با کامپیوتر، انتقال به فلش و نصب با فایل‌منیجر.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-right">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset text-right">
                             <strong class="text-xs font-bold text-stone-900 dark:text-stone-50 block mb-0.5">روش دوم: مرورگر تلویزیون</strong>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">ورود به <code class="text-amber-700 dark:text-amber-400 font-mono">talalive.ir/app</code> با مرورگر و دانلود مستقیم.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-right">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset text-right">
                             <strong class="text-xs font-bold text-stone-900 dark:text-stone-50 block mb-0.5">روش سوم: با وای‌فای</strong>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">با نرم‌افزار Send Files to TV فایل را بی‌سیم منتقل کنید.</p>
                         </div>
@@ -392,10 +385,10 @@
             </div>
 
             <!-- گام ۳: مراحل جفت‌سازی -->
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+            <div class="tl-neu-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-base flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/25">
+                        <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 font-black text-base flex items-center justify-center shrink-0">
                             ۳
                         </div>
                         <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
@@ -406,15 +399,15 @@
                         پس از نصب، اپلیکیشن را باز کنید. یک کد ۶ رقمی همراه با بارکد QR ظاهر می‌شود؛ یکی از راه‌های زیر را انجام دهید:
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">الف) ورود کد در پنل:</span>
                             <p class="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed">در بخش تلویزیون‌های من در پنل، دکمه افزودن دستگاه را بزنید و کد را وارد کنید.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">ب) اسکن QR Code:</span>
                             <p class="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed">دوربین موبایل را جلوی بارکد تلویزیون بگیرید تا درجا فعال شود.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">ج) پیامک لینک:</span>
                             <p class="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed">دکمه ارسال پیامک را با ریموت بزنید و شماره موبایل را وارد نمایید.</p>
                         </div>
@@ -423,10 +416,10 @@
             </div>
 
             <!-- گام ۴: حل مشکل بالا نیامدن پس از قطع برق -->
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+            <div class="tl-neu-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-base flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/25">
+                        <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 font-black text-base flex items-center justify-center shrink-0">
                             ۴
                         </div>
                         <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
@@ -436,7 +429,7 @@
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                         اپلیکیشن طلالایو مجهز به گیرنده خودکار روشن شدن با برق (Boot Receiver) است. با این حال در برخی تلویزیون‌ها:
                     </p>
-                    <div class="p-3.5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 space-y-1.5">
+                    <div class="p-4 rounded-2xl tl-neu-inset space-y-1.5">
                         <strong class="text-xs font-bold text-amber-700 dark:text-amber-400 block">انتخاب طلالایو به عنوان برنامه پیش‌فرض خانه (Home App):</strong>
                         <p class="text-xs text-stone-700 dark:text-stone-300 leading-relaxed">
                             به <strong>تنظیمات تلویزیون</strong> > <strong>برنامه‌ها</strong> > <strong>برنامه‌های پیش‌فرض</strong> > <strong>برنامه خانه</strong> رفته و گزینه <strong>«طلالایو TV»</strong> را انتخاب کنید.
@@ -446,10 +439,10 @@
             </div>
 
             <!-- گام ۵: حل مشکل عدم به‌روزرسانی قیمت‌ها -->
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+            <div class="tl-neu-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-base flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/25">
+                        <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 font-black text-base flex items-center justify-center shrink-0">
                             ۵
                         </div>
                         <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
@@ -459,7 +452,7 @@
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                         سامانه طلالایو از فناوری نسل جدید جاوااسکریپت برای به‌روزرسانی ثانیه‌ای نرخ‌ها استفاده می‌کند که نیازمند <strong>Android System WebView</strong> نسخه ۸۰ به بالاست:
                     </p>
-                    <div class="p-3.5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-xs text-stone-700 dark:text-stone-300 space-y-1.5">
+                    <div class="p-4 rounded-2xl tl-neu-inset text-xs text-stone-700 dark:text-stone-300 space-y-1.5">
                         <p>۱. فروشگاه <strong>Google Play Store</strong> یا <strong>بازار</strong> را در تلویزیون باز کنید.</p>
                         <p>۲. عبارت <strong>Android System WebView</strong> را جستجو کرده و دکمه <strong>به‌روزرسانی (Update)</strong> را بزنید.</p>
                         <p>۳. پس از آپدیت، یک‌بار تلویزیون را خاموش و روشن کنید تا قیمت‌ها با حداکثر سرعت به‌روزرسانی شوند.</p>
@@ -468,10 +461,10 @@
             </div>
 
             <!-- گام ۶: رفتار کلیدهای ریموت کنترل -->
-            <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+            <div class="tl-neu-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-base flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/25">
+                        <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 font-black text-base flex items-center justify-center shrink-0">
                             ۶
                         </div>
                         <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
@@ -479,19 +472,19 @@
                         </h3>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-1">
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">کلیدهای جهت‌نما:</span>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400">بزرگ‌نمایی و کوچک‌نمایی سریع مقیاس تابلو جهت تطابق بی‌نقص با انواع سایز تلویزیون.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">MENU یا نگه‌داشتن OK:</span>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400">باز شدن منوی تنظیمات سریع، سوئیچ بین حالت وب و نیتیو و بررسی آپدیت آنلاین.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">دکمه BACK:</span>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400">برای جلوگیری از بسته‌شدن تصادفی تابلو در مغازه، نیازمند دو بار فشردن سریع است.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                        <div class="p-3.5 rounded-2xl tl-neu-inset">
                             <span class="text-xs font-bold text-amber-700 dark:text-amber-400 block mb-1">سیستم آپدیت آنلاین:</span>
                             <p class="text-[11px] text-stone-600 dark:text-stone-400">دریافت خودکار قابلیت‌های جدید بدون نیاز به فلش‌مموری یا تنظیمات دستی.</p>
                         </div>
@@ -504,9 +497,9 @@
 
     {{-- ۴. بخش سوالات متداول (FAQ) --}}
     <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 my-16 relative z-10">
-        <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-10 shadow-xs">
+        <div class="tl-neu-card rounded-3xl p-6 sm:p-10">
             <div class="text-center max-w-2xl mx-auto mb-8">
-                <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
+                <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-50">
                     سؤالات متداول درباره اپلیکیشن تابلوی طلالایو
                 </h2>
                 <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-2">
@@ -515,28 +508,28 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
-                <div class="p-5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                <div class="p-5 rounded-2xl tl-neu-inset">
                     <h3 class="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-400 mb-2">۱. آیا استفاده از اپلیکیشن هزینه جداگانه دارد؟</h3>
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                         خیر؛ با تهیه هر یک از پلن‌های اشتراک طلالایو، دسترسی به پنل اپلیکیشن موبایل، مدیریت تابلو و تمامی به‌روزرسانی‌های نسخه تلویزیون کاملاً رایگان خواهد بود.
                     </p>
                 </div>
 
-                <div class="p-5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                <div class="p-5 rounded-2xl tl-neu-inset">
                     <h3 class="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-400 mb-2">۲. اگر تلویزیون مغازه اندروید نباشد چه کنیم؟</h3>
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                         تلویزیون‌های سامسونگ (Tizen) و ال‌جی (webOS) بدون نیاز به نصب هیچ نرم‌افزاری، مستقیماً از طریق مرورگر داخلی تلویزیون با آدرس <a href="{{ route('display.tv') }}" class="text-amber-700 dark:text-amber-400 underline font-bold">talalive.ir/tv</a> متصل می‌شوند. همچنین می‌توانید یک اندروید باکس ساده به تلویزیون وصل کنید.
                     </p>
                 </div>
 
-                <div class="p-5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                <div class="p-5 rounded-2xl tl-neu-inset">
                     <h3 class="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-400 mb-2">۳. چگونه نسخه وب را در گوشی ذخیره کنیم؟</h3>
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                         با مرورگر گوشی به آدرس <a href="/admin/login" class="text-amber-700 dark:text-amber-400 underline font-bold">talalive.ir/admin/login</a> بروید و گزینه «Add to Home screen» (افزودن به صفحه اصلی) را بزنید تا همانند یک اپلیکیشن روی صفحه ظاهر شود.
                     </p>
                 </div>
 
-                <div class="p-5 rounded-xl bg-stone-100/80 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+                <div class="p-5 rounded-2xl tl-neu-inset">
                     <h3 class="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-400 mb-2">۴. در صورت قطعی اینترنت، نمایشگر خاموش می‌شود؟</h3>
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                         خیر؛ اپلیکیشن به صورت خودکار آخرین نرخ‌های معتبر را به همراه ساعت دقیق آخرین استعلام حفظ کرده و به مشتریان نمایش می‌دهد و به محض اتصال مجدد اینترنت، بدون دخالت دست آپدیت می‌شود.
@@ -548,22 +541,22 @@
 
     {{-- ۵. بنر تبدیل پایانی --}}
     <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 mb-16 relative z-10">
-        <div class="relative rounded-2xl p-8 sm:p-10 bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-center sm:text-right flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="relative rounded-3xl p-8 sm:p-10 tl-neu-card-gold text-center sm:text-right flex flex-col sm:flex-row items-center justify-between gap-6">
             <div class="space-y-2 max-w-xl">
-                <h3 class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50">
+                <h3 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-50">
                     آماده‌اید تابلوی مدرن طلافروشی خود را روشن کنید؟
                 </h3>
-                <p class="text-sm text-stone-600 dark:text-stone-400">
+                <p class="text-sm text-stone-600 dark:text-stone-300">
                     همین حالا ثبت‌نام کنید و از ۱۴ روز تست کاملاً رایگان سامانه طلالایو روی تلویزیون مغازه بدون نیاز به پیش‌پرداخت بهره‌مند شوید.
                 </p>
             </div>
 
             <div class="flex items-center gap-3 flex-wrap justify-center shrink-0">
-                <a href="{{ route('admin.register') }}" class="min-h-11 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors shadow-xs inline-flex items-center gap-1.5">
+                <a href="{{ route('admin.register') }}" class="min-h-11 px-6 py-3 rounded-xl tl-btn-bullion font-bold text-xs inline-flex items-center gap-1.5">
                     <span>ثبت‌نام گالری طلا (۱۴ روز رایگان)</span>
                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-4 h-4'])
                 </a>
-                <a href="{{ url('/demo') }}" class="min-h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-stone-100 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 font-semibold text-xs border border-stone-300 dark:border-stone-700 transition-colors inline-flex items-center gap-1.5">
+                <a href="{{ url('/demo') }}" class="min-h-11 px-5 py-3 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-100 font-bold text-xs inline-flex items-center gap-1.5">
                     <span>مشاهده دموی زنده تابلو</span>
                 </a>
             </div>
@@ -687,25 +680,29 @@
 }
 </script>
 
-    {{-- مودال هوشمند و زیبای راهنمای نصب وب‌اپلیکیشن PWA --}}
+    {{-- مودال هوشمند شیشه‌ای Apple HIG راهنمای نصب وب‌اپلیکیشن PWA --}}
     <div id="pwa-install-modal" 
-         style="display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999999; background-color: rgba(2, 6, 23, 0.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box; opacity: 0; transition: opacity 0.25s ease-in-out;"
+         style="display: none;"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="pwaModalTitle"
          class="pwa-modal-overlay">
-        <div style="position: relative; width: 100%; max-width: 28rem; background-color: #ffffff; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45); padding: 1.5rem; color: #0f172a; text-align: right; z-index: 10000000;"
-             class="pwa-modal-box">
+        <div class="pwa-modal-box">
             
             <!-- هدر مودال -->
-            <div class="flex items-center justify-between pb-3.5 border-b border-stone-200 dark:border-stone-800">
+            <div class="flex items-center justify-between pb-3.5 border-b border-stone-300/60 dark:border-stone-800">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 border border-amber-200 dark:border-amber-500/25">
+                    <div class="w-10 h-10 rounded-2xl tl-neu-icon-orb text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
                         @include('partials.ui-icon', ['name' => 'smartphone', 'class' => 'w-5 h-5'])
                     </div>
                     <div>
-                        <h3 class="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-50">نصب وب‌اپلیکیشن طلالایو (PWA)</h3>
+                        <h3 id="pwaModalTitle" class="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-50">نصب وب‌اپلیکیشن طلالایو (PWA)</h3>
                         <p class="text-[10px] sm:text-[11px] text-stone-600 dark:text-stone-400">نرم‌افزار مستقل، سبک و همیشه به‌روز</p>
                     </div>
                 </div>
-                <button onclick="closePwaModal()" class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 flex items-center justify-center text-lg transition-colors cursor-pointer" title="بستن">&times;</button>
+                <button onclick="closePwaModal()" type="button" aria-label="بستن پنجره نصب" class="relative w-9 h-9 rounded-xl tl-neu-btn text-stone-700 dark:text-stone-300 flex items-center justify-center cursor-pointer after:content-[''] after:absolute after:-inset-1">
+                    @include('partials.ui-icon', ['name' => 'x', 'class' => 'w-4 h-4'])
+                </button>
             </div>
 
             <!-- محتوای وابسته به سیستم‌عامل -->
@@ -713,7 +710,7 @@
                 
                 {{-- راهنمای مخصوص iOS در مرورگر Safari --}}
                 <div id="pwa-modal-ios-content" style="display: none;" class="space-y-3">
-                    <div class="p-3.5 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-stone-800 dark:text-stone-200 space-y-2 leading-relaxed">
+                    <div class="p-3.5 rounded-2xl tl-neu-inset text-xs text-stone-800 dark:text-stone-200 space-y-2 leading-relaxed">
                         <div class="font-bold flex items-center gap-1.5 text-xs sm:text-sm text-stone-900 dark:text-stone-50">
                             <span>راهنمای نصب روی آیفون و آیپد (سافاری):</span>
                         </div>
@@ -732,13 +729,13 @@
                     </p>
 
                     <div id="pwa-native-install-section" style="display: none;">
-                        <button onclick="triggerPwaPromptFromModal()" type="button" class="w-full min-h-11 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-xs">
+                        <button onclick="triggerPwaPromptFromModal()" type="button" class="w-full min-h-11 py-2.5 px-4 rounded-xl tl-btn-bullion font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer">
                             @include('partials.ui-icon', ['name' => 'smartphone', 'class' => 'w-4 h-4'])
                             <span>نصب مستقیم اپلیکیشن روی دستگاه</span>
                         </button>
                     </div>
 
-                    <div id="pwa-browser-manual-guide" class="p-3 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs text-stone-700 dark:text-stone-300 space-y-1">
+                    <div id="pwa-browser-manual-guide" class="p-3.5 rounded-2xl tl-neu-inset text-xs text-stone-700 dark:text-stone-300 space-y-1">
                         <div class="font-bold flex items-center gap-1.5 text-amber-700 dark:text-amber-400 text-xs">
                             <span>نصب از طریق منوی مرورگر:</span>
                         </div>
@@ -749,7 +746,7 @@
                 </div>
 
                 {{-- حالت اپلیکیشن نصب‌شده --}}
-                <div id="pwa-modal-installed-content" style="display: none;" class="p-3.5 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-stone-800 dark:text-stone-200 space-y-1">
+                <div id="pwa-modal-installed-content" style="display: none;" class="p-3.5 rounded-2xl tl-neu-inset text-xs text-stone-800 dark:text-stone-200 space-y-1">
                     <div class="font-bold flex items-center gap-1.5 text-xs sm:text-sm text-emerald-700 dark:text-emerald-400">
                         @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4'])
                         <span>اپلیکیشن طلالایو روی دستگاه شما نصب است!</span>
@@ -759,11 +756,11 @@
             </div>
 
             <!-- دکمه‌های فوتر مودال -->
-            <div class="pt-3 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2.5">
-                <a href="/admin/login" class="flex-1 min-h-11 py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-900 dark:text-stone-100 font-bold text-xs border border-stone-300 dark:border-stone-700 text-center transition-colors inline-flex items-center justify-center">
+            <div class="pt-3 border-t border-stone-300/60 dark:border-stone-800 flex items-center justify-between gap-2.5">
+                <a href="/admin/login" class="flex-1 min-h-11 py-2.5 px-3 rounded-xl tl-btn-bullion font-bold text-xs text-center inline-flex items-center justify-center">
                     ورود به پنل وب (/admin)
                 </a>
-                <button onclick="closePwaModal()" type="button" class="min-h-11 py-2.5 px-4 rounded-xl bg-white hover:bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold text-xs border border-stone-300 dark:border-stone-700 transition-colors cursor-pointer">
+                <button onclick="closePwaModal()" type="button" class="min-h-11 py-2.5 px-4 rounded-xl tl-neu-btn text-stone-700 dark:text-stone-200 font-bold text-xs cursor-pointer">
                     بستن
                 </button>
             </div>

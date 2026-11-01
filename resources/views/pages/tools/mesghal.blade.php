@@ -52,7 +52,7 @@
 @endsection
 
 @section('content')
-<div class="py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10">
+<div class="py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-10 relative">
 
     @include('partials.breadcrumb', [
         'items' => [
@@ -61,46 +61,66 @@
         ]
     ])
 
-    {{-- هدر صفحه --}}
-    <div class="text-center space-y-4 max-w-2xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold">
+    {{-- هدر صفحه با هاله نور طلایی --}}
+    <div class="relative text-center space-y-4 max-w-2xl mx-auto">
+        <div class="tl-ambient-gold -top-24 left-1/2 -translate-x-1/2 w-80 h-80 opacity-60"></div>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full tl-glass-badge text-amber-700 dark:text-amber-400 text-xs font-bold">
+            <x-ui-icon name="scale" class="w-3.5 h-3.5" />
             <span>ضریب رسمی صنف طلا و جواهر: ۴.۳۳۱۸</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-black text-stone-900 dark:text-white leading-tight">
             تبدیل مظنه مثقال به گرم ۱۸ عیار <br>
-            <span class="text-amber-600 dark:text-amber-400">و تحلیل تفاوت مظنه نقدی، فردایی و جهانی</span>
+            <span class="text-amber-700 dark:text-amber-400">و تحلیل تفاوت مظنه نقدی، فردایی و جهانی</span>
         </h1>
         <p class="text-stone-600 dark:text-stone-400 text-sm">
             محاسبه دوطرفه آنی با نرخ لحظه‌ای اتحادیه و بازار بزرگ تهران
         </p>
-        <p class="text-xs text-stone-500 dark:text-stone-400">
-            مظنه پایه بازار در سامانه: <strong class="text-amber-700 dark:text-amber-400 font-mono">{{ number_format($rates['mesghal']) }}</strong> تومان (بروزرسانی: {{ $lastUpdated }})
-        </p>
+        <div class="pt-2">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-300">
+                <span>مظنه پایه بازار در سامانه:</span>
+                <strong class="text-amber-700 dark:text-amber-400 font-mono font-bold">{{ number_format($rates['mesghal']) }} تومان</strong>
+                <span class="text-stone-400 text-[11px]">(بروزرسانی: {{ $lastUpdated }})</span>
+            </span>
+        </div>
     </div>
 
-    {{-- ویجت آلپاین تبدیل مظنه --}}
+    {{-- ویجت آلپاین تبدیل مظنه با شاسی نئومورفیک و محاسبه تعاملی دوطرفه --}}
     <div x-data="{
         mesghal: {{ $rates['mesghal'] > 0 ? $rates['mesghal'] : 19500000 }},
         factor: 4.3318,
         get gram18() { return (this.mesghal || 0) > 0 ? Math.round(this.mesghal / this.factor) : 0; },
-        setFromGram(val) { this.mesghal = Math.round((val || 0) * this.factor); }
-    }" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-10 shadow-sm space-y-8">
+        setFromGram(val) { this.mesghal = Math.round((parseFloat(val) || 0) * this.factor); }
+    }" class="tl-neu-card rounded-3xl p-6 sm:p-10 space-y-8">
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
             <div class="space-y-2">
                 <label for="mesghal-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">مظنه ۱ مثقال طلای ۱۷ عیار (تومان):</label>
-                <input id="mesghal-input" type="number" step="1000" x-model.number="mesghal" class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                <input id="mesghal-input" type="number" step="1000" x-model.number="mesghal" class="min-h-11 w-full px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums">
             </div>
 
             <div class="space-y-2">
-                <label class="block text-xs font-bold text-stone-700 dark:text-stone-300">معادل ۱ گرم طلای ۱۸ عیار (تومان):</label>
-                <div class="min-h-11 w-full px-4 py-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 font-mono font-bold text-lg tabular-nums flex items-center" x-text="gram18.toLocaleString('fa-IR') + ' تومان'">
+                <label for="gram18-input" class="block text-xs font-bold text-stone-700 dark:text-stone-300">معادل ۱ گرم طلای ۱۸ عیار (تومان):</label>
+                <input id="gram18-input" type="number" step="1000" :value="gram18" @input="setFromGram($event.target.value)" class="min-h-11 w-full px-4 py-2.5 rounded-2xl tl-neu-inset text-stone-900 dark:text-white font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-all tabular-nums" placeholder="مبلغ هر گرم ۱۸ عیار">
+            </div>
+        </div>
+
+        {{-- نمایشگر OLED نتایج با انعکاس نور --}}
+        <div class="rounded-3xl tl-oled-readout p-6 sm:p-8 relative overflow-hidden">
+            <div class="tl-screen-glare"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10 text-center sm:text-right">
+                <div class="space-y-1">
+                    <span class="text-xs text-stone-400 font-bold">مظنه ۱ مثقال ۱۷ عیار:</span>
+                    <div class="text-2xl sm:text-3xl font-black text-white tabular-nums font-mono" x-text="(mesghal || 0).toLocaleString('fa-IR') + ' تومان'"></div>
+                </div>
+                <div class="space-y-1 sm:border-r sm:border-white/10 sm:pr-6">
+                    <span class="text-xs text-amber-400 font-bold">معادل هر گرم ۱۸ عیار (۷۵۰):</span>
+                    <div class="text-2xl sm:text-3xl font-black text-amber-400 tabular-nums font-mono" x-text="(gram18 || 0).toLocaleString('fa-IR') + ' تومان'"></div>
                 </div>
             </div>
         </div>
 
-        <div class="p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/50 text-xs text-stone-500 dark:text-stone-400 space-y-2">
-            <div class="font-bold text-stone-700 dark:text-stone-300">فرمول ریاضی زرگری:</div>
+        <div class="p-4 sm:p-5 rounded-2xl tl-neu-inset text-xs text-stone-600 dark:text-stone-300 space-y-2">
+            <div class="font-bold text-stone-800 dark:text-stone-200">فرمول ریاضی زرگری:</div>
             <div>قیمت هر گرم ۱۸ عیار = قیمت یک مثقال ۱۷ عیار ÷ ۴.۳۳۱۸</div>
             <div>قیمت یک مثقال طلا = قیمت هر گرم ۱۸ عیار × ۴.۳۳۱۸</div>
             <div class="pt-2 border-t border-stone-200 dark:border-stone-700/60 text-stone-600 dark:text-stone-300">
@@ -109,27 +129,27 @@
         </div>
     </div>
 
-    {{-- بخش آموزشی: تعریف مظنه نقدی، فردایی و جهانی --}}
+    {{-- بخش آموزشی: تعریف مظنه نقدی، فردایی و جهانی با کارت‌های نئومورفیک --}}
     <section class="space-y-6">
         <div class="text-center space-y-3">
             <h2 class="text-2xl font-black text-stone-900 dark:text-white">
                 تعریف مظنه نقدی، مظنه فردایی و مظنه جهانی در صنف طلا
             </h2>
-            <p class="text-stone-500 dark:text-stone-400 text-xs sm:text-sm max-w-2xl mx-auto">
+            <p class="text-stone-600 dark:text-stone-400 text-xs sm:text-sm max-w-2xl mx-auto">
                 در تابلوی طلافروشی و بازار عمده‌فروشی، سه نوع مظنه کاربرد دارد که در زمان تسویه و نحوه کشف قیمت تفاوت اساسی دارند:
             </p>
         </div>
 
         <div class="grid sm:grid-cols-3 gap-6">
-            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
-                <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">تسویه در همان روز</span>
+            <div class="p-6 rounded-3xl tl-neu-card space-y-3">
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[11px] font-bold">تسویه در همان روز</span>
                 <h3 class="text-base font-black text-stone-900 dark:text-white">۱. مظنه نقدی تهران</h3>
                 <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
                     <strong>مظنه نقدی</strong> قیمت یک مثقال طلای ۱۷ عیار برای دادوستد و تسویه فیزیکی شمش یا طلای آبشده در همان روز کاری بازار است. این نرخ مرجع رسمی قیمت‌گذاری فاکتورهای ویترین و مغازه طلافروشی است.
                 </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+            <div class="p-6 rounded-3xl tl-neu-card space-y-3">
                 <span class="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-[11px] font-bold">معاملات اعتباری و آتی</span>
                 <h3 class="text-base font-black text-stone-900 dark:text-white">۲. مظنه فردایی</h3>
                 <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
@@ -137,7 +157,7 @@
                 </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+            <div class="p-6 rounded-3xl tl-neu-card space-y-3">
                 <span class="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-[11px] font-bold">معیار طلای جهانی</span>
                 <h3 class="text-base font-black text-stone-900 dark:text-white">۳. مظنه جهانی طلا</h3>
                 <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
@@ -152,7 +172,7 @@
         <h3 class="text-lg font-black text-stone-900 dark:text-white">
             جدول مقایسه سه گانه مظنه نقدی، فردایی و جهانی در بازار طلا
         </h3>
-        <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
+        <div class="overflow-x-auto rounded-3xl tl-neu-card">
             <table class="w-full text-right text-xs sm:text-sm">
                 <thead class="bg-stone-100 dark:bg-stone-800/80 text-stone-900 dark:text-white font-bold border-b border-stone-200 dark:border-stone-800">
                     <tr>
@@ -165,7 +185,7 @@
                 <tbody class="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
                     <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
                         <td class="p-4 font-bold">مظنه نقدی تهران</td>
-                        <td class="p-4 text-emerald-600 dark:text-emerald-400 font-bold">همان روز (ساعت ۱۱ تا ۱۸)</td>
+                        <td class="p-4 text-emerald-700 dark:text-emerald-400 font-bold">همان روز (ساعت ۱۱ تا ۱۸)</td>
                         <td class="p-4 text-stone-500 dark:text-stone-400 text-xs">معاملات واقعی طلای آبشده در سبزه میدان تهران</td>
                         <td class="p-4 text-stone-500 dark:text-stone-400 text-xs">مبنای ۱۰۰٪ قیمت فروش طلای ۱۸ عیار ویترین</td>
                     </tr>

@@ -16,10 +16,13 @@
         </template>
         <template x-if="loaded">
             <div class="flex items-center gap-3 sm:gap-4 text-xs whitespace-nowrap">
+                <span class="inline-flex h-2 w-2 rounded-full shrink-0"
+                      :class="stale ? 'bg-amber-500' : 'bg-emerald-500'"
+                      aria-hidden="true"></span>
                 <template x-for="row in items" :key="row.key">
                     <span class="flex items-center gap-1.5 snap-start shrink-0">
                         <span class="text-stone-600 dark:text-stone-400 font-medium" x-text="row.label"></span>
-                        <span class="font-semibold text-stone-900 dark:text-stone-100 tabular-nums" x-text="row.price"></span>
+                        <span class="font-bold text-stone-900 dark:text-stone-100 tabular-nums" x-text="row.price"></span>
                         <span :class="row.dir === 'up' ? 'text-emerald-700 dark:text-emerald-400' : (row.dir === 'down' ? 'text-rose-700 dark:text-rose-400' : 'text-stone-400 dark:text-stone-500')"
                               :title="row.dir === 'up' ? 'افزایشی' : (row.dir === 'down' ? 'کاهشی' : 'بدون تغییر')"
                               x-text="row.dir === 'up' ? '▲' : (row.dir === 'down' ? '▼' : '-')"></span>
