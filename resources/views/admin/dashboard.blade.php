@@ -25,13 +25,13 @@
     @endif
 
     @if(session('success'))
-        <div class="rounded-2xl px-5 py-3.5 border border-emerald-300 dark:border-emerald-800/70 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-xs">
-            <div class="flex items-center gap-2.5">
-                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-black shrink-0">✓</span>
-                <span>{{ session('success') }}</span>
+        <div class="rounded-2xl px-4 sm:px-5 py-3.5 border border-emerald-300 dark:border-emerald-800/70 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm font-bold flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-start sm:items-center gap-2.5 min-w-0">
+                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-black shrink-0 mt-0.5 sm:mt-0">✓</span>
+                <span class="leading-relaxed">{{ session('success') }}</span>
             </div>
             <button type="button" onclick="window.openTalaliveGuide && window.openTalaliveGuide('welcome')"
-                    class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black whitespace-nowrap cursor-pointer shrink-0">
+                    class="w-full sm:w-auto px-3.5 py-2 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black whitespace-nowrap cursor-pointer shrink-0 text-center">
                 🎓 مشاهده راهنما
             </button>
         </div>
@@ -42,41 +42,49 @@
         <div x-data="{ hideChecklist: localStorage.getItem('talalive_hide_checklist_{{ auth()->id() }}') === '1' }"
              x-show="!hideChecklist"
              x-cloak
-             class="rounded-3xl p-5 sm:p-6 bg-white dark:bg-slate-900 border-2 border-amber-500/35 shadow-md space-y-4">
+             class="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-white dark:bg-slate-900 border-2 border-amber-500/35 shadow-md space-y-4">
 
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-800">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2.5 flex-wrap">
-                        <span class="text-lg">🚀</span>
-                        <h2 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                            راهنمای شروع سریع و راه‌اندازی تابلوی گالری
-                        </h2>
-                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                            {{ $onboardingChecklist['completed_count'] }} از {{ $onboardingChecklist['total_count'] }} تکمیل شده ({{ $onboardingChecklist['progress_percent'] }}٪)
-                        </span>
+                <div class="space-y-1 min-w-0">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2 flex-wrap min-w-0">
+                            <span class="text-base sm:text-lg shrink-0">🚀</span>
+                            <h2 class="text-xs sm:text-base font-black text-slate-900 dark:text-white">
+                                راهنمای شروع سریع و راه‌اندازی تابلوی گالری
+                            </h2>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                                {{ $onboardingChecklist['completed_count'] }} از {{ $onboardingChecklist['total_count'] }} تکمیل شده ({{ $onboardingChecklist['progress_percent'] }}٪)
+                            </span>
+                        </div>
+                        <button type="button"
+                                @click="hideChecklist = true; localStorage.setItem('talalive_hide_checklist_{{ auth()->id() }}', '1')"
+                                title="مخفی کردن چک‌لیست"
+                                class="md:hidden p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                    <p class="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                         با تکمیل این ۴ گام کوتاه، بیشترین بازدهی و زیبایی را روی تلویزیون ویترین یا سالن مغازه خواهید داشت.
                     </p>
                 </div>
 
-                <div class="flex items-center gap-2 flex-wrap shrink-0">
+                <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full md:w-auto shrink-0">
                     <button type="button"
                             onclick="window.startTalaliveSpotlightTour && window.startTalaliveSpotlightTour()"
-                            class="px-3 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
+                            class="px-3 py-2.5 sm:py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
                         <span>✨</span>
                         <span>تور نوری منوها</span>
                     </button>
                     <button type="button"
                             onclick="window.openTalaliveGuide && window.openTalaliveGuide('panel')"
-                            class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
+                            class="px-3 py-2.5 sm:py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
                         <span>🎓</span>
                         <span>آموزش کامل پنل</span>
                     </button>
                     <button type="button"
                             @click="hideChecklist = true; localStorage.setItem('talalive_hide_checklist_{{ auth()->id() }}', '1')"
                             title="مخفی کردن چک‌لیست"
-                            class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+                            class="hidden md:inline-flex p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
                         <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
                 </div>

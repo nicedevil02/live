@@ -41,6 +41,7 @@
         [x-cloak] { display: none !important; }
         body { font-family: 'Vazirmatn', sans-serif; }
         .sidebar-transition { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .admin-shell-height { height: 100vh; height: 100dvh; }
         /* اطمینان از اینکه در حالت لایت، پس‌زمینه حتما سفید/روشن باشد */
         html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
     </style>
@@ -48,7 +49,7 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
 
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex admin-shell-height overflow-hidden">
         {{-- Mobile Overlay --}}
         <div x-show="mobileMenu"
              x-cloak
@@ -61,7 +62,7 @@
         {{-- Sidebar --}}
         <aside
             x-cloak
-            class="fixed inset-y-0 right-0 z-50 w-72 flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sidebar-transition lg:static lg:translate-x-0"
+            class="fixed inset-y-0 right-0 z-50 w-72 max-w-[86vw] flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sidebar-transition lg:static lg:translate-x-0"
             :class="mobileMenu ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
         >
             <div class="flex h-16 items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
@@ -138,19 +139,19 @@
                 </div>
             @endif
 
-            <header class="h-16 shrink-0 flex items-center justify-between px-4 lg:px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm z-30">
-                <div class="flex items-center gap-4">
-                    <button @click="mobileMenu = true" class="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
+            <header class="h-16 shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 lg:px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm z-30">
+                <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+                    <button @click="mobileMenu = true" class="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shrink-0">
+                        <i data-lucide="menu" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </button>
-                    <h1 class="text-sm font-black text-slate-800 dark:text-white">@yield('title', 'داشبورد')</h1>
+                    <h1 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white truncate min-w-0">@yield('title', 'داشبورد')</h1>
                 </div>
 
-                <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     {{-- دکمه راهنما و آموزش پنل و اتصال تلویزیون --}}
                     <button onclick="window.openTalaliveGuide && window.openTalaliveGuide('panel')"
                             type="button"
-                            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-500/35 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs font-black transition-all cursor-pointer shadow-sm"
+                            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-500/35 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[11px] sm:text-xs font-black transition-all cursor-pointer shadow-sm whitespace-nowrap"
                             title="آموزش بخش‌های پنل و راهنمای اتصال تلویزیون">
                         <span>🎓</span>
                         <span class="hidden md:inline">راهنما و آموزش</span>
@@ -161,23 +162,23 @@
                     <button onclick="triggerPwaInstall()"
                             type="button"
                             id="header-pwa-btn"
-                            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all cursor-pointer shadow-sm"
+                            class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all cursor-pointer shadow-sm"
                             title="نصب وب‌اپلیکیشن طلالایو روی دستگاه">
                         <span>📱</span>
                         <span class="hidden sm:inline">نصب اپلیکیشن</span>
                     </button>
 
                     <button @click="toggleTheme()"
-                            class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm flex items-center justify-center">
-                        <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5 text-slate-600"></i>
-                        <i x-show="darkMode" data-lucide="sun" class="w-5 h-5 text-amber-400"></i>
+                            class="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm flex items-center justify-center">
+                        <i x-show="!darkMode" data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-600"></i>
+                        <i x-show="darkMode" data-lucide="sun" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400"></i>
                     </button>
 
-                    <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                    <div class="hidden sm:block h-8 w-px bg-slate-200 dark:bg-slate-800 mx-0.5"></div>
 
-                    <form method="POST" action="{{ route('admin.logout') }}">
+                    <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
                         @csrf
-                        <button class="px-4 py-2 rounded-xl text-xs font-black text-rose-600 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 transition-colors border border-rose-100 dark:border-rose-900/30">
+                        <button class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black text-rose-600 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 transition-colors border border-rose-100 dark:border-rose-900/30 whitespace-nowrap">
                             خروج
                         </button>
                     </form>
@@ -228,8 +229,8 @@
 
     {{-- اعلان هوشمند و زیبا برای نصب وب‌اپلیکیشن PWA ویژه پنل حساب کاربری --}}
     <div id="pwa-install-toast"
-         style="display: none; position: fixed; bottom: 20px; left: 20px; z-index: 99999;"
-         class="max-w-md w-[calc(100vw-40px)] sm:w-auto bg-white/95 dark:bg-slate-900/95 border-2 border-amber-500/80 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl transition-all duration-300">
+         style="display: none; position: fixed; bottom: 16px; left: 16px; z-index: 70;"
+         class="max-w-md w-[calc(100vw-32px)] sm:w-auto bg-white/95 dark:bg-slate-900/95 border-2 border-amber-500/80 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl transition-all duration-300">
         
         <div class="flex items-start gap-3.5">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 text-2xl shadow-lg shadow-amber-500/30 shrink-0">

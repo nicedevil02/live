@@ -45,15 +45,41 @@ $criticalSyncFiles = [
     'resources/views/admin/devices/index.blade.php',
     'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
     'public_html/build/manifest.json',
-    'public_html/build/assets/app-CH_h4sEu.css',
+    'public_html/build/assets/app-B1rJlf7f.css',
     'public_html/build/assets/app-34mOoJaZ.js',
     'public_html/downloads/talalive-tv.json',
     'public_html/deploy-run.php',
 ];
 
+function appendManifestAssetsToSyncList(string $manifestContent, array &$syncList): void {
+    $decoded = @json_decode($manifestContent, true);
+    if (!is_array($decoded)) return;
+    foreach ($decoded as $entry) {
+        if (!empty($entry['file']) && is_string($entry['file'])) {
+            $rel = 'public_html/build/' . ltrim($entry['file'], '/');
+            if (!in_array($rel, $syncList, true)) {
+                $syncList[] = $rel;
+            }
+        }
+        if (!empty($entry['css']) && is_array($entry['css'])) {
+            foreach ($entry['css'] as $cssFile) {
+                $rel = 'public_html/build/' . ltrim((string)$cssFile, '/');
+                if (!in_array($rel, $syncList, true)) {
+                    $syncList[] = $rel;
+                }
+            }
+        }
+    }
+}
+
 if (!empty($_GET['sync_blade']) || !empty($_GET['sync_files']) || !empty($_GET['sync_all'])) {
     $synced = [];
     $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
+
+    $manifestRaw = @file_get_contents("https://raw.githubusercontent.com/nicedevil02/live/master/public_html/build/manifest.json?t=" . time() . rand(100, 999), false, $ctx);
+    if ($manifestRaw !== false) {
+        appendManifestAssetsToSyncList($manifestRaw, $criticalSyncFiles);
+    }
 
     foreach ($criticalSyncFiles as $relPath) {
         $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
@@ -202,6 +228,10 @@ $gitSuccess = !empty($headCommit) && stripos($headCommit, 'fatal:') === false;
 if (!$gitSuccess && !$zipExtracted) {
     $log[] = 'Notice: Git pull was not successful. Executing automatic GitHub direct fallback synchronization...';
     $ctx = stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0 (TalaDeploy)\r\n"]]);
+    $manifestRaw = @file_get_contents("https://raw.githubusercontent.com/nicedevil02/live/master/public_html/build/manifest.json?t=" . time() . rand(100, 999), false, $ctx);
+    if ($manifestRaw !== false) {
+        appendManifestAssetsToSyncList($manifestRaw, $criticalSyncFiles);
+    }
     foreach ($criticalSyncFiles as $relPath) {
         $rawUrl = "https://raw.githubusercontent.com/nicedevil02/live/master/$relPath?t=" . time() . rand(100, 999);
         $content = @file_get_contents($rawUrl, false, $ctx);

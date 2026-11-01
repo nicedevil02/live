@@ -21,44 +21,46 @@
     @endif
 
     {{-- ۱. نوار نمایش لینک تابلوی اختصاصی طلافروشی --}}
-    <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-        <div class="flex items-center gap-3">
-            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+    <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm">
+        <div class="flex items-start sm:items-center gap-3">
+            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
                 <i data-lucide="tv" class="w-6 h-6"></i>
             </div>
-            <div>
-                <h3 class="text-base font-bold text-blue-900 dark:text-blue-200">لینک تابلوی نمایشی طلافروشی شما</h3>
-                <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما به نمایش درآید.</p>
+            <div class="min-w-0">
+                <h3 class="text-sm sm:text-base font-bold text-blue-900 dark:text-blue-200">لینک تابلوی نمایشی طلافروشی شما</h3>
+                <p class="text-xs sm:text-sm text-blue-700 dark:text-blue-400 mt-1 leading-relaxed">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما به نمایش درآید.</p>
             </div>
         </div>
-        <div class="flex items-center gap-2 w-full md:w-auto" dir="ltr">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto min-w-0" dir="ltr">
             <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
-                   class="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900 rounded-xl px-4 py-2 text-sm text-blue-900 dark:text-blue-300 w-full md:w-80 select-all font-mono">
-            <button @click="copyDisplayUrl()"
-                    class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors cursor-pointer">
-                <span x-text="copiedLink ? 'کپی شد! ✓' : 'کپی لینک'"></span>
-            </button>
-            <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-               class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer">
-                مشاهده تابلو <i data-lucide="external-link" class="w-4 h-4"></i>
-            </a>
+                   class="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-blue-900 dark:text-blue-300 w-full md:w-80 min-w-0 select-all font-mono">
+            <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0" dir="rtl">
+                <button @click="copyDisplayUrl()"
+                        class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors cursor-pointer text-center">
+                    <span x-text="copiedLink ? 'کپی شد! ✓' : 'کپی لینک'"></span>
+                </button>
+                <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+            </div>
         </div>
     </div>
 
     {{-- ۲. نوار اتصال تلویزیون به تابلوی مغازه (راهنمای مرحله‌ای ویزارد + ثبت کد + اسکن QR) --}}
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+        <div class="flex items-start sm:items-center gap-3">
             <div class="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl shrink-0">
                 <i data-lucide="tv-2" class="w-6 h-6"></i>
             </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">اتصال تلویزیون به تابلوی مغازه</h3>
-                    <button @click="openWizard()" type="button" class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors cursor-pointer">
+            <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">اتصال تلویزیون به تابلوی مغازه</h3>
+                    <button @click="openWizard()" type="button" class="px-2.5 py-1 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors cursor-pointer">
                         ✨ راهنمای مرحله‌ای (ویزارد)
                     </button>
                 </div>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">پین ۶ رقمی نمایش داده شده روی تلویزیون را وارد کنید یا با دوربین بارکد را اسکن نمایید.</p>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">پین ۶ رقمی نمایش داده شده روی تلویزیون را وارد کنید یا با دوربین بارکد را اسکن نمایید.</p>
             </div>
         </div>
         

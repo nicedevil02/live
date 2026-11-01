@@ -85,11 +85,15 @@ class TwoStepAuthAndOnboardingTest extends TestCase
         // Ensure no silver items were created for new gallery
         $this->assertSame(0, DisplayItem::where('user_id', $user->id)->whereIn('key', ['silver999', 'silver925'])->count());
 
-        // Dashboard renders checklist + onboarding & TV connection guide modal
+        // Dashboard renders checklist + mobile-optimized onboarding & TV connection guide modal
         $dashRes = $this->actingAs($user)->get(route('admin.dashboard'));
         $dashRes->assertStatus(200);
         $dashRes->assertSee('راهنمای شروع سریع و راه‌اندازی تابلوی گالری');
-        $dashRes->assertSee('مرکز آموزش و راه‌اندازی تابلوی');
+        $dashRes->assertSee('آموزش و راه‌اندازی تابلوی');
+        $dashRes->assertSee('talalive-guide-panel');
+        $dashRes->assertSee('talalive-guide-footer');
+        $dashRes->assertSee('talalive-tour-card');
+        $dashRes->assertSee('hideFloatingPwaToast');
         $dashRes->assertSee('talalive.ir/tv');
         $dashRes->assertSee('اجرای تور نوری منوها');
     }
