@@ -600,8 +600,8 @@
         </div>
     </section>
 
-    {{-- بخش ۲: نوار شاخص‌های ارزش و اعتماد نئومورفیک --}}
-    <section class="py-8 px-4 sm:px-6 lg:px-8">
+    {{-- بخش ۲: نوار شاخص‌های ارزش و اعتماد نئومورفیک با انیمیشن اسکرول --}}
+    <section class="py-8 px-4 sm:px-6 lg:px-8 tl-reveal">
         <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
             <div class="tl-neu-card rounded-2xl p-5 space-y-1">
                 <div class="text-2xl lg:text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۰ تومان</div>
@@ -626,8 +626,8 @@
         </div>
     </section>
 
-    {{-- بخش ۳: آموزش سریع پیدا کردن مرورگر تلویزیون (کارت‌های تعاملی نئومورفیک برندها) --}}
-    <section class="py-14 px-4 sm:px-6 lg:px-8 border-b border-stone-300/60 dark:border-white/10">
+    {{-- بخش ۳: آموزش سریع پیدا کردن مرورگر تلویزیون با انیمیشن اسکرول --}}
+    <section class="py-14 px-4 sm:px-6 lg:px-8 border-b border-stone-300/60 dark:border-white/10 tl-reveal">
         <div class="max-w-6xl mx-auto space-y-10">
             <div class="text-center space-y-3">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
@@ -736,7 +736,7 @@
     </section>
 
     {{-- بخش ۴: امکانات و ویژگی‌های تخصصی طلالایو با کارت‌ها و گوی‌های نئومورفیک --}}
-    <section id="features" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="features" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto tl-reveal">
         <div class="text-center space-y-3 mb-12">
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
                 @include('partials.ui-icon', ['name' => 'gem', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
@@ -811,7 +811,7 @@
     </section>
 
     {{-- بخش ۵: مقایسه جامع تابلوی هوشمند با تابلوهای سنتی روان LED --}}
-    <section id="comparison" class="py-16 px-4 sm:px-6 lg:px-8 border-y border-stone-300/60 dark:border-white/10">
+    <section id="comparison" class="py-16 px-4 sm:px-6 lg:px-8 border-y border-stone-300/60 dark:border-white/10 tl-reveal">
         <div class="max-w-5xl mx-auto space-y-10">
             <div class="text-center space-y-3">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
@@ -875,7 +875,7 @@
     </section>
 
     {{-- بخش ۶: تعرفه‌ها و بسته‌های اشتراک با سگمنت اپل و کارت‌های نئومورفیک (Pricing Table) --}}
-    <section id="pricing" x-data="{ mobilePlan: '12m' }" class="py-16 px-4 sm:px-6 lg:px-8">
+    <section id="pricing" x-data="{ mobilePlan: '12m' }" class="py-16 px-4 sm:px-6 lg:px-8 tl-reveal">
         <div class="max-w-6xl mx-auto space-y-12">
             
             <div class="text-center space-y-3 max-w-2xl mx-auto">
@@ -1362,7 +1362,7 @@
     </section>
 
     {{-- بخش ۷: سوالات متداول طلافروشان (FAQ با details بومی و سطح نئومورفیک) --}}
-    <section id="faq" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-stone-300/60 dark:border-white/10">
+    <section id="faq" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-stone-300/60 dark:border-white/10 tl-reveal">
         <div class="max-w-4xl mx-auto space-y-8">
             <div class="text-center space-y-3">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-amber-900 dark:text-amber-300 text-xs font-semibold">
@@ -1438,7 +1438,7 @@
     </section>
 
     {{-- بخش ۸: پایگاه دانش و راهنماهای تخصصی طلا و سکه --}}
-    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto tl-reveal">
         <div class="flex items-center justify-between flex-wrap gap-4 mb-10">
             <div>
                 <h2 class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-50">

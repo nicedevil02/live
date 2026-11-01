@@ -102,7 +102,7 @@ $criticalSyncFiles = [
     'resources/views/admin/devices/index.blade.php',
     'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
     'public_html/build/manifest.json',
-    'public_html/build/assets/app-D5eoHsjd.css',
+    'public_html/build/assets/app-DkwcU_sx.css',
     'public_html/build/assets/app-34mOoJaZ.js',
     'public_html/downloads/talalive-tv.json',
     'public_html/deploy-run.php',

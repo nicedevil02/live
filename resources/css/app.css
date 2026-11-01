@@ -380,47 +380,71 @@
 }
 
 /* ==========================================================================
-   ۳. دکمه پرمیوم اسلیت شبانه لوکس (Luxury Midnight Obsidian Slate Primary CTA)
-   جایگزین دکمه طلایی جیغ با وقار و کنتراست بالای ۱۷ به ۱ اپل/استرایپ
+   ۳. دکمه پرمیوم شامپاینی ابریشمین با خطوط نوری (Satin Champagne Gold Primary CTA)
+   روشن، درخشان، باوقار و همراه با جوهر اسپرسو برنز غنی و هایلایت شیمر متحرک
    ========================================================================== */
 .tl-btn-bullion,
 .tl-public :where(a, button):where(.bg-amber-500) {
-    background-image: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-    color: #ffffff !important;
-    border: 1px solid rgba(15, 23, 42, 0.95);
+    position: relative;
+    overflow: hidden;
+    background-image: linear-gradient(180deg, #fdfcf7 0%, #f5ecdb 48%, #e9d8b9 100%);
+    color: #451a03 !important;
+    border: 1px solid rgba(180, 130, 45, 0.45);
     box-shadow:
-        0 4px 14px -2px rgba(15, 23, 42, 0.28),
-        0 1px 3px 0 rgba(15, 23, 42, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        0 4px 14px -2px rgba(180, 130, 45, 0.22),
+        0 1px 3px 0 rgba(180, 130, 45, 0.12),
+        inset 0 1px 0.5px rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(180, 130, 45, 0.25);
     transition:
         transform 220ms var(--tl-spring),
         box-shadow 220ms var(--tl-spring),
-        filter 180ms ease;
+        filter 180ms ease,
+        border-color 180ms ease;
+}
+
+.tl-btn-bullion::after,
+.tl-public :where(a, button):where(.bg-amber-500)::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -80%;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+    transform: rotate(25deg);
+    transition: left 650ms var(--tl-spring);
+    pointer-events: none;
+}
+
+.tl-btn-bullion:hover::after,
+.tl-public :where(a, button):where(.bg-amber-500):hover::after {
+    left: 140%;
 }
 
 .tl-btn-bullion:hover,
 .tl-public :where(a, button):where(.bg-amber-500):hover {
-    filter: brightness(1.15);
+    filter: brightness(1.03);
     transform: translateY(-1.5px);
+    border-color: rgba(180, 130, 45, 0.65);
     box-shadow:
-        0 8px 22px -3px rgba(15, 23, 42, 0.35),
-        0 2px 6px -1px rgba(15, 23, 42, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        0 8px 22px -3px rgba(180, 130, 45, 0.3),
+        0 2px 6px -1px rgba(180, 130, 45, 0.18),
+        inset 0 1px 0.5px rgba(255, 255, 255, 1);
 }
 
 .tl-btn-bullion:active,
 .tl-public :where(a, button):where(.bg-amber-500):active {
     transform: translateY(1px);
-    filter: brightness(0.95);
+    filter: brightness(0.97);
     box-shadow:
-        inset 0 2px 4px rgba(0, 0, 0, 0.35),
-        0 1px 2px rgba(15, 23, 42, 0.2);
+        inset 0 2px 4px rgba(120, 53, 15, 0.25),
+        0 1px 2px rgba(180, 130, 45, 0.15);
 }
 
 .dark .tl-btn-bullion,
 .dark .tl-public :where(a, button):where(.bg-amber-500) {
-    background-image: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
-    color: #0f172a !important;
+    background-image: linear-gradient(180deg, #ffffff 0%, #f5ecdb 100%);
+    color: #451a03 !important;
     border: 1px solid rgba(255, 255, 255, 0.95);
     box-shadow:
         0 4px 16px -2px rgba(0, 0, 0, 0.5),
@@ -488,6 +512,71 @@
         0 10px 24px -8px rgba(28, 25, 23, 0.3);
 }
 
+/* ==========================================================================
+   ۵. انیمیشن‌های تنبل اسکرول و تعاملات حرکتی اپل (Apple Scroll Reveal & Micro-Interactions)
+   ========================================================================== */
+.tl-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+        opacity 650ms var(--tl-spring),
+        transform 650ms var(--tl-spring);
+    will-change: opacity, transform;
+}
+
+.tl-reveal.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tl-reveal-scale {
+    opacity: 0;
+    transform: scale(0.96) translateY(16px);
+    transition:
+        opacity 650ms var(--tl-spring),
+        transform 650ms var(--tl-spring);
+    will-change: opacity, transform;
+}
+
+.tl-reveal-scale.is-revealed {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* تاخیر آبشاری (Stagger Delays) */
+.tl-stagger-1 { transition-delay: 80ms; }
+.tl-stagger-2 { transition-delay: 160ms; }
+.tl-stagger-3 { transition-delay: 240ms; }
+.tl-stagger-4 { transition-delay: 320ms; }
+
+/* نبض ملایم نشانگر وضعیت زنده (Live Status Indicator Breathing) */
+@keyframes tl-pulse-ring {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.tl-live-dot {
+    animation: tl-pulse-ring 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* هاور و مقیاس هوشمند برای آیکون‌های اورب */
+.tl-neu-card:hover .tl-neu-icon-orb,
+.tl-neu-card-interactive:hover .tl-neu-icon-orb {
+    transform: scale(1.08) rotate(2deg);
+    border-color: rgba(180, 130, 45, 0.38);
+    box-shadow: var(--tl-neu-shadow);
+}
+
 @media (prefers-reduced-motion: reduce) {
     .tl-public *,
     .tl-public *::before,
@@ -496,6 +585,15 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+    .tl-reveal,
+    .tl-reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+    .tl-live-dot {
+        animation: none !important;
     }
 }
 

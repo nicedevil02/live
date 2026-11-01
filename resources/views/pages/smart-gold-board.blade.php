@@ -125,7 +125,7 @@
     </header>
 
     {{-- چرا تابلوهای LED روان سنتی منسوخ شده‌اند؟ --}}
-    <section class="relative z-10 tl-neu-card rounded-3xl p-6 sm:p-10 space-y-8">
+    <section class="tl-reveal relative z-10 tl-neu-card rounded-3xl p-6 sm:p-10 space-y-8">
         <div class="text-center space-y-2">
             <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">چرا تابلوهای LED و سنتی دیگر به صرفه نیستند؟</h2>
             <p class="text-stone-600 dark:text-stone-400 text-sm">چالش‌هایی که طلافروشان سال‌ها با تابلوهای قدیمی سخت‌افزاری تجربه کرده‌اند</p>
@@ -165,7 +165,7 @@
     </section>
 
     {{-- جدول مقایسه کامل و جامع (Comparison Matrix) --}}
-    <section class="relative z-10 space-y-6">
+    <section class="tl-reveal relative z-10 space-y-6">
         <div class="text-center space-y-2">
             <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">مقایسه تخصصی: طلالایو در برابر تابلوی سنتی LED مغازه طلا فروشی</h2>
             <p class="text-stone-600 dark:text-stone-400 text-sm">چرا +۳۵۰ گالری معتبر طلا در سراسر کشور به تابلوی ابری مهاجرت کرده‌اند؟</p>
@@ -229,7 +229,7 @@
     </section>
 
     {{-- قابلیت‌های ویژه تابلوی طلالایو --}}
-    <section class="relative z-10 space-y-8">
+    <section class="tl-reveal relative z-10 space-y-8">
         <div class="text-center space-y-2">
             <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">امکانات تابلوی هوشمند طلالایو</h2>
             <p class="text-stone-600 dark:text-stone-400 text-sm">طراحی شده بر اساس نیازهای روز صنف طلا و جواهر</p>
@@ -324,7 +324,7 @@
     </section>
 
     {{-- سوالات متداول --}}
-    <section class="relative z-10 space-y-6 max-w-4xl mx-auto">
+    <section class="tl-reveal relative z-10 space-y-6 max-w-4xl mx-auto">
         <div class="text-center space-y-2">
             <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">سوالات متداول تابلوی هوشمند طلافروشی</h2>
         </div>
@@ -391,7 +391,7 @@
     </div>
 
     {{-- بنر دعوت به اقدام نهایی با پنل OLED لوکس --}}
-    <div class="tl-oled-readout rounded-3xl p-8 sm:p-12 text-center space-y-6">
+    <div class="tl-reveal tl-oled-readout rounded-3xl p-8 sm:p-12 text-center space-y-6">
         <div class="tl-screen-glare absolute inset-0" aria-hidden="true"></div>
         <div class="relative z-10 space-y-6">
             <h2 class="text-2xl sm:text-4xl font-black text-stone-50">

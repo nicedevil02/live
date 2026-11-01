@@ -77,7 +77,7 @@
     </div>
 
     {{-- بنر افقی شیشه‌ای تست رایگان ۱۴ روزه --}}
-    <div class="relative z-10 max-w-6xl mx-auto rounded-3xl p-6 sm:p-8 tl-glass-deck flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="tl-reveal relative z-10 max-w-6xl mx-auto rounded-3xl p-6 sm:p-8 tl-glass-deck flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-start gap-4 text-right">
             <div class="w-12 h-12 rounded-2xl tl-neu-icon-orb flex items-center justify-center shrink-0 text-amber-700 dark:text-amber-400">
                 @include('partials.ui-icon', ['name' => 'gift', 'class' => 'w-6 h-6'])
@@ -106,7 +106,7 @@
     </div>
 
     {{-- گرید ۴ پلن اشتراک واقعی و هم‌تراز نئومورفیک --}}
-    <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch max-w-6xl mx-auto">
+    <div class="tl-reveal relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch max-w-6xl mx-auto">
         
         {{-- پلن ۱: ۱ ماهه --}}
         <div class="tl-neu-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between">
@@ -296,7 +296,7 @@
     </div>
 
     {{-- بخش مقایسه با سایر راه‌حل‌ها و رقبا --}}
-    <div class="relative z-10 pt-10 border-t border-stone-300/60 dark:border-stone-800 space-y-8 max-w-6xl mx-auto">
+    <div class="tl-reveal relative z-10 pt-10 border-t border-stone-300/60 dark:border-stone-800 space-y-8 max-w-6xl mx-auto">
         <div class="text-center space-y-3">
             <h2 class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-50">
                 مقایسه شفاف طلالایو با سایر گزینه‌ها و نرم‌افزارهای بازار

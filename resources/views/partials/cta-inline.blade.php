@@ -1,5 +1,5 @@
-{{-- بلوک فراخوان به اقدام میانی با متریال نئومورفیک طلایی (Inline Call To Action) --}}
-<div class="my-10 relative overflow-hidden rounded-3xl tl-neu-card-gold p-6 sm:p-8 text-center sm:text-right">
+{{-- بلوک فراخوان به اقدام میانی با متریال نئومورفیک طلایی و انیمیشن اسکرول (Inline Call To Action) --}}
+<div class="my-10 relative overflow-hidden rounded-3xl tl-neu-card-gold p-6 sm:p-8 text-center sm:text-right tl-reveal">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
         <div class="space-y-2 max-w-xl text-center sm:text-right">
             <h3 class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-50">

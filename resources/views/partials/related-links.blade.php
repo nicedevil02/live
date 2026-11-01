@@ -1,6 +1,6 @@
-{{-- بلوک پیوندهای مرتبط با کارت‌های تعاملی نئومورفیک جهت ارتقای خزش و رتبه معنایی --}}
+{{-- بلوک پیوندهای مرتبط با کارت‌های تعاملی نئومورفیک جهت ارتقای خزش و رتبه معنایی با انیمیشن اسکرول --}}
 @if(!empty($links) && is_array($links))
-<div class="my-10 p-6 sm:p-8 rounded-3xl tl-neu-card">
+<div class="my-10 p-6 sm:p-8 rounded-3xl tl-neu-card tl-reveal">
     <div class="flex items-center gap-3 mb-5">
         <span class="tl-neu-icon-orb w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
             @include('partials.ui-icon', ['name' => 'book', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])

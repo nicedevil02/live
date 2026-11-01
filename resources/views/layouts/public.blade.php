@@ -561,6 +561,41 @@
         }
     </script>
 
+    {{-- موتور انیمیشن‌های تنبل اسکرول اپل (Apple Scroll Reveal Engine) --}}
+    <script>
+        (function() {
+            function initScrollReveal() {
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.querySelectorAll('.tl-reveal, .tl-reveal-scale').forEach(function(el) {
+                        el.classList.add('is-revealed');
+                    });
+                    return;
+                }
+                var observer = new IntersectionObserver(function(entries, obs) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-revealed');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.08,
+                    rootMargin: '0px 0px -36px 0px'
+                });
+
+                document.querySelectorAll('.tl-reveal, .tl-reveal-scale').forEach(function(el) {
+                    observer.observe(el);
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initScrollReveal);
+            } else {
+                initScrollReveal();
+            }
+        })();
+    </script>
+
     {{-- ثبت Service Worker برای PWA --}}
     <script>
         if ('serviceWorker' in navigator) {

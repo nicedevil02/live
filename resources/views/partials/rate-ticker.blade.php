@@ -16,7 +16,7 @@
         </template>
         <template x-if="loaded">
             <div class="flex items-center gap-3 sm:gap-4 text-xs whitespace-nowrap">
-                <span class="inline-flex h-2 w-2 rounded-full shrink-0"
+                <span class="inline-flex h-2 w-2 rounded-full shrink-0 tl-live-dot"
                       :class="stale ? 'bg-amber-500' : 'bg-emerald-500'"
                       aria-hidden="true"></span>
                 <template x-for="row in items" :key="row.key">
