@@ -27,7 +27,7 @@
         "price": "0",
         "priceCurrency": "IRR"
       },
-      "description": "سامانه ابری پیشرفته تابلوی نرخ طلا و سکه ویژه نمایشگرهای طلافروشی و مغازه طلا فروشی بدون نیاز به سخت‌افزار جانبی."
+      "description": "سامانه ابری تابلوی نرخ طلا و سکه ویژه نمایشگرهای طلافروشی و مغازه طلا فروشی بدون نیاز به سخت‌افزار جانبی."
     },
     {
       "@@type": "BreadcrumbList",
@@ -54,7 +54,7 @@
           "name": "تابلوی هوشمند طلافروشی طلالایو چه تفاوتی با تابلوهای LED سنتی دارد؟",
           "acceptedAnswer": {
             "@@type": "Answer",
-            "text": "تابلوهای سنتی LED نیازمند سخت‌افزار گران‌قیمت، بردهای الکترونیکی حساس به نوسان برق و سیم‌کشی اختصاصی هستند و فونت‌های تک‌رنگ و بی‌کیفیت دارند. تابلوی هوشمند طلالایو مستقیماً روی هر تلویزیون معمولی یا 4K در مغازه طلا فروشی اجرا می‌شود، گرافیک فوق‌العاده مدرن شیشه‌ای دارد، نرخ‌ها را خودکار بروزرسانی می‌کند و تصاویر محصولات ویترین مغازه را نیز به نمایش می‌گذارد."
+            "text": "تابلوهای سنتی LED نیازمند سخت‌افزار گران‌قیمت، بردهای الکترونیکی حساس به نوسان برق و سیم‌کشی اختصاصی هستند و فونت‌های تک‌رنگ و بی‌کیفیت دارند. تابلوی هوشمند طلالایو مستقیماً روی هر تلویزیون معمولی یا 4K در مغازه طلا فروشی اجرا می‌شود، گرافیک شفاف دارد، نرخ‌ها را خودکار بروزرسانی می‌کند و تصاویر محصولات ویترین مغازه را نیز به نمایش می‌گذارد."
           }
         },
         {
@@ -89,281 +89,314 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-20">
+<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-20">
 
     {{-- هیرو سکشن لندینگ --}}
-    <div class="text-center space-y-6 max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold">
-            <span class="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400 animate-ping"></span>
-            <span>انقلاب در دکوراسیون و فناوری گالری‌های طلا و جواهر</span>
+    <header class="text-center space-y-6 max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span>فناوری تابلوی دیجیتال گالری‌های طلا و جواهر</span>
         </div>
         
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-tight">
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-stone-900 dark:text-stone-100 leading-tight">
             تابلوی هوشمند طلافروشی روی تلویزیون مغازه؛ <br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
-                لوکس، ابری و بدون نیاز به مینی‌کیس
+            <span class="text-amber-600 dark:text-amber-400">
+                ابری، باکیفیت و بدون نیاز به مینی‌کیس
             </span>
         </h1>
 
-        <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
-            دوران تابلوهای گران‌قیمت، زشت و پرمصرف LED سنتی به سر آمده است. با <strong>طلالایو</strong>، هر تلویزیون معمولی در ویترین مغازه طلا فروشی را تنها در ۶۰ ثانیه به یک تابلوی اعلانات فوق‌العاده شیک با نرخ‌های لحظه‌ای و اسلایدشوی جواهرات تبدیل کنید.
+        <p class="text-stone-600 dark:text-stone-300 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
+            با <strong>طلالایو</strong>، هر تلویزیون معمولی در ویترین مغازه طلافروشی را بدون نیاز به مینی‌کیس به یک تابلوی اعلانات تمیز با نرخ‌های لحظه‌ای و اسلایدشوی محصولات تبدیل کنید.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <a href="{{ route('admin.register') }}" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105 cursor-pointer">
+            <a href="{{ route('admin.register') }}" class="w-full sm:w-auto min-h-11 px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm transition-colors shadow-sm inline-flex items-center justify-center">
                 تست رایگان و ثبت‌نام گالری
             </a>
-            <a href="{{ url('/demo') }}" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-sm transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2">
-                <span>مشاهده پیش‌نمایش زنده تابلو (/demo)</span>
-                <span>⚡</span>
+            <a href="{{ url('/demo') }}" class="w-full sm:w-auto min-h-11 px-8 py-3.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-850 text-stone-800 dark:text-stone-200 font-bold text-sm transition-colors shadow-sm inline-flex items-center justify-center gap-2">
+                <span>مشاهده پیش‌نمایش زنده تابلو</span>
+                @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-4 h-4 text-amber-600 dark:text-amber-400'])
             </a>
         </div>
-    </div>
+    </header>
 
     {{-- چرا تابلوهای LED روان سنتی منسوخ شده‌اند؟ --}}
-    <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 space-y-8">
+    <section class="rounded-3xl p-6 sm:p-10 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-8">
         <div class="text-center space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">چرا تابلوهای LED و سنتی دیگر به صرفه نیستند؟</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">چالش‌هایی که طلافروشان سال‌ها با تابلوهای قدیمی سخت‌افزاری تجربه کرده‌اند</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">چرا تابلوهای LED و سنتی دیگر به صرفه نیستند؟</h2>
+            <p class="text-stone-500 dark:text-stone-400 text-sm">چالش‌هایی که طلافروشان سال‌ها با تابلوهای قدیمی سخت‌افزاری تجربه کرده‌اند</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-red-50/70 dark:bg-slate-950/60 p-6 rounded-2xl border border-red-200 dark:border-red-900/30 space-y-3">
-                <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 dark:text-red-400 flex items-center justify-center text-xl font-black">✕</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">هزینه‌های گزاف سخت‌افزاری</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <div class="bg-red-50/70 dark:bg-stone-950/60 p-6 rounded-2xl border border-red-200 dark:border-red-900/30 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'x', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">هزینه‌های گزاف سخت‌افزاری</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                     خرید تابلوی LED ماتریسی با ابعاد مناسب بیش از ۲۰ تا ۵۰ میلیون تومان هزینه دارد و با هر نوسان برق، قطعات تغذیه و ماژول‌های آن دچار سوختگی می‌شوند.
                 </p>
             </div>
 
-            <div class="bg-red-50/70 dark:bg-slate-950/60 p-6 rounded-2xl border border-red-200 dark:border-red-900/30 space-y-3">
-                <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 dark:text-red-400 flex items-center justify-center text-xl font-black">✕</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">ظاهر نامناسب و فونت‌های زشت</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    فونت‌های پیکسلی تک‌رنگ (قرمز یا سبز) جلوه لوکس ویترین طلافروشی را تخریب می‌کنند و هیچ امکانی برای نمایش عکس مدال، النگو یا تیزر تبلیغاتی ندارند.
+            <div class="bg-red-50/70 dark:bg-stone-950/60 p-6 rounded-2xl border border-red-200 dark:border-red-900/30 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'x', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">ظاهر نامناسب و فونت‌های زشت</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    فونت‌های پیکسلی تک‌رنگ (قرمز یا سبز) جلوه دکوراسیون ویترین طلافروشی را کاهش می‌دهند و امکان نمایش عکس مدال، النگو یا تیزر تبلیغاتی ندارند.
                 </p>
             </div>
 
-            <div class="bg-red-50/70 dark:bg-slate-950/60 p-6 rounded-2xl border border-red-200 dark:border-red-900/30 space-y-3">
-                <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 dark:text-red-400 flex items-center justify-center text-xl font-black">✕</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">دردسر بروزرسانی و کابل‌کشی</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    برای تغییر نرخ در تابلوهای قدیمی باید از ریموت‌های کند استفاده می‌کردید یا یک کامپیوتر با کابل سریال طولانی همیشه به تابلو متصل می‌ماند.
+            <div class="bg-red-50/70 dark:bg-stone-950/60 p-6 rounded-2xl border border-red-200 dark:border-red-900/30 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'x', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">دردسر بروزرسانی و کابل‌کشی</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    برای تغییر نرخ در تابلوهای قدیمی باید از ریموت‌های کند استفاده می‌کردید یا یک کامپیوتر با کابل سریال همیشه به تابلو متصل می‌ماند.
                 </p>
             </div>
         </div>
-    </div>
+    </section>
 
     {{-- جدول مقایسه کامل و جامع (Comparison Matrix) --}}
-    <div class="space-y-6">
+    <section class="space-y-6">
         <div class="text-center space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">مقایسه تخصصی: طلالایو در برابر تابلوی سنتی LED مغازه طلا فروشی</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">چرا صدها گالری معتبر طلا در حال مهاجرت به تابلوی ابری هستند؟</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">مقایسه تخصصی: طلالایو در برابر تابلوی سنتی LED مغازه طلا فروشی</h2>
+            <p class="text-stone-500 dark:text-stone-400 text-sm">چرا +۳۵۰ گالری معتبر طلا در سراسر کشور به تابلوی ابری مهاجرت کرده‌اند؟</p>
         </div>
 
-        <div class="overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 shadow-xl dark:shadow-2xl">
+        <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm">
             <table class="w-full text-right text-xs sm:text-sm border-collapse">
                 <thead>
-                    <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-300">
+                    <tr class="border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 text-stone-700 dark:text-stone-300">
                         <th class="p-4 sm:p-5 font-bold">ویژگی و شاخص فنی</th>
                         <th class="p-4 sm:p-5 font-bold text-amber-600 dark:text-amber-400">سامانه ابری طلالایو (TalaLive)</th>
-                        <th class="p-4 sm:p-5 font-bold text-slate-500 dark:text-slate-400">تابلوهای ماتریسی LED قدیمی</th>
+                        <th class="p-4 sm:p-5 font-bold text-stone-500 dark:text-stone-400">تابلوهای ماتریسی LED قدیمی</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60">
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">نیاز به خرید مینی‌کیس / کامپیوتر</td>
+                <tbody class="divide-y divide-stone-200 dark:divide-stone-800/60">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">نیاز به خرید مینی‌کیس یا کامپیوتر</td>
                         <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">بدون نیاز (۱۰۰٪ ابری از طریق مرورگر تلویزیون)</td>
-                        <td class="p-4 sm:p-5 text-rose-600 dark:text-red-400">نیاز به برد کنترلر یا کیس اختصاصی</td>
+                        <td class="p-4 sm:p-5 text-red-600 dark:text-red-400">نیاز به برد کنترلر یا کیس اختصاصی</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">کیفیت تصویر و فونت فارسی</td>
-                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">فوق‌العاده شفاف (Full HD و 4K با فونت وزیرمتن)</td>
-                        <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">ماتریسی پیکسلی تک‌رنگ و بی‌کیفیت</td>
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">کیفیت تصویر و فونت فارسی</td>
+                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">شفاف (Full HD و 4K با فونت وزیرمتن)</td>
+                        <td class="p-4 sm:p-5 text-stone-500 dark:text-stone-400">ماتریسی پیکسلی تک‌رنگ و بی‌کیفیت</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">نحوه بروزرسانی قیمت‌ها</td>
-                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">کاملاً خودکار و آنی از مراجع معتبر و منتخب بازار طلا</td>
-                        <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">دستی با ریموت یا نرم‌افزارهای پیچیده کامپیوتر</td>
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">نحوه بروزرسانی قیمت‌ها</td>
+                        <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">خودکار و آنی از مراجع منتخب بازار طلا</td>
+                        <td class="p-4 sm:p-5 text-stone-500 dark:text-stone-400">دستی با ریموت یا نرم‌افزارهای پیچیده کامپیوتر</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">نمایش عکس و اسلایدشوی محصولات ویترین</td>
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">نمایش عکس و اسلایدشوی محصولات ویترین</td>
                         <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">دارد (گالری تصاویر و بارکد اختصاصی اینستاگرام مغازه)</td>
-                        <td class="p-4 sm:p-5 text-rose-600 dark:text-red-400">غیرممکن</td>
+                        <td class="p-4 sm:p-5 text-red-600 dark:text-red-400">غیرممکن</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">شخصی‌سازی حاشیه سود و اجرت فروش</td>
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">شخصی‌سازی حاشیه سود و اجرت فروش</td>
                         <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">دارد (فرمول‌ساز پیشرفته خرید و فروش طلا و سکه)</td>
-                        <td class="p-4 sm:p-5 text-rose-600 dark:text-red-400">فقط نمایش اعداد خام و دستی</td>
+                        <td class="p-4 sm:p-5 text-red-600 dark:text-red-400">فقط نمایش اعداد خام و دستی</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">پایداری در زمان قطعی موقت اینترنت</td>
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">پایداری در زمان قطعی موقت اینترنت</td>
                         <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">دارد (حالت آفلاین هوشمند با حفظ کامل ویترین و آخرین نرخ)</td>
-                        <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">وابسته به ارسال دستور دستی</td>
+                        <td class="p-4 sm:p-5 text-stone-500 dark:text-stone-400">وابسته به ارسال دستور دستی</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
-                        <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">هزینه راه‌اندازی اولیه</td>
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
+                        <td class="p-4 sm:p-5 font-bold text-stone-900 dark:text-stone-100">هزینه راه‌اندازی اولیه</td>
                         <td class="p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 font-bold">صفر تومان (استفاده از تلویزیون موجود در گالری)</td>
-                        <td class="p-4 sm:p-5 text-rose-600 dark:text-red-400">۲۰ تا ۶۰ میلیون تومان خرید تابلو</td>
+                        <td class="p-4 sm:p-5 text-red-600 dark:text-red-400">۲۰ تا ۶۰ میلیون تومان خرید تابلو</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="mt-6 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-            <div class="font-bold text-slate-900 dark:text-white mb-2">راهنماهای تخصصی جایگزینی تابلو:</div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm text-stone-700 dark:text-stone-200 leading-relaxed">
+            <div class="font-bold text-stone-900 dark:text-stone-100 mb-2">راهنماهای تخصصی جایگزینی تابلو:</div>
             <p>
                 اگر به دنبال جایگزینی تابلوی سنتی ۷ رقمه سون سگمنت هستید، راهنمای <a href="{{ route('public.digital-rate-board') }}" class="text-amber-600 dark:text-amber-400 font-bold underline hover:text-amber-500">نرخ نامه دیجیتال طلافروشی</a> را بخوانید. همچنین برای آشنایی با راه‌اندازی بدون خرید هرگونه کیس یا سخت‌افزار، به صفحه <a href="{{ route('public.gold-board-without-device') }}" class="text-amber-600 dark:text-amber-400 font-bold underline hover:text-amber-500">تابلو طلا بدون دستگاه</a> مراجعه فرمایید.
             </p>
         </div>
-    </div>
+    </section>
 
     {{-- قابلیت‌های ویژه تابلوی طلالایو --}}
-    <div class="space-y-8">
+    <section class="space-y-8">
         <div class="text-center space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">امکانات منحصر‌به‌فرد تابلوی هوشمند طلالایو</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">طراحی شده بر اساس استانداردهای روز بازارهای بین‌المللی و صنف طلا و جواهر ایران</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">امکانات تابلوی هوشمند طلالایو</h2>
+            <p class="text-stone-500 dark:text-stone-400 text-sm">طراحی شده بر اساس نیازهای روز صنف طلا و جواهر</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="glass-card-gold p-7 rounded-3xl space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">⚡</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">اتصال در ۶۰ ثانیه با بارکد QR</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">اتصال در ۶۰ ثانیه با بارکد QR</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                     مرورگر تلویزیون را باز کنید، بارکد نمایش داده شده را با دوربین موبایل اسکن نمایید؛ صفحه فوراً متصل شده و نیاز به هیچ تنظیمات دیگری ندارد.
                 </p>
             </div>
 
-            <div class="glass-card-gold p-7 rounded-3xl space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">💎</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">اسلایدشوی لوکس ویترین طلا</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    عکس النگوها، دستبندها و سرویس‌های خاص خود را همراه با مشخصات و بارکد پیج اینستاگرام گالری در کنار قیمت‌ها پخش کنید تا مشتریان در مغازه مجذوب محصولات شوند.
+            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'sparkles', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">اسلایدشوی ویترین طلا</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    عکس النگوها، دستبندها و سرویس‌های خود را همراه با مشخصات و بارکد اینستاگرام گالری در کنار قیمت‌ها پخش کنید.
                 </p>
             </div>
 
-            <div class="glass-card-gold p-7 rounded-3xl space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">🧮</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">فرمول‌ساز سود و اجرت فروشگاهی</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    آیا می‌خواهید نرخ طلای ۱۸ عیار با احتساب سود یا اجرت مشخصی روی تابلو برود؟ با سیستم فرمول‌ساز، محاسبات به صورت بلادرنگ و خودکار انجام می‌شود.
+            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'calculator', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">فرمول‌ساز سود و اجرت فروشگاهی</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    اگر می‌خواهید نرخ طلای ۱۸ عیار با احتساب سود یا اجرت مشخصی روی تابلو برود، با سیستم فرمول‌ساز، محاسبات به صورت لحظه‌ای انجام می‌شود.
                 </p>
             </div>
 
-            <div class="glass-card-gold p-7 rounded-3xl space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">📡</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">کارکرد آفلاین هوشمند (Offline Shield)</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    اگر اینترنت گالری برای چند ساعت قطع شود، صفحه تلویزیون سیاه نمی‌شود؛ بلکه آخرین نرخ‌های دریافتی را با ثبت ساعت دقیق بروزرسانی به همراه ویترین حفظ می‌کند.
+            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'wifi', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">کارکرد آفلاین هوشمند</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    اگر اینترنت گالری برای ساعاتی قطع شود، صفحه تلویزیون سیاه نمی‌شود؛ بلکه آخرین نرخ‌های دریافتی را با ثبت ساعت دقیق بروزرسانی به همراه ویترین حفظ می‌کند.
                 </p>
             </div>
 
-            <div class="glass-card-gold p-7 rounded-3xl space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">🛡️</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">جلوگیری از ماندگاری تصویر (Burn-In Protection)</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    الگوریتم‌های حرکتی ملایم و چرخش اسلایدها در طلالایو به نحوی طراحی شده‌اند که پیکسل‌های تلویزیون شما حتی در کارکرد مداوم ۱۰ ساعته روزانه دچار سوختگی یا سایه نشوند.
+            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'shield', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">حفاظت از پنل تلویزیون</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    الگوریتم‌های حرکتی ملایم و چرخش اسلایدها در طلالایو به نحوی طراحی شده‌اند که پیکسل‌های تلویزیون شما در کارکرد مداوم روزانه دچار ماندگاری تصویر نشوند.
                 </p>
             </div>
 
-            <div class="glass-card-gold p-7 rounded-3xl space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-lg">📱</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">مدیریت کامل از گوشی یا لپ‌تاپ</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <div class="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'smartphone', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">مدیریت از گوشی یا رایانه</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                     هر تغییری در آیتم‌های نمایش، مخفی‌سازی قیمت ارز، تغییر ترتیب سکه‌ها یا افزودن محصول جدید را مستقیماً از گوشی همراه خود در چند ثانیه اعمال کنید.
                 </p>
             </div>
         </div>
 
         {{-- پوشش ارز و نقره و شمش --}}
-        <div class="mt-8 p-6 sm:p-8 rounded-3xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+        <div class="p-6 sm:p-8 rounded-2xl bg-stone-100/80 dark:bg-stone-850/80 border border-stone-200 dark:border-stone-800 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
             <div class="space-y-1.5 text-right">
                 <div class="flex items-center gap-2">
-                    <span class="text-xl">✨</span>
-                    <h3 class="text-base font-black text-slate-900 dark:text-white">
+                    @include('partials.ui-icon', ['name' => 'sparkles', 'class' => 'w-5 h-5 text-amber-600 dark:text-amber-400'])
+                    <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">
                         پشتیبانی چندمنظوره از تابلوهای صرافی، نقره و شمش
                     </h3>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 max-w-2xl leading-relaxed">
                     علاوه بر طلا و جواهر، امکان راه‌اندازی اختصاصی <a href="{{ route('public.currency-exchange-board') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلو صرافی و نرخ ارز</a> و همچنین <a href="{{ route('public.silver-bullion-board') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلو نرخ نقره و شمش</a> با ردیف‌های تفکیکی عیارهای ۹۹۹ و ۹۲۵ فراهم است.
                 </p>
             </div>
             <div class="flex items-center gap-3 shrink-0 flex-wrap">
-                <a href="{{ route('public.currency-exchange-board') }}" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-colors">
-                    مشاهده تابلوی صرافی ←
+                <a href="{{ route('public.currency-exchange-board') }}" class="min-h-11 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors inline-flex items-center justify-center">
+                    مشاهده تابلوی صرافی
                 </a>
-                <a href="{{ route('public.silver-bullion-board') }}" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-colors">
-                    مشاهده تابلوی نقره ←
+                <a href="{{ route('public.silver-bullion-board') }}" class="min-h-11 px-5 py-2.5 rounded-xl bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 font-bold text-xs transition-colors inline-flex items-center justify-center">
+                    مشاهده تابلوی نقره
                 </a>
             </div>
         </div>
-    </div>
+    </section>
 
     {{-- سوالات متداول --}}
-    <div class="space-y-6 max-w-4xl mx-auto">
+    <section class="space-y-6 max-w-4xl mx-auto">
         <div class="text-center space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">سوالات متداول درباره تابلوی هوشمند طلافروشی و تابلو طلا فروشی</h2>
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">سوالات متداول تابلوی هوشمند طلافروشی</h2>
         </div>
 
-        <div class="space-y-4">
-            <div class="glass-panel p-6 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800">
-                <h3 class="font-bold text-amber-600 dark:text-amber-400 text-sm sm:text-base">آیا تلویزیون مغازه طلا فروشی باید دائماً به اینترنت وصل باشد؟</h3>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        <div class="space-y-3">
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>آیا تلویزیون مغازه طلا فروشی باید دائماً به اینترنت وصل باشد؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
                     برای دریافت تغییرات نرخ‌ها به اینترنت نیاز است، اما حجم مصرفی سامانه طلالایو بسیار ناچیز است (کمتر از چند مگابایت در روز). همچنین در صورت قطعی اینترنت، سیستم به شکل آفلاین کار خواهد کرد.
-                </p>
-            </div>
+                </div>
+            </details>
 
-            <div class="glass-panel p-6 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800">
-                <h3 class="font-bold text-amber-600 dark:text-amber-400 text-sm sm:text-base">اگر برق مغازه قطع شود، بعد از روشن شدن تلویزیون چه می‌شود؟</h3>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>اگر برق مغازه قطع شود، بعد از روشن شدن تلویزیون چه می‌شود؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
                     اطلاعات اتصال تلویزیون در حافظه مرورگر آن ذخیره شده است. به محض روشن شدن تلویزیون و باز کردن مرورگر، بدون نیاز به اسکن مجدد بارکد، تابلوی گالری طلا فروشی شما بالا می‌آید.
-                </p>
-            </div>
+                </div>
+            </details>
 
-            <div class="glass-panel p-6 rounded-2xl space-y-2 border border-slate-200 dark:border-slate-800">
-                <h3 class="font-bold text-amber-600 dark:text-amber-400 text-sm sm:text-base">آیا می‌توانیم فونت و رنگ‌ها را طبق دکور مغازه طلا فروشی تغییر دهیم؟</h3>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>آیا می‌توانیم فونت و رنگ‌ها را طبق دکور مغازه طلا فروشی تغییر دهیم؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
                     قالب استاندارد طلالایو بر اساس بالاترین کنتراست نوری تنظیم شده تا از فاصله دور نیز ارقام کاملاً خوانا باشند. همچنین گزینه‌های سفارشی‌سازی رنگ در پنل تنظیمات در دسترس است.
-                </p>
-            </div>
+                </div>
+            </details>
         </div>
-    </div>
+    </section>
 
     {{-- لینک به بازار مجاور: صرافی و نرخ ارز --}}
-    <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="space-y-1 text-center sm:text-right">
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">آیا در کنار طلا، معاملات ارزی و حواله نیز انجام می‌دهید؟</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400">سامانه طلالایو نسخه اختصاصی نمایشگر دو نرخه خرید و فروش انواع ارز و حواله را برای صرافی‌ها ارائه می‌دهد.</p>
+            <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">آیا در کنار طلا، معاملات ارزی و حواله نیز انجام می‌دهید؟</h3>
+            <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400">سامانه طلالایو نسخه اختصاصی نمایشگر دو نرخه خرید و فروش انواع ارز و حواله را برای صرافی‌ها ارائه می‌دهد.</p>
         </div>
-        <a href="/currency-exchange-board" class="whitespace-nowrap px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-colors shadow-sm">
-            مشاهده تابلو صرافی و نرخ ارز ←
+        <a href="{{ route('public.currency-exchange-board') }}" class="min-h-11 px-6 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-white text-white dark:text-stone-950 font-bold text-xs transition-colors shadow-sm inline-flex items-center justify-center shrink-0">
+            مشاهده تابلو صرافی و نرخ ارز
         </a>
     </div>
 
     {{-- لینک به بازار مجاور: نقره و شمش --}}
-    <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="space-y-1 text-center sm:text-right">
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">فروشگاه نقره، کارگاه ساچمه یا مرکز معاملات شمش دارید؟</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400">نمایشگر زنده عیارهای ۹۹۹، ۹۹۵ و ۹۲۵ نقره به همراه شمش‌های طلا را روی تلویزیون مشاهده کنید.</p>
+            <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">فروشگاه نقره، کارگاه ساچمه یا مرکز معاملات شمش دارید؟</h3>
+            <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400">نمایشگر زنده عیارهای ۹۹۹، ۹۹۵ و ۹۲۵ نقره به همراه شمش‌های طلا را روی تلویزیون مشاهده کنید.</p>
         </div>
-        <a href="/silver-bullion-board" class="whitespace-nowrap px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs transition-colors shadow-sm">
-            مشاهده تابلو نرخ نقره و شمش ←
+        <a href="{{ route('public.silver-bullion-board') }}" class="min-h-11 px-6 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-white text-white dark:text-stone-950 font-bold text-xs transition-colors shadow-sm inline-flex items-center justify-center shrink-0">
+            مشاهده تابلو نرخ نقره و شمش
         </a>
     </div>
 
     {{-- بنر دعوت به اقدام نهایی --}}
-    <div class="rounded-3xl p-8 sm:p-12 bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-blue-500/10 dark:from-amber-500/20 dark:via-slate-900 dark:to-blue-600/20 border border-amber-500/30 text-center space-y-6">
-        <h2 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white">
-            تلویزیون ویترین مغازه طلا فروشی خود را به مدرن‌ترین تابلوی هوشمند طلا تبدیل کنید
+    <div class="rounded-3xl p-8 sm:p-12 bg-stone-900 dark:bg-stone-850 border border-stone-800 text-center space-y-6">
+        <h2 class="text-2xl sm:text-4xl font-black text-white">
+            تلویزیون ویترین مغازه خود را به تابلوی هوشمند طلا تبدیل کنید
         </h2>
-        <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-            ثبت‌نام رایگان است. تابلوی اختصاصی خود را بسازید و اعتبار و جلوه بصری مغازه طلا فروشی و طلافروشی‌تان را متحول نمایید.
+        <p class="text-stone-300 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+            ثبت‌نام رایگان است. تابلوی اختصاصی خود را بسازید و جلوه بصری مغازه طلافروشی‌تان را ارتقا دهید.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="{{ route('admin.register') }}" class="px-8 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm transition-all hover:scale-105 shadow-xl shadow-amber-500/20">
+            <a href="{{ route('admin.register') }}" class="w-full sm:w-auto min-h-11 px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm transition-colors shadow-sm inline-flex items-center justify-center">
                 شروع فوری و ثبت‌نام گالری
             </a>
-            <a href="tel:09187009064" class="px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-sm transition-all shadow-sm">
+            <a href="tel:09187009064" class="w-full sm:w-auto min-h-11 px-8 py-3.5 rounded-xl bg-stone-800 border border-stone-700 hover:bg-stone-700 text-white font-bold text-sm transition-colors shadow-sm inline-flex items-center justify-center">
                 تماس با واحد پشتیبانی: ۰۹۱۸۷۰۰۹۰۶۴
             </a>
         </div>

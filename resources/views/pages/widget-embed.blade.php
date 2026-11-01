@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, follow">
-    <title>ویجت نرخ لحظه‌ای طلا و سکه — طلالایو</title>
+    <title>ویجت نرخ لحظه‌ای طلا و سکه | طلالایو</title>
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
         /* تم‌ها */
-        .theme-dark { background-color: #090d16; color: #f1f5f9; border-color: #1e293b; }
-        .theme-light { background-color: #ffffff; color: #0f172a; border-color: #e2e8f0; }
-        .theme-gold { background-color: #120e06; color: #fef08a; border-color: #78350f; }
+        .theme-dark { background-color: #0c0a09; color: #f5f5f4; border-color: #292524; }
+        .theme-light { background-color: #ffffff; color: #1c1917; border-color: #e7e5e4; }
+        .theme-gold { background-color: #171412; color: #fef3c7; border-color: #78350f; }
 
         .price-gold { color: #f59e0b; font-weight: 900; }
         .theme-light .price-gold { color: #d97706; }
@@ -35,7 +35,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            border-bottom: 1px solid rgba(168, 162, 158, 0.2);
             padding-bottom: 10px;
             margin-bottom: 10px;
         }
@@ -54,8 +54,9 @@
             justify-content: space-between;
             padding: 7px 10px;
             border-radius: 10px;
-            background: rgba(148, 163, 184, 0.08);
+            background: rgba(168, 162, 158, 0.08);
             font-size: 13px;
+            font-variant-numeric: tabular-nums;
         }
 
         /* حالت نوار افقی Ticker */
@@ -88,7 +89,8 @@
             font-size: 13px;
             padding: 4px 10px;
             border-radius: 8px;
-            background: rgba(148, 163, 184, 0.1);
+            background: rgba(168, 162, 158, 0.1);
+            font-variant-numeric: tabular-nums;
         }
 
         .attribution {
@@ -98,7 +100,7 @@
             gap: 4px;
             font-size: 11px;
             padding-top: 8px;
-            border-top: 1px solid rgba(148, 163, 184, 0.15);
+            border-top: 1px solid rgba(168, 162, 158, 0.15);
             text-align: center;
         }
 
@@ -115,7 +117,6 @@
             border-radius: 50%;
             background-color: #10b981;
             display: inline-block;
-            box-shadow: 0 0 6px #10b981;
         }
     </style>
 </head>

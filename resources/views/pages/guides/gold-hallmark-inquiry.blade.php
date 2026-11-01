@@ -17,7 +17,7 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12">
+<div class="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
 
     {{-- خرده‌نان (Breadcrumb) --}}
     @include('partials.breadcrumb', [
@@ -27,20 +27,20 @@
         ]
     ])
 
-    <article class="space-y-10">
+    <article class="space-y-8 bg-white dark:bg-stone-900 p-6 sm:p-10 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm">
 
         {{-- هدر مقاله با تعریف صریح موضوع در ۴۰ کلمه اول --}}
-        <header class="space-y-4 border-b border-slate-200 dark:border-slate-800 pb-8">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
+        <header class="space-y-4 border-b border-stone-200 dark:border-stone-800 pb-8">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold">
                 <span>راهنمای فنی معاملات طلای آبشده • بروزرسانی ۱۴۰۵</span>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-stone-900 dark:text-white leading-tight">
                 استعلام انگ طلا و راهنمای خواندن عیار و شماره پاکت ری‌گیری
             </h1>
-            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed text-justify">
+            <p class="text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed text-justify">
                 استعلام انگ طلا فرآیند بررسی و اعتبارسنجی کد شناسایی و عیار رسمی حک‌شده روی قطعه طلای آبشده از طریق سامانه استعلام آزمایشگاه‌های ری‌گیری زیر نظر اتحادیه طلا و جواهر است.
             </p>
-            <div class="flex items-center gap-4 text-xs text-slate-400 pt-2">
+            <div class="flex items-center gap-4 text-xs text-stone-400 pt-2">
                 <span>نویسنده: تیم پژوهش بازار طلالایو</span>
                 <span>•</span>
                 <span>زمان مطالعه: ۶ دقیقه</span>
@@ -49,7 +49,7 @@
             </div>
 
             {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
-            <figure class="mt-6 relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+            <figure class="mt-6 relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-stone-800 shadow-xl aspect-[16/9] bg-stone-900 group">
                 <img src="{{ asset('images/guides/gold-hallmark-inquiry.webp') }}" 
                      alt="استعلام انگ طلا و راهنمای خواندن عیار و شماره پاکت ری‌گیری" 
                      width="1200" height="675" 
@@ -59,9 +59,9 @@
         </header>
 
         {{-- سلب مسئولیت صریح E-E-A-T و خط قرمز عدم ادعای اعتبارسنجی رسمی --}}
-        <div class="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs sm:text-sm leading-relaxed space-y-2">
-            <div class="font-bold flex items-center gap-2 text-amber-900 dark:text-amber-200">
-                <span>⚠️</span>
+        <div class="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-stone-800 dark:text-stone-200 text-xs sm:text-sm leading-relaxed space-y-2">
+            <div class="font-bold flex items-center gap-2 text-amber-800 dark:text-amber-300">
+                <x-ui-icon name="information-circle" class="w-5 h-5 text-amber-700 dark:text-amber-400 shrink-0" />
                 <span>اطلاعیه مهم حقوقی و صنفی پیرامون استعلام عیار:</span>
             </div>
             <p>
@@ -71,16 +71,16 @@
 
         {{-- بخش H2 اول: انگ طلا چیست --}}
         <div class="space-y-4">
-            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white">
                 انگ طلا چیست و چه اطلاعاتی روی قطعه طلای آبشده حک می‌شود؟
             </h2>
-            <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed">
                 هنگامی که طلاهای کارکرده و متفرقه در کوره ذوب می‌شوند، شمش آبشده حاصل ساختاری ناهمگن دارد. برای تعیین دقیق عیار، قطعه‌ای از آن قیچی شده (که به آن <em>تکه بار</em> می‌گویند) و به آزمایشگاه تخصصی <strong>ری گیری طلا</strong> فرستاده می‌شود. کارشناس ری‌گیری با روش کوپلاسیون، عیار دقیق را می‌سنجد و کدی منحصر‌به‌فرد روی شمش آبشده می‌کوبد که به آن <strong>انگ طلا</strong> گفته می‌شود.
             </p>
-            <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed">
                 روی هر قطعه آبشده معتبر اطلاعات زیر به صورت ضربی کوبیده می‌شود:
             </p>
-            <ul class="list-disc list-inside space-y-2 text-sm text-slate-600 dark:text-slate-400 pr-2">
+            <ul class="list-disc list-inside space-y-2 text-sm text-stone-600 dark:text-stone-400 pr-2">
                 <li><strong>نام ری‌گیری:</strong> نام آزمایشگاهی که نمونه را آزمون کرده است (مانند صفا، پارس، زرشناس).</li>
                 <li><strong>شماره پاکت:</strong> شماره یکتا و سریال ثبت‌شده در دفتر کل آزمایشگاه ری‌گیری.</li>
                 <li><strong>عیار خطی:</strong> عیار دقیق بر پایه ۱۰۰۰ (مانند ۷۳۵، ۷۴۰، ۷۵۰ یا ۷۶۵).</li>
@@ -89,37 +89,37 @@
 
         {{-- جدول یونیک: اجزای کد انگ --}}
         <div class="space-y-4">
-            <h3 class="text-lg font-black text-slate-900 dark:text-white">
+            <h3 class="text-lg font-black text-stone-900 dark:text-white">
                 جدول اجزای کد انگ و ساختار شناسنامه طلای آبشده
             </h3>
-            <div class="overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-lg">
+            <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
                 <table class="w-full text-right text-xs sm:text-sm">
-                    <thead class="bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-black border-b border-slate-200 dark:border-slate-800">
+                    <thead class="bg-stone-100 dark:bg-stone-800/80 text-stone-900 dark:text-white font-bold border-b border-stone-200 dark:border-stone-800">
                         <tr>
-                            <th class="p-4">بخش کد انگ</th>
-                            <th class="p-4 text-amber-500">نمونه روی قطعه</th>
-                            <th class="p-4">مفهوم و کاربرد صنفی</th>
-                            <th class="p-4">مرجع استعلام</th>
+                            <th class="p-3.5 sm:p-4">بخش کد انگ</th>
+                            <th class="p-3.5 sm:p-4 text-amber-700 dark:text-amber-400">نمونه روی قطعه</th>
+                            <th class="p-3.5 sm:p-4">مفهوم و کاربرد صنفی</th>
+                            <th class="p-3.5 sm:p-4">مرجع استعلام</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                            <td class="p-4 font-bold">نام یا آرم ری‌گیری</td>
-                            <td class="p-4 text-amber-600 dark:text-amber-400 font-bold">ری‌گیری تهران / صفا</td>
-                            <td class="p-4 text-slate-500 dark:text-slate-400 text-xs">نشان‌دهنده آزمایشگاه دارای پروانه معتبر اتحادیه طلا و جواهر.</td>
-                            <td class="p-4 text-slate-500 dark:text-slate-400 text-xs">فهرست آزمایشگاه‌های مجاز اتحادیه</td>
+                    <tbody class="divide-y divide-stone-200 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
+                            <td class="p-3.5 sm:p-4 font-bold">نام یا آرم ری‌گیری</td>
+                            <td class="p-3.5 sm:p-4 text-amber-700 dark:text-amber-400 font-bold">ری‌گیری تهران / صفا</td>
+                            <td class="p-3.5 sm:p-4 text-stone-500 dark:text-stone-400 text-xs">نشان‌دهنده آزمایشگاه دارای پروانه معتبر اتحادیه طلا و جواهر.</td>
+                            <td class="p-3.5 sm:p-4 text-stone-500 dark:text-stone-400 text-xs">فهرست آزمایشگاه‌های مجاز اتحادیه</td>
                         </tr>
-                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                            <td class="p-4 font-bold">شماره پاکت (رسید)</td>
-                            <td class="p-4 text-amber-600 dark:text-amber-400 font-bold">۱۴۵۸۹</td>
-                            <td class="p-4 text-slate-500 dark:text-slate-400 text-xs">شناسه اختصاصی که در رایانه ری‌گیری و دفتر ثبت سوابق بایگانی شده است.</td>
-                            <td class="p-4 text-slate-500 dark:text-slate-400 text-xs">سامانه پیامکی یا تلفنی همان ری‌گیری</td>
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
+                            <td class="p-3.5 sm:p-4 font-bold">شماره پاکت (رسید)</td>
+                            <td class="p-3.5 sm:p-4 text-amber-700 dark:text-amber-400 font-bold">۱۴۵۸۹</td>
+                            <td class="p-3.5 sm:p-4 text-stone-500 dark:text-stone-400 text-xs">شناسه اختصاصی که در رایانه ری‌گیری و دفتر ثبت سوابق بایگانی شده است.</td>
+                            <td class="p-3.5 sm:p-4 text-stone-500 dark:text-stone-400 text-xs">سامانه پیامکی یا تلفنی همان ری‌گیری</td>
                         </tr>
-                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                            <td class="p-4 font-bold">عیار عیارسنجی‌شده</td>
-                            <td class="p-4 text-emerald-600 dark:text-emerald-400 font-bold">۷۴۵ یا ۷۵۰</td>
-                            <td class="p-4 text-slate-500 dark:text-slate-400 text-xs">خلوص طلا در هر ۱۰۰۰ واحد وزنی. اگر کمتر از ۷۵۰ باشد طلای شرطی و اگر بیشتر باشد پاداش عیار دارد.</td>
-                            <td class="p-4 text-slate-500 dark:text-slate-400 text-xs">قبض رسمی و سامانه تلفن‌گویا</td>
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
+                            <td class="p-3.5 sm:p-4 font-bold">عیار عیارسنجی‌شده</td>
+                            <td class="p-3.5 sm:p-4 text-emerald-600 dark:text-emerald-400 font-bold">۷۴۵ یا ۷۵۰</td>
+                            <td class="p-3.5 sm:p-4 text-stone-500 dark:text-stone-400 text-xs">خلوص طلا در هر ۱۰۰۰ واحد وزنی. اگر کمتر از ۷۵۰ باشد طلای شرطی و اگر بیشتر باشد پاداش عیار دارد.</td>
+                            <td class="p-3.5 sm:p-4 text-stone-500 dark:text-stone-400 text-xs">قبض رسمی و سامانه تلفن‌گویا</td>
                         </tr>
                     </tbody>
                 </table>
@@ -138,13 +138,13 @@
 
         {{-- بخش H2 دوم: مراحل گام‌به‌گام استعلام شماره پاکت --}}
         <div class="space-y-4">
-            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white">
                 مراحل گام‌به‌گام استعلام شماره پاکت ری‌گیری و جواب انگ
             </h2>
-            <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed">
                 هنگامی که قطعه آبشده‌ای را خریداری می‌کنید یا به عنوان وثیقه و دادوستد تحویل می‌گیرید، برای استعلام <strong>جواب انگ</strong> مراحل زیر را انجام دهید:
             </p>
-            <ol class="list-decimal list-inside space-y-3 text-sm text-slate-700 dark:text-slate-300 pr-2">
+            <ol class="list-decimal list-inside space-y-3 text-sm text-stone-700 dark:text-stone-300 pr-2">
                 <li>
                     <strong>شناسایی نام آزمایشگاه ری‌گیری:</strong> به نوشته یا مهر حروفی کوبیده‌شده روی شمش دقت کنید و نام آزمایشگاه را یادداشت کنید.
                 </li>
@@ -158,23 +158,26 @@
                     <strong>تطبیق جواب انگ با عدد کوبیده‌شده:</strong> عیاری که سامانه تلفنی یا پیامکی اعلام می‌کند باید عیناً با عیار حک‌شده روی قطعه و رسید کاغذی همخوانی داشته باشد.
                 </li>
             </ol>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed pt-2">
-                برای تبدیل عیار آبشده به وزن طلای استاندارد ۷۵۰ می‌توانید از ابزار تخصصی <a href="{{ route('public.tools.melted-gold') }}" class="text-amber-500 font-bold hover:underline">محاسبه‌گر طلای آبشده</a> و برای تبدیل واحدهای مختلف از <a href="{{ route('public.tools.karat-converter') }}" class="text-amber-500 font-bold hover:underline">تبدیل عیار طلا</a> استفاده نمایید.
+            <p class="text-xs text-stone-500 dark:text-stone-400 leading-relaxed pt-2">
+                برای تبدیل عیار آبشده به وزن طلای استاندارد ۷۵۰ می‌توانید از ابزار تخصصی <a href="{{ route('public.tools.melted-gold') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">محاسبه‌گر طلای آبشده</a> و برای تبدیل واحدهای مختلف از <a href="{{ route('public.tools.karat-converter') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">تبدیل عیار طلا</a> استفاده نمایید.
             </p>
         </div>
 
         {{-- بخش H2 سوم: چه چیزهایی را نشان نمی‌دهد --}}
         <div class="space-y-4">
-            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-white">
                 کد انگ طلا چه مواردی را اثبات می‌کند و چه چیزهایی را نشان نمی‌دهد؟
             </h2>
-            <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed">
                 شناخت محدودیت‌های کد انگ برای پیشگیری از کلاهبرداری در صنف طلا حیاتی است:
             </p>
             <div class="grid sm:grid-cols-2 gap-4">
                 <div class="p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 space-y-2">
-                    <span class="text-emerald-600 dark:text-emerald-400 font-black text-sm">✅ مواردی که انگ اثبات می‌کند:</span>
-                    <ul class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400 list-disc list-inside">
+                    <span class="text-emerald-700 dark:text-emerald-400 font-black text-sm flex items-center gap-1.5">
+                        <x-ui-icon name="check" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <span>مواردی که انگ اثبات می‌کند:</span>
+                    </span>
+                    <ul class="space-y-1.5 text-xs text-stone-600 dark:text-stone-400 list-disc list-inside">
                         <li>عیار علمی تکه نمونه‌برداری‌شده در تاریخ مشخص.</li>
                         <li>آزمون شدن توسط یک آزمایشگاه مشخص با شماره ثبتی معلوم.</li>
                         <li>عدم وجود مس یا ناخالصی بیش از حد استاندارد در قطعه آزمون‌شده.</li>
@@ -182,38 +185,40 @@
                 </div>
 
                 <div class="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/50 space-y-2">
-                    <span class="text-rose-600 dark:text-rose-400 font-black text-sm">❌ مواردی که انگ اثبات نمی‌کند:</span>
-                    <ul class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400 list-disc list-inside">
+                    <span class="text-rose-700 dark:text-rose-400 font-black text-sm flex items-center gap-1.5">
+                        <x-ui-icon name="x-mark" class="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+                        <span>مواردی که انگ اثبات نمی‌کند:</span>
+                    </span>
+                    <ul class="space-y-1.5 text-xs text-stone-600 dark:text-stone-400 list-disc list-inside">
                         <li>اصالت خود قالب؛ ممکن است انگ جعلی روی شمش تقلبی کوبیده شده باشد.</li>
                         <li>مغز شمش؛ اگر شمش دست‌ساز و ناهمگن باشد ممکن است مغز آن عیار متفاوتی داشته باشد.</li>
                         <li>مالکیت قانونی فرد؛ شمش آبشده شناسنامه هویتی مالک همراه ندارد.</li>
                     </ul>
                 </div>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p class="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
                 به همین دلیل است که طلافروشان همواره شمش‌های آبشده مشکوک یا خریداری‌شده از افراد ناشناس را دوباره قیچی کرده و به ری‌گیری معتمد خود ارسال می‌کنند.
             </p>
         </div>
 
-        {{-- بخش H2 چهارم: سامانه رسمی و لینک خروجی با TODO --}}
-        <div class="space-y-4 p-6 rounded-3xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-            <h2 class="text-xl font-black text-slate-900 dark:text-white">
+        {{-- بخش H2 چهارم: سامانه رسمی و لینک خروجی --}}
+        <div class="space-y-4 p-6 rounded-3xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700">
+            <h2 class="text-xl font-black text-stone-900 dark:text-white">
                 سامانه رسمی استعلام و پیامک رهگیری ری‌گیری‌های کشور
             </h2>
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                 اتحادیه طلا، جواهر، نقره و سکه تهران و سایر استان‌ها درگاه‌های رسمی جهت معرفی ری‌گیری‌های مجاز و استعلام پیامکی کدهای رهگیری راه‌اندازی نموده‌اند:
             </p>
-            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <span class="text-xs text-amber-500 font-bold">درگاه رسمی اتحادیه طلا و جواهر</span>
-                    <div class="text-sm font-black text-slate-900 dark:text-white mt-0.5">سامانه جامع استعلام پروانه ری‌گیری‌ها و اعتبارسنجی</div>
+                    <span class="text-xs text-amber-700 dark:text-amber-400 font-bold">درگاه رسمی اتحادیه طلا و جواهر</span>
+                    <div class="text-sm font-black text-stone-900 dark:text-white mt-0.5">سامانه جامع استعلام پروانه ری‌گیری‌ها و اعتبارسنجی</div>
                 </div>
-                <!-- TODO(data): آدرس سامانه رسمی -->
-                <a href="https://estelam.ir" target="_blank" rel="nofollow noopener noreferrer" class="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-700 text-white text-xs font-bold hover:bg-amber-500 hover:text-slate-950 transition-colors">
-                    ورود به سامانه استعلام اتحادیه ←
+                <a href="https://estelam.ir" target="_blank" rel="nofollow noopener noreferrer" class="min-h-11 px-5 py-2.5 rounded-xl bg-stone-900 dark:bg-stone-700 text-white text-xs font-bold hover:bg-amber-600 hover:text-white transition-colors inline-flex items-center justify-center">
+                    ورود به سامانه استعلام اتحادیه
                 </a>
             </div>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            <p class="text-[11px] text-stone-500 dark:text-stone-400">
                 توجه: لینک فوق به درگاه رسمی صنفی هدایت می‌شود. برای تغییر یا به‌روزرسانی نشانی درگاه به فایل کانفیگ مراجعه نمایید.
             </p>
         </div>

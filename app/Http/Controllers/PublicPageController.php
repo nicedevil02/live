@@ -298,14 +298,14 @@ class PublicPageController extends Controller
                 'view' => 'pages.guides.goldsmith-legal-profit',
             ],
             'led-board-price-1405' => [
-                'title' => 'قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵ — راهنمای کامل',
+                'title' => 'قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵ (راهنمای کامل)',
                 'description' => 'لیست قیمت تابلو ال ای دی طلافروشی در ۱۴۰۵: بررسی قیمت متری انواع ماژول P10، هزینه‌های پنهان ساخت و مقایسه اقتصادی با تلویزیون. همین حالا مطالعه کنید.',
                 'date' => '۱۴۰۵/۰۱/۲۰',
                 'image' => 'images/guides/led-board-price-1405.webp',
                 'view' => 'pages.guides.led-board-price-1405',
             ],
             'gold-hallmark-inquiry' => [
-                'title' => 'استعلام انگ طلا و ری‌گیری — راهنمای کامل',
+                'title' => 'استعلام انگ طلا و ری‌گیری: راهنمای کامل',
                 'description' => 'راهنمای استعلام انگ طلا و آزمایشگاه‌های ری‌گیری: روش خواندن شماره پاکت و عیار ۷۵۰ آبشده به همراه نکات رهگیری در سال ۱۴۰۵. همین حالا روش استعلام را بخوانید.',
                 'date' => '۱۴۰۵/۰۱/۲۲',
                 'image' => 'images/guides/gold-hallmark-inquiry.webp',

@@ -8,25 +8,25 @@
          :class="stale ? 'opacity-60 grayscale' : ''">
         <template x-if="!loaded">
             <div class="flex items-center gap-3 w-full" aria-hidden="true">
-                <div class="h-2.5 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-2.5 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-2.5 w-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                <div class="h-2.5 w-20 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                <div class="h-2.5 w-24 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
+                <div class="h-2.5 w-24 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
+                <div class="h-2.5 w-24 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
+                <div class="h-2.5 w-20 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
             </div>
         </template>
         <template x-if="loaded">
-            <div class="flex items-center gap-3 sm:gap-4 text-[11px] sm:text-xs whitespace-nowrap">
+            <div class="flex items-center gap-3 sm:gap-4 text-xs whitespace-nowrap">
                 <template x-for="row in items" :key="row.key">
                     <span class="flex items-center gap-1.5 snap-start shrink-0">
-                        <span class="text-slate-500 dark:text-slate-400 font-medium" x-text="row.label"></span>
-                        <span class="font-bold text-slate-800 dark:text-slate-100 font-mono tracking-tight" x-text="row.price"></span>
-                        <span :class="row.dir === 'up' ? 'text-emerald-500' : (row.dir === 'down' ? 'text-red-500' : 'text-slate-400')"
+                        <span class="text-stone-600 dark:text-stone-400 font-medium" x-text="row.label"></span>
+                        <span class="font-semibold text-stone-900 dark:text-stone-100 tabular-nums" x-text="row.price"></span>
+                        <span :class="row.dir === 'up' ? 'text-emerald-700 dark:text-emerald-400' : (row.dir === 'down' ? 'text-rose-700 dark:text-rose-400' : 'text-stone-400 dark:text-stone-500')"
                               :title="row.dir === 'up' ? 'افزایشی' : (row.dir === 'down' ? 'کاهشی' : 'بدون تغییر')"
-                              x-text="row.dir === 'up' ? '▲' : (row.dir === 'down' ? '▼' : '–')"></span>
+                              x-text="row.dir === 'up' ? '▲' : (row.dir === 'down' ? '▼' : '-')"></span>
                     </span>
                 </template>
-                <span class="text-[10px] text-slate-400 shrink-0 transition-colors"
-                      :class="stale ? 'text-amber-500 dark:text-amber-400 font-bold' : 'text-slate-400'"
+                <span class="text-xs shrink-0 transition-colors"
+                      :class="stale ? 'text-amber-800 dark:text-amber-400 font-semibold' : 'text-stone-500 dark:text-stone-400'"
                       x-text="stale ? 'تأخیر در به‌روزرسانی' : updatedLabel"></span>
             </div>
         </template>
@@ -68,7 +68,6 @@ function rateTicker() {
                 this.updatedLabel = this.formatAge(data.dataAgeSeconds);
                 this.loaded = true;
             } catch (e) {
-                // خطا را بلع نکن: نوار در حالت کهنه با پیام تأخیر باقی می‌ماند
                 this.stale = true;
                 this.loaded = true;
             }
@@ -96,12 +95,17 @@ function rateTicker() {
             return targetOrder.map(target => {
                 const item = feedMap[target.key];
                 if (!item) return null;
-                const formattedPrice = (Number(item.value) || 0).toLocaleString('fa-IR');
-                const unit = item.unit ? (' ' + item.unit) : ' تومان';
+                const numVal = Number(item.value) || 0;
+                let priceText = 'در حال به‌روزرسانی';
+                if (numVal > 0) {
+                    const formattedPrice = numVal.toLocaleString('fa-IR');
+                    const unit = item.unit ? (' ' + item.unit) : ' تومان';
+                    priceText = formattedPrice + unit;
+                }
                 return {
                     key: target.key,
                     label: item.label || target.defaultLabel,
-                    price: formattedPrice + unit,
+                    price: priceText,
                     dir: item.direction || 'flat'
                 };
             }).filter(Boolean);

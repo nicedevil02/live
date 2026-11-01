@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'تابلو نرخ نقره و شمش — گرم ۹۹۹، ۹۹۵ و ۹۲۵ | طلالایو')
+@section('title', 'تابلو نرخ نقره و شمش: گرم ۹۹۹، ۹۹۵ و ۹۲۵ | طلالایو')
 @section('meta_description', 'تابلوی تخصصی نرخ انواع شمش طلا و نقره ساچمه و گرم‌های ۹۹۹، ۹۹۵ و ۹۲۵ با تفکیک خرید و فروش لحظه‌ای روی تلویزیون در سال ۱۴۰۵. همین حالا رایگان تست کنید.')
 @section('canonical', 'https://talalive.ir/silver-bullion-board')
 
@@ -59,51 +59,51 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-20">
+<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-20">
 
     {{-- هیرو سکشن لندینگ نقره و شمش --}}
-    <div class="text-center space-y-6 max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold">
-            <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+    <header class="text-center space-y-6 max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 dark:bg-stone-850 border border-stone-200 dark:border-stone-750 text-stone-700 dark:text-stone-300 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
             <span>ویژه فروشندگان نقره، کارگاه‌های ریخته‌گری، معامله‌گران ساچمه و شمش</span>
         </div>
         
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-tight">
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-stone-900 dark:text-stone-100 leading-tight">
             تابلو نرخ نقره و شمش طلا؛ <br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 via-cyan-500 to-amber-500 dark:from-slate-200 dark:via-cyan-300 dark:to-yellow-400">
+            <span class="text-amber-600 dark:text-amber-400">
                 نمایشگر زنده عیارهای ۹۹۹، ۹۹۵ و ۹۲۵ روی تلویزیون
             </span>
         </h1>
 
-        <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto bg-slate-100/70 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 text-justify sm:text-center">
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto bg-stone-50 dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-800 text-justify sm:text-center">
             <strong>تابلو نرخ نقره و شمش</strong> سامانه‌ای تخصصی و ابری برای نمایش زنده قیمت شمش طلا، ساچمه نقره خام، گرم‌های ۹۹۹، ۹۹۵ و عیار ۹۲۵ روی تلویزیون فروشگاه‌ها است که جایگزین تابلوهای سنتی شده و بدون نیاز به سخت‌افزار کار می‌کند.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <a href="{{ route('admin.register') }}" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-slate-800 to-slate-950 dark:from-cyan-500 dark:to-blue-600 hover:from-slate-900 hover:to-black text-white font-black text-sm shadow-xl shadow-slate-500/25 transition-all hover:scale-105 cursor-pointer">
+            <a href="{{ route('admin.register') }}" class="w-full sm:w-auto min-h-11 px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm shadow-sm transition-colors inline-flex items-center justify-center">
                 تست ۱۴ روزه رایگان تابلو نقره و شمش
             </a>
-            <a href="/tv-setup-guide" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white font-bold text-sm transition-all shadow-sm cursor-pointer">
+            <a href="{{ route('public.tv-setup-guide') }}" class="w-full sm:w-auto min-h-11 px-8 py-3.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-850 text-stone-800 dark:text-stone-200 font-bold text-sm transition-colors shadow-sm inline-flex items-center justify-center">
                 راهنمای اتصال تلویزیون مغازه
             </a>
         </div>
-    </div>
+    </header>
 
     {{-- جدول عیارهای نقره و شمش‌های استاندارد --}}
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-6">
+    <section class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-10 shadow-sm space-y-6">
         <div class="space-y-2">
-            <h2 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+            <h2 class="text-xl sm:text-2xl font-black text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                <span class="w-2.5 h-6 rounded-full bg-amber-500"></span>
                 <span>جدول ردیف‌های تخصصی شمش و نقره خام در تابلوی طلالایو</span>
             </h2>
-            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                پوشش جامع انواع شمش‌های استاندارد ۲۴ عیار، ساچمه نقره و زیورآلات نقره با تفکیک مظنه خرید و فروش:
+            <p class="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
+                پوشش انواع شمش‌های استاندارد ۲۴ عیار، ساچمه نقره و زیورآلات نقره با تفکیک مظنه خرید و فروش:
             </p>
         </div>
 
-        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
-            <table class="w-full text-right text-xs sm:text-sm">
-                <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold">
+        <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800">
+            <table class="w-full text-right text-xs sm:text-sm border-collapse">
+                <thead class="bg-stone-100 dark:bg-stone-850 text-stone-900 dark:text-stone-100 font-bold">
                     <tr>
                         <th class="p-3.5">عنوان دارایی</th>
                         <th class="p-3.5">عیار و خلوص</th>
@@ -112,194 +112,225 @@
                         <th class="p-3.5">کاربرد در بازار</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                <tbody class="divide-y divide-stone-200 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">قیمت گرم نقره ۹۹۹ (ساچمه خالص)</td>
-                        <td class="p-3.5 font-mono text-cyan-600 dark:text-cyan-400 font-bold">۹۹۹.۹ (۲۴ نقره)</td>
+                        <td class="p-3.5 font-mono text-stone-900 dark:text-stone-100 font-bold">۹۹۹.۹</td>
                         <td class="p-3.5">هر گرم</td>
-                        <td class="p-3.5">انس جهانی نقره (XAG) + دلار آزاد</td>
-                        <td class="p-3.5">مبنای معاملات خام، آبکاری و ریخته‌گری</td>
+                        <td class="p-3.5">انس جهانی نقره + دلار آزاد</td>
+                        <td class="p-3.5">مبنای معاملات خام و ریخته‌گری</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">نقره خام عیار ۹۹۵ (صنعتی)</td>
-                        <td class="p-3.5 font-mono text-cyan-600 dark:text-cyan-400 font-bold">۹۹۵ از ۱۰۰۰</td>
+                        <td class="p-3.5 font-mono text-stone-900 dark:text-stone-100 font-bold">۹۹۵ از ۱۰۰۰</td>
                         <td class="p-3.5">هر گرم / کیلوگرم</td>
                         <td class="p-3.5">ضریب ۹۹۵ از نقره خالص</td>
-                        <td class="p-3.5">صنایع الکترونیک، کاتالیزور و آلیاژسازی</td>
+                        <td class="p-3.5">صنایع الکترونیک و آلیاژسازی</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">نقره استرلینگ عیار ۹۲۵ (زیورآلات)</td>
-                        <td class="p-3.5 font-mono text-cyan-600 dark:text-cyan-400 font-bold">۹۲۵ از ۱۰۰۰</td>
+                        <td class="p-3.5 font-mono text-stone-900 dark:text-stone-100 font-bold">۹۲۵ از ۱۰۰۰</td>
                         <td class="p-3.5">هر گرم</td>
                         <td class="p-3.5">ضریب ۹۲۵ نقره + اجرت ساخت</td>
-                        <td class="p-3.5">انگشتر، دستبند، زنجیر و ظروف نقره</td>
+                        <td class="p-3.5">انگشتر، دستبند و ظروف نقره</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">شمش نقره ۱ کیلوگرمی پلمپ</td>
-                        <td class="p-3.5 font-mono text-cyan-600 dark:text-cyan-400 font-bold">۹۹۹.۹ فیزیکی</td>
+                        <td class="p-3.5 font-mono text-stone-900 dark:text-stone-100 font-bold">۹۹۹.۹ فیزیکی</td>
                         <td class="p-3.5">هر کیلوگرم (۱۰۰۰ گرم)</td>
-                        <td class="p-3.5">ارزش ذاتی ۱۰۰۰ گرم نقره + پرمیوم پکینگ</td>
-                        <td class="p-3.5">سرمایه‌گذاری امن بلندمدت و حفظ ارزش دارایی</td>
+                        <td class="p-3.5">ارزش ذاتی ۱۰۰۰ گرم نقره + کارمزد بسته‌بندی</td>
+                        <td class="p-3.5">سرمایه‌گذاری بلندمدت</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">شمش طلای ۱ اونسی (۳۱.۱۰۳۵ گرم)</td>
                         <td class="p-3.5 font-mono text-amber-600 dark:text-amber-400 font-bold">۲۴ عیار (۹۹۹.۹)</td>
                         <td class="p-3.5">هر قطعه ۱ اونسی</td>
-                        <td class="p-3.5">انس جهانی طلا (XAU) + کارمزد ضرب</td>
-                        <td class="p-3.5">شمش‌های سوئیسی پمپ، والکامبی و معتبر</td>
+                        <td class="p-3.5">انس جهانی طلا + کارمزد ضرب</td>
+                        <td class="p-3.5">شمش‌های معتبر بین‌المللی</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">شمش طلا ۱۰۰ گرمی استاندارد</td>
                         <td class="p-3.5 font-mono text-amber-600 dark:text-amber-400 font-bold">۲۴ عیار (۹۹۹)</td>
                         <td class="p-3.5">قطعه ۱۰۰ گرمی</td>
                         <td class="p-3.5">۱۰۰ گرم طلای ۲۴ + هولوگرام ری‌گیری</td>
-                        <td class="p-3.5">دادوستد شرکتی، سرمایه‌گذاری بدون اجرت ساخت</td>
+                        <td class="p-3.5">دادوستد بدون اجرت ساخت</td>
                     </tr>
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
                         <td class="p-3.5 font-bold">شمش طلا ۱ کیلوگرمی بانکی</td>
                         <td class="p-3.5 font-mono text-amber-600 dark:text-amber-400 font-bold">۲۴ عیار (۹۹۹.۹)</td>
                         <td class="p-3.5">هر کیلوگرم (۱۰۰۰ گرم)</td>
                         <td class="p-3.5">مظنه مرجع مرکز مبادله طلا و ارز</td>
-                        <td class="p-3.5">معاملات کلان بین‌بانکی و پشتوانه ارزی</td>
+                        <td class="p-3.5">معاملات کلان بین‌بانکی</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <p class="text-[11px] text-slate-500">تمامی ردیف‌ها قابلیت نمایش هم‌زمان خرید و فروش، افزودن حاشیه سود یا کسر کارمزد به صورت درصدی را دارا می‌باشند.</p>
-    </div>
+        <p class="text-xs text-stone-500">تمامی ردیف‌ها قابلیت نمایش هم‌زمان خرید و فروش، افزودن حاشیه سود یا کسر کارمزد به صورت درصدی را دارند.</p>
+    </section>
 
     {{-- تفاوت‌های ساختاری نرخ‌گذاری نقره با طلا --}}
-    <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 space-y-8">
+    <section class="rounded-3xl p-6 sm:p-10 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-8">
         <div class="text-center space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">
                 تفاوت‌های کلیدی نرخ‌گذاری نقره با طلا چیست؟
             </h2>
-            <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">
-                اصول محاسباتی و تفاوت‌های بنیادین بازار نقره که در تابلوی اعلام نرخ باید رعایت شوند
+            <p class="text-stone-500 dark:text-stone-400 text-xs sm:text-sm">
+                اصول محاسباتی و تفاوت‌های بنیادین بازار نقره که در تابلوی اعلام نرخ رعایت می‌شوند
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="p-6 rounded-2xl bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">۱</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">مبنای قیمت‌گذاری گرمی در برابر مثقال ۱۷ عیار</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    در بازار طلای ایران، عرف قیمت‌گذاری بر مبنای «مظنه مثقال ۱۷ عیار» (معادل ۴.۳۳۱۸ گرم طلای ۷۰۵) است. اما در بازار نقره، هرگز واحد مثقال ملاک قرار نمی‌گیرد؛ بلکه مظنه بر حسب هر گرم ساچمه عیار ۹۹۹ یا عیار ۹۲۵ اعلام می‌شود. تابلوی طلالایو به صورت خودکار قیمت هر گرم نقره را محاسبه و روی تلویزیون درج می‌نماید.
+            <div class="p-6 rounded-2xl bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-sm">۱</div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">مبنای قیمت‌گذاری گرمی در برابر مثقال ۱۷ عیار</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    در بازار طلای ایران، عرف قیمت‌گذاری بر مبنای مظنه مثقال ۱۷ عیار است. اما در بازار نقره، هرگز واحد مثقال ملاک قرار نمی‌گیرد؛ بلکه مظنه بر حسب هر گرم ساچمه عیار ۹۹۹ یا عیار ۹۲۵ اعلام می‌شود. تابلوی طلالایو به صورت خودکار قیمت هر گرم نقره را محاسبه و روی تلویزیون درج می‌نماید.
                 </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">۲</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">نسبت طلا به نقره (Gold-to-Silver Ratio) و انس مجزا</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    نقره دارای نماد معاملاتی مستقل در بازارهای بین‌المللی با کد XAG/USD است و نوسانات آن همیشه هم‌جهت با طلای جهانی (XAU) نیست. علاوه بر این، تقاضای بالای نقره در صنایع پنل‌های خورشیدی، باتری و تراشه‌های الکترونیکی سبب شده تا دینامیک قیمت نقره رفتاری دوگانه (صنعتی-سرمایه‌ای) داشته باشد.
+            <div class="p-6 rounded-2xl bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-sm">۲</div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">انس مستقل و ماهیت دوگانه نقره</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    نقره دارای نماد معاملاتی مستقل در بازارهای بین‌المللی با کد XAG است و نوسانات آن همیشه هم‌جهت با طلای جهانی نیست. علاوه بر این، تقاضای بالای نقره در صنایع الکترونیکی سبب شده تا دینامیک قیمت نقره رفتاری صنعتی و سرمایه‌ای داشته باشد.
                 </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">۳</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">تفاوت عیار استاندارد نقره (۹۲۵ استرلینگ) با طلای ۱۸ عیار (۷۵۰)</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    در حالی که عیار رسمی زیورآلات طلا در ایران ۷۵۰ از ۱۰۰۰ است، استاندارد نقره عیار ۹۲۵ (معروف به نقره استرلینگ با ۷.۵ درصد مس برای افزایش استحکام) می‌باشد. تابلوی فروشگاه نقره باید بتواند تبدیل عیار ساچمه ۹۹۹ به کار ساخته ۹۲۵ را مطابق فرمول استاندارد در پای فاکتور لحاظ کند. برای بررسی ضرایب عیار به <a href="/tools/karat-converter" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">ابزار تبدیل عیار طلا و نقره</a> مراجعه کنید.
+            <div class="p-6 rounded-2xl bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-sm">۳</div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">تفاوت عیار استاندارد نقره با طلای ۱۸ عیار</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    در حالی که عیار رسمی زیورآلات طلا در ایران ۷۵۰ از ۱۰۰۰ است، استاندارد نقره عیار ۹۲۵ (معروف به نقره استرلینگ) می‌باشد. تابلوی فروشگاه نقره می‌تواند تبدیل عیار ساچمه ۹۹۹ به کار ساخته ۹۲۵ را لحاظ کند. برای بررسی ضرایب عیار به <a href="{{ route('public.tools.karat-converter') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">ابزار تبدیل عیار طلا و نقره</a> مراجعه کنید.
                 </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">۴</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">کارمزد ریخته‌گری شمش در برابر اجرت ساخت زیورآلات</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    شمش‌های طلا و نقره برای مصارف سرمایه‌گذاری ضرب می‌شوند و بر خلاف النگو یا سرویس‌های طلا، فاقد اجرت‌های سنگین ساخت (۱۵ تا ۲۵ درصد) هستند. در شمش‌ها تنها یک کارمزد ناچیز بسته‌بندی امنیتی و هولوگرام لحاظ می‌شود و قیمت تابلو بسیار نزدیک به ارزش طلای خالص خام است.
+            <div class="p-6 rounded-2xl bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-sm">۴</div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">کارمزد ضرب شمش در برابر اجرت ساخت</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    شمش‌های طلا و نقره برای مصارف سرمایه‌گذاری ضرب می‌شوند و بر خلاف سرویس‌های طلا، فاقد اجرت‌های سنگین ساخت هستند. در شمش‌ها تنها یک کارمزد ناچیز بسته‌بندی امنیتی لحاظ می‌شود و قیمت تابلو بسیار نزدیک به ارزش طلای خالص خام است.
                 </p>
             </div>
         </div>
-    </div>
+    </section>
 
     {{-- ویژگی‌های نرم‌افزار تابلوی نقره و شمش طلالایو --}}
-    <div class="space-y-8">
+    <section class="space-y-6">
         <div class="text-center space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+            <h2 class="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">
                 امکانات تابلو شمش و نقره طلالایو روی تلویزیون هوشمند
             </h2>
-            <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">
-                طراحی چشم‌نواز با تم‌های نقره‌ای، متالیک و طلایی ویژه ویترین‌های مدرن
+            <p class="text-stone-500 dark:text-stone-400 text-xs sm:text-sm">
+                طراحی مناسب با فونت‌های خوانا ویژه نمایشگرهای مدرن
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-50 dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">📊</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">تفکیک نرخ خرید و فروش شمش</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    امکان نمایش شفاف دو ستون خرید و فروش برای انواع شمش طلا و نقره تا خریداران سرمایه‌ای بتوانند با اطمینان کامل از حاشیه سود و نرخ بازخرید، تصمیم‌گیری کنند.
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'chart-bar', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">تفکیک نرخ خرید و فروش شمش</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    امکان نمایش شفاف دو ستون خرید و فروش برای انواع شمش طلا و نقره تا خریداران سرمایه‌ای بتوانند با اطمینان کامل از حاشیه سود، تصمیم‌گیری کنند.
                 </p>
             </div>
 
-            <div class="bg-slate-50 dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">📺</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">اجرا روی هر تلویزیون بدون مینی‌کیس</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">اجرا روی هر تلویزیون بدون مینی‌کیس</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                     تنها با باز کردن مرورگر تلویزیون هوشمند کارگاه یا گالری، تابلوی زنده شروع به کار می‌کند. بدون هزینه خرید مینی‌کیس و بدون استهلاک بردهای قدیمی LED.
                 </p>
             </div>
 
-            <div class="bg-slate-50 dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg">💎</div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">اسلایدشوی محصولات و گواهی شمش‌ها</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    امکان نمایش اسلایدر کاتالوگ شمش‌های موجود، هولوگرام‌های امنیتی، استانداردهای آزمایشگاهی و مشخصات فنی ظروف و زیورآلات نقره در کنار نرخ‌های زنده.
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    @include('partials.ui-icon', ['name' => 'sparkles', 'class' => 'w-5 h-5'])
+                </div>
+                <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">اسلایدشوی محصولات و گواهی شمش‌ها</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                    امکان نمایش اسلایدر کاتالوگ شمش‌های موجود، هولوگرام‌های امنیتی و مشخصات فنی ظروف و زیورآلات نقره در کنار نرخ‌های زنده.
                 </p>
             </div>
         </div>
-    </div>
+    </section>
 
     {{-- سوالات متداول نقره و شمش --}}
-    <div class="glass-panel p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6">
-        <h2 class="text-2xl font-black text-slate-900 dark:text-white text-center">
+    <section class="space-y-4 max-w-4xl mx-auto">
+        <h2 class="text-2xl font-black text-stone-900 dark:text-stone-100 text-center">
             پرسش‌های متداول فعالان بازار نقره و شمش
         </h2>
 
-        <div class="space-y-4 max-w-3xl mx-auto pt-4">
-            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">آیا نرخ هر گرم نقره ساچمه ۹۹۹ به صورت خودکار آپدیت می‌شود؟</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        <div class="space-y-3 pt-2">
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>آیا نرخ هر گرم نقره ساچمه ۹۹۹ به صورت خودکار آپدیت می‌شود؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
                     بله؛ سامانه طلالایو نرخ مرجع نقره خام را از منابع رسمی بازار داخلی و انس جهانی نقره دریافت می‌کند. همچنین مدیر فروشگاه می‌تواند درصد یا مبلغ ثابتی را به عنوان کارمزد فروش به نرخ پایه اضافه نماید.
-                </p>
-            </div>
+                </div>
+            </details>
 
-            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">آیا می‌توان در یک نمایشگر، هم‌زمان نرخ طلا، سکه، نقره و ارز را نمایش داد؟</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    بله؛ در پنل کاربری طلالایو می‌توانید هر ترکیبی از ردیف‌ها را که تمایل دارید فعال سازید. برای مثال ردیف‌های شمش طلا و نقره را در کنار مظنه طلا و ارزهایی نظیر درهم یا دلار قرار دهید. برای بررسی راهکار ارزی، صفحه <a href="/currency-exchange-board" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">تابلو صرافی و نرخ ارز</a> را ببینید.
-                </p>
-            </div>
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>آیا می‌توان در یک نمایشگر، هم‌زمان نرخ طلا، سکه، نقره و ارز را نمایش داد؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
+                    بله؛ در پنل کاربری طلالایو می‌توانید هر ترکیبی از ردیف‌ها را که تمایل دارید فعال سازید. برای مثال ردیف‌های شمش طلا و نقره را در کنار مظنه طلا و ارزهایی نظیر درهم یا دلار قرار دهید. برای بررسی راهکار ارزی، صفحه <a href="{{ route('public.currency-exchange-board') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلو صرافی و نرخ ارز</a> را ببینید.
+                </div>
+            </details>
 
-            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">آیا تابلوی نقره در صورت قطعی اینترنت خاموش می‌شود؟</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    خیر؛ فناوری ذخیره‌سازی محلی هوشمند اجازه نمی‌دهد صفحه سیاه شود. آخرین مظنه معتبر ثبت‌شده همراه با نشانگر ساعت استعلام در طول قطعی شبکه روی نمایشگر نشان داده می‌شود.
-                </p>
-            </div>
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>آیا تابلوی نقره در صورت قطعی اینترنت خاموش می‌شود؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
+                    خیر؛ فناوری ذخیره‌سازی محلی اجازه نمی‌دهد صفحه سیاه شود. آخرین مظنه معتبر ثبت‌شده همراه با نشانگر ساعت استعلام در طول قطعی شبکه روی نمایشگر نشان داده می‌شود.
+                </div>
+            </details>
 
-            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">چگونه تلویزیون فروشگاه را به تابلوی شمش وصل کنیم؟</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    کافی است تلویزیون را به وای‌فای مغازه متصل نموده و مرورگر وب داخلی تلویزیون را باز کنید. مراحل تفکیکی برندهای سامسونگ، ال‌جی و سونی در صفحه <a href="/tv-setup-guide" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">راهنمای اتصال تلویزیون</a> توضیح داده شده است.
-                </p>
-            </div>
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>چگونه تلویزیون فروشگاه را به تابلوی شمش وصل کنیم؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
+                    کافی است تلویزیون را به وای‌فای مغازه متصل نموده و مرورگر وب داخلی تلویزیون را باز کنید. مراحل تفکیکی برندهای سامسونگ، ال‌جی و سونی در صفحه <a href="{{ route('public.tv-setup-guide') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">راهنمای اتصال تلویزیون</a> توضیح داده شده است.
+                </div>
+            </details>
 
-            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">هزینه استفاده از سامانه برای گالری‌های نقره چقدر است؟</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    طلالایو برای تمامی کاربران جدید ۱۴ روز تست رایگان و کامل بدون نیاز به ثبت کارت بانکی در نظر گرفته است. پس از آن می‌توانید از پلن‌های اقتصادی سالیانه مندرج در <a href="/pricing" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline">صفحه تعرفه‌ها</a> استفاده فرمایید.
-                </p>
-            </div>
+            <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
+                <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
+                    <span>هزینه استفاده از سامانه برای گالری‌های نقره چقدر است؟</span>
+                    <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
+                        @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
+                    </span>
+                </summary>
+                <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
+                    طلالایو برای تمامی کاربران جدید ۱۴ روز تست رایگان بدون نیاز به ثبت کارت بانکی در نظر گرفته است. پس از آن می‌توانید از پلن‌های اقتصادی سالیانه مندرج در <a href="{{ route('public.pricing') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">صفحه تعرفه‌ها</a> استفاده فرمایید.
+                </div>
+            </details>
         </div>
-    </div>
+    </section>
 
     {{-- CTA میانی --}}
     @include('partials.cta-inline', [
         'title' => 'تابلوی نرخ نقره و شمش مغازه خود را در ۳ دقیقه فعال کنید',
-        'subtitle' => 'بدون نیاز به خرید تجهیزات سخت‌افزاری گران‌قیمت؛ همین حالا با تست ۱۴ روزه رایگان آغاز نمایید.',
+        'subtitle' => 'بدون نیاز به خرید تجهیزات سخت‌افزاری؛ همین حالا با تست ۱۴ روزه رایگان آغاز نمایید.',
         'buttonText' => 'تست رایگان تابلوی نقره و شمش',
         'buttonUrl' => route('admin.register')
     ])
@@ -308,17 +339,17 @@
     @include('partials.related-links', [
         'links' => [
             [
-                'url' => '/smart-gold-board',
+                'url' => route('public.smart-gold-board'),
                 'title' => 'تابلوی هوشمند طلافروشی',
                 'desc' => 'سامانه ابری نمایش زنده نرخ طلا و مسکوکات روی تلویزیون مغازه.'
             ],
             [
-                'url' => '/currency-exchange-board',
+                'url' => route('public.currency-exchange-board'),
                 'title' => 'تابلو صرافی و نرخ ارز',
                 'desc' => 'نمایشگر دیجیتال دو نرخه قیمت انواع ارز، اسکناس و حواله.'
             ],
             [
-                'url' => '/tools/karat-converter',
+                'url' => route('public.tools.karat-converter'),
                 'title' => 'تبدیل عیار طلا و نقره',
                 'desc' => 'فرمول و جدول آنلاین تبدیل عیارهای ۷۰۵ تا ۹۹۹ طلا و ۹۲۵ نقره.'
             ]

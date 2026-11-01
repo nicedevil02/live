@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'بهترین تلویزیون برای مغازه طلافروشی — راهنمای خرید ۱۴۰۵')
+@section('title', 'بهترین تلویزیون برای مغازه طلافروشی: راهنمای خرید ۱۴۰۵')
 @section('meta_description', 'راهنمای جامع خرید بهترین تلویزیون برای ویترین طلافروشی: بررسی روشنایی نیت، پنل ضد انعکاس و زاویه دید سامسونگ و ال‌جی در سال ۱۴۰۵ برای اتصال به تابلو طلا.')
 @section('canonical', 'https://talalive.ir/guides/best-tv-for-jewelry-shop')
 @section('og_image', asset('images/guides/best-tv-gold-shop.webp'))
@@ -13,7 +13,7 @@
   "@@graph": [
     {
       "@@type": "Article",
-      "headline": "بهترین تلویزیون برای مغازه طلافروشی — راهنمای خرید ۱۴۰۵",
+      "headline": "بهترین تلویزیون برای مغازه طلافروشی: راهنمای خرید ۱۴۰۵",
       "description": "راهنمای جامع خرید بهترین تلویزیون برای ویترین طلافروشی: بررسی روشنایی نیت، پنل ضد انعکاس و زاویه دید سامسونگ و ال‌جی در سال ۱۴۰۵.",
       "image": [
         "https://talalive.ir/images/guides/best-tv-gold-shop.webp"
@@ -57,37 +57,44 @@
 @endsection
 
 @section('content')
-<div class="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12">
+<div class="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8">
+
+    @include('partials.breadcrumb', [
+        'items' => [
+            ['title' => 'پایگاه دانش طلا', 'url' => route('public.guides')],
+            ['title' => 'بهترین تلویزیون برای طلافروشی'],
+        ]
+    ])
 
     {{-- تفکیک راهنمای خرید از راهنمای اتصال نرم‌افزاری --}}
-    <div class="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-            <span class="text-2xl">🔌</span>
-            <div class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                <strong class="font-bold text-blue-700 dark:text-blue-300">تلویزیون را خریده‌اید و می‌خواهید آن را به تابلو وصل کنید؟</strong>
-                <span>این مقاله راهنمای سخت‌افزاری «کدام تلویزیون را بخریم» است. برای مراحل اتصال مرورگر به تابلو، راهنما را باز کنید:</span>
+            <x-ui-icon name="tv" class="w-6 h-6 text-amber-700 dark:text-amber-400 shrink-0" />
+            <div class="text-xs sm:text-sm text-stone-700 dark:text-stone-300">
+                <strong class="font-bold text-amber-800 dark:text-amber-300">تلویزیون را خریده‌اید و می‌خواهید آن را به تابلو وصل کنید؟</strong>
+                <span>این مقاله راهنمای سخت‌افزاری انتخاب نمایشگر است. برای مراحل اتصال مرورگر به تابلو، راهنمای راه‌اندازی را ببینید:</span>
             </div>
         </div>
-        <a href="/tv-setup-guide" class="whitespace-nowrap px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-colors shadow-sm">
-            آموزش اتصال تلویزیون به تابلو طلا ←
+        <a href="/tv-setup-guide" class="min-h-11 whitespace-nowrap px-4 py-2.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-bold text-xs hover:bg-stone-800 dark:hover:bg-white transition-colors inline-flex items-center justify-center shrink-0">
+            آموزش اتصال تلویزیون به تابلو
         </a>
     </div>
 
     {{-- تیتر اصلی و تعریف ۴۰ کلمه‌ای --}}
     <div class="space-y-4">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold">
             <span>راهنمای خرید سخت‌افزار مغازه طلا</span>
         </div>
-        <h1 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+        <h1 class="text-2xl sm:text-4xl font-black text-stone-900 dark:text-white leading-tight">
             بهترین تلویزیون برای مغازه طلافروشی و نمایشگر ویترین (۱۴۰۵)
         </h1>
-        <p class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <p class="text-stone-700 dark:text-stone-300 text-sm sm:text-base leading-relaxed bg-stone-50 dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-800">
             <strong>بهترین تلویزیون برای طلافروشی</strong> نمایشگری با روشنایی حداقل ۳۵۰ نیت، پنل ضد انعکاس مات، زاویه دید عریض و مرورگر وب پایدار است که بدون خطر سوختگی پیکسل، نرخ‌های زنده طلا و جواهرات ویترین را به مدت ۱۰ ساعت مداوم با وضوح خیره‌کننده نمایش دهد.
         </p>
     </div>
 
     {{-- تصویر شاخص راهنما با کیفیت عالی سئو و استانداردهای Core Web Vitals --}}
-    <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-slate-800 shadow-2xl aspect-[16/9] bg-slate-900 group">
+    <figure class="relative rounded-3xl overflow-hidden border border-amber-500/25 dark:border-stone-800 shadow-xl aspect-[16/9] bg-stone-900 group">
         <img src="{{ asset('images/guides/best-tv-gold-shop.webp') }}" 
              alt="بهترین تلویزیون برای مغازه طلافروشی و نمایشگر ویترین طلالایو" 
              width="1200" height="675" 
@@ -96,38 +103,38 @@
     </figure>
 
     {{-- معیارهای کلیدی انتخاب نمایشگر --}}
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-10 shadow-sm space-y-8 text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed">
         
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <h2 class="text-xl font-bold text-stone-900 dark:text-white flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
             <span>۴ معیار حیاتی در انتخاب تلویزیون مناسب ویترین طلافروشی</span>
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">۱. روشنایی نیت تلویزیون (Brightness)</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <div class="p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-2">
+                <h3 class="font-bold text-stone-900 dark:text-white text-sm">۱. روشنایی نیت تلویزیون (Brightness)</h3>
+                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
                     ویترین طلافروشی سرشار از نورافکن‌های SMD و هالوژن‌های پرقدرت است. اگر روشنایی پنل کمتر از ۳۰۰ نیت باشد، صفحه تاریک و ناخوانا به نظر می‌رسد. حداقل روشنایی استاندارد ۳۵۰ الی ۵۰۰ نیت پیشنهاد می‌شود.
                 </p>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">۲. پنل ضد انعکاس طلافروشی (Anti-Glare)</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <div class="p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-2">
+                <h3 class="font-bold text-stone-900 dark:text-white text-sm">۲. پنل ضد انعکاس طلافروشی (Anti-Glare)</h3>
+                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
                     صفحات براق مانند آینه نور پروژکتورهای سقف مغازه را بازتاب می‌دهند. تلویزیون‌هایی با پوشش مات ضد بازتاب (Anti-Reflective Coating) خوانایی ارقام مظنه و سکه را برای مراجعین ویترین دوچندان می‌کنند.
                 </p>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">۳. نوع پنل: چرا OLED نخریم؟</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <div class="p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-2">
+                <h3 class="font-bold text-stone-900 dark:text-white text-sm">۳. نوع پنل: چرا OLED نخریم؟</h3>
+                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
                     تلویزیون‌های OLED به دلیل پدیده Burn-in (سوختگی تصویر ناشی از نمایش متن و ارقام ثابت در طول روز) اصلاً مناسب تابلو نیستند. پنل‌های LED، QLED و IPS بهترین دوام کاری را دارند.
                 </p>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">۴. زاویه دید عریض (Wide Viewing Angle)</h3>
-                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <div class="p-5 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-2">
+                <h3 class="font-bold text-stone-900 dark:text-white text-sm">۴. زاویه دید عریض (Wide Viewing Angle)</h3>
+                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
                     مشتریان ویترین مغازه از زوایای کناری به صفحه نگاه می‌کنند. پنل‌های IPS و ADS در زاویه ۱۷۸ درجه بدون افت رنگ و کنتراست ارقام قیمت طلا را واضح نشان می‌دهند.
                 </p>
             </div>
@@ -135,13 +142,13 @@
 
         {{-- جدول مقایسه برندها و تکنولوژی‌ها --}}
         <div class="space-y-4 pt-4">
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 class="text-xl font-bold text-stone-900 dark:text-white flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                 <span>جدول مقایسه تلویزیون‌های مناسب تابلو طلا در بازار ایران (۱۴۰۵)</span>
             </h2>
-            <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div class="overflow-x-auto rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
                 <table class="w-full text-right text-xs sm:text-sm">
-                    <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold">
+                    <thead class="bg-stone-100 dark:bg-stone-800/80 text-stone-900 dark:text-white font-bold">
                         <tr>
                             <th class="p-3.5">برند و سری</th>
                             <th class="p-3.5">نوع پنل</th>
@@ -150,46 +157,46 @@
                             <th class="p-3.5">مناسب ویترین؟</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tbody class="divide-y divide-stone-200 dark:divide-stone-800">
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/50">
                             <td class="p-3.5 font-bold">سامسونگ Crystal UHD (CU7000 / DU8000)</td>
                             <td class="p-3.5">Crystal LED (VA/IPS)</td>
                             <td class="p-3.5 font-mono">~ ۳۵۰ نیت</td>
                             <td class="p-3.5">Tizen OS</td>
                             <td class="p-3.5 text-emerald-600 dark:text-emerald-400 font-bold">بسیار عالی (انتخاب اول)</td>
                         </tr>
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/50">
                             <td class="p-3.5 font-bold">ال‌جی NanoCell (NANO77 / NANO80)</td>
                             <td class="p-3.5">NanoCell IPS عریض</td>
                             <td class="p-3.5 font-mono">~ ۳۸۰ نیت</td>
                             <td class="p-3.5">webOS</td>
                             <td class="p-3.5 text-emerald-600 dark:text-emerald-400 font-bold">فوق‌العاده برای زاویه دید</td>
                         </tr>
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/50">
                             <td class="p-3.5 font-bold">اسنوا / دوو Smart 4K</td>
                             <td class="p-3.5">LED با گرید A+</td>
                             <td class="p-3.5 font-mono">~ ۳۰۰ نیت</td>
                             <td class="p-3.5">Android TV</td>
-                            <td class="p-3.5 text-blue-600 dark:text-blue-400 font-bold">اقتصادی و مناسب مغازه</td>
+                            <td class="p-3.5 text-stone-900 dark:text-stone-100 font-bold">اقتصادی و مناسب مغازه</td>
                         </tr>
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/50">
                             <td class="p-3.5 font-bold">سونی Bravia سری 7 و 8</td>
                             <td class="p-3.5">Direct LED / Triluminos</td>
                             <td class="p-3.5 font-mono">~ ۵۰۰ نیت</td>
                             <td class="p-3.5">Google TV</td>
-                            <td class="p-3.5 text-purple-600 dark:text-purple-400 font-bold">لوکس و باکیفیت‌ترین تصویر</td>
+                            <td class="p-3.5 text-amber-700 dark:text-amber-400 font-bold">لوکس و بالاترین کیفیت تصویر</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text-[11px] text-slate-500">تاریخ آخرین بررسی فنی بازار سخت‌افزار: فروردین ۱۴۰۵. ارقام روشنایی نیت بر مبنای تست‌های آزمایشگاهی است.</p>
+            <p class="text-[11px] text-stone-500">تاریخ آخرین بررسی فنی بازار سخت‌افزار: فروردین ۱۴۰۵. ارقام روشنایی نیت بر مبنای تست‌های آزمایشگاهی است.</p>
         </div>
 
         {{-- فراخوان به تابلوی طلالایو --}}
-        <div class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">آیا نوع تلویزیون در اتصال به طلالایو تفاوتی ایجاد می‌کند؟</h2>
+        <div class="space-y-4 pt-4 border-t border-stone-200 dark:border-stone-800">
+            <h2 class="text-xl font-bold text-stone-900 dark:text-white">آیا نوع تلویزیون در اتصال به طلالایو تفاوتی ایجاد می‌کند؟</h2>
             <p>
-                خیر! بزرگ‌ترین مزیت مهندسی <a href="/smart-gold-board" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلوی هوشمند طلافروشی طلالایو</a> این است که ۱۰۰٪ تحت وب طراحی شده است. فارغ از اینکه سامسونگ تایزن، ال‌جی وب‌او‌اس، یا تلویزیون اندرویدی اسنوا داشته باشید، تنها کافی است مرورگر تلویزیون را باز کنید. برای مقایسه هزینه‌های سالیانه تلویزیون در برابر تابلوهای روان، مقاله <a href="/led-vs-smart-board" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">مقایسه تابلو ال ای دی طلا فروشی با تلویزیون</a> را مطالعه کنید.
+                خیر! بزرگ‌ترین مزیت مهندسی <a href="/smart-gold-board" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">تابلوی هوشمند طلافروشی طلالایو</a> این است که ۱۰۰٪ تحت وب طراحی شده است. فارغ از اینکه سامسونگ تایزن، ال‌جی وب‌او‌اس، یا تلویزیون اندرویدی اسنوا داشته باشید، تنها کافی است مرورگر تلویزیون را باز کنید. برای مقایسه هزینه‌های سالیانه تلویزیون در برابر تابلوهای روان، مقاله <a href="/led-vs-smart-board" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">مقایسه تابلو ال ای دی طلا فروشی با تلویزیون</a> را مطالعه کنید.
             </p>
         </div>
 
