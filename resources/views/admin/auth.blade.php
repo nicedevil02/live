@@ -147,7 +147,7 @@
                             : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 font-semibold'"
                         class="min-h-11 rounded-xl text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
                     <span>ثبت‌نام گالری</span>
-                    <span :class="activeTab === 'register' ? 'bg-stone-950/15 text-stone-950' : 'bg-amber-500/15 text-amber-800 dark:text-amber-300'"
+                    <span :class="activeTab === 'register' ? 'bg-white/20 text-white' : 'bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300'"
                           class="text-xs font-bold px-1.5 py-0.5 rounded-md">رایگان</span>
                 </button>
             </div>

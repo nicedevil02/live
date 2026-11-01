@@ -13,60 +13,59 @@
 }
 
 /* ==========================================================================
-   TalaLive Design System: Apple HIG Liquid Glass + 135° Tactile Neumorphism
+   TalaLive Design System: Apple HIG Liquid Glass + Luxury Obsidian & Pure White
    ========================================================================== */
 :root {
     --tl-spring: cubic-bezier(0.22, 1, 0.36, 1);
-    --tl-bg: #f1eee7;
-    --tl-bg-subtle: #ebe7de;
-    --tl-surface: #f8f6f1;
-    --tl-surface-2: #eae5da;
-    --tl-border: rgba(255, 255, 255, 0.82);
-    --tl-border-outline: rgba(180, 171, 155, 0.38);
-    --tl-border-strong: rgba(160, 150, 134, 0.55);
-    --tl-text: #1c1917;
-    --tl-text-secondary: #44403c;
-    --tl-text-muted: #57534e;
+    --tl-bg: #ffffff;
+    --tl-bg-subtle: #f8fafc;
+    --tl-surface: #ffffff;
+    --tl-surface-2: #f1f5f9;
+    --tl-border: rgba(15, 23, 42, 0.08);
+    --tl-border-outline: rgba(15, 23, 42, 0.09);
+    --tl-border-strong: rgba(15, 23, 42, 0.16);
+    --tl-text: #0f172a;
+    --tl-text-secondary: #334155;
+    --tl-text-muted: #64748b;
     --tl-accent-text: #b45309;
-    --tl-accent-cta: #f59e0b;
-    --tl-accent-cta-ink: #1c1917;
+    --tl-accent-cta: #0f172a;
+    --tl-accent-cta-ink: #ffffff;
 
-    /* Neumorphic 135° Dual-Shadow Physics (Light Alabaster Pearl) */
-    --tl-neu-grad: linear-gradient(145deg, #fcfbf8 0%, #efece4 100%);
+    /* Clean Apple HIG Elevation & Tactile Physics (Pure White Canvas) */
+    --tl-neu-grad: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
     --tl-neu-shadow:
-        -7px -7px 16px rgba(255, 255, 255, 0.92),
-        8px 8px 18px rgba(176, 168, 152, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        0 1px 3px 0 rgba(15, 23, 42, 0.03),
+        0 8px 24px -4px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
     --tl-neu-shadow-hover:
-        -8px -8px 18px rgba(255, 255, 255, 0.96),
-        10px 10px 22px rgba(168, 159, 142, 0.44),
-        0 0 0 1px rgba(217, 119, 6, 0.28),
+        0 4px 12px -2px rgba(15, 23, 42, 0.05),
+        0 16px 36px -6px rgba(15, 23, 42, 0.1),
+        0 0 0 1px rgba(15, 23, 42, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 1);
     --tl-neu-shadow-sm:
-        -4px -4px 9px rgba(255, 255, 255, 0.9),
-        4px 4px 10px rgba(176, 168, 152, 0.34),
-        inset 0 1px 0 rgba(255, 255, 255, 0.92);
-    --tl-neu-inset-bg: #e7e2d7;
+        0 1px 2px 0 rgba(15, 23, 42, 0.04),
+        0 3px 8px -1px rgba(15, 23, 42, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    --tl-neu-inset-bg: #f8fafc;
     --tl-neu-inset-shadow:
-        inset 4px 4px 9px rgba(169, 160, 144, 0.44),
-        inset -4px -4px 9px rgba(255, 255, 255, 0.9),
-        0 1px 0 rgba(255, 255, 255, 0.75);
+        inset 0 2px 4px 0 rgba(15, 23, 42, 0.04),
+        inset 0 0 0 1px rgba(15, 23, 42, 0.08);
 
-    /* Apple HIG Liquid Frosted Glass (Light Vibrancy) */
-    --tl-glass-capsule-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(246, 243, 236, 0.68) 100%);
-    --tl-glass-capsule-border: rgba(255, 255, 255, 0.85);
+    /* Apple HIG Liquid Frosted Glass (Crystal Clear on White) */
+    --tl-glass-capsule-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.78) 100%);
+    --tl-glass-capsule-border: rgba(15, 23, 42, 0.08);
     --tl-glass-capsule-shadow:
-        0 18px 40px -10px rgba(28, 25, 23, 0.1),
-        0 4px 12px -2px rgba(28, 25, 23, 0.05),
-        inset 0 1px 1px rgba(255, 255, 255, 0.98),
-        inset 0 -1px 0 rgba(176, 168, 152, 0.28);
+        0 18px 40px -10px rgba(15, 23, 42, 0.08),
+        0 4px 12px -2px rgba(15, 23, 42, 0.04),
+        inset 0 1px 1px rgba(255, 255, 255, 1),
+        inset 0 -1px 0 rgba(15, 23, 42, 0.04);
 
-    --tl-glass-sheet-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.86) 0%, rgba(245, 242, 235, 0.78) 100%);
-    --tl-glass-sheet-border: rgba(255, 255, 255, 0.88);
+    --tl-glass-sheet-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+    --tl-glass-sheet-border: rgba(15, 23, 42, 0.08);
     --tl-glass-sheet-shadow:
-        0 24px 52px -12px rgba(28, 25, 23, 0.16),
-        0 6px 16px -4px rgba(28, 25, 23, 0.06),
-        inset 0 1px 1px rgba(255, 255, 255, 0.96);
+        0 24px 52px -12px rgba(15, 23, 42, 0.12),
+        0 6px 16px -4px rgba(15, 23, 42, 0.05),
+        inset 0 1px 1px rgba(255, 255, 255, 1);
 }
 
 .dark {
@@ -199,13 +198,13 @@
 }
 
 .tl-glass-badge {
-    background: rgba(255, 255, 255, 0.58);
+    background: rgba(248, 250, 252, 0.88);
     backdrop-filter: blur(12px) saturate(160%);
     -webkit-backdrop-filter: blur(12px) saturate(160%);
-    border: 1px solid rgba(217, 119, 6, 0.28);
+    border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow:
-        0 4px 12px -2px rgba(180, 83, 9, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        0 2px 8px -1px rgba(15, 23, 42, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 .dark .tl-glass-badge {
     background: rgba(36, 31, 26, 0.65);
@@ -288,12 +287,12 @@
 .tl-neu-card-gold {
     background-color: var(--tl-surface);
     background-image:
-        radial-gradient(circle at top right, rgba(245, 158, 11, 0.13), transparent 58%),
+        radial-gradient(circle at top right, rgba(217, 119, 6, 0.06), transparent 50%),
         var(--tl-neu-grad);
-    border: 1.5px solid rgba(245, 158, 11, 0.58);
+    border: 1.5px solid rgba(217, 119, 6, 0.35);
     box-shadow:
         var(--tl-neu-shadow),
-        0 14px 34px -10px rgba(217, 119, 6, 0.24);
+        0 10px 28px -8px rgba(217, 119, 6, 0.12);
 }
 
 /* شیار حکاکی‌شده فرورفته (Concave Inset Well: فیلدهای ورودی، پنل‌های داخلی و ریل تب‌ها) */
@@ -334,7 +333,7 @@
     border-color: var(--tl-accent-text) !important;
     box-shadow:
         var(--tl-neu-inset-shadow),
-        0 0 0 3px rgba(245, 158, 11, 0.22) !important;
+        0 0 0 3px rgba(15, 23, 42, 0.12) !important;
 }
 
 /* دکمه و گوی آیکون برجسته نئومورفیک (Tactile Secondary Button & Icon Orb) */
@@ -342,8 +341,9 @@
 .tl-neu-pill-active,
 .tl-neu-icon-orb {
     background-color: var(--tl-surface);
-    background-image: var(--tl-neu-grad);
+    background-image: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     border: 1px solid var(--tl-border-outline);
+    color: var(--tl-text);
     box-shadow: var(--tl-neu-shadow-sm);
     transition:
         transform 220ms var(--tl-spring),
@@ -354,8 +354,8 @@
 
 .tl-neu-btn:hover {
     transform: translateY(-1px);
-    border-color: rgba(217, 119, 6, 0.38);
-    box-shadow: var(--tl-neu-shadow);
+    border-color: rgba(15, 23, 42, 0.24);
+    box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
 }
 
 .tl-neu-btn:active {
@@ -365,19 +365,33 @@
     box-shadow: var(--tl-neu-inset-shadow);
 }
 
+.dark .tl-neu-btn,
+.dark .tl-neu-pill-active,
+.dark .tl-neu-icon-orb {
+    background-color: var(--tl-surface);
+    background-image: var(--tl-neu-grad);
+    border-color: var(--tl-border-outline);
+    color: var(--tl-text);
+}
+
+.dark .tl-neu-btn:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: var(--tl-neu-shadow);
+}
+
 /* ==========================================================================
-   ۳. دکمه سه‌بعدی شمش طلای ۱۸ عیار (3D 18K Bullion Tactile Primary CTA)
+   ۳. دکمه پرمیوم اسلیت شبانه لوکس (Luxury Midnight Obsidian Slate Primary CTA)
+   جایگزین دکمه طلایی جیغ با وقار و کنتراست بالای ۱۷ به ۱ اپل/استرایپ
    ========================================================================== */
 .tl-btn-bullion,
 .tl-public :where(a, button):where(.bg-amber-500) {
-    background-image: linear-gradient(180deg, #fcd34d 0%, #f59e0b 52%, #d97706 100%);
-    color: #1c1917 !important;
-    border: 1px solid rgba(180, 83, 9, 0.45);
+    background-image: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    color: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.95);
     box-shadow:
-        0 8px 20px -4px rgba(217, 119, 6, 0.4),
-        0 2px 6px -1px rgba(180, 83, 9, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.72),
-        inset 0 -1px 1px rgba(120, 53, 15, 0.32);
+        0 4px 14px -2px rgba(15, 23, 42, 0.28),
+        0 1px 3px 0 rgba(15, 23, 42, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
     transition:
         transform 220ms var(--tl-spring),
         box-shadow 220ms var(--tl-spring),
@@ -386,34 +400,51 @@
 
 .tl-btn-bullion:hover,
 .tl-public :where(a, button):where(.bg-amber-500):hover {
-    filter: brightness(1.04);
+    filter: brightness(1.15);
     transform: translateY(-1.5px);
     box-shadow:
-        0 12px 26px -4px rgba(217, 119, 6, 0.5),
-        0 4px 10px -2px rgba(180, 83, 9, 0.28),
-        inset 0 1px 1px rgba(255, 255, 255, 0.85),
-        inset 0 -1px 1px rgba(120, 53, 15, 0.32);
+        0 8px 22px -3px rgba(15, 23, 42, 0.35),
+        0 2px 6px -1px rgba(15, 23, 42, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .tl-btn-bullion:active,
 .tl-public :where(a, button):where(.bg-amber-500):active {
     transform: translateY(1px);
-    filter: brightness(0.97);
+    filter: brightness(0.95);
     box-shadow:
-        inset 0 2px 6px rgba(120, 53, 15, 0.45),
-        0 2px 6px -2px rgba(217, 119, 6, 0.3);
+        inset 0 2px 4px rgba(0, 0, 0, 0.35),
+        0 1px 2px rgba(15, 23, 42, 0.2);
+}
+
+.dark .tl-btn-bullion,
+.dark .tl-public :where(a, button):where(.bg-amber-500) {
+    background-image: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    color: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 4px 16px -2px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.dark .tl-btn-bullion:hover,
+.dark .tl-public :where(a, button):where(.bg-amber-500):hover {
+    filter: brightness(1.05);
+    box-shadow:
+        0 8px 24px -2px rgba(255, 255, 255, 0.25),
+        0 4px 12px -2px rgba(0, 0, 0, 0.6);
 }
 
 /* ==========================================================================
    ۴. سخت‌افزار استودیویی: شاسی تیتانیومی تلویزیون، نمایشگر OLED و نور مخفی طلایی
    ========================================================================== */
 .tl-ambient-gold {
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.1) 42%, transparent 72%);
-    filter: blur(36px);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.04) 45%, transparent 70%);
+    filter: blur(48px);
     pointer-events: none;
 }
 .dark .tl-ambient-gold {
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.28) 0%, rgba(180, 83, 9, 0.14) 45%, transparent 74%);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(180, 83, 9, 0.12) 45%, transparent 74%);
 }
 
 .tl-tv-titanium {

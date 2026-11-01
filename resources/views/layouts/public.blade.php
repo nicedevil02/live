@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" id="appThemeColorMeta" content="#f1eee7">
+    <meta name="theme-color" id="appThemeColorMeta" content="#ffffff">
     @stack('head')
 
     <!-- Favicons & App Icons (Cache-Busted v=2) -->
@@ -37,14 +37,14 @@
                 if (meta) meta.setAttribute('content', '#141312');
             } else {
                 document.documentElement.classList.remove('dark');
-                if (meta) meta.setAttribute('content', '#f1eee7');
+                if (meta) meta.setAttribute('content', '#ffffff');
             }
         })();
 
         function toggleAppTheme() {
             var isDark = document.documentElement.classList.toggle('dark');
             var meta = document.getElementById('appThemeColorMeta');
-            if (meta) meta.setAttribute('content', isDark ? '#141312' : '#f1eee7');
+            if (meta) meta.setAttribute('content', isDark ? '#141312' : '#ffffff');
             try { localStorage.setItem('talalive_theme', isDark ? 'dark' : 'light'); } catch (e) { /* استوریج مسدود است */ }
             window.dispatchEvent(new CustomEvent('talalive-theme-changed', { detail: { isDark: isDark } }));
         }
