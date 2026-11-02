@@ -297,27 +297,27 @@
         @endif
     @endif
 
-    {{-- لینک صفحه نمایش اختصاصی طلا --}}
-    <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+    {{-- لینک صفحه نمایش اختصاصی طلا با استایل لوکس طلایی --}}
+    <div class="rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-stone-900/80 dark:to-stone-900/80 shadow-lg shadow-amber-500/5">
+        <div class="flex items-center gap-3.5">
+            <div class="p-3.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-2xl border border-amber-500/30 shadow-sm shrink-0">
                 <i data-lucide="tv" class="w-6 h-6"></i>
             </div>
             <div>
-                <h3 class="text-base font-bold text-blue-900 dark:text-blue-200">لینک تابلوی نمایشی طلافروشی شما</h3>
-                <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما به نمایش درآید.</p>
+                <h3 class="text-base font-black text-slate-900 dark:text-amber-300">لینک تابلوی نمایشی اختصاصی شما</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-stone-300 mt-1">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما با نرخ‌های زنده پخش شود.</p>
             </div>
         </div>
         <div class="flex items-center gap-2 w-full md:w-auto" dir="ltr">
             <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
-                   class="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900 rounded-xl px-4 py-2 text-sm text-blue-900 dark:text-blue-300 w-full md:w-80 select-all font-mono">
-            <button onclick="navigator.clipboard.writeText(document.getElementById('displayUrlInput').value); alert('لینک کپی شد!');"
-                    class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors cursor-pointer">
+                   class="tl-neu-inset rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-amber-300 w-full md:w-80 select-all font-mono font-bold">
+            <button onclick="navigator.clipboard.writeText(document.getElementById('displayUrlInput').value); alert('لینک اختصاصی کپی شد!');"
+                    class="tl-neu-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer">
                 کپی لینک
             </button>
             <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-               class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer">
-                مشاهده تابلو <i data-lucide="external-link" class="w-4 h-4"></i>
+               class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-md shadow-amber-500/25 transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-4 h-4"></i>
             </a>
         </div>
     </div>
@@ -404,7 +404,7 @@
                     <h3 class="text-3xl font-black mt-1 text-slate-800 dark:text-slate-100 tabular-nums"
                         x-text="isLoading ? '...' : status.updatedAt"></h3>
                 </div>
-                <button @click="loadData()" class="p-3 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                <button @click="loadData()" class="p-3 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25 border border-amber-500/20 transition-all cursor-pointer">
                     <i data-lucide="refresh-cw" :class="isLoading ? 'animate-spin' : ''" class="w-6 h-6"></i>
                 </button>
             </div>
@@ -455,10 +455,10 @@
             <div class="flex items-start justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">قیمت محاسبه‌شده طلای ۱۸ عیار جهانی</p>
-                    <h3 class="text-3xl font-black mt-1 text-blue-600 dark:text-blue-400 tabular-nums"
+                    <h3 class="text-3xl font-black mt-1 text-amber-600 dark:text-amber-400 tabular-nums"
                         x-text="isLoading ? '...' : status.formula18Price"></h3>
                 </div>
-                <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                <div class="p-3 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25">
                     <i data-lucide="calculator" class="w-6 h-6"></i>
                 </div>
             </div>
@@ -471,27 +471,27 @@
     {{-- Quick Actions --}}
     <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 pt-4">دسترسی سریع</h3>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="{{ route('admin.formulas') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all">
-            <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+        <a href="{{ route('admin.formulas') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all">
+            <div class="w-12 h-12 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i data-lucide="variable" class="w-6 h-6"></i>
             </div>
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">مدیریت فرمول‌ها</span>
         </a>
-        <a href="{{ route('admin.products.index') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md transition-all">
-            <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+        <a href="{{ route('admin.products.index') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all">
+            <div class="w-12 h-12 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i data-lucide="gem" class="w-6 h-6"></i>
             </div>
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">تصاویر و اسلایدر</span>
         </a>
-        <a href="{{ route('admin.display-control') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-md transition-all">
-            <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+        <a href="{{ route('admin.display-control') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-emerald-400/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all">
+            <div class="w-12 h-12 bg-emerald-500/15 border border-emerald-500/25 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i data-lucide="monitor" class="w-6 h-6"></i>
             </div>
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">تنظیمات تابلو و پوسته</span>
         </a>
         @if(auth()->user()->is_super_admin)
-        <a href="{{ route('admin.sources') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-md transition-all">
-            <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+        <a href="{{ route('admin.sources') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all">
+            <div class="w-12 h-12 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i data-lucide="rss" class="w-6 h-6"></i>
             </div>
             <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">پیکربندی API</span>
@@ -657,22 +657,24 @@
 @push('styles')
 <style>
     .qr-scan-btn {
-        background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
-        color: #ffffff !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35) !important;
+        background: linear-gradient(135deg, #292524 0%, #1c1917 100%) !important;
+        color: #fbbf24 !important;
+        border: 1px solid rgba(251, 191, 36, 0.35) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
     }
     .qr-scan-btn:hover {
-        background: linear-gradient(135deg, #4338ca 0%, #312e81 100%) !important;
-        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.5) !important;
+        background: linear-gradient(135deg, #35302d 0%, #221f1d 100%) !important;
+        box-shadow: 0 6px 18px rgba(245, 158, 11, 0.25) !important;
+        border-color: rgba(251, 191, 36, 0.5) !important;
         transform: translateY(-1px);
     }
     .qr-scan-modal-btn {
-        background: #4f46e5 !important;
-        color: #ffffff !important;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: #1c1917 !important;
+        font-weight: 800 !important;
     }
     .qr-scan-modal-btn:hover {
-        background: #4338ca !important;
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
     }
     #qr-reader { border: none !important; }
     #qr-reader video { border-radius: 1rem; object-fit: cover; width: 100% !important; height: 100% !important; }

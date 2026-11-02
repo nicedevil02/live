@@ -20,27 +20,27 @@
         </div>
     @endif
 
-    {{-- ۱. نوار نمایش لینک تابلوی اختصاصی طلافروشی --}}
-    <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm">
+    {{-- ۱. نوار نمایش لینک تابلوی اختصاصی طلافروشی با استایل لوکس طلایی --}}
+    <div class="rounded-3xl p-4 sm:p-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-stone-900/80 dark:to-stone-900/80 shadow-lg shadow-amber-500/5">
         <div class="flex items-start sm:items-center gap-3">
-            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
+            <div class="p-3 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-2xl border border-amber-500/30 shadow-sm shrink-0">
                 <i data-lucide="tv" class="w-6 h-6"></i>
             </div>
             <div class="min-w-0">
-                <h3 class="text-sm sm:text-base font-bold text-blue-900 dark:text-blue-200">لینک تابلوی نمایشی طلافروشی شما</h3>
-                <p class="text-xs sm:text-sm text-blue-700 dark:text-blue-400 mt-1 leading-relaxed">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما به نمایش درآید.</p>
+                <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-amber-300">لینک تابلوی نمایشی اختصاصی شما</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما با نرخ‌های زنده پخش شود.</p>
             </div>
         </div>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto min-w-0" dir="ltr">
             <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
-                   class="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-blue-900 dark:text-blue-300 w-full md:w-80 min-w-0 select-all font-mono">
+                   class="tl-neu-inset rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-amber-300 w-full md:w-80 min-w-0 select-all font-mono font-bold">
             <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0" dir="rtl">
                 <button @click="copyDisplayUrl()"
-                        class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors cursor-pointer text-center">
+                        class="tl-neu-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer text-center">
                     <span x-text="copiedLink ? 'کپی شد! ✓' : 'کپی لینک'"></span>
                 </button>
                 <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                   class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-md shadow-amber-500/25 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                     <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-4 h-4"></i>
                 </a>
             </div>

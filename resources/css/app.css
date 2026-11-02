@@ -665,3 +665,163 @@ input:-webkit-autofill:active {
     direction: ltr;
     unicode-bidi: isolate;
 }
+
+/* ==========================================================================
+   ۴. سیستم طراحی پنل مدیریت و پنل کاربری (TalaLive Luxury Admin & User Panel)
+   Apple HIG Liquid Glass + Luxury Obsidian & Pure Pearl White
+   ========================================================================== */
+body.tl-admin {
+    font-family: var(--font-sans);
+    background-color: var(--tl-bg-subtle) !important;
+    color: var(--tl-text) !important;
+}
+
+html.dark body.tl-admin {
+    background-color: var(--tl-bg) !important;
+    color: var(--tl-text) !important;
+}
+
+/* سایدبار شیشه‌ای نئومورفیک */
+.tl-admin-sidebar {
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(24px) saturate(170%);
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    border-color: var(--tl-border) !important;
+}
+
+html.dark .tl-admin-sidebar {
+    background: rgba(20, 19, 18, 0.94) !important;
+    backdrop-filter: blur(24px) saturate(170%);
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    border-color: var(--tl-border) !important;
+}
+
+/* هدر شیشه‌ای اپل */
+.tl-admin-header {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-color: var(--tl-border) !important;
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+}
+
+html.dark .tl-admin-header {
+    background: rgba(20, 19, 18, 0.9) !important;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-color: var(--tl-border) !important;
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.6);
+}
+
+/* آیتم فعال ناوبری سایدبار */
+.tl-admin-nav-active {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    color: #78350f !important;
+    border: 1px solid rgba(217, 119, 6, 0.32) !important;
+    box-shadow: 0 4px 14px -2px rgba(217, 119, 6, 0.18) !important;
+}
+
+html.dark .tl-admin-nav-active {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.14) 100%) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.4) !important;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* آیتم‌های عادی ناوبری سایدبار */
+.tl-admin-nav-item {
+    color: var(--tl-text-secondary) !important;
+    transition: all 200ms var(--tl-spring);
+}
+
+.tl-admin-nav-item:hover {
+    color: #92400e !important;
+    background-color: rgba(245, 158, 11, 0.09) !important;
+}
+
+html.dark .tl-admin-nav-item {
+    color: var(--tl-text-muted) !important;
+}
+
+html.dark .tl-admin-nav-item:hover {
+    color: #fbbf24 !important;
+    background-color: rgba(251, 191, 36, 0.1) !important;
+}
+
+/* کارت‌ها و کانتینرهای پنل مدیریت */
+.tl-admin :where(.bg-white, .dark\:bg-slate-900):where(.rounded-2xl, .rounded-3xl):not(.tl-raw):not(input):not(select):not(textarea):not(.tl-glass-capsule):not(.tl-glass-sheet) {
+    background-color: var(--tl-surface) !important;
+    background-image: var(--tl-neu-grad) !important;
+    border-color: var(--tl-border-outline) !important;
+    box-shadow: var(--tl-neu-shadow) !important;
+}
+
+/* پنل‌های داخلی و سطوح لایه ۲ */
+.tl-admin :where(.bg-slate-50, .dark\:bg-slate-950, .dark\:bg-slate-800\/50, .dark\:bg-slate-800\/70, .dark\:bg-slate-800):where(.rounded-xl, .rounded-2xl):not(input):not(select):not(textarea):not(button) {
+    background-color: var(--tl-surface-2) !important;
+    border-color: var(--tl-border) !important;
+}
+
+/* بوردرهای خاکستری هماهنگ‌شده با توکن طلالایو */
+.tl-admin :where(.border-slate-100, .border-slate-200, .dark\:border-slate-800, .dark\:border-slate-700) {
+    border-color: var(--tl-border) !important;
+}
+
+/* متون عنوان و محتوا */
+.tl-admin :where(.text-slate-900, .dark\:text-white):not(.tl-admin-nav-active):not(button) {
+    color: var(--tl-text) !important;
+}
+
+.tl-admin :where(.text-slate-500, .text-slate-600, .dark\:text-slate-400, .dark\:text-slate-300):not(.tl-admin-nav-active) {
+    color: var(--tl-text-muted) !important;
+}
+
+/* جداول داده در پنل مدیریت */
+.tl-admin table thead tr {
+    background-color: var(--tl-surface-2) !important;
+    color: var(--tl-text-secondary) !important;
+    border-color: var(--tl-border) !important;
+}
+
+.tl-admin table tbody tr {
+    border-color: var(--tl-border) !important;
+    transition: background-color 150ms ease;
+}
+
+.tl-admin table tbody tr:hover {
+    background-color: rgba(245, 158, 11, 0.04) !important;
+}
+
+html.dark .tl-admin table tbody tr:hover {
+    background-color: rgba(251, 191, 36, 0.04) !important;
+}
+
+/* یکپارچه‌سازی هوشمند دکمه‌ها و عناصر آبی قالب با لهجه طلایی و لوکس طلالایو در پنل ادمین */
+.tl-admin :where(button, a):where(.bg-blue-600) {
+    background-color: #d97706 !important;
+    background-image: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: #1c1917 !important;
+    font-weight: 800 !important;
+    border: 1px solid rgba(217, 119, 6, 0.35) !important;
+    box-shadow: 0 4px 14px -2px rgba(217, 119, 6, 0.25) !important;
+}
+
+.tl-admin :where(button, a):where(.bg-blue-600):hover,
+.tl-admin :where(button, a):where(.hover\:bg-blue-700):hover {
+    background-image: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+    box-shadow: 0 6px 18px -2px rgba(217, 119, 6, 0.35) !important;
+    transform: translateY(-1px);
+}
+
+.tl-admin :where(.text-blue-600, .dark\:text-blue-400) {
+    color: var(--tl-accent-text) !important;
+}
+
+.tl-admin :where(.bg-blue-50, .dark\:bg-blue-900\/30, .dark\:bg-blue-950\/40, .bg-blue-500\/10, .bg-blue-500\/15) {
+    background-color: rgba(245, 158, 11, 0.12) !important;
+    border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+.tl-admin :where(.border-blue-200, .dark\:border-blue-800\/40, .dark\:border-blue-900\/60, .dark\:border-blue-800\/50) {
+    border-color: rgba(245, 158, 11, 0.3) !important;
+}

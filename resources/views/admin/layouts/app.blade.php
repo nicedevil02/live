@@ -28,7 +28,7 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}?v=2">
     <link rel="manifest" href="{{ asset('manifest.json') }}?v=2">
-    <meta name="theme-color" content="#020617">
+    <meta name="theme-color" content="#141312">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="طلالایو">
@@ -42,8 +42,6 @@
         body { font-family: 'Vazirmatn', sans-serif; }
         .sidebar-transition { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .admin-shell-height { height: 100vh; height: 100dvh; }
-        /* اطمینان از اینکه در حالت لایت، پس‌زمینه حتما سفید/روشن باشد */
-        html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
 
         html.dark { color-scheme: dark; }
         html:not(.dark) { color-scheme: light; }
@@ -65,22 +63,22 @@
         .dark input:-webkit-autofill:hover,
         .dark input:-webkit-autofill:focus,
         .dark input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 1000px #0f172a inset !important;
-            box-shadow: 0 0 0 1000px #0f172a inset !important;
+            -webkit-box-shadow: 0 0 0 1000px #0d0c0b inset !important;
+            box-shadow: 0 0 0 1000px #0d0c0b inset !important;
             -webkit-text-fill-color: #ffffff !important;
             color: #ffffff !important;
         }
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
+<body class="tl-admin font-sans antialiased transition-colors duration-300">
 
     <div class="flex admin-shell-height overflow-hidden">
         {{-- Mobile Overlay --}}
         <div x-show="mobileMenu"
              x-cloak
              @click="mobileMenu = false"
-             class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden"
+             class="fixed inset-0 z-40 bg-black/60 backdrop-blur-md lg:hidden"
              x-transition:enter="transition opacity-0 duration-300"
              x-transition:leave="transition opacity-0 duration-200">
         </div>
@@ -88,20 +86,25 @@
         {{-- Sidebar --}}
         <aside
             x-cloak
-            class="fixed inset-y-0 right-0 z-50 w-72 max-w-[86vw] flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sidebar-transition lg:static lg:translate-x-0"
+            class="tl-admin-sidebar fixed inset-y-0 right-0 z-50 w-72 max-w-[86vw] flex flex-col border-l sidebar-transition lg:static lg:translate-x-0"
             :class="mobileMenu ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
         >
-            <div class="flex h-16 items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}?v=2" class="h-9 w-9 object-contain rounded-xl bg-slate-100 dark:bg-slate-800 p-0.5" alt="Logo">
-                    <h2 class="text-lg font-black">پنل مدیریت</h2>
+            <div class="flex h-16 items-center justify-between px-6 border-b border-slate-200/80 dark:border-white/10">
+                <div class="flex items-center gap-2.5">
+                    <div class="relative p-1 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 shadow-md shadow-amber-500/20">
+                        <img src="{{ asset('images/logo.png') }}?v=2" class="h-8 w-8 object-contain rounded-xl bg-white dark:bg-stone-900 p-0.5" alt="Logo">
+                    </div>
+                    <div>
+                        <h2 class="text-base font-black text-slate-900 dark:text-white leading-tight">طلالایو</h2>
+                        <p class="text-[10px] font-bold text-amber-600 dark:text-amber-400">سامانه تابلوی زنده طلا</p>
+                    </div>
                 </div>
-                <button @click="mobileMenu = false" class="lg:hidden text-slate-500 p-2 hover:text-rose-500 transition-colors">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+                <button @click="mobileMenu = false" class="lg:hidden text-slate-400 hover:text-rose-500 p-1.5 rounded-xl transition-colors cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+            <nav class="flex-1 overflow-y-auto p-4 space-y-1.5">
                 @php
                     $links = [
                         ['r' => 'admin.dashboard', 'l' => 'داشبورد مدیریت', 'i' => 'layout-dashboard', 'tour' => 'dashboard'],
@@ -122,27 +125,29 @@
                     @if(!isset($link['super_only']) || auth()->user()->is_super_admin)
                         <a href="{{ route($link['r']) }}"
                            @if(!empty($link['tour'])) data-tour-id="{{ $link['tour'] }}" @endif
-                           class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all
-                                  {{ request()->routeIs($link['r'] . '*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                            <i data-lucide="{{ $link['i'] }}" class="w-5 h-5"></i>
+                           class="flex items-center gap-3 px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all
+                                  {{ request()->routeIs($link['r'] . '*') ? 'tl-admin-nav-active' : 'tl-admin-nav-item' }}">
+                            <i data-lucide="{{ $link['i'] }}" class="w-5 h-5 shrink-0"></i>
                             <span>{{ $link['l'] }}</span>
                         </a>
                     @endif
                 @endforeach
             </nav>
 
-            <div class="p-4 border-t border-slate-200 dark:border-slate-800">
-                <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/50">
+            <div class="p-4 border-t border-slate-200/80 dark:border-white/10">
+                <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-100/80 dark:bg-stone-900/70 border border-slate-200/60 dark:border-white/5">
                     <div class="flex items-center gap-3 min-w-0">
-                        <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                        <div class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-black text-sm shadow-md shadow-amber-500/25 shrink-0">
                             {{ mb_substr(auth()->user()->name, 0, 1, 'UTF-8') }}
                         </div>
                         <div class="min-w-0">
-                            <p class="text-sm font-bold truncate">{{ auth()->user()->name }}</p>
-                            <p class="text-[10px] opacity-60 uppercase font-black tracking-wider text-slate-500 dark:text-slate-400">Administrator</p>
+                            <p class="text-xs sm:text-sm font-bold truncate text-slate-900 dark:text-white">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                                {{ auth()->user()->is_super_admin ? 'مدیر ارشد سامانه' : 'گالری طلا' }}
+                            </p>
                         </div>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 self-end select-none">v2.1.4</span>
+                    <span class="text-[10px] font-mono font-bold text-slate-400 dark:text-stone-500 self-end select-none">v2.1.4</span>
                 </div>
             </div>
         </aside>
@@ -165,19 +170,19 @@
                 </div>
             @endif
 
-            <header class="h-16 shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 lg:px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm z-30">
+            <header class="tl-admin-header h-16 shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 lg:px-8 border-b z-30">
                 <div class="flex items-center gap-2 sm:gap-4 min-w-0">
-                    <button @click="mobileMenu = true" class="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shrink-0">
+                    <button @click="mobileMenu = true" class="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-stone-800 text-slate-600 dark:text-stone-300 shrink-0 cursor-pointer">
                         <i data-lucide="menu" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </button>
-                    <h1 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white truncate min-w-0">@yield('title', 'داشبورد')</h1>
+                    <h1 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate min-w-0">@yield('title', 'داشبورد')</h1>
                 </div>
 
                 <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     {{-- دکمه راهنما و آموزش پنل و اتصال تلویزیون --}}
                     <button onclick="window.openTalaliveGuide && window.openTalaliveGuide('panel')"
                             type="button"
-                            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-indigo-500/35 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[11px] sm:text-xs font-black transition-all cursor-pointer shadow-sm whitespace-nowrap"
+                            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-500/35 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] sm:text-xs font-black transition-all cursor-pointer shadow-xs whitespace-nowrap"
                             title="آموزش بخش‌های پنل و راهنمای اتصال تلویزیون">
                         <span>🎓</span>
                         <span class="hidden md:inline">راهنما و آموزش</span>
@@ -188,23 +193,24 @@
                     <button onclick="triggerPwaInstall()"
                             type="button"
                             id="header-pwa-btn"
-                            class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-black transition-all cursor-pointer shadow-sm"
+                            class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs font-black transition-all cursor-pointer shadow-xs"
                             title="نصب وب‌اپلیکیشن طلالایو روی دستگاه">
                         <span>📱</span>
                         <span class="hidden sm:inline">نصب اپلیکیشن</span>
                     </button>
 
                     <button @click="toggleTheme()"
-                            class="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm flex items-center justify-center">
+                            class="tl-neu-btn p-2 sm:p-2.5 rounded-xl transition-all shadow-xs flex items-center justify-center cursor-pointer"
+                            title="تغییر تم تاریک / روشن">
                         <i x-show="!darkMode" data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-600"></i>
                         <i x-show="darkMode" data-lucide="sun" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400"></i>
                     </button>
 
-                    <div class="hidden sm:block h-8 w-px bg-slate-200 dark:bg-slate-800 mx-0.5"></div>
+                    <div class="hidden sm:block h-8 w-px bg-slate-200 dark:bg-stone-800 mx-0.5"></div>
 
                     <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
                         @csrf
-                        <button class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black text-rose-600 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 transition-colors border border-rose-100 dark:border-rose-900/30 whitespace-nowrap">
+                        <button class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors border border-rose-200 dark:border-rose-900/30 whitespace-nowrap cursor-pointer">
                             خروج
                         </button>
                     </form>

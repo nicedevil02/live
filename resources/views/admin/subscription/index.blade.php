@@ -65,7 +65,7 @@
                             : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
                     
                     @if($plan->badge_text)
-                        <span class="absolute -top-2.5 right-2 px-1.5 py-0.2 rounded-full text-[9px] font-black {{ $plan->is_popular ? 'bg-rose-500 text-white' : 'bg-blue-600 text-white' }}">
+                        <span class="absolute -top-2.5 right-2 px-1.5 py-0.2 rounded-full text-[9px] font-black {{ $plan->is_popular ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950 font-black shadow-xs' }}">
                             {{ $plan->badge_text }}
                         </span>
                     @endif
