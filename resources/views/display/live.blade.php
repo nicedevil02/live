@@ -1916,10 +1916,10 @@
                     @for($i = 0; $i < 32; $i++)
                         @php
                             $left = ($i * 3.125) . '%';
-                            $delay = (($i * 0.17) % 2.5) . 's';
-                            $dur = (0.7 + (($i * 0.08) % 0.6)) . 's';
+                            $delay = (round((($i * 17) % 250) / 100, 2)) . 's';
+                            $dur = (round(0.7 + ((($i * 8) % 60) / 100), 2)) . 's';
                             $h = (30 + (($i * 7) % 35)) . 'px';
-                            $op = 0.25 + (($i % 5) * 0.1);
+                            $op = round(0.25 + (($i % 5) * 0.1), 2);
                         @endphp
                         <span class="weather-raindrop" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; height: {{ $h }}; opacity: {{ $op }};"></span>
                     @endfor
@@ -1929,9 +1929,9 @@
                 <div x-show="weather.icon === 'snow'" class="absolute inset-0 overflow-hidden">
                     @for($i = 0; $i < 28; $i++)
                         @php
-                            $left = ($i * 3.57) . '%';
-                            $delay = (($i * 0.35) % 6) . 's';
-                            $dur = (4 + (($i * 0.4) % 4)) . 's';
+                            $left = (round($i * 3.57, 2)) . '%';
+                            $delay = (round((($i * 35) % 600) / 100, 2)) . 's';
+                            $dur = (round(4 + ((($i * 4) % 40) / 10), 1)) . 's';
                             $size = (4 + (($i * 3) % 9)) . 'px';
                             $sway = (($i % 2 === 0 ? 1 : -1) * (20 + (($i * 5) % 40))) . 'px';
                         @endphp
@@ -1946,9 +1946,9 @@
                     <div class="weather-sun-beam-secondary"></div>
                     @for($i = 0; $i < 12; $i++)
                         @php
-                            $left = (10 + ($i * 7.5)) . '%';
+                            $left = (round(10 + ($i * 7.5), 1)) . '%';
                             $top = (15 + (($i * 13) % 70)) . '%';
-                            $delay = ($i * 0.6) . 's';
+                            $delay = (round($i * 0.6, 2)) . 's';
                             $dur = (4 + ($i % 4)) . 's';
                         @endphp
                         <span class="weather-sun-mote" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }};"></span>
@@ -1962,7 +1962,7 @@
                         @php
                             $left = (5 + ($i * 4)) . '%';
                             $top = (5 + (($i * 17) % 80)) . '%';
-                            $delay = (($i * 0.4) % 3) . 's';
+                            $delay = (round((($i * 4) % 30) / 10, 1)) . 's';
                             $dur = (2 + ($i % 3)) . 's';
                             $size = (2 + ($i % 3)) . 'px';
                         @endphp
