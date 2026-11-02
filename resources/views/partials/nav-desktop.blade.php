@@ -39,11 +39,12 @@
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
          x-transition:leave-end="opacity-0 translate-y-1 scale-[0.98]"
-         class="absolute right-0 mt-2.5 w-[42rem] rounded-2xl tl-glass-sheet p-4 z-50 before:content-[''] before:absolute before:-top-3 before:inset-x-0 before:h-3">
+         style="width: 44rem; max-width: calc(100vw - 2rem); min-width: 36rem;"
+         class="absolute right-0 mt-2.5 w-[44rem] rounded-2xl tl-glass-sheet p-4 z-50 before:content-[''] before:absolute before:-top-3 before:inset-x-0 before:h-3">
         
         <div class="grid grid-cols-2 gap-4">
             {{-- ستون راست: تابلوها و نمایشگرهای زنده نرخ --}}
-            <div class="space-y-1">
+            <div class="space-y-1 min-w-0">
                 <div class="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-2 px-2 flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                     <span>{{ $productsGroup['displays_heading'] ?? 'نمایشگرها و تابلوهای نرخ' }}</span>
@@ -55,7 +56,7 @@
                         </span>
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center justify-between gap-1.5">
-                                <span class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 transition-colors">{{ $item['title'] }}</span>
+                                <span class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 transition-colors whitespace-nowrap">{{ $item['title'] }}</span>
                                 @if(!empty($item['badge']))
                                     <span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 whitespace-nowrap">{{ $item['badge'] }}</span>
                                 @endif
@@ -69,7 +70,7 @@
             </div>
 
             {{-- ستون چپ: وب‌سرویس، ابزارها و مقایسه با LED --}}
-            <div class="space-y-1 border-r border-stone-300/60 dark:border-white/10 pr-4">
+            <div class="space-y-1 border-r border-stone-300/60 dark:border-white/10 pr-4 min-w-0">
                 <div class="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-2 px-2 flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     <span>{{ $productsGroup['tools_heading'] ?? 'وب‌سرویس، ابزارها و مقایسه' }}</span>
@@ -81,7 +82,7 @@
                         </span>
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center justify-between gap-1.5">
-                                <span class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 transition-colors">{{ $item['title'] }}</span>
+                                <span class="text-xs font-semibold text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-300 transition-colors whitespace-nowrap">{{ $item['title'] }}</span>
                                 @if(!empty($item['badge']))
                                     <span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 whitespace-nowrap">{{ $item['badge'] }}</span>
                                 @endif
@@ -96,10 +97,10 @@
         </div>
 
         @if(!empty($productsGroup['footer_items']))
-            <div class="mt-3 pt-3 border-t border-stone-300/60 dark:border-white/10 flex items-center justify-between px-2">
+            <div class="mt-3 pt-3 border-t border-stone-300/60 dark:border-white/10 flex items-center justify-between px-2 gap-3">
                 @foreach($productsGroup['footer_items'] as $fItem)
-                    <a href="{{ route($fItem['route']) }}" class="flex items-center gap-1.5 text-xs font-semibold {{ $fItem['class'] ?? 'text-stone-800 dark:text-stone-200' }} hover:underline">
-                        @include('partials.ui-icon', ['name' => $fItem['icon'], 'class' => 'w-3.5 h-3.5'])
+                    <a href="{{ route($fItem['route']) }}" class="flex items-center gap-1.5 text-xs font-semibold {{ $fItem['class'] ?? 'text-stone-800 dark:text-stone-200' }} hover:underline whitespace-nowrap">
+                        @include('partials.ui-icon', ['name' => $fItem['icon'], 'class' => 'w-3.5 h-3.5 shrink-0'])
                         <span>{{ $fItem['title'] }}</span>
                     </a>
                 @endforeach
