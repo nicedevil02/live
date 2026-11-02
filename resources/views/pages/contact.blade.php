@@ -22,11 +22,11 @@
             <div class="w-12 h-12 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
                 <x-ui-icon name="phone" class="w-6 h-6" />
             </div>
-            <h2 class="font-black text-stone-900 dark:text-white text-lg">پشتیبانی و امور مشترکین</h2>
+            <h2 class="font-black text-stone-900 dark:text-white text-lg">پشتیبانی تلگرام و امور مشترکین</h2>
             <p class="text-xs text-stone-500">پاسخگویی روزهای کاری از ساعت ۹ الی ۲۱</p>
             <div class="space-y-2 pt-2 text-sm font-bold">
-                <div>موبایل: <a href="tel:09187009064" class="text-amber-600 dark:text-amber-400 dir-ltr inline-block hover:underline min-h-11 inline-flex items-center">۰۹۱۸ ۷۰۰ ۹۰۶۴</a></div>
-                <div>تلفن ثابت: <a href="tel:08135229063" class="text-amber-600 dark:text-amber-400 dir-ltr inline-block hover:underline min-h-11 inline-flex items-center">۰۸۱-۳۵۲۲۹۰۶۳</a></div>
+                <div>موبایل: <a href="tel:09187009064" dir="ltr" class="text-amber-600 dark:text-amber-400 inline-flex items-center min-h-11 hover:underline tabular-nums" style="unicode-bidi:isolate">۰۹۱۸ ۷۰۰ ۹۰۶۴</a></div>
+                <div>تلفن ثابت: <a href="tel:08135229063" dir="ltr" class="text-amber-600 dark:text-amber-400 inline-flex items-center min-h-11 hover:underline tabular-nums" style="unicode-bidi:isolate">۰۸۱-۳۵۲۲۹۰۶۳</a></div>
             </div>
         </div>
 
@@ -37,8 +37,11 @@
             <h2 class="font-black text-stone-900 dark:text-white text-lg">ارتباط مستقیم در پیام‌رسان‌ها</h2>
             <p class="text-xs text-stone-500">مشاوره آنلاین و ارسال راهنماها</p>
             <div class="space-y-2 pt-2 text-sm font-bold">
-                <div>ایتا و پیام‌رسان‌ها: <span class="text-amber-600 dark:text-amber-400 dir-ltr inline-block min-h-11 inline-flex items-center">۰۹۱۸ ۷۰۰ ۹۰۶۴</span></div>
-                <div>وبسایت: <span class="text-stone-700 dark:text-stone-300">talalive.ir</span></div>
+                <div>تلگرام، روبیکا، بله و ایتا: <span dir="ltr" class="text-amber-600 dark:text-amber-400 inline-flex items-center min-h-11 tabular-nums" style="unicode-bidi:isolate">۰۹۱۸ ۷۰۰ ۹۰۶۴</span></div>
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                    @include('partials.messenger-links')
+                </div>
+                <div>وبسایت: <span dir="ltr" class="text-stone-700 dark:text-stone-300 inline-block" style="unicode-bidi:isolate">talalive.ir</span></div>
             </div>
         </div>
 

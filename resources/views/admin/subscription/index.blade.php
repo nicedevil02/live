@@ -298,7 +298,7 @@
         </div>
     </form>
 
-    {{-- پشتیبانی سریع تلفنی و روبیکا (فشرده) --}}
+    {{-- پشتیبانی سریع تلفنی و تلگرام (فشرده) --}}
     <div class="flex items-center justify-between p-3 rounded-xl bg-slate-100/80 dark:bg-slate-800/40 text-xs">
         <span class="text-slate-500 dark:text-slate-400 text-[11px]">پشتیبانی و هماهنگی واریز:</span>
         <div class="flex items-center gap-2">
@@ -306,8 +306,8 @@
                 <i data-lucide="phone" class="w-3 h-3 text-amber-500"></i>
                 <span>۰۹۱۸۷۰۰۹۰۶۴</span>
             </a>
-            <a href="https://rubika.ir/talalive" target="_blank" class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-[11px] flex items-center gap-1">
-                <span>پشتیبانی روبیکا</span>
+            <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank" class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-[11px] flex items-center gap-1">
+                <span>پشتیبانی تلگرام</span>
             </a>
         </div>
     </div>

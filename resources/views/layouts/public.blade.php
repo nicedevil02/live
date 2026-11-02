@@ -388,10 +388,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="pt-1">
-                    <a href="https://rubika.ir/talalive" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 min-h-11 px-4 py-2.5 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-semibold">
-                        <span>ارتباط در روبیکا: talalive@</span>
-                    </a>
+                <div class="pt-1 space-y-2">
+                    <div class="text-xs font-semibold text-stone-700 dark:text-stone-300">ارتباط در تلگرام یا روبیکا یا بله:</div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        @include('partials.messenger-links')
+                    </div>
                 </div>
             </div>
 

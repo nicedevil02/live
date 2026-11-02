@@ -686,9 +686,9 @@
                 <span dir="ltr" class="font-mono text-xs tabular-nums">0918 700 9064</span>
             </a>
             <span class="text-stone-400 dark:text-stone-700">&bull;</span>
-            <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 text-stone-700 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition-colors font-semibold">
-                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="14" height="14" class="w-3.5 h-3.5 object-contain rounded-xs" alt="روبیکا">
-                <span>پشتیبانی روبیکا</span>
+            <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank" class="inline-flex items-center gap-1.5 text-stone-700 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition-colors font-semibold">
+                <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                <span>پشتیبانی تلگرام</span>
             </a>
         </div>
 

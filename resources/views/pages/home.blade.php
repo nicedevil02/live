@@ -587,11 +587,8 @@
                             <a href="tel:08135229063" class="hover:underline">081 3522 9063</a>
                         </p>
                         <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
-                            <span class="text-stone-700 dark:text-stone-300 font-semibold text-[11px]">پشتیبانی در پیام‌رسان:</span>
-                            <a href="https://rubika.ir/talalive" target="_blank" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 text-xs font-semibold">
-                                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="14" height="14" loading="lazy" decoding="async" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
-                                <span>پشتیبانی روبیکا</span>
-                            </a>
+                            <span class="text-stone-700 dark:text-stone-300 font-semibold text-[11px]">پشتیبانی در تلگرام، روبیکا و بله:</span>
+                            @include('partials.messenger-links')
                         </div>
                     </div>
                 </div>
@@ -726,9 +723,9 @@
                         <span>تماس مستقیم با پشتیبانی:</span>
                         <span class="font-mono text-sm tabular-nums" dir="ltr">0918 700 9064</span>
                     </a>
-                    <a href="https://rubika.ir/talalive" target="_blank" class="min-h-11 px-4 py-2.5 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold text-xs flex items-center gap-2 cursor-pointer">
-                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="16" height="16" loading="lazy" decoding="async" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                        <span>پشتیبانی در روبیکا</span>
+                    <a href="https://t.me/talalive" target="_blank" rel="noopener noreferrer" class="min-h-11 px-4 py-2.5 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold text-xs flex items-center gap-2 cursor-pointer">
+                        @include('partials.ui-icon', ['name' => 'send', 'class' => 'w-4 h-4 shrink-0'])
+                        <span>پشتیبانی در تلگرام</span>
                     </a>
                 </div>
             </div>
@@ -952,7 +949,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                                <span>پشتیبانی فنی در روبیکا و تلفنی</span>
+                                <span>پشتیبانی فنی در تلگرام و تلفنی</span>
                             </li>
                         </ul>
                         @auth
@@ -1154,7 +1151,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                                <span>پشتیبانی روبیکا و تلفنی</span>
+                                <span>پشتیبانی تلگرام و تلفنی</span>
                             </li>
                         </ul>
                     </div>
@@ -1205,7 +1202,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                                <span>پشتیبانی روبیکا و تلفنی</span>
+                                <span>پشتیبانی تلگرام و تلفنی</span>
                             </li>
                         </ul>
                     </div>
@@ -1256,7 +1253,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                                <span>پشتیبانی روبیکا و تلفنی</span>
+                                <span>پشتیبانی تلگرام و تلفنی</span>
                             </li>
                         </ul>
                     </div>

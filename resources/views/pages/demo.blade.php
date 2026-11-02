@@ -16,7 +16,7 @@
     {{-- اسکیما ساختاریافته نرم‌افزار ابری --}}
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "پیش‌نمایش زنده تابلوی طلالایو",
         "applicationCategory": "BusinessApplication",

@@ -573,9 +573,9 @@
                     </p>
                     <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
                         <span class="text-slate-700 dark:text-slate-300 font-bold text-[11px]">پشتیبانی فنی طلالایو</span>
-                        <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="14" height="14" loading="lazy" decoding="async" class="w-3.5 h-3.5 object-contain rounded-sm" alt="روبیکا">
-                            <span>پشتیبانی روبیکا</span>
+                        <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-[10px] font-bold shadow-sm transition-all">
+                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                            <span>پشتیبانی تلگرام</span>
                         </a>
                     </div>
                 </div>
@@ -690,9 +690,9 @@
                         <span>📞 تماس مستقیم با پشتیبانی فنی:</span>
                         <span class="font-mono text-sm" dir="ltr">0918 700 9064</span>
                     </a>
-                    <a href="https://rubika.ir/talalive" target="_blank" class="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20 cursor-pointer">
-                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                        <span>پشتیبانی در روبیکا</span>
+                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank" class="px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20 cursor-pointer">
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                        <span>پشتیبانی در تلگرام</span>
                     </a>
                 </div>
             </div>
@@ -1043,7 +1043,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span>پشتیبانی اختصاصی روبیکا و تماس</span>
+                                <span>پشتیبانی اختصاصی تلگرام و تماس</span>
                             </li>
                         </ul>
                         @auth
@@ -1201,7 +1201,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span class="font-bold text-amber-500">پشتیبانی ویژه روبیکا و تماس مستقیم VIP</span>
+                                <span class="font-bold text-amber-500">پشتیبانی ویژه تلگرام و تماس مستقیم VIP</span>
                             </li>
                         </ul>
                         @auth
@@ -1254,7 +1254,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span>پشتیبانی روبیکا و تلفنی</span>
+                                <span>پشتیبانی تلگرام و تلفنی</span>
                             </li>
                         </ul>
                     </div>
@@ -1305,7 +1305,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span>پشتیبانی روبیکا و تلفنی</span>
+                                <span>پشتیبانی تلگرام و تلفنی</span>
                             </li>
                         </ul>
                     </div>
@@ -1356,7 +1356,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span>پشتیبانی روبیکا و تلفنی</span>
+                                <span>پشتیبانی تلگرام و تلفنی</span>
                             </li>
                         </ul>
                     </div>
@@ -1415,7 +1415,7 @@
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                <span class="font-bold text-amber-500">پشتیبانی VIP روبیکا و تلفنی مستقیم</span>
+                                <span class="font-bold text-amber-500">پشتیبانی VIP تلگرام و تلفنی مستقیم</span>
                             </li>
                         </ul>
                     </div>
@@ -1764,7 +1764,7 @@
                         <span class="font-bold text-amber-400">پشتیبانی فنی طلالایو</span>
                     </p>
                     <p class="text-slate-300">
-                        <span class="text-slate-400">تلفن همراه و روبیکا:</span>
+                        <span class="text-slate-400">تلفن همراه، تلگرام، روبیکا و بله:</span>
                         <a href="tel:09187009064" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">0918 700 9064</a>
                     </p>
                     <p class="text-slate-300">
@@ -1772,9 +1772,9 @@
                         <a href="tel:08135229063" class="font-mono font-bold text-slate-200 hover:text-amber-400" dir="ltr">081 3522 9063</a>
                     </p>
                     <div class="pt-1">
-                        <a href="https://rubika.ir/talalive" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
-                            <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" width="16" height="16" loading="lazy" decoding="async" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                            <span>ارتباط در پیام‌رسان روبیکا</span>
+                        <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-bold shadow-sm transition-all">
+                            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                            <span>ارتباط در تلگرام یا روبیکا یا بله</span>
                         </a>
                     </div>
                     <p class="text-slate-400 text-[11px] leading-relaxed pt-1">

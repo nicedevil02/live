@@ -220,10 +220,10 @@
                     <a href="tel:09187009064" class="flex-1 md:flex-none px-3.5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
                         <span>📞 تماس: ۰۹۱۸۷۰۰۹۰۶۴</span>
                     </a>
-                    <a href="https://rubika.ir/talalive" target="_blank"
+                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
                        class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
-                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                        <span>پشتیبانی روبیکا</span>
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                        <span>پشتیبانی تلگرام</span>
                     </a>
                 </div>
             </div>
@@ -255,10 +255,10 @@
                     <a href="tel:09187009064" class="flex-1 md:flex-none px-3.5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
                         <span>📞 تماس: ۰۹۱۸۷۰۰۹۰۶۴</span>
                     </a>
-                    <a href="https://rubika.ir/talalive" target="_blank"
+                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
                        class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
-                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                        <span>پشتیبانی روبیکا</span>
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                        <span>پشتیبانی تلگرام</span>
                     </a>
                 </div>
             </div>
@@ -287,10 +287,10 @@
                         <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i>
                         <span>ارتقا / تمدید بسته</span>
                     </a>
-                    <a href="https://rubika.ir/talalive" target="_blank"
+                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
                        class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
-                        <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-md" alt="روبیکا">
-                        <span>پشتیبانی روبیکا</span>
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                        <span>پشتیبانی تلگرام</span>
                     </a>
                 </div>
             </div>

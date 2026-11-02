@@ -59,7 +59,7 @@
                 </div>
                 <div><span class="text-slate-500">نام تجاری:</span> <strong class="text-slate-900">سامانه هوشمند طلالایو (TalaLive.ir)</strong></div>
                 <div><span class="text-slate-500">تلفن پشتیبانی:</span> <strong class="text-slate-900" dir="ltr">۰۹۱۸۷۰۰۹۰۶۴</strong></div>
-                <div><span class="text-slate-500">پشتیبانی برخط:</span> <strong class="text-slate-900">روبیکا (@talalive)</strong></div>
+                <div><span class="text-slate-500">پشتیبانی برخط:</span> <strong class="text-slate-900">تلگرام (@talalive)</strong></div>
                 <div><span class="text-slate-500">آدرس وب‌سایت:</span> <strong class="text-slate-900" dir="ltr">https://talalive.ir</strong></div>
             </div>
 

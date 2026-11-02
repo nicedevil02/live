@@ -140,7 +140,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                        <span>پشتیبانی روبیکا و تلفنی</span>
+                        <span>پشتیبانی تلگرام و تلفنی</span>
                     </li>
                 </ul>
             </div>
@@ -184,7 +184,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                        <span>پشتیبانی روبیکا و تلفنی</span>
+                        <span>پشتیبانی تلگرام و تلفنی</span>
                     </li>
                 </ul>
             </div>
@@ -228,7 +228,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         @include('partials.ui-icon', ['name' => 'check', 'class' => 'w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0'])
-                        <span>پشتیبانی روبیکا و تلفنی</span>
+                        <span>پشتیبانی تلگرام و تلفنی</span>
                     </li>
                 </ul>
             </div>

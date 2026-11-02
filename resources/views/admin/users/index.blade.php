@@ -116,6 +116,19 @@
                                     <i data-lucide="at-sign" class="w-3 h-3 text-slate-400"></i>
                                     <span>{{ $user->username }}</span>
                                 </div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1.5 flex items-center gap-1 tabular-nums" title="تاریخ و ساعت ثبت‌نام">
+                                    <i data-lucide="calendar-plus" class="w-3 h-3 text-slate-400 shrink-0"></i>
+                                    <span>ثبت‌نام: {{ $user->created_at ? \App\Models\User::toJalali($user->created_at) : 'نامشخص' }}</span>
+                                </div>
+                                @if($user->username)
+                                <a href="{{ route('display.live', ['username' => $user->username]) }}" target="_blank" rel="noopener noreferrer"
+                                   class="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                                   title="باز کردن تابلوی زنده این کاربر در برگه جدید">
+                                    <i data-lucide="tv" class="w-3 h-3 shrink-0"></i>
+                                    <span>مشاهده تابلو</span>
+                                    <span class="font-mono font-normal text-slate-500 dark:text-slate-400" dir="ltr">/{{ $user->username }}</span>
+                                </a>
+                                @endif
                             </td>
 
                             {{-- ۲. اطلاعات تماس --}}

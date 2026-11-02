@@ -88,7 +88,7 @@
     {{-- مسیر راهنما Breadcrumb --}}
     @include('partials.breadcrumb', [
         'items' => [
-            ['title' => 'پایگاه دانش', 'url' => route('public.guides.index')],
+            ['title' => 'پایگاه دانش', 'url' => route('public.guides')],
             ['title' => 'تابلو طلا روی اندروید تی‌وی', 'url' => ''],
         ]
     ])

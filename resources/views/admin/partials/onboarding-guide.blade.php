@@ -560,10 +560,10 @@
                                 <span dir="ltr" class="font-mono">0918 700 9064</span>
                             </a>
 
-                            <a href="https://rubika.ir/talalive" target="_blank"
+                            <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
                                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white text-xs font-black flex items-center justify-center gap-2 shadow-sm transition-all">
-                                <img src="/images/logos/rubika.png" onerror="this.src='/icons/icon-72x72.png'" class="w-4 h-4 object-contain rounded-sm" alt="روبیکا">
-                                <span>گفتگو در پشتیبانی روبیکا</span>
+                                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                                <span>گفتگو در پشتیبانی تلگرام</span>
                             </a>
 
                             <a href="{{ route('public.tv-setup-guide') }}" target="_blank"
