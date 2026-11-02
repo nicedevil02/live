@@ -17,12 +17,21 @@ class MarketCache extends Model
         'change_value',
         'change_percent',
         'direction',
+        'yesterday_price',
+        'today_open_price',
+        'price_date',
         'is_stale',
         'fetched_at',
     ];
 
     protected $casts = [
-        'is_stale'   => 'boolean',
-        'fetched_at' => 'datetime',
+        'value'            => 'float',
+        'change_value'     => 'float',
+        'change_percent'   => 'float',
+        'yesterday_price'  => 'float',
+        'today_open_price' => 'float',
+        'is_stale'         => 'boolean',
+        'fetched_at'       => 'datetime',
+        'price_date'       => 'date',
     ];
 }

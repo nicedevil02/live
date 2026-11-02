@@ -561,6 +561,34 @@ class MarketService
     }
 
     /**
+     * اطمینان از وجود ستون‌های نرخ‌های مبنا و تاریخ در دیتابیس
+     */
+    public static function ensureColumnsExist(): void
+    {
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('market_cache')) {
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('market_cache', 'yesterday_price')) {
+                    \Illuminate\Support\Facades\Schema::table('market_cache', function ($table) {
+                        $table->decimal('yesterday_price', 20, 2)->nullable();
+                    });
+                }
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('market_cache', 'today_open_price')) {
+                    \Illuminate\Support\Facades\Schema::table('market_cache', function ($table) {
+                        $table->decimal('today_open_price', 20, 2)->nullable();
+                    });
+                }
+                if (!\Illuminate\Support\Facades\Schema::hasColumn('market_cache', 'price_date')) {
+                    \Illuminate\Support\Facades\Schema::table('market_cache', function ($table) {
+                        $table->date('price_date')->nullable();
+                    });
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('MarketService ensureColumnsExist error: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * متد ذخیره و بروزرسانی قیمت و محاسبه درصد و جهت نوسان
      */
     public function savePriceItem(string $symbol, float $val, string $unit, string $apiDate = ''): void
@@ -574,25 +602,48 @@ class MarketService
             }
         }
 
-        if (!empty($apiDate)) {
-            $lastApiDate = Cache::get('last_api_date_' . $symbol);
-            if ($lastApiDate && $lastApiDate !== $apiDate) {
-                $currentRecord = MarketCache::where('symbol', $symbol)->first();
-                if ($currentRecord && $currentRecord->value > 0) {
-                    Cache::forever('yesterday_price_' . $symbol, (float)$currentRecord->value);
-                }
+        self::ensureColumnsExist();
+
+        $today = now('Asia/Tehran')->format('Y-m-d');
+        $record = MarketCache::where('symbol', $symbol)->first();
+
+        $yesterdayPrice = null;
+        $todayOpenPrice = null;
+
+        if ($record) {
+            $recordDate = $record->price_date ? Carbon::parse($record->price_date)->format('Y-m-d') : null;
+            
+            if ($recordDate && $recordDate !== $today) {
+                // با ورود به روز جدید تقویمی، آخرین قیمت روز گذشته به عنوان نرخ پایانی دیروز در دیتابیس قفل می‌شود
+                $yesterdayPrice = (float)($record->value > 0 ? $record->value : ($record->yesterday_price ?? $val));
+                $todayOpenPrice = $val;
+            } else {
+                // در طول همان روز کاری: نرخ پایانی دیروز و نرخ بازگشایی صبح از دیتابیس خوانده و حفظ می‌شوند
+                $yesterdayPrice = ($record->yesterday_price && $record->yesterday_price > 0) ? (float)$record->yesterday_price : null;
+                $todayOpenPrice = ($record->today_open_price && $record->today_open_price > 0) ? (float)$record->today_open_price : $val;
             }
-            Cache::put('last_api_date_' . $symbol, $apiDate, now()->addDays(2));
         }
 
-        $yesterdayPrice = Cache::get('yesterday_price_' . $symbol);
-        if ($yesterdayPrice === null || $yesterdayPrice <= 0) {
-            Cache::forever('yesterday_price_' . $symbol, $val);
-            $yesterdayPrice = $val;
+        // در صورتی که نرخ دیروز هنوز در دیتابیس خالی باشد (مثلاً روز اول راه‌اندازی یا پس از تغییرات)
+        if (!$yesterdayPrice || $yesterdayPrice <= 0) {
+            $cachedYesterday = Cache::get('yesterday_price_' . $symbol);
+            if ($cachedYesterday && (float)$cachedYesterday > 0) {
+                $yesterdayPrice = (float)$cachedYesterday;
+            } elseif ($todayOpenPrice && $todayOpenPrice > 0 && abs($val - $todayOpenPrice) > 0.001) {
+                $yesterdayPrice = $todayOpenPrice;
+            } else {
+                $yesterdayPrice = $val;
+            }
         }
 
-        $changeValue = $val - $yesterdayPrice;
-        $changePercent = $yesterdayPrice > 0 ? ($changeValue / $yesterdayPrice * 100) : 0;
+        if (!$todayOpenPrice || $todayOpenPrice <= 0) {
+            $todayOpenPrice = $val;
+        }
+
+        // مبنای محاسبه نوسان روزانه: نرخ پایانی دیروز (و در صورت نبود، نرخ بازگشایی امروز)
+        $baseline = ($yesterdayPrice > 0) ? $yesterdayPrice : $todayOpenPrice;
+        $changeValue = $val - $baseline;
+        $changePercent = $baseline > 0 ? ($changeValue / $baseline * 100) : 0;
 
         $direction = 'flat';
         if ($changeValue > 0.01) {
@@ -601,7 +652,17 @@ class MarketService
             $direction = 'down';
         }
 
-        $this->setCache($symbol, $val, $unit, $changeValue, $changePercent, $direction);
+        $this->setCache(
+            $symbol,
+            $val,
+            $unit,
+            $changeValue,
+            $changePercent,
+            $direction,
+            $yesterdayPrice,
+            $todayOpenPrice,
+            $today
+        );
     }
 
     /**
@@ -629,8 +690,17 @@ class MarketService
         return str_replace($persian, $english, $string);
     }
 
-    public function setCache(string $symbol, float $value, string $unit, ?float $changeValue = null, ?float $changePercent = null, ?string $direction = null): void
-    {
+    public function setCache(
+        string $symbol,
+        float $value,
+        string $unit,
+        ?float $changeValue = null,
+        ?float $changePercent = null,
+        ?string $direction = null,
+        ?float $yesterdayPrice = null,
+        ?float $todayOpenPrice = null,
+        ?string $priceDate = null
+    ): void {
         if ($symbol === 'ounce') {
             $integerPart = (int)$value;
             if ($integerPart >= 100000 && $integerPart <= 999999) {
@@ -641,17 +711,30 @@ class MarketService
             }
         }
 
+        $today = $priceDate ?: now('Asia/Tehran')->format('Y-m-d');
+
+        $payload = [
+            'value'          => $value,
+            'unit'           => $unit,
+            'change_value'   => $changeValue ?? 0,
+            'change_percent' => $changePercent ?? 0,
+            'direction'      => $direction ?? 'flat',
+            'is_stale'       => false,
+            'fetched_at'     => now(),
+            'price_date'     => $today,
+        ];
+
+        if ($yesterdayPrice !== null && $yesterdayPrice > 0) {
+            $payload['yesterday_price'] = $yesterdayPrice;
+            Cache::forever('yesterday_price_' . $symbol, $yesterdayPrice);
+        }
+        if ($todayOpenPrice !== null && $todayOpenPrice > 0) {
+            $payload['today_open_price'] = $todayOpenPrice;
+        }
+
         MarketCache::updateOrCreate(
             ['symbol' => $symbol],
-            [
-                'value'          => $value,
-                'unit'           => $unit,
-                'change_value'   => $changeValue ?? 0,
-                'change_percent' => $changePercent ?? 0,
-                'direction'      => $direction ?? 'flat',
-                'is_stale'       => false,
-                'fetched_at'     => now(),
-            ]
+            $payload
         );
     }
 
@@ -696,7 +779,7 @@ class MarketService
             if ($sym === 'buy_gold') {
                 $val = round(($gold18 * $formula->buy_multiplier_a) / $formula->buy_divisor_b);
                 $ref = $cache->get('gold18');
-                $changeVal = $ref?->change_value ?? 0;
+                $changeVal = $ref ? round(($ref->change_value * $formula->buy_multiplier_a) / $formula->buy_divisor_b) : 0;
                 $changePct = $ref?->change_percent ?? 0;
                 $dir = $ref?->direction ?? 'flat';
 
