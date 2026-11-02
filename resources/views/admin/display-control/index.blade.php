@@ -111,15 +111,15 @@
                     </div>
                 </label>
 
-                {{-- تاگل جلوه متحرک پس‌زمینه آب‌وهوا --}}
+                {{-- تاگل جلوه متحرک وضعیت آب‌وهوا در هدر --}}
                 <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40 cursor-pointer transition-colors">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
                             <i data-lucide="sparkles" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">جلوه متحرک وضعیت هوا در پس‌زمینه تابلو</span>
-                            <div class="text-[11px] text-slate-500 mt-0.5">بارش ملایم باران، برف، تابش پرتوهای آفتاب و آسمان شب در پس‌زمینه</div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">جلوه متحرک وضعیت هوا در هدر تابلو</span>
+                            <div class="text-[11px] text-slate-500 mt-0.5">بارش واضح باران، برف، حرکت ابرها و تابش آفتاب در نوار بالایی تابلو</div>
                         </div>
                     </div>
                     <div class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none"

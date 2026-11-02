@@ -1508,203 +1508,194 @@
         }
 
         /* =========================================================================
-           Weather Ambient Stage (جلوه زنده وضعیت جوی و آب‌وهوای شهر در پس‌زمینه)
-           کاملاً شتاب‌یافته با GPU و ترنزیشن‌های سخت‌افزاری بدون مصرف CPU
+           Weather Header Stage (جلوه زنده و واضح وضعیت جوی در نوار بالای تابلو)
+           طراحی اختصاصی با کنتراست بالا و کاملاً شتاب‌یافته با GPU در هدر تابلو
            ========================================================================= */
-        .weather-ambient-stage {
-            position: fixed;
+        .weather-header-stage {
+            position: absolute;
             inset: 0;
             pointer-events: none;
-            z-index: 2;
+            z-index: 0;
             overflow: hidden;
+            border-radius: 2rem;
             contain: strict;
             transform: translateZ(0);
         }
 
-        /* ۱. باران و رگبار (Rain streaks) */
-        .weather-raindrop {
+        /* ۱. باران و رعدوبرق در هدر (Header Rain Streaks) */
+        .hdr-raindrop {
             position: absolute;
-            top: -60px;
-            width: 1.5px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(186, 230, 253, 0.45) 60%, rgba(255, 255, 255, 0.75) 100%);
+            top: -30px;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(56, 189, 248, 0.8) 50%, rgba(255, 255, 255, 0.95) 100%);
             border-radius: 9999px;
+            filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.85));
             will-change: transform;
-            animation: weatherRainFall linear infinite;
+            animation: hdrRainFall linear infinite;
         }
-        @keyframes weatherRainFall {
+        @keyframes hdrRainFall {
             0% {
-                transform: translate3d(0, -60px, 0) rotate(12deg);
+                transform: translate3d(0, -30px, 0) rotate(16deg);
                 opacity: 0;
             }
             15% {
-                opacity: 0.7;
+                opacity: 0.95;
             }
             85% {
-                opacity: 0.7;
+                opacity: 0.95;
             }
             100% {
-                transform: translate3d(-120px, 115vh, 0) rotate(12deg);
+                transform: translate3d(-35px, 160px, 0) rotate(16deg);
                 opacity: 0;
             }
         }
-
-        /* رعد و برق ملو در پس‌زمینه */
-        .weather-thunder-active {
-            animation: weatherThunderPulse 12s ease-in-out infinite;
+        .hdr-thunder-active {
+            animation: hdrThunderPulse 9s ease-in-out infinite;
         }
-        @keyframes weatherThunderPulse {
-            0%, 92%, 100% { background: transparent; }
-            93% { background: rgba(234, 179, 8, 0.08); }
-            94% { background: transparent; }
-            95% { background: rgba(255, 255, 255, 0.12); }
-            96% { background: transparent; }
+        @keyframes hdrThunderPulse {
+            0%, 93%, 100% { background: transparent; }
+            94% { background: rgba(56, 189, 248, 0.18); }
+            95% { background: transparent; }
+            96% { background: rgba(255, 255, 255, 0.28); }
+            97% { background: transparent; }
         }
 
-        /* ۲. برف (Snowflakes) */
-        .weather-snowflake {
+        /* ۲. برف در هدر (Header Crisp Snowflakes) */
+        .hdr-snowflake {
             position: absolute;
-            top: -30px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.7) 60%, transparent 100%);
+            top: -15px;
+            background: radial-gradient(circle, #ffffff 30%, rgba(186, 230, 253, 0.9) 70%, transparent 100%);
             border-radius: 50%;
+            box-shadow: 0 0 6px rgba(224, 242, 254, 0.95);
             will-change: transform;
-            animation: weatherSnowFall linear infinite;
+            animation: hdrSnowFall linear infinite;
         }
-        @keyframes weatherSnowFall {
+        @keyframes hdrSnowFall {
             0% {
-                transform: translate3d(0, -30px, 0);
+                transform: translate3d(0, -15px, 0);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.85;
+            15% {
+                opacity: 0.95;
             }
-            90% {
-                opacity: 0.85;
+            85% {
+                opacity: 0.95;
             }
             100% {
-                transform: translate3d(var(--sway, 25px), 115vh, 0);
+                transform: translate3d(var(--sway, 15px), 150px, 0);
                 opacity: 0;
             }
         }
 
-        /* ۳. خورشید و پرتوهای طلایی روز آفتابی (Sunny Glow & God rays) */
-        .weather-sun-glow {
+        /* ۳. ابرها در هدر (Header Distinct Cloud Silhouettes) - کاملاً واضح و متحرک */
+        .hdr-cloud-wrapper {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .hdr-cloud {
+            position: absolute;
+            will-change: transform;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+        }
+        .hdr-cloud-1 {
+            top: 10px;
+            left: -220px;
+            width: 250px;
+            opacity: 0.42;
+            animation: hdrCloudDrift1 45s linear infinite;
+        }
+        .hdr-cloud-2 {
+            top: 35px;
+            left: -320px;
+            width: 320px;
+            opacity: 0.35;
+            animation: hdrCloudDrift2 65s linear infinite 12s;
+        }
+        .hdr-cloud-3 {
+            top: -5px;
+            left: -260px;
+            width: 280px;
+            opacity: 0.38;
+            animation: hdrCloudDrift3 55s linear infinite 24s;
+        }
+        @keyframes hdrCloudDrift1 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(2250px, 0, 0); }
+        }
+        @keyframes hdrCloudDrift2 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(2350px, 0, 0); }
+        }
+        @keyframes hdrCloudDrift3 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(2300px, 0, 0); }
+        }
+
+        /* ۴. خورشید و پرتوهای طلایی در هدر (Header Sun Beam & Rays) */
+        .hdr-sun-glow {
+            position: absolute;
+            top: -120px;
+            right: 15%;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(251, 191, 36, 0.38) 0%, rgba(245, 158, 11, 0.20) 45%, rgba(217, 119, 6, 0.05) 70%, transparent 85%);
+            animation: hdrSunPulse 6s ease-in-out infinite alternate;
+        }
+        .hdr-sun-beam {
             position: absolute;
             top: -200px;
-            left: 20%;
-            width: 700px;
-            height: 700px;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.12) 40%, rgba(217, 119, 6, 0.04) 65%, transparent 80%);
-            will-change: transform, opacity;
-            animation: weatherSunGlowPulse 8s ease-in-out infinite alternate;
-        }
-        .weather-sun-beam {
-            position: absolute;
-            top: -300px;
-            left: 10%;
-            width: 900px;
-            height: 900px;
-            background: conic-gradient(from 120deg at 50% 50%, transparent 0deg, rgba(251, 191, 36, 0.07) 25deg, transparent 50deg, rgba(251, 191, 36, 0.09) 80deg, transparent 110deg, rgba(251, 191, 36, 0.06) 160deg, transparent 190deg);
+            right: 10%;
+            width: 550px;
+            height: 550px;
+            background: conic-gradient(from 45deg at 50% 50%, transparent 0deg, rgba(251, 191, 36, 0.15) 25deg, transparent 55deg, rgba(251, 191, 36, 0.20) 85deg, transparent 115deg, rgba(251, 191, 36, 0.12) 165deg, transparent 195deg);
             will-change: transform;
-            animation: weatherSunbeamRotate 60s linear infinite;
+            animation: hdrSunRotate 50s linear infinite;
         }
-        .weather-sun-beam-secondary {
-            position: absolute;
-            top: -300px;
-            left: 10%;
-            width: 900px;
-            height: 900px;
-            background: conic-gradient(from 40deg at 50% 50%, transparent 0deg, rgba(251, 191, 36, 0.05) 30deg, transparent 65deg, rgba(245, 158, 11, 0.06) 120deg, transparent 150deg);
-            will-change: transform;
-            animation: weatherSunbeamRotateReverse 80s linear infinite;
+        @keyframes hdrSunPulse {
+            0% { transform: scale(0.92); opacity: 0.75; }
+            100% { transform: scale(1.08); opacity: 1; }
         }
-        @keyframes weatherSunGlowPulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
-            100% { transform: scale(1.1); opacity: 1; }
-        }
-        @keyframes weatherSunbeamRotate {
+        @keyframes hdrSunRotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        @keyframes weatherSunbeamRotateReverse {
-            from { transform: rotate(360deg); }
-            to { transform: rotate(0deg); }
-        }
-        .weather-sun-mote {
+        .hdr-sun-mote {
             position: absolute;
-            width: 3px;
-            height: 3px;
+            width: 3.5px;
+            height: 3.5px;
             border-radius: 50%;
-            background: rgba(251, 191, 36, 0.65);
-            box-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
+            background: #fde047;
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.95);
             will-change: transform, opacity;
-            animation: weatherMoteDrift ease-in-out infinite alternate;
+            animation: hdrMoteDrift ease-in-out infinite alternate;
         }
-        @keyframes weatherMoteDrift {
-            0% { transform: translate3d(0, 0, 0); opacity: 0.2; }
-            50% { opacity: 0.8; }
-            100% { transform: translate3d(-30px, -45px, 0); opacity: 0.2; }
+        @keyframes hdrMoteDrift {
+            0% { transform: translate3d(0, 0, 0); opacity: 0.25; }
+            50% { opacity: 0.9; }
+            100% { transform: translate3d(-25px, -20px, 0); opacity: 0.25; }
         }
 
-        /* ۴. آسمان شب و ستاره‌ها (Moon & Starry Night) */
-        .weather-moon-glow {
+        /* ۵. آسمان شب و ستاره‌های هدر (Header Starry Sky & Moon Glow) */
+        .hdr-night-glow {
             position: absolute;
-            top: 2%;
-            right: 15%;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, rgba(199, 210, 254, 0.16) 0%, rgba(129, 140, 248, 0.07) 45%, transparent 75%);
-            animation: weatherMoonGlow 7s ease-in-out infinite alternate;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(30, 27, 75, 0.35) 0%, rgba(49, 46, 129, 0.18) 50%, rgba(30, 27, 75, 0.35) 100%);
+            border-radius: 2rem;
         }
-        @keyframes weatherMoonGlow {
-            0% { transform: scale(0.96); opacity: 0.6; }
-            100% { transform: scale(1.06); opacity: 0.9; }
-        }
-        .weather-star {
+        .hdr-star {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.85);
+            background: #ffffff;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
             will-change: transform, opacity;
-            animation: weatherStarTwinkle ease-in-out infinite alternate;
+            animation: hdrStarTwinkle ease-in-out infinite alternate;
         }
-        @keyframes weatherStarTwinkle {
-            0% { opacity: 0.15; transform: scale(0.7); }
-            100% { opacity: 0.95; transform: scale(1.3); }
-        }
-
-        /* ۵. ابری و مه‌آلود (Volumetric Cloud silhouettes) */
-        .weather-cloud-drift {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(40px);
-            opacity: 0.18;
-            will-change: transform;
-        }
-        .cloud-layer-1 {
-            top: 5%;
-            left: -15%;
-            width: 800px;
-            height: 350px;
-            background: radial-gradient(ellipse at center, rgba(148, 163, 184, 0.8) 0%, rgba(100, 116, 139, 0.4) 50%, transparent 80%);
-            animation: weatherCloudDrift1 55s ease-in-out infinite alternate;
-        }
-        .cloud-layer-2 {
-            top: 25%;
-            right: -15%;
-            width: 950px;
-            height: 400px;
-            background: radial-gradient(ellipse at center, rgba(100, 116, 139, 0.75) 0%, rgba(71, 85, 105, 0.35) 50%, transparent 80%);
-            animation: weatherCloudDrift2 70s ease-in-out infinite alternate;
-        }
-        @keyframes weatherCloudDrift1 {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(180px, 20px, 0); }
-        }
-        @keyframes weatherCloudDrift2 {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-220px, -25px, 0); }
+        @keyframes hdrStarTwinkle {
+            0% { opacity: 0.2; transform: scale(0.6); }
+            100% { opacity: 1; transform: scale(1.4); }
         }
 
         /* =========================================================================
@@ -1732,7 +1723,7 @@
         /* مخفی‌سازی کامل افکت‌های حرکتی و نوری تزیینی (اسلایدر فعال می‌ماند) */
         .eco-mode .animate-gold-beam,
         .eco-mode .ambient-orb-container,
-        .eco-mode .weather-ambient-stage,
+        .eco-mode .weather-header-stage,
         .eco-mode .animate-laser-sweep,
         .eco-mode [class*="neu-hero"]::after {
             display: none !important;
@@ -1907,87 +1898,93 @@
             <div class="ambient-orb orb-12"></div>
         </div>
 
-        {{-- لایه انیمیشن پس‌زمینه زنده وضعیت جوی و آب‌وهوا --}}
-        <template x-if="weather && (settings.show_weather_bg ?? true) && !ecoMode">
-            <div class="weather-ambient-stage pointer-events-none fixed inset-0 z-[5] overflow-hidden select-none transition-opacity duration-1000">
-                
-                {{-- باران و رعدوبرق --}}
-                <div x-show="weather.icon === 'rain' || weather.icon === 'thunder'" class="absolute inset-0 overflow-hidden" :class="weather.icon === 'thunder' ? 'weather-thunder-active' : ''">
-                    @for($i = 0; $i < 32; $i++)
-                        @php
-                            $left = ($i * 3.125) . '%';
-                            $delay = (round((($i * 17) % 250) / 100, 2)) . 's';
-                            $dur = (round(0.7 + ((($i * 8) % 60) / 100), 2)) . 's';
-                            $h = (30 + (($i * 7) % 35)) . 'px';
-                            $op = round(0.25 + (($i % 5) * 0.1), 2);
-                        @endphp
-                        <span class="weather-raindrop" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; height: {{ $h }}; opacity: {{ $op }};"></span>
-                    @endfor
-                </div>
-
-                {{-- برف --}}
-                <div x-show="weather.icon === 'snow'" class="absolute inset-0 overflow-hidden">
-                    @for($i = 0; $i < 28; $i++)
-                        @php
-                            $left = (round($i * 3.57, 2)) . '%';
-                            $delay = (round((($i * 35) % 600) / 100, 2)) . 's';
-                            $dur = (round(4 + ((($i * 4) % 40) / 10), 1)) . 's';
-                            $size = (4 + (($i * 3) % 9)) . 'px';
-                            $sway = (($i % 2 === 0 ? 1 : -1) * (20 + (($i * 5) % 40))) . 'px';
-                        @endphp
-                        <span class="weather-snowflake" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }}; --sway: {{ $sway }};"></span>
-                    @endfor
-                </div>
-
-                {{-- آفتابی و روز صاف --}}
-                <div x-show="weather.icon === 'sun'" class="absolute inset-0 overflow-hidden">
-                    <div class="weather-sun-glow"></div>
-                    <div class="weather-sun-beam"></div>
-                    <div class="weather-sun-beam-secondary"></div>
-                    @for($i = 0; $i < 12; $i++)
-                        @php
-                            $left = (round(10 + ($i * 7.5), 1)) . '%';
-                            $top = (15 + (($i * 13) % 70)) . '%';
-                            $delay = (round($i * 0.6, 2)) . 's';
-                            $dur = (4 + ($i % 4)) . 's';
-                        @endphp
-                        <span class="weather-sun-mote" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }};"></span>
-                    @endfor
-                </div>
-
-                {{-- شب و آسمان صاف با ماه و ستاره --}}
-                <div x-show="weather.icon === 'moon'" class="absolute inset-0 overflow-hidden">
-                    <div class="weather-moon-glow"></div>
-                    @for($i = 0; $i < 24; $i++)
-                        @php
-                            $left = (5 + ($i * 4)) . '%';
-                            $top = (5 + (($i * 17) % 80)) . '%';
-                            $delay = (round((($i * 4) % 30) / 10, 1)) . 's';
-                            $dur = (2 + ($i % 3)) . 's';
-                            $size = (2 + ($i % 3)) . 'px';
-                        @endphp
-                        <span class="weather-star" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }};"></span>
-                    @endfor
-                </div>
-
-                {{-- ابری، نیمه‌ابری و مه‌آلود --}}
-                <div x-show="weather.icon === 'cloud' || weather.icon === 'cloud-sun'" class="absolute inset-0 overflow-hidden">
-                    <div class="weather-cloud-drift cloud-layer-1"></div>
-                    <div class="weather-cloud-drift cloud-layer-2"></div>
-                </div>
-
-            </div>
-        </template>
-
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
         <div id="tv-stage-viewport" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
             <div id="tv-stage-canvas" class="pointer-events-auto absolute left-0 top-0 w-[1920px] h-[1080px] p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none">
 
             {{-- Header --}}
-            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
+            <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 relative overflow-hidden">
+
+                {{-- جلوه زنده و متحرک وضعیت جوی شهر (منحصراً در نوار بالای تابلو با وضوح بالا) --}}
+                <template x-if="weather && (settings.show_weather_bg ?? true) && !ecoMode">
+                    <div class="weather-header-stage absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-[2rem]">
+                        
+                        {{-- ۱. باران و رعدوبرق در هدر --}}
+                        <div x-show="weather.icon === 'rain' || weather.icon === 'thunder'" class="absolute inset-0 overflow-hidden" :class="weather.icon === 'thunder' ? 'hdr-thunder-active' : ''">
+                            @for($i = 0; $i < 36; $i++)
+                                @php
+                                    $left = ($i * 2.77) . '%';
+                                    $delay = (round((($i * 13) % 180) / 100, 2)) . 's';
+                                    $dur = (round(0.42 + ((($i * 7) % 30) / 100), 2)) . 's';
+                                    $h = (18 + (($i * 5) % 20)) . 'px';
+                                    $op = round(0.55 + (($i % 4) * 0.15), 2);
+                                @endphp
+                                <span class="hdr-raindrop" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; height: {{ $h }}; opacity: {{ $op }};"></span>
+                            @endfor
+                        </div>
+
+                        {{-- ۲. برف در هدر --}}
+                        <div x-show="weather.icon === 'snow'" class="absolute inset-0 overflow-hidden">
+                            @for($i = 0; $i < 28; $i++)
+                                @php
+                                    $left = ($i * 3.57) . '%';
+                                    $delay = (round((($i * 23) % 300) / 100, 2)) . 's';
+                                    $dur = (round(2.2 + ((($i * 5) % 20) / 10), 1)) . 's';
+                                    $size = (5 + (($i * 3) % 8)) . 'px';
+                                    $sway = (($i % 2 === 0 ? 1 : -1) * (12 + (($i * 4) % 24))) . 'px';
+                                @endphp
+                                <span class="hdr-snowflake" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }}; --sway: {{ $sway }};"></span>
+                            @endfor
+                        </div>
+
+                        {{-- ۳. آفتابی و روز صاف در هدر --}}
+                        <div x-show="weather.icon === 'sun'" class="absolute inset-0 overflow-hidden">
+                            <div class="hdr-sun-glow"></div>
+                            <div class="hdr-sun-beam"></div>
+                            @for($i = 0; $i < 16; $i++)
+                                @php
+                                    $left = (round(5 + ($i * 6), 1)) . '%';
+                                    $top = (15 + (($i * 17) % 65)) . '%';
+                                    $delay = (round($i * 0.4, 2)) . 's';
+                                    $dur = (3 + ($i % 4)) . 's';
+                                @endphp
+                                <span class="hdr-sun-mote" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }};"></span>
+                            @endfor
+                        </div>
+
+                        {{-- ۴. آسمان شب و ستاره‌ها در هدر --}}
+                        <div x-show="weather.icon === 'moon'" class="absolute inset-0 overflow-hidden">
+                            <div class="hdr-night-glow"></div>
+                            @for($i = 0; $i < 28; $i++)
+                                @php
+                                    $left = (round(3 + ($i * 3.4), 1)) . '%';
+                                    $top = (10 + (($i * 23) % 75)) . '%';
+                                    $delay = (round((($i * 7) % 25) / 10, 1)) . 's';
+                                    $dur = (1.5 + (($i % 4) * 0.5)) . 's';
+                                    $size = (2 + ($i % 3)) . 'px';
+                                @endphp
+                                <span class="hdr-star" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }};"></span>
+                            @endfor
+                        </div>
+
+                        {{-- ۵. ابرها در هدر (کاملاً واضح و متحرک) --}}
+                        <div x-show="weather.icon === 'cloud' || weather.icon === 'cloud-sun'" class="hdr-cloud-wrapper">
+                            <svg class="hdr-cloud hdr-cloud-1 text-white/45 dark:text-white/30" viewBox="0 0 120 60" fill="currentColor">
+                                <path d="M25 45h70a18 18 0 0 0 5-35 24 24 0 0 0-45-8 18 18 0 0 0-30 18 16 16 0 0 0 0 25z"/>
+                            </svg>
+                            <svg class="hdr-cloud hdr-cloud-2 text-sky-100/50 dark:text-sky-200/25" viewBox="0 0 140 70" fill="currentColor">
+                                <path d="M30 52h80a20 20 0 0 0 6-39 28 28 0 0 0-52-10 20 20 0 0 0-34 20 18 18 0 0 0 0 29z"/>
+                            </svg>
+                            <svg class="hdr-cloud hdr-cloud-3 text-slate-100/45 dark:text-slate-300/25" viewBox="0 0 110 55" fill="currentColor">
+                                <path d="M22 42h66a16 16 0 0 0 5-31 22 22 0 0 0-41-8 16 16 0 0 0-30 16 14 14 0 0 0 0 23z"/>
+                            </svg>
+                        </div>
+
+                    </div>
+                </template>
 
                 {{-- سمت راست: QR کد و اطلاعات --}}
-                <div class="order-1 flex w-[38%] items-center gap-5 text-right">
+                <div class="order-1 flex w-[38%] items-center gap-5 text-right relative z-10">
                     {{-- دکمه‌ها و اطلاعات تماس (سایز بزرگتر و خواناتر) --}}
                     <div class="flex flex-col gap-2 justify-center items-stretch shrink-0 w-fit">
                         <template x-if="settings.phone">
@@ -2036,7 +2033,7 @@
                 </div>
 
                 {{-- نام فروشگاه (وسط) --}}
-                <div class="order-2 flex w-[28%] flex-col items-center justify-center text-center">
+                <div class="order-2 flex w-[28%] flex-col items-center justify-center text-center relative z-10">
                     <h1 :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800 drop-shadow-[0_1px_4px_rgba(217,119,6,0.3)]' : 'text-slate-900') : 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 drop-shadow-[0_0_20px_rgba(251,191,36,0.2)]'" 
                         class="max-w-full break-words text-3xl xl:text-4xl font-black tracking-tight leading-tight" x-text="settings.shop_name">{{ $galleryDisplayName ?? 'گالری طلا' }}</h1>
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
@@ -2065,7 +2062,7 @@
                 </div>
 
                 {{-- تاریخ و ساعت (سمت چپ) --}}
-                <div class="order-3 flex w-[38%] flex-row items-center justify-end gap-5 text-left">
+                <div class="order-3 flex w-[38%] flex-row items-center justify-end gap-5 text-left relative z-10">
                     {{-- کنترل‌ها و دکمه‌های وضعیت (HUD هوشمند با Auto-Hide) --}}
                     <div class="flex flex-col gap-2 items-end justify-center min-h-[58px]">
                         {{-- وضعیت اتصال: اگر ارتباط مختل شد همیشه نشان داده می‌شود، در حالت آنلاین با HUD هماهنگ است --}}
