@@ -407,8 +407,8 @@
                     <li><a href="{{ route('public.digital-rate-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلوی دیجیتال نرخ طلا و ارز</a></li>
                     <li><a href="{{ route('public.gold-board-without-device') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلو طلا بدون خرید دستگاه</a></li>
                     <li><a href="{{ route('public.online-gold-price-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلو آنلاین قیمت لحظه‌ای طلا</a></li>
-                    <li><a href="{{ route('public.currency-exchange-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلو نرخ صرافی و ارزها</a></li>
-                    <li><a href="{{ route('public.silver-bullion-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلوی شمش و آبشده نقره</a></li>
+                    <li><a href="{{ route('public.currency-exchange-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"><span>تابلو نرخ صرافی و ارزها</span><span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 leading-tight">به‌زودی</span></a></li>
+                    <li><a href="{{ route('public.silver-bullion-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"><span>تابلوی شمش و آبشده نقره</span><span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 leading-tight">به‌زودی</span></a></li>
                     <li><a href="{{ route('public.demo') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">دموی آنلاین تابلوی طلا</a></li>
                     <li><a href="{{ route('public.app') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">اپلیکیشن اندروید تی‌وی و موبایل</a></li>
                 </ul>

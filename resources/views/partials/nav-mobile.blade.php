@@ -13,21 +13,40 @@
                     @include('partials.ui-icon', ['name' => $item['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
                 </span>
                 <span>{{ $item['mobile_title'] ?? $item['title'] }}</span>
+                @if(!empty($item['badge']))
+                <span class="mr-auto px-1.5 py-0.5 rounded-md text-[10px] font-bold {{ $item['badge'] === 'به‌زودی' ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30' : 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' }}">{{ $item['badge'] }}</span>
+                @endif
             </a>
             @endforeach
+
+            @if(!empty($navGroups['products']['web_tools']))
+            <div class="pt-2 mt-2 border-t border-stone-200/60 dark:border-white/10">
+                <div class="text-[11px] font-semibold text-stone-500 dark:text-stone-400 mb-1.5 px-2.5">{{ $navGroups['products']['tools_heading'] ?? 'وب‌سرویس و ابزارهای اتصال' }}</div>
+                @foreach($navGroups['products']['web_tools'] as $toolItem)
+                <a href="{{ route($toolItem['route']) }}" class="min-h-11 px-3 py-2 rounded-xl {{ !empty($toolItem['highlight']) ? 'tl-glass-badge font-bold text-amber-900 dark:text-amber-300' : 'hover:bg-white/60 dark:hover:bg-white/[0.06]' }} flex items-center gap-2.5 transition-colors">
+                    <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+                        @include('partials.ui-icon', ['name' => $toolItem['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                    </span>
+                    <span>{{ $toolItem['mobile_title'] ?? $toolItem['title'] }}</span>
+                    @if(!empty($toolItem['badge']))
+                    <span class="mr-auto px-1.5 py-0.5 rounded-md text-[10px] font-bold {{ $toolItem['badge'] === 'به‌زودی' ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30' : 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' }}">{{ $toolItem['badge'] }}</span>
+                    @endif
+                </a>
+                @endforeach
+            </div>
+            @endif
+
             @if(!empty($navGroups['products']['footer_items']))
-            <a href="{{ route('public.demo') }}" class="min-h-11 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-white/[0.06] flex items-center gap-2.5 text-amber-800 dark:text-amber-300 font-bold transition-colors">
-                <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
-                    @include('partials.ui-icon', ['name' => 'play', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
-                </span>
-                <span>پیش‌نمایش زنده تابلو</span>
-            </a>
-            <a href="{{ route('public.app') }}" class="min-h-11 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-white/[0.06] flex items-center gap-2.5 text-stone-800 dark:text-stone-200 transition-colors">
-                <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
-                    @include('partials.ui-icon', ['name' => 'smartphone', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
-                </span>
-                <span>دانلود اپلیکیشن و PWA</span>
-            </a>
+            <div class="pt-2 mt-2 border-t border-stone-200/60 dark:border-white/10 flex flex-col space-y-1">
+                @foreach($navGroups['products']['footer_items'] as $fItem)
+                <a href="{{ route($fItem['route']) }}" class="min-h-11 px-3 py-2 rounded-xl hover:bg-white/60 dark:hover:bg-white/[0.06] flex items-center gap-2.5 {{ !empty($fItem['highlight']) ? 'text-amber-800 dark:text-amber-300 font-bold' : 'text-stone-700 dark:text-stone-300' }} transition-colors">
+                    <span class="tl-neu-icon-orb w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+                        @include('partials.ui-icon', ['name' => $fItem['icon'], 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
+                    </span>
+                    <span>{{ $fItem['title'] }}</span>
+                </a>
+                @endforeach
+            </div>
             @endif
         </nav>
     </div>

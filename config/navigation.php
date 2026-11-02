@@ -5,8 +5,8 @@ return [
         [
             'key'            => 'products',
             'label'          => 'سامانه‌ها',
-            'mobile_heading' => 'سامانه‌ها و تابلوها',
-            'width'          => 'w-72',
+            'mobile_heading' => 'سامانه‌ها و نمایشگرها',
+            'width'          => 'w-[42rem]',
             'active_routes'  => [
                 'public.smart-gold-board',
                 'public.digital-rate-board',
@@ -16,7 +16,12 @@ return [
                 'public.silver-bullion-board',
                 'public.demo',
                 'public.app',
+                'public.api-docs',
+                'public.widget*',
+                'display.tv',
+                'public.led-vs-smart-board',
             ],
+            'displays_heading' => 'نمایشگرها و تابلوهای نرخ',
             'items' => [
                 [
                     'route' => 'public.smart-gold-board',
@@ -47,28 +52,65 @@ return [
                     'icon'  => 'currency',
                     'title' => 'تابلو نرخ ارز صرافی',
                     'desc'  => 'ویژه صرافی‌ها و مراکز ارزی',
+                    'badge' => 'به‌زودی',
                 ],
                 [
                     'route' => 'public.silver-bullion-board',
                     'icon'  => 'layers',
                     'title' => 'تابلو نقره و شمش',
                     'desc'  => 'پوشش کامل شمش و گرم نقره',
+                    'badge' => 'به‌زودی',
                 ],
             ],
-            'footer_items' => [
+            'tools_heading' => 'وب‌سرویس، ابزارها و مقایسه',
+            'web_tools' => [
                 [
-                    'route' => 'public.demo',
-                    'icon'  => 'play',
-                    'title' => 'پیش‌نمایش زنده',
-                    'mobile_title' => 'پیش‌نمایش زنده تابلو',
-                    'class' => 'text-amber-700 dark:text-amber-400',
+                    'route' => 'public.api-docs',
+                    'icon'  => 'code',
+                    'title' => 'وب‌سرویس و API نرخ لحظه‌ای',
+                    'desc'  => 'مستندات REST API رایگان طلا و سکه',
+                    'badge' => 'رایگان',
+                ],
+                [
+                    'route' => 'public.widget',
+                    'icon'  => 'puzzle',
+                    'title' => 'ویجت نرخ طلا برای سایت‌ها',
+                    'desc'  => 'تولید کد اختصاصی آی‌فریم آنلاین',
+                ],
+                [
+                    'route' => 'display.tv',
+                    'icon'  => 'tv',
+                    'title' => 'اتصال تلویزیون به سامانه',
+                    'desc'  => 'جفت‌سازی ۶۰ ثانیه‌ای با بارکد QR',
                 ],
                 [
                     'route' => 'public.app',
                     'icon'  => 'smartphone',
-                    'title' => 'دانلود اپلیکیشن و PWA',
-                    'mobile_title' => 'دانلود اپلیکیشن و PWA',
-                    'class' => 'text-stone-700 dark:text-stone-300',
+                    'title' => 'اپلیکیشن تلویزیون و موبایل',
+                    'desc'  => 'دانلود نسخه Android TV و PWA',
+                ],
+                [
+                    'route'     => 'public.led-vs-smart-board',
+                    'icon'      => 'bolt',
+                    'title'     => 'مقایسه با تابلوهای LED روان',
+                    'desc'      => 'بررسی اقتصادی، صفر تومان سخت‌افزار',
+                    'highlight' => true,
+                ],
+            ],
+            'footer_items' => [
+                [
+                    'route'        => 'public.demo',
+                    'icon'         => 'play',
+                    'title'        => 'مشاهده پیش‌نمایش زنده تابلوی مغازه (/demo)',
+                    'mobile_title' => 'پیش‌نمایش زنده تابلو',
+                    'class'        => 'text-amber-700 dark:text-amber-400 font-bold',
+                ],
+                [
+                    'route'        => 'admin.register',
+                    'icon'         => 'arrow-left',
+                    'title'        => 'شروع ۱۴ روز تست رایگان',
+                    'mobile_title' => 'ثبت‌نام و تست رایگان',
+                    'class'        => 'text-stone-800 dark:text-stone-200 font-bold',
                 ],
             ],
         ],
@@ -79,7 +121,6 @@ return [
             'width'          => 'w-64',
             'active_routes'  => [
                 'public.led-vs-smart-board',
-                'public.compare.*',
             ],
             'items' => [
                 [
@@ -87,24 +128,6 @@ return [
                     'icon'  => 'bolt',
                     'title' => 'مقایسه با تابلوهای LED روان',
                     'desc'  => 'بررسی اقتصادی و هزینه‌ها',
-                ],
-                [
-                    'route' => 'public.compare.tabangohar',
-                    'icon'  => 'scale',
-                    'title' => 'مقایسه با تابان گوهر',
-                    'desc'  => 'تفاوت سامانه ابری با مینی‌کیس',
-                ],
-                [
-                    'route' => 'public.compare.tgju-tv',
-                    'icon'  => 'chart',
-                    'title' => 'مقایسه با TGJU TV',
-                    'desc'  => 'تخصصی بودن و پشتیبانی صنف طلا',
-                ],
-                [
-                    'route' => 'public.compare.tablotala',
-                    'icon'  => 'globe',
-                    'title' => 'مقایسه با تابلوطلا دات‌کام',
-                    'desc'  => 'تحت وب در برابر نرم‌افزار نصبی',
                 ],
             ],
         ],

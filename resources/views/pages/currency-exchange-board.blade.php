@@ -63,9 +63,9 @@
 
     {{-- هیرو سکشن لندینگ صرافی --}}
     <header class="text-center space-y-6 max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 dark:bg-stone-850 border border-stone-200 dark:border-stone-750 text-stone-700 dark:text-stone-300 text-xs font-semibold">
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-            <span>ویژه صرافی‌های مجاز، دفاتر خدمات ارزی و کارگزاران حواله‌جات</span>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 text-amber-900 dark:text-amber-300 text-xs font-semibold">
+            <span class="px-2 py-0.5 rounded-full bg-amber-500 text-stone-950 font-bold text-[11px]">به‌زودی</span>
+            <span>ویژه صرافی‌های مجاز، دفاتر خدمات ارزی و کارگزاران حواله‌جات (در حال آماده‌سازی)</span>
         </div>
         
         <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-stone-900 dark:text-stone-100 leading-tight">
