@@ -81,6 +81,36 @@
                     </template>
                 </div>
             </div>
+
+            {{-- ویجت‌های هوشمند سرصفحه تابلو --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="cloud-sun" class="w-5 h-5 text-amber-500"></i>
+                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">ویجت هوشمند آب و هوای تابلو</h3>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">زنده و برخط</span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    با فعال‌سازی این گزینه، دمای لحظه‌ای و وضعیت جوی شهر مغازه شما به‌صورت کپسول شیشه‌ای شیک در کنار ساعت هدر تابلو نمایش داده می‌شود.
+                </p>
+                <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40 cursor-pointer transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="sun" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">نمایش دما و وضعیت آب‌وهوا</span>
+                            <div class="text-[11px] text-slate-500 mt-0.5">به‌روزرسانی خودکار بر اساس شهر ثبت‌شده گالری</div>
+                        </div>
+                    </div>
+                    <div class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none"
+                         @click.prevent="settings.show_weather = !Boolean(settings.show_weather ?? true)">
+                        <div class="h-6 w-11 rounded-full transition-colors" :class="(settings.show_weather ?? true) ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"></div>
+                        <div class="absolute left-[3px] top-[3px] h-4.5 w-4.5 rounded-full bg-white transition-transform shadow-xs" :class="(settings.show_weather ?? true) ? 'translate-x-5' : ''"></div>
+                    </div>
+                </label>
+            </div>
         </div>
 
         {{-- Right Column: Display Items Toggles --}}
@@ -140,7 +170,7 @@
 <script>
 function displayControlPage() {
     return {
-        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
+        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, show_weather: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
         items: [],
         message: { text: '', type: '' },
         isSaving: false,

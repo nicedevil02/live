@@ -209,6 +209,19 @@ class PublicDisplayController extends Controller
         $resolved = $this->resolveGalleryCityInfo($user, $settings);
 
         \App\Http\Controllers\Admin\DisplaySettingController::ensureEmptyShowcaseColumnsExist();
+        \App\Http\Controllers\Admin\DisplaySettingController::ensureWeatherColumnsExist();
+
+        $weather = null;
+        if ($settings->show_weather ?? true) {
+            try {
+                $weather = app(\App\Services\WeatherService::class)->getWeatherForCity(
+                    $resolved['citySlug'] ?? 'tehran',
+                    $resolved['cityName'] ?? 'تهران'
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Weather fetch snapshot error: ' . $e->getMessage());
+            }
+        }
 
         $settingsData = $settings->toArray();
         $settingsData['city_slug'] = $resolved['citySlug'];
@@ -219,6 +232,7 @@ class PublicDisplayController extends Controller
         $settingsData['empty_showcase_title'] = $settings->empty_showcase_title ?? '';
         $settingsData['empty_showcase_text'] = $settings->empty_showcase_text ?? '';
         $settingsData['empty_showcase_theme'] = $settings->empty_showcase_theme ?? 'gold';
+        $settingsData['show_weather'] = (bool) ($settings->show_weather ?? true);
 
         return [
             'username'               => $user->username,
@@ -239,6 +253,7 @@ class PublicDisplayController extends Controller
             'priceFeed'              => $priceFeed,
             'products'               => $products,
             'settings'               => $settingsData,
+            'weather'                => $weather,
             'bingWallpaper'          => $bingWallpaper,
         ];
     }

@@ -478,6 +478,7 @@ class PublicPageController extends Controller
             'priceFeed' => $demoFeed,
             'products' => [],
             'settings' => (object)$demoSetting,
+            'weather' => app(\App\Services\WeatherService::class)->getWeatherForCity('tehran', 'تهران'),
         ];
 
         return view('pages.demo', array_merge($ratesData, [

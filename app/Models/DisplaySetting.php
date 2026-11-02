@@ -14,6 +14,7 @@ class DisplaySetting extends Model
         'show_weight',
         'show_labor',
         'show_profit',
+        'show_weather',
         'shop_name',
         'phone',
         'instagram',
@@ -31,6 +32,7 @@ class DisplaySetting extends Model
         'show_weight' => 'boolean',
         'show_labor' => 'boolean',
         'show_profit' => 'boolean',
+        'show_weather' => 'boolean',
         'published_at' => 'datetime',
     ];
 }

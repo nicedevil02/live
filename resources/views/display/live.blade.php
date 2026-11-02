@@ -1835,6 +1835,48 @@
                         </div>
                     </div>
 
+                    {{-- ویجت آب‌وهوای زنده شهر مغازه (طرح اول) --}}
+                    <template x-if="weather && (settings.show_weather ?? true)">
+                        <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 border-amber-300/50 text-amber-950 shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.2)]' : 'bg-white/80 border-slate-200 text-slate-800 shadow-sm') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.2),0_4px_12px_rgba(0,0,0,0.6)]' : (isBingTheme ? 'bg-white/10 border-white/15 text-white backdrop-blur-xl' : 'bg-black/20 border-white/10 text-white backdrop-blur-md'))"
+                             class="flex items-center gap-2 px-3 py-1.5 rounded-2xl border transition-all duration-300 shrink-0 select-none shadow-sm hover:scale-[1.02]">
+                            
+                            {{-- آیکون وضعیت آب‌وهوا --}}
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                                 :class="weather.iconBg || 'bg-amber-500/20 text-amber-400'">
+                                <template x-if="weather.icon === 'sun'">
+                                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                                </template>
+                                <template x-if="weather.icon === 'moon'">
+                                    <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                                </template>
+                                <template x-if="weather.icon === 'cloud-sun'">
+                                    <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41M2 12h2m17.66 5.66A6 6 0 0012 10a6 6 0 00-6 6h15z"/></svg>
+                                </template>
+                                <template x-if="weather.icon === 'cloud'">
+                                    <svg class="w-4 h-4 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h11a5 5 0 001.5-9.77A7 7 0 005.5 11 4 4 0 003 15z"/></svg>
+                                </template>
+                                <template x-if="weather.icon === 'rain'">
+                                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 13v6m-4-4v6m-4-4v6M20 16.58A5 5 0 0018 7h-1.26A8 8 0 104 15.25"/></svg>
+                                </template>
+                                <template x-if="weather.icon === 'snow'">
+                                    <svg class="w-4 h-4 text-cyan-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m17 7l-14-14m0 14L19 5"/></svg>
+                                </template>
+                                <template x-if="weather.icon === 'thunder'">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                </template>
+                            </div>
+
+                            {{-- جزییات دما و نام شهر --}}
+                            <div class="flex flex-col text-right leading-tight">
+                                <div class="flex items-center gap-1" dir="ltr">
+                                    <span class="text-base xl:text-lg font-black font-mono tracking-tight" x-text="weather.temp_farsi + '°C'"></span>
+                                    <span :class="theme.textPrimary" class="text-xs font-bold truncate max-w-[80px]" dir="rtl" x-text="weather.city"></span>
+                                </div>
+                                <span :class="theme.textSecondary" class="text-[10px] font-semibold opacity-80 truncate max-w-[100px]" x-text="weather.description"></span>
+                            </div>
+                        </div>
+                    </template>
+
                     {{-- خط عمودی جداکننده --}}
                     <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-16"></div>
 
@@ -2801,6 +2843,7 @@
                 },
 
                 get settings() { return this.snapshotData?.settings || {}; },
+                get weather() { return this.snapshotData?.weather || null; },
                 get products() { return this.snapshotData?.products || []; },
                 get activeProduct() { return this.products[this.activeIndex] || null; },
                 get activeProductImageUrl() {

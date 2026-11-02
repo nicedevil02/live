@@ -14,12 +14,14 @@ class DisplaySettingController extends Controller
      */
     public function index()
     {
+        self::ensureWeatherColumnsExist();
         $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()], [
             'theme_mode' => 'light-modern',
             'slider_interval_sec' => 8,
             'show_weight' => true,
             'show_labor' => true,
             'show_profit' => true,
+            'show_weather' => true,
             'shop_name' => auth()->user()->name ?? 'گالری طلای جدید',
             'phone' => '',
             'instagram' => '',
@@ -46,6 +48,7 @@ class DisplaySettingController extends Controller
     public function update(Request $request)
     {
         $this->ensureCityColumnsExist();
+        self::ensureWeatherColumnsExist();
         $user = auth()->user();
         $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id]);
 
@@ -55,6 +58,7 @@ class DisplaySettingController extends Controller
             'show_weight'         => 'sometimes|boolean',
             'show_labor'          => 'sometimes|boolean',
             'show_profit'         => 'sometimes|boolean',
+            'show_weather'        => 'sometimes|boolean',
             'shop_name'           => 'nullable|string|max:255',
             'city'                => 'nullable|string|max:50',
             'phone'               => 'nullable|string|max:20',
@@ -64,6 +68,10 @@ class DisplaySettingController extends Controller
             'qr_label'            => 'nullable|string|max:255',
             'qr_desc'             => 'nullable|string|max:255',
         ]);
+
+        if ($request->has('show_weather')) {
+            $validated['show_weather'] = $request->boolean('show_weather');
+        }
 
         if ($request->has('city')) {
             $cityInput = trim((string) $request->input('city', ''));
@@ -309,6 +317,22 @@ class DisplaySettingController extends Controller
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('ensureEmptyShowcaseColumnsExist error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * اطمینان از وجود ستون نمایش آب‌وهوا در جدول display_settings
+     */
+    public static function ensureWeatherColumnsExist(): void
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'show_weather')) {
+                \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) {
+                    $table->boolean('show_weather')->default(true);
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureWeatherColumnsExist error: ' . $e->getMessage());
         }
     }
 
