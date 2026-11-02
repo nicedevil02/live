@@ -233,6 +233,7 @@ class PublicDisplayController extends Controller
         $settingsData['empty_showcase_text'] = $settings->empty_showcase_text ?? '';
         $settingsData['empty_showcase_theme'] = $settings->empty_showcase_theme ?? 'gold';
         $settingsData['show_weather'] = (bool) ($settings->show_weather ?? true);
+        $settingsData['show_weather_bg'] = (bool) ($settings->show_weather_bg ?? true);
 
         return [
             'username'               => $user->username,

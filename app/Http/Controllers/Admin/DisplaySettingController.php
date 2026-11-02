@@ -22,6 +22,7 @@ class DisplaySettingController extends Controller
             'show_labor' => true,
             'show_profit' => true,
             'show_weather' => true,
+            'show_weather_bg' => true,
             'shop_name' => auth()->user()->name ?? 'گالری طلای جدید',
             'phone' => '',
             'instagram' => '',
@@ -59,6 +60,7 @@ class DisplaySettingController extends Controller
             'show_labor'          => 'sometimes|boolean',
             'show_profit'         => 'sometimes|boolean',
             'show_weather'        => 'sometimes|boolean',
+            'show_weather_bg'     => 'sometimes|boolean',
             'shop_name'           => 'nullable|string|max:255',
             'city'                => 'nullable|string|max:50',
             'phone'               => 'nullable|string|max:20',
@@ -71,6 +73,10 @@ class DisplaySettingController extends Controller
 
         if ($request->has('show_weather')) {
             $validated['show_weather'] = $request->boolean('show_weather');
+        }
+
+        if ($request->has('show_weather_bg')) {
+            $validated['show_weather_bg'] = $request->boolean('show_weather_bg');
         }
 
         if ($request->has('city')) {
@@ -329,6 +335,11 @@ class DisplaySettingController extends Controller
             if (!\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'show_weather')) {
                 \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) {
                     $table->boolean('show_weather')->default(true);
+                });
+            }
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('display_settings', 'show_weather_bg')) {
+                \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) {
+                    $table->boolean('show_weather_bg')->default(true);
                 });
             }
         } catch (\Throwable $e) {

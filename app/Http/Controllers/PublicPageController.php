@@ -439,6 +439,8 @@ class PublicPageController extends Controller
             'show_weight' => true,
             'show_labor' => true,
             'show_profit' => true,
+            'show_weather' => true,
+            'show_weather_bg' => true,
             'qr_link' => 'https://talalive.ir',
             'qr_label' => 'اسکن تابلوی زنده',
             'qr_desc' => 'مشاهده روی گوشی همراه',

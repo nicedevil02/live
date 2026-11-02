@@ -110,6 +110,24 @@
                         <div class="absolute left-[3px] top-[3px] h-4.5 w-4.5 rounded-full bg-white transition-transform shadow-xs" :class="(settings.show_weather ?? true) ? 'translate-x-5' : ''"></div>
                     </div>
                 </label>
+
+                {{-- تاگل جلوه متحرک پس‌زمینه آب‌وهوا --}}
+                <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40 cursor-pointer transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">جلوه متحرک وضعیت هوا در پس‌زمینه تابلو</span>
+                            <div class="text-[11px] text-slate-500 mt-0.5">بارش ملایم باران، برف، تابش پرتوهای آفتاب و آسمان شب در پس‌زمینه</div>
+                        </div>
+                    </div>
+                    <div class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none"
+                         @click.prevent="settings.show_weather_bg = !Boolean(settings.show_weather_bg ?? true)">
+                        <div class="h-6 w-11 rounded-full transition-colors" :class="(settings.show_weather_bg ?? true) ? 'bg-sky-500' : 'bg-slate-300 dark:bg-slate-700'"></div>
+                        <div class="absolute left-[3px] top-[3px] h-4.5 w-4.5 rounded-full bg-white transition-transform shadow-xs" :class="(settings.show_weather_bg ?? true) ? 'translate-x-5' : ''"></div>
+                    </div>
+                </label>
             </div>
         </div>
 
@@ -170,7 +188,7 @@
 <script>
 function displayControlPage() {
     return {
-        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, show_weather: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
+        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, show_weather: true, show_weather_bg: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
         items: [],
         message: { text: '', type: '' },
         isSaving: false,

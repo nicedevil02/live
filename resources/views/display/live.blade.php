@@ -1508,6 +1508,206 @@
         }
 
         /* =========================================================================
+           Weather Ambient Stage (جلوه زنده وضعیت جوی و آب‌وهوای شهر در پس‌زمینه)
+           کاملاً شتاب‌یافته با GPU و ترنزیشن‌های سخت‌افزاری بدون مصرف CPU
+           ========================================================================= */
+        .weather-ambient-stage {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+            contain: strict;
+            transform: translateZ(0);
+        }
+
+        /* ۱. باران و رگبار (Rain streaks) */
+        .weather-raindrop {
+            position: absolute;
+            top: -60px;
+            width: 1.5px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(186, 230, 253, 0.45) 60%, rgba(255, 255, 255, 0.75) 100%);
+            border-radius: 9999px;
+            will-change: transform;
+            animation: weatherRainFall linear infinite;
+        }
+        @keyframes weatherRainFall {
+            0% {
+                transform: translate3d(0, -60px, 0) rotate(12deg);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.7;
+            }
+            85% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate3d(-120px, 115vh, 0) rotate(12deg);
+                opacity: 0;
+            }
+        }
+
+        /* رعد و برق ملو در پس‌زمینه */
+        .weather-thunder-active {
+            animation: weatherThunderPulse 12s ease-in-out infinite;
+        }
+        @keyframes weatherThunderPulse {
+            0%, 92%, 100% { background: transparent; }
+            93% { background: rgba(234, 179, 8, 0.08); }
+            94% { background: transparent; }
+            95% { background: rgba(255, 255, 255, 0.12); }
+            96% { background: transparent; }
+        }
+
+        /* ۲. برف (Snowflakes) */
+        .weather-snowflake {
+            position: absolute;
+            top: -30px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.7) 60%, transparent 100%);
+            border-radius: 50%;
+            will-change: transform;
+            animation: weatherSnowFall linear infinite;
+        }
+        @keyframes weatherSnowFall {
+            0% {
+                transform: translate3d(0, -30px, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.85;
+            }
+            90% {
+                opacity: 0.85;
+            }
+            100% {
+                transform: translate3d(var(--sway, 25px), 115vh, 0);
+                opacity: 0;
+            }
+        }
+
+        /* ۳. خورشید و پرتوهای طلایی روز آفتابی (Sunny Glow & God rays) */
+        .weather-sun-glow {
+            position: absolute;
+            top: -200px;
+            left: 20%;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.12) 40%, rgba(217, 119, 6, 0.04) 65%, transparent 80%);
+            will-change: transform, opacity;
+            animation: weatherSunGlowPulse 8s ease-in-out infinite alternate;
+        }
+        .weather-sun-beam {
+            position: absolute;
+            top: -300px;
+            left: 10%;
+            width: 900px;
+            height: 900px;
+            background: conic-gradient(from 120deg at 50% 50%, transparent 0deg, rgba(251, 191, 36, 0.07) 25deg, transparent 50deg, rgba(251, 191, 36, 0.09) 80deg, transparent 110deg, rgba(251, 191, 36, 0.06) 160deg, transparent 190deg);
+            will-change: transform;
+            animation: weatherSunbeamRotate 60s linear infinite;
+        }
+        .weather-sun-beam-secondary {
+            position: absolute;
+            top: -300px;
+            left: 10%;
+            width: 900px;
+            height: 900px;
+            background: conic-gradient(from 40deg at 50% 50%, transparent 0deg, rgba(251, 191, 36, 0.05) 30deg, transparent 65deg, rgba(245, 158, 11, 0.06) 120deg, transparent 150deg);
+            will-change: transform;
+            animation: weatherSunbeamRotateReverse 80s linear infinite;
+        }
+        @keyframes weatherSunGlowPulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+        @keyframes weatherSunbeamRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes weatherSunbeamRotateReverse {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        .weather-sun-mote {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.65);
+            box-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
+            will-change: transform, opacity;
+            animation: weatherMoteDrift ease-in-out infinite alternate;
+        }
+        @keyframes weatherMoteDrift {
+            0% { transform: translate3d(0, 0, 0); opacity: 0.2; }
+            50% { opacity: 0.8; }
+            100% { transform: translate3d(-30px, -45px, 0); opacity: 0.2; }
+        }
+
+        /* ۴. آسمان شب و ستاره‌ها (Moon & Starry Night) */
+        .weather-moon-glow {
+            position: absolute;
+            top: 2%;
+            right: 15%;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(199, 210, 254, 0.16) 0%, rgba(129, 140, 248, 0.07) 45%, transparent 75%);
+            animation: weatherMoonGlow 7s ease-in-out infinite alternate;
+        }
+        @keyframes weatherMoonGlow {
+            0% { transform: scale(0.96); opacity: 0.6; }
+            100% { transform: scale(1.06); opacity: 0.9; }
+        }
+        .weather-star {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.85);
+            will-change: transform, opacity;
+            animation: weatherStarTwinkle ease-in-out infinite alternate;
+        }
+        @keyframes weatherStarTwinkle {
+            0% { opacity: 0.15; transform: scale(0.7); }
+            100% { opacity: 0.95; transform: scale(1.3); }
+        }
+
+        /* ۵. ابری و مه‌آلود (Volumetric Cloud silhouettes) */
+        .weather-cloud-drift {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.18;
+            will-change: transform;
+        }
+        .cloud-layer-1 {
+            top: 5%;
+            left: -15%;
+            width: 800px;
+            height: 350px;
+            background: radial-gradient(ellipse at center, rgba(148, 163, 184, 0.8) 0%, rgba(100, 116, 139, 0.4) 50%, transparent 80%);
+            animation: weatherCloudDrift1 55s ease-in-out infinite alternate;
+        }
+        .cloud-layer-2 {
+            top: 25%;
+            right: -15%;
+            width: 950px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(100, 116, 139, 0.75) 0%, rgba(71, 85, 105, 0.35) 50%, transparent 80%);
+            animation: weatherCloudDrift2 70s ease-in-out infinite alternate;
+        }
+        @keyframes weatherCloudDrift1 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(180px, 20px, 0); }
+        }
+        @keyframes weatherCloudDrift2 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-220px, -25px, 0); }
+        }
+
+        /* =========================================================================
            حالت سبک / روان (Eco / Lite Mode Engine)
            توقف کامل تمام انیمیشن‌ها، فیلترهای بلور و پردازش‌های سنگین گرافیکی
            جهت کارکرد روان و بی‌نقص روی سیستم‌ها و تلویزیون‌های ضعیف
@@ -1532,6 +1732,7 @@
         /* مخفی‌سازی کامل افکت‌های حرکتی و نوری تزیینی (اسلایدر فعال می‌ماند) */
         .eco-mode .animate-gold-beam,
         .eco-mode .ambient-orb-container,
+        .eco-mode .weather-ambient-stage,
         .eco-mode .animate-laser-sweep,
         .eco-mode [class*="neu-hero"]::after {
             display: none !important;
@@ -1705,6 +1906,78 @@
             <div class="ambient-orb orb-11"></div>
             <div class="ambient-orb orb-12"></div>
         </div>
+
+        {{-- لایه انیمیشن پس‌زمینه زنده وضعیت جوی و آب‌وهوا --}}
+        <template x-if="weather && (settings.show_weather_bg ?? true) && !ecoMode">
+            <div class="weather-ambient-stage pointer-events-none fixed inset-0 z-[5] overflow-hidden select-none transition-opacity duration-1000">
+                
+                {{-- باران و رعدوبرق --}}
+                <div x-show="weather.icon === 'rain' || weather.icon === 'thunder'" class="absolute inset-0 overflow-hidden" :class="weather.icon === 'thunder' ? 'weather-thunder-active' : ''">
+                    @for($i = 0; $i < 32; $i++)
+                        @php
+                            $left = ($i * 3.125) . '%';
+                            $delay = (($i * 0.17) % 2.5) . 's';
+                            $dur = (0.7 + (($i * 0.08) % 0.6)) . 's';
+                            $h = (30 + (($i * 7) % 35)) . 'px';
+                            $op = 0.25 + (($i % 5) * 0.1);
+                        @endphp
+                        <span class="weather-raindrop" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; height: {{ $h }}; opacity: {{ $op }};"></span>
+                    @endfor
+                </div>
+
+                {{-- برف --}}
+                <div x-show="weather.icon === 'snow'" class="absolute inset-0 overflow-hidden">
+                    @for($i = 0; $i < 28; $i++)
+                        @php
+                            $left = ($i * 3.57) . '%';
+                            $delay = (($i * 0.35) % 6) . 's';
+                            $dur = (4 + (($i * 0.4) % 4)) . 's';
+                            $size = (4 + (($i * 3) % 9)) . 'px';
+                            $sway = (($i % 2 === 0 ? 1 : -1) * (20 + (($i * 5) % 40))) . 'px';
+                        @endphp
+                        <span class="weather-snowflake" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }}; --sway: {{ $sway }};"></span>
+                    @endfor
+                </div>
+
+                {{-- آفتابی و روز صاف --}}
+                <div x-show="weather.icon === 'sun'" class="absolute inset-0 overflow-hidden">
+                    <div class="weather-sun-glow"></div>
+                    <div class="weather-sun-beam"></div>
+                    <div class="weather-sun-beam-secondary"></div>
+                    @for($i = 0; $i < 12; $i++)
+                        @php
+                            $left = (10 + ($i * 7.5)) . '%';
+                            $top = (15 + (($i * 13) % 70)) . '%';
+                            $delay = ($i * 0.6) . 's';
+                            $dur = (4 + ($i % 4)) . 's';
+                        @endphp
+                        <span class="weather-sun-mote" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }};"></span>
+                    @endfor
+                </div>
+
+                {{-- شب و آسمان صاف با ماه و ستاره --}}
+                <div x-show="weather.icon === 'moon'" class="absolute inset-0 overflow-hidden">
+                    <div class="weather-moon-glow"></div>
+                    @for($i = 0; $i < 24; $i++)
+                        @php
+                            $left = (5 + ($i * 4)) . '%';
+                            $top = (5 + (($i * 17) % 80)) . '%';
+                            $delay = (($i * 0.4) % 3) . 's';
+                            $dur = (2 + ($i % 3)) . 's';
+                            $size = (2 + ($i % 3)) . 'px';
+                        @endphp
+                        <span class="weather-star" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }};"></span>
+                    @endfor
+                </div>
+
+                {{-- ابری، نیمه‌ابری و مه‌آلود --}}
+                <div x-show="weather.icon === 'cloud' || weather.icon === 'cloud-sun'" class="absolute inset-0 overflow-hidden">
+                    <div class="weather-cloud-drift cloud-layer-1"></div>
+                    <div class="weather-cloud-drift cloud-layer-2"></div>
+                </div>
+
+            </div>
+        </template>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
         <div id="tv-stage-viewport" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
