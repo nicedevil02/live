@@ -34,6 +34,7 @@ $criticalSyncFiles = [
     'app/Http/Controllers/Admin/AuthController.php',
     'app/Http/Controllers/Admin/DashboardController.php',
     'app/Services/MarketService.php',
+    'app/Services/WeatherService.php',
     'resources/views/layouts/public.blade.php',
     'resources/views/components/ui-icon.blade.php',
     'resources/views/partials/nav-desktop.blade.php',
@@ -587,7 +588,7 @@ $logPath = "$targetDir/storage/logs/laravel.log";
 if (file_exists($logPath)) {
     $lines = @file($logPath);
     if (!empty($lines)) {
-        $recentErrors = array_slice($lines, -15);
+        $recentErrors = array_slice($lines, -120);
     }
 }
 
