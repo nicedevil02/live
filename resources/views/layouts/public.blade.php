@@ -176,12 +176,27 @@
             background-color: var(--tl-bg);
             color: var(--tl-text);
         }
+        html.dark { color-scheme: dark; }
+        html:not(.dark) { color-scheme: light; }
         body.menu-open { overflow: hidden; }
         html.dark .theme-sun-icon { display: inline-block !important; }
         html.dark .theme-moon-icon { display: none !important; }
         html:not(.dark) .theme-sun-icon { display: none !important; }
         html:not(.dark) .theme-moon-icon { display: inline-block !important; }
         [x-cloak] { display: none !important; }
+
+        .dark input:not([type="checkbox"]):not([type="radio"]),
+        .dark select,
+        .dark textarea {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: #a8a29e !important;
+            -webkit-text-fill-color: #a8a29e !important;
+        }
     </style>
 </head>
 <body class="tl-public text-stone-900 dark:text-stone-50 selection:bg-amber-500/30 selection:text-amber-900 dark:selection:text-amber-200 antialiased min-h-screen flex flex-col transition-colors duration-200" x-data="publicLayoutHandler()">

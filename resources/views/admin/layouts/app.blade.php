@@ -44,6 +44,32 @@
         .admin-shell-height { height: 100vh; height: 100dvh; }
         /* اطمینان از اینکه در حالت لایت، پس‌زمینه حتما سفید/روشن باشد */
         html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
+
+        html.dark { color-scheme: dark; }
+        html:not(.dark) { color-scheme: light; }
+
+        .dark input:not([type="checkbox"]):not([type="radio"]),
+        .dark select,
+        .dark textarea {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: #94a3b8 !important;
+            -webkit-text-fill-color: #94a3b8 !important;
+        }
+
+        .dark input:-webkit-autofill,
+        .dark input:-webkit-autofill:hover,
+        .dark input:-webkit-autofill:focus,
+        .dark input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #0f172a inset !important;
+            box-shadow: 0 0 0 1000px #0f172a inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff !important;
+        }
     </style>
     @stack('styles')
 </head>

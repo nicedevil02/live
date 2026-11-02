@@ -16,6 +16,7 @@
    TalaLive Design System: Apple HIG Liquid Glass + Luxury Obsidian & Pure White
    ========================================================================== */
 :root {
+    color-scheme: light;
     --tl-spring: cubic-bezier(0.22, 1, 0.36, 1);
     --tl-bg: #ffffff;
     --tl-bg-subtle: #f8fafc;
@@ -69,6 +70,7 @@
 }
 
 .dark {
+    color-scheme: dark;
     --tl-bg: #141312;
     --tl-bg-subtle: #191716;
     --tl-surface: #1d1b19;
@@ -313,10 +315,13 @@
     background-image: none !important;
     border: 1px solid var(--tl-border-outline) !important;
     box-shadow: var(--tl-neu-inset-shadow) !important;
+    color: var(--tl-text) !important;
+    caret-color: var(--tl-accent-text);
     transition:
         box-shadow 220ms var(--tl-spring),
         border-color 200ms ease,
-        background-color 200ms ease;
+        background-color 200ms ease,
+        color 200ms ease;
 }
 
 .tl-public :where(
@@ -334,6 +339,57 @@
     box-shadow:
         var(--tl-neu-inset-shadow),
         0 0 0 3px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* حل ریشه‌ای کنتراست و رنگ متن تمام فیلدهای ورودی در حالت تاریک */
+.dark .tl-neu-inset,
+.dark .tl-public :where(
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    input[type="url"],
+    select,
+    textarea
+),
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark textarea {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #a8a29e !important;
+    -webkit-text-fill-color: #a8a29e !important;
+}
+
+/* استایل سراسری ضد سیاه‌شدگی اتوفیل مرورگر (Chrome / Edge / Safari / Blink) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f8fafc inset !important;
+    box-shadow: 0 0 0 1000px #f8fafc inset !important;
+    -webkit-text-fill-color: #0f172a !important;
+    color: #0f172a !important;
+    caret-color: #0f172a !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #0d0c0b inset !important;
+    box-shadow: 0 0 0 1000px #0d0c0b inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    color: #ffffff !important;
+    caret-color: #fbbf24 !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 /* دکمه و گوی آیکون برجسته نئومورفیک (Tactile Secondary Button & Icon Orb) */

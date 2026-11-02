@@ -73,10 +73,44 @@
     <style>
         [x-cloak] { display: none !important; }
         body { font-family: var(--font-sans); }
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus {
-            -webkit-text-fill-color: inherit;
+        
+        /* اصلاح کامل و قطعی کنتراست فیلدهای فرم و متن در حالت تاریک و اتوفیل مرورگر */
+        html.dark { color-scheme: dark; }
+        html:not(.dark) { color-scheme: light; }
+
+        .dark input,
+        .dark .tl-neu-inset {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        .dark input::placeholder {
+            color: #a8a29e !important;
+            -webkit-text-fill-color: #a8a29e !important;
+        }
+
+        /* جلوگیری ۱۰۰٪ از سیاه‌شدن کادر یا متن در زمان تکمیل خودکار (Autofill) نام‌کاربری و رمز عبور */
+        .dark input:-webkit-autofill,
+        .dark input:-webkit-autofill:hover,
+        .dark input:-webkit-autofill:focus,
+        .dark input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #0d0c0b inset !important;
+            box-shadow: 0 0 0 1000px #0d0c0b inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff !important;
+            caret-color: #fbbf24 !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        html:not(.dark) input:-webkit-autofill,
+        html:not(.dark) input:-webkit-autofill:hover,
+        html:not(.dark) input:-webkit-autofill:focus,
+        html:not(.dark) input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #f8fafc inset !important;
+            box-shadow: 0 0 0 1000px #f8fafc inset !important;
+            -webkit-text-fill-color: #0f172a !important;
+            color: #0f172a !important;
+            caret-color: #0f172a !important;
             transition: background-color 5000s ease-in-out 0s;
         }
     </style>

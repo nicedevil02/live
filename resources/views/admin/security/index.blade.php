@@ -33,7 +33,7 @@
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">رمز عبور فعلی (جهت احراز هویت) *</label>
             <input type="password" required dir="ltr" placeholder="••••••••"
                    x-model="currentPassword"
-                   class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-rose-500/40 transition-shadow text-left">
+                   class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-3 text-base text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/40 transition-shadow text-left">
         </div>
 
         <hr class="border-slate-200 dark:border-slate-800">
@@ -46,7 +46,7 @@
                 <label class="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"><i data-lucide="user" class="w-4 h-4 text-slate-400"></i> نام کاربری جدید</label>
                 <input type="text" dir="ltr" placeholder="admin"
                        x-model="newUsername"
-                       class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
+                       class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -54,13 +54,13 @@
                     <label class="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"><i data-lucide="lock" class="w-4 h-4 text-slate-400"></i> رمز عبور جدید</label>
                     <input type="password" dir="ltr" placeholder="حداقل ۴ رقم یا کاراکتر"
                            x-model="newPassword"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">تکرار رمز عبور جدید</label>
                     <input type="password" dir="ltr" placeholder="تکرار رمز عبور"
                            x-model="confirmPassword"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-base text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-shadow text-left">
                 </div>
             </div>
         </div>

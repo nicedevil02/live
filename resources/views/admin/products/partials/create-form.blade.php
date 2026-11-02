@@ -55,19 +55,19 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">نام محصول</label>
-                <input type="text" x-model="form.title" :class="errors.title ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="مثال: مدال تراش خورده ۱۸ عیار">
+                <input type="text" x-model="form.title" :class="errors.title ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="مثال: مدال تراش خورده ۱۸ عیار">
                 <template x-if="errors.title"><span class="text-red-500 text-xs mt-1" x-text="errors.title[0]"></span></template>
             </div>
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">وزن (گرم)</label>
-                <input type="number" step="0.001" x-model="form.weight_gram" :class="errors.weight_gram ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="وارد کردن وزن الزامی است">
+                <input type="number" step="0.001" x-model="form.weight_gram" :class="errors.weight_gram ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="وارد کردن وزن الزامی است">
                 <template x-if="errors.weight_gram"><span class="text-red-500 text-xs mt-1" x-text="errors.weight_gram[0]"></span></template>
             </div>
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">نوع سود و اجرت</label>
-                <select x-model="form.profit_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                <select x-model="form.profit_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     <option value="percent">درصد سود و اجرت (%)</option>
                     <option value="amount">مبلغ ثابت کل سود و اجرت (تومان)</option>
                     <option value="amount_per_gram">مبلغ ثابت به ازای هر گرم (تومان)</option>
@@ -76,7 +76,7 @@
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">مقدار سود و اجرت</label>
-                <input type="number" x-model="form.profit_value" :class="errors.profit_value ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="وارد کردن سود الزامی است">
+                <input type="number" x-model="form.profit_value" :class="errors.profit_value ? 'border-red-500 ring-red-500' : 'border-slate-200 dark:border-slate-700'" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="وارد کردن سود الزامی است">
                 <template x-if="errors.profit_value"><span class="text-red-500 text-xs mt-1" x-text="errors.profit_value[0]"></span></template>
             </div>
 
@@ -163,7 +163,7 @@
                             }">
                         </label>
                         <div class="text-slate-300 text-sm">یا</div>
-                        <input type="text" x-model="imageUrl" placeholder="لینک مستقیم تصویر (URL)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="text" x-model="imageUrl" placeholder="لینک مستقیم تصویر (URL)" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
                     <template x-if="errors.image_file"><span class="text-red-500 text-xs mt-1" x-text="errors.image_file[0]"></span></template>
                 </div>

@@ -338,7 +338,7 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">مدت زمان باقیمانده از اشتراک (از ۱ روز تا هر تعداد روز دلخواه):</label>
                     <div class="flex items-center gap-2">
                         <input type="number" name="days" min="1" max="5000" required x-model="customDays"
-                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-base font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/40 tabular-nums">
+                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 tabular-nums">
                         <span class="text-xs text-slate-500 font-bold whitespace-nowrap">روز از امروز</span>
                     </div>
                     <p class="text-[11px] text-slate-500 dark:text-slate-400">
@@ -395,14 +395,14 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">رمز عبور جدید:</label>
                     <input type="password" name="password" required minlength="4" placeholder="حداقل ۴ رقم یا کاراکتر"
-                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-left" dir="ltr">
+                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-left" dir="ltr">
                 </div>
 
                 {{-- Confirm Password Input --}}
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">تکرار رمز عبور جدید:</label>
                     <input type="password" name="password_confirmation" required minlength="4" placeholder="تکرار رمز عبور"
-                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-left" dir="ltr">
+                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-left" dir="ltr">
                 </div>
 
                 <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">

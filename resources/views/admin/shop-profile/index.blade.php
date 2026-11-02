@@ -215,7 +215,7 @@
                             <span>اینستاگرام</span>
                         </label>
                         <input type="text" dir="ltr" x-model="form.instagram" placeholder="@my_gold_gallery"
-                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-left font-mono">
+                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-left font-mono">
                     </div>
                     <div class="space-y-1.5">
                         <label class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
@@ -223,7 +223,7 @@
                             <span>روبیکا / ایتا / تلگرام</span>
                         </label>
                         <input type="text" dir="ltr" x-model="form.rubika" placeholder="@channel_id"
-                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-left font-mono">
+                               class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 text-left font-mono">
                     </div>
                 </div>
             </div>
@@ -248,7 +248,7 @@
                         <span>لینک مقصد (URL کامل)</span>
                     </label>
                     <input type="text" dir="ltr" x-model="form.qr_link" placeholder="https://rubika.ir/my_channel"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left font-mono">
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left font-mono">
                 </div>
 
                 {{-- عنوان بالای QR --}}
@@ -258,7 +258,7 @@
                         <span>متن بالای کد QR</span>
                     </label>
                     <input type="text" x-model="form.qr_label" placeholder="مثال: کانال روبیکا / عضویت باشگاه مشتریان"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                 </div>
 
                 {{-- توضیح زیر QR --}}
@@ -268,7 +268,7 @@
                         <span>توضیح زیر کد QR</span>
                     </label>
                     <input type="text" x-model="form.qr_desc" placeholder="مثال: اسکن جهت عضویت در کانال قیمت‌ها"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                 </div>
 
                 {{-- پیش‌نمایش زنده در کارت تلویزیون --}}

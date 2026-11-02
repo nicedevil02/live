@@ -13,17 +13,17 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">نام محصول</label>
-                <input type="text" x-model="form.title" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                <input type="text" x-model="form.title" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
             </div>
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">وزن (گرم)</label>
-                <input type="number" step="0.001" x-model="form.weight_gram" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="number" step="0.001" x-model="form.weight_gram" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">نوع سود و اجرت</label>
-                <select x-model="form.profit_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <select x-model="form.profit_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
                     <option value="percent">درصد سود و اجرت (%)</option>
                     <option value="amount">مبلغ ثابت کل سود و اجرت (تومان)</option>
                     <option value="amount_per_gram">مبلغ ثابت به ازای هر گرم (تومان)</option>
@@ -32,7 +32,7 @@
 
             <div>
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">مقدار سود و اجرت</label>
-                <input type="number" x-model="form.profit_value" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="number" x-model="form.profit_value" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
 
             {{-- Marketing Badges --}}
@@ -96,7 +96,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div class="flex gap-2">
-                    <input type="text" x-model="imageUrl" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-blue-500" placeholder="لینک تصویر جدید (URL)">
+                    <input type="text" x-model="imageUrl" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500" placeholder="لینک تصویر جدید (URL)">
                     <button @click="handleAddImageUrl" class="px-4 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold hover:bg-slate-300 transition-colors">افزودن</button>
                 </div>
                 <div>
