@@ -1073,10 +1073,10 @@
                             <span class="text-xs text-stone-600 dark:text-stone-400">مبلغ یک سال کامل:</span>
                             <div class="text-left">
                                 <div class="flex items-baseline gap-1.5">
-                                    <span class="text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۳,۹۹۰,۰۰۰</span>
+                                    <span class="text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۴,۷۰۰,۰۰۰</span>
                                     <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">تومان</span>
                                 </div>
-                                <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5 font-mono tabular-nums">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
+                                <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5 font-mono tabular-nums">تخفیف ۴۸ ساعت اول: ۳,۹۶۰,۰۰۰ ت</div>
                             </div>
                         </div>
                         <ul class="space-y-2.5 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-4">
@@ -1285,10 +1285,12 @@
                         </div>
                         <div class="mb-4">
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۳,۹۹۰,۰۰۰</span>
+                                <span class="text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۴,۷۰۰,۰۰۰</span>
                                 <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">تومان</span>
                             </div>
-                            <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-1 font-mono tabular-nums">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
+                            <div class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">
+                                <span>تخفیف ۴۸ ساعت اول: ۳,۹۶۰,۰۰۰ تومان</span>
+                            </div>
                         </div>
                         <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">
                             بیشترین صرفه اقتصادی برای یک سال کامل بدون دغدغه نوسان قیمت، همراه با اولویت پشتیبانی.

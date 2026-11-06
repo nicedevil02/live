@@ -182,6 +182,92 @@
             </div>
         </div>
     @endif
+    {{-- نوار پیشنهاد ویژه ۴۸ ساعت اول ثبت‌نام --}}
+    @if(!empty($isWelcomePeriod))
+        <div class="rounded-2xl p-4 sm:p-5 border-2 border-amber-500/60 bg-gradient-to-r from-amber-500/15 via-slate-900 to-amber-950/30 text-white shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0 shadow-md shadow-amber-500/30">
+                    🔥
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h3 class="text-sm sm:text-base font-black text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۴۸ ساعت اول)</h3>
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500 text-white">
+                            {{ $welcomeHoursLeft }} ساعت تا انقضا
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                        اشتراک سالانه الماس طلالایو به جای <span class="line-through text-slate-400">۴,۷۰۰,۰۰۰ تومان</span>، فقط با <strong class="text-amber-300 text-sm font-black">۳,۹۶۰,۰۰۰ تومان</strong> برای شما محاسبه می‌شود (۷۴۰,۰۰۰ تومان تخفیف ویژه افتتاحیه).
+                    </p>
+                </div>
+            </div>
+
+            <div class="shrink-0 w-full md:w-auto">
+                <a href="{{ route('admin.subscription.index') }}"
+                   class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/25 flex items-center justify-center gap-2">
+                    <span>خرید با تخفیف ویژه (۳,۹۶۰,۰۰۰ ت)</span>
+                    <span>&larr;</span>
+                </a>
+            </div>
+        </div>
+    @endif
+
+    {{-- کارت اختصاصی درخواست تماس و نصب رایگان تلویزیون توسط کارشناس --}}
+    @if(!empty($onboardingChecklist) && !$onboardingChecklist['tv_connected'])
+        <div x-data="{ requested: false, loading: false, msg: '' }" class="rounded-2xl p-4 sm:p-5 border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-900 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-black text-2xl shrink-0">
+                    📺
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm sm:text-base font-black text-white">در اتصال تلویزیون مغازه نیاز به راهنمایی دارید؟</h3>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">۱۰۰٪ رایگان</span>
+                    </div>
+                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                        کارشناس فنی طلالایو در کمتر از ۳ دقیقه پشت تلفن، تابلوی زنده طلا را روی تلویزیون مغازه شما روشن می‌کند.
+                    </p>
+                    <div x-show="msg" x-text="msg" class="text-xs font-bold text-emerald-400 mt-1.5" x-cloak></div>
+                </div>
+            </div>
+
+            <div class="shrink-0 w-full md:w-auto">
+                <button type="button"
+                        x-show="!requested"
+                        :disabled="loading"
+                        @click="
+                            loading = true;
+                            fetch('{{ route('admin.request-setup-call') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json'
+                                }
+                            })
+                            .then(r => r.json())
+                            .then(data => {
+                                loading = false;
+                                if(data.success) {
+                                    requested = true;
+                                    msg = data.message;
+                                }
+                            })
+                            .catch(e => { loading = false; });
+                        "
+                        class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                    <span x-show="!loading">📞 درخواست تماس و نصب رایگان</span>
+                    <span x-show="loading" x-cloak>در حال ثبت درخواست...</span>
+                </button>
+
+                <div x-show="requested" x-cloak class="px-4 py-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-black text-xs flex items-center justify-center gap-1.5">
+                    <span>✓</span>
+                    <span>درخواست ثبت شد؛ به زودی تماس می‌گیریم</span>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- نوار وضعیت اشتراک / دوره آزمایشی (مخصوص گالری‌های غیر سوپرادمین) --}}
     @if(!auth()->user()->is_super_admin && auth()->user()->expires_at)
         @php

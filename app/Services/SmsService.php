@@ -113,6 +113,25 @@ class SmsService
     }
 
     /**
+     * ارسال نوتیفیکیشن درخواست تماس و راه‌اندازی فوری تلویزیون توسط کارشناس به مدیریت
+     */
+    public function notifyAdminSetupCallRequest(string $shopName, string $mobile): bool
+    {
+        $adminMobile = self::normalizeMobile($this->adminPhone);
+        if (empty($adminMobile)) {
+            return false;
+        }
+
+        $this->logSms('admin_setup_call_request', $adminMobile, [
+            'shop'     => $shopName,
+            'customer' => $mobile,
+            'note'     => 'درخواست تماس فوری برای نصب تلویزیون مغازه ثبت شد.',
+        ]);
+
+        return true;
+    }
+
+    /**
      * ثبت لاگ و اطلاع‌رسانی پیامکی لینک اختصاصی تابلو به طلافروش
      */
     public function sendWelcomeSms(string $mobile, string $shopName, string $slug): bool

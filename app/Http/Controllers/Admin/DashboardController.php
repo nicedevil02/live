@@ -73,6 +73,40 @@ class DashboardController extends Controller
             'is_all_done'        => $completedCount >= 4,
         ];
 
-        return view('admin.dashboard', compact('username', 'onboardingChecklist'));
+        $isWelcomePeriod = $user->created_at ? (now()->diffInHours($user->created_at, false) <= 48) : false;
+        $welcomeHoursLeft = $user->created_at ? max(0, 48 - (int)now()->diffInHours($user->created_at, false)) : 0;
+
+        return view('admin.dashboard', compact('username', 'onboardingChecklist', 'isWelcomePeriod', 'welcomeHoursLeft'));
+    }
+
+    /**
+     * ثبت درخواست تماس و راه‌اندازی رایگان تلویزیون توسط کارشناس طلالایو
+     */
+    public function requestSetupCall(\Illuminate\Http\Request $request, \App\Services\SmsService $smsService)
+    {
+        $user = auth()->user();
+
+        \App\Models\AuditLog::create([
+            'id'          => 'call-' . now()->timestamp . rand(100, 999),
+            'actor'       => $user->name ?? $user->phone ?? 'کاربر',
+            'action'      => 'request_setup_call',
+            'entity_type' => 'user',
+            'entity_id'   => (string) $user->id,
+            'payload'     => json_encode([
+                'phone'        => $user->phone,
+                'name'         => $user->name,
+                'city'         => $user->city_name,
+                'ip'           => $request->ip(),
+                'requested_at' => now()->toDateTimeString(),
+            ], JSON_UNESCAPED_UNICODE),
+            'created_at'  => now(),
+        ]);
+
+        $smsService->notifyAdminSetupCallRequest($user->name ?? 'طلافروشی', $user->phone ?? '');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'درخواست تماس شما با اولویت بالا ثبت شد. کارشناس فنی طلالایو جهت راه‌اندازی سریع تلویزیون مغازه به زودی با شما تماس می‌گیرد.',
+        ]);
     }
 }

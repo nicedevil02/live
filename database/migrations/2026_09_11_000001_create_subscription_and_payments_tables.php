@@ -92,7 +92,7 @@ return new class extends Migration
                     'name'           => 'اشتراک ۱ ساله الماس (ویژه)',
                     'slug'           => '12-months',
                     'duration_days'  => 365,
-                    'price'          => 3990000,
+                    'price'          => 4700000,
                     'original_price' => 8280000,
                     'badge_text'     => 'بیشترین صرفه اقتصادی - محبوب‌ترین',
                     'features'       => json_encode([

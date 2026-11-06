@@ -154,6 +154,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::post('/subscription/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
     Route::get('/subscription/invoice/{payment}', [SubscriptionController::class, 'invoice'])->name('subscription.invoice');
 
+    // درخواست تماس و نصب رایگان تلویزیون توسط کارشناس
+    Route::post('/request-setup-call', [DashboardController::class, 'requestSetupCall'])->name('request-setup-call');
+
     // محصولات (ویترین)
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');

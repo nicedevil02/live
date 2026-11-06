@@ -250,14 +250,18 @@
             <div>
                 <div class="flex items-center justify-between mb-4 pt-2">
                     <h3 class="text-lg font-bold text-stone-900 dark:text-stone-50">اشتراک سالانه (۱۲ ماه)</h3>
-                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold tl-glass-badge text-amber-800 dark:text-amber-300">بیش از ۵۰٪ تخفیف</span>
+                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold tl-glass-badge text-amber-800 dark:text-amber-300">محبوب‌ترین انتخاب</span>
                 </div>
                 <div class="mb-4">
                     <div class="flex items-baseline gap-1.5">
-                        <span class="text-3xl font-black text-amber-700 dark:text-amber-400 tabular-nums">۳,۹۹۰,۰۰۰</span>
+                        <span class="text-3xl font-black text-amber-700 dark:text-amber-400 tabular-nums">۴,۷۰۰,۰۰۰</span>
                         <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">تومان</span>
                     </div>
-                    <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-bold mt-1 tabular-nums">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
+                    <div class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-black border border-emerald-500/20">
+                        <span>🔥</span>
+                        <span>تخفیف ۴۸ ساعت اول ثبت‌نام: فقط ۳,۹۶۰,۰۰۰ تومان</span>
+                    </div>
+                    <div class="text-[11px] text-stone-500 dark:text-stone-400 mt-1 tabular-nums">معادل فقط ۳۳۰,۰۰۰ تومان / ماه در بازه تخفیف</div>
                 </div>
                 <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">
                     بیشترین صرفه اقتصادی برای یک سال کامل بدون دغدغه نوسان قیمت، همراه با اولویت پشتیبانی.
@@ -293,6 +297,27 @@
             </div>
         </div>
 
+    </div>
+
+    {{-- کادر تضمین بازگشت ۱۰۰٪ وجه و امنیت خرید --}}
+    <div class="tl-reveal relative z-10 max-w-4xl mx-auto rounded-3xl p-6 sm:p-7 bg-gradient-to-l from-emerald-500/10 via-amber-500/10 to-stone-100/50 dark:from-emerald-950/20 dark:via-amber-950/20 dark:to-stone-900/40 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-right shadow-sm">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-3xl font-black shrink-0">
+                🛡️
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-black text-stone-900 dark:text-stone-100">
+                    ضمانت بازگشت ۱۰۰٪ وجه تا ۳۰ روز (بدون قید و شرط)
+                </h3>
+                <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed max-w-xl">
+                    اگر به هر دلیلی در ماه اول از تابلوی طلالایو در مغازه خود رضایت کامل نداشتید، تنها با یک پیام یا تماس، تمام مبلغ پرداختی بدون هیچ‌گونه سوالی به حساب بانکی شما بازگردانده خواهد شد.
+                </p>
+            </div>
+        </div>
+        <div class="shrink-0 flex items-center gap-2 text-xs font-black text-emerald-700 dark:text-emerald-400 bg-white dark:bg-stone-900 px-4 py-2.5 rounded-xl border border-emerald-500/30 shadow-xs">
+            <span>تضمین پایداری ۹۹.۹٪</span>
+            <span>✓</span>
+        </div>
     </div>
 
     {{-- بخش مقایسه با سایر راه‌حل‌ها و رقبا --}}

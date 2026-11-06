@@ -98,7 +98,7 @@ class SubscriptionController extends Controller
                         'name'           => 'اشتراک ۱ ساله الماس (ویژه)',
                         'slug'           => '12-months',
                         'duration_days'  => 365,
-                        'price'          => 3990000,
+                        'price'          => 4700000,
                         'original_price' => 8280000,
                         'badge_text'     => 'بیشترین صرفه اقتصادی - محبوب‌ترین',
                         'features'       => json_encode([
@@ -121,22 +121,51 @@ class SubscriptionController extends Controller
             }
         }
 
-        if (Schema::hasTable('coupons') && DB::table('coupons')->count() === 0) {
+        // بروزرسانی قیمت پلن سالانه به ۴,۷۰۰,۰۰۰ تومان
+        if (Schema::hasTable('subscription_plans')) {
             try {
-                DB::table('coupons')->insert([
-                    'code'         => 'TALALIVE10',
-                    'title'        => 'تخفیف ۱۰ درصدی راه‌اندازی طلالایو',
-                    'type'         => 'percent',
-                    'value'        => 10,
-                    'min_amount'   => 500000,
-                    'max_discount' => 500000,
-                    'usage_limit'  => 1000,
-                    'used_count'   => 0,
-                    'is_active'    => true,
-                    'created_at'   => now(),
-                    'updated_at'   => now(),
-                ]);
-                Log::info('Auto-seeded default coupon successfully.');
+                DB::table('subscription_plans')
+                    ->where('slug', '12-months')
+                    ->update([
+                        'price'          => 4700000,
+                        'original_price' => 8280000,
+                    ]);
+            } catch (\Throwable $e) {}
+        }
+
+        if (Schema::hasTable('coupons')) {
+            try {
+                if (DB::table('coupons')->count() === 0) {
+                    DB::table('coupons')->insert([
+                        'code'         => 'TALALIVE10',
+                        'title'        => 'تخفیف ۱۰ درصدی راه‌اندازی طلالایو',
+                        'type'         => 'percent',
+                        'value'        => 10,
+                        'min_amount'   => 500000,
+                        'max_discount' => 500000,
+                        'usage_limit'  => 1000,
+                        'used_count'   => 0,
+                        'is_active'    => true,
+                        'created_at'   => now(),
+                        'updated_at'   => now(),
+                    ]);
+                }
+
+                // ثبت یا بروزرسانی کوپن تخفیف ۴۸ ساعت اول (تبدیل ۴,۷۰۰,۰۰۰ به ۳,۹۶۰,۰۰۰)
+                DB::table('coupons')->updateOrInsert(
+                    ['code' => 'WELCOME48'],
+                    [
+                        'title'        => 'تخفیف ویژه ۴۸ ساعت اول ثبت‌نام گالری',
+                        'type'         => 'fixed',
+                        'value'        => 740000,
+                        'min_amount'   => 4000000,
+                        'max_discount' => 740000,
+                        'usage_limit'  => null,
+                        'is_active'    => true,
+                        'created_at'   => now(),
+                        'updated_at'   => now(),
+                    ]
+                );
             } catch (\Throwable $e) {
                 Log::error('Auto-seed coupons failed: ' . $e->getMessage());
             }
@@ -175,6 +204,9 @@ class SubscriptionController extends Controller
             'account_owner'         => 'بهمن شاکری',
         ]);
 
+        $isWelcomePeriod = $user->created_at ? (now()->diffInHours($user->created_at, false) <= 48) : false;
+        $welcomeHoursLeft = $user->created_at ? max(0, 48 - (int)now()->diffInHours($user->created_at, false)) : 0;
+
         return view('admin.subscription.index', compact(
             'user',
             'plans',
@@ -183,7 +215,9 @@ class SubscriptionController extends Controller
             'isSubscribed',
             'jalaliExpiry',
             'onlineGatewaysEnabled',
-            'bankInfo'
+            'bankInfo',
+            'isWelcomePeriod',
+            'welcomeHoursLeft'
         ));
     }
 

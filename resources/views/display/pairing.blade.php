@@ -934,10 +934,10 @@
                             </div>
                             <div class="text-left">
                                 <div class="flex items-baseline gap-1.5">
-                                    <span class="text-3xl font-black text-amber-500 font-mono">۳,۹۹۰,۰۰۰</span>
+                                    <span class="text-3xl font-black text-amber-500 font-mono">۴,۷۰۰,۰۰۰</span>
                                     <span class="text-xs font-bold text-slate-500">تومان</span>
                                 </div>
-                                <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-black mt-0.5">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
+                                <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-black mt-0.5">تخفیف ۴۸ ساعت اول: ۳,۹۶۰,۰۰۰ ت</div>
                             </div>
                         </div>
                         <ul class="space-y-2.5 text-xs text-slate-700 dark:text-slate-200 border-t border-amber-500/20 pt-4">
@@ -1146,10 +1146,12 @@
                         </div>
                         <div class="mb-4">
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-3xl font-black text-amber-500 font-mono">۳,۹۹۰,۰۰۰</span>
+                                <span class="text-3xl font-black text-amber-500 font-mono">۴,۷۰۰,۰۰۰</span>
                                 <span class="text-xs font-bold text-slate-500">تومان</span>
                             </div>
-                            <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold mt-1">معادل فقط ۳۳۲,۵۰۰ تومان / ماه</div>
+                            <div class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-black">
+                                <span>تخفیف ۴۸ ساعت اول: ۳,۹۶۰,۰۰۰ تومان</span>
+                            </div>
                         </div>
                         <p class="text-xs text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
                             بیشترین صرفه اقتصادی برای یک سال کامل بدون دغدغه نوسان قیمت، همراه با اولویت پشتیبانی.
