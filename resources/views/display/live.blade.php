@@ -1789,6 +1789,83 @@
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
+
+        /* =========================================================================
+           SUBSCRIPTION EXPIRY WARNING BANNER (هماهنگ با تم فعال تابلو)
+           کنتراست بالا و سازگار با تلویزیون‌های هوشمند و انواع تم‌های تابلو
+           ========================================================================= */
+        .sub-warn-container-light {
+            background-color: #fffdf5 !important;
+            background: linear-gradient(135deg, #ffffff 0%, #fef3c7 50%, #fffbeb 100%) !important;
+            border: 2px solid #f59e0b !important;
+            box-shadow: 0 14px 40px -4px rgba(217, 119, 6, 0.28), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 #ffffff !important;
+            color: #0f172a !important;
+        }
+        .sub-warn-container-dark {
+            background-color: #1c1917 !important;
+            background: linear-gradient(135deg, #1c1917 0%, #291c10 50%, #1c1917 100%) !important;
+            border: 2px solid rgba(245, 158, 11, 0.75) !important;
+            box-shadow: 0 16px 45px -4px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(251, 191, 36, 0.25) !important;
+            color: #ffffff !important;
+        }
+        .sub-warn-icon-light {
+            background-color: #fef3c7 !important;
+            border: 1.5px solid #fbbf24 !important;
+            color: #b45309 !important;
+        }
+        .sub-warn-icon-dark {
+            background-color: rgba(245, 158, 11, 0.2) !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+            color: #fbbf24 !important;
+        }
+        .sub-warn-title-light {
+            color: #78350f !important;
+            font-weight: 900 !important;
+        }
+        .sub-warn-title-dark {
+            color: #fde68a !important;
+            font-weight: 900 !important;
+        }
+        .sub-warn-badge-light {
+            background-color: #fde68a !important;
+            color: #78350f !important;
+            border: 1px solid #f59e0b !important;
+            font-weight: 900 !important;
+        }
+        .sub-warn-badge-dark {
+            background-color: rgba(245, 158, 11, 0.25) !important;
+            color: #fef08a !important;
+            border: 1px solid rgba(245, 158, 11, 0.5) !important;
+            font-weight: 900 !important;
+        }
+        .sub-warn-desc-light {
+            color: #451a03 !important;
+            font-weight: 700 !important;
+        }
+        .sub-warn-desc-dark {
+            color: #e2e8f0 !important;
+            font-weight: 500 !important;
+        }
+        .sub-warn-close-light {
+            background-color: #fef3c7 !important;
+            border: 1px solid #fde68a !important;
+            color: #78350f !important;
+        }
+        .sub-warn-close-light:hover {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+            border-color: #ef4444 !important;
+        }
+        .sub-warn-close-dark {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #e2e8f0 !important;
+        }
+        .sub-warn-close-dark:hover {
+            background-color: rgba(239, 68, 68, 0.6) !important;
+            color: #ffffff !important;
+            border-color: rgba(239, 68, 68, 0.8) !important;
+        }
     </style>
 </head>
 <body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen" @keydown.window="handleKeydown($event)">
@@ -1832,18 +1909,23 @@
              x-transition:leave-start="translate-y-0 opacity-100"
              x-transition:leave-end="-translate-y-full opacity-0"
              class="fixed top-2 sm:top-3 inset-x-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none">
-            <div class="pointer-events-auto max-w-4xl w-full rounded-2xl bg-gradient-to-r from-amber-950/95 via-stone-900/95 to-amber-950/95 border-2 border-amber-500/50 shadow-2xl backdrop-blur-2xl px-4 py-2.5 sm:px-6 sm:py-3 flex items-center justify-between gap-3 text-white">
+            <div :class="isLightTheme ? 'sub-warn-container-light' : 'sub-warn-container-dark'"
+                 class="pointer-events-auto max-w-4xl w-full rounded-2xl border-2 px-4 py-2.5 sm:px-6 sm:py-3 flex items-center justify-between gap-3 transition-all duration-300">
                 <div class="flex items-center gap-3 min-w-0">
-                    <span class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-inner">
+                    <span :class="isLightTheme ? 'sub-warn-icon-light' : 'sub-warn-icon-dark'"
+                          class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-inner">
                         ⚠️
                     </span>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-xs sm:text-sm font-black text-amber-300">هشدار پایان اعتبار تابلوی طلالایو</span>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-amber-500/25 text-amber-200 border border-amber-500/40"
+                            <span :class="isLightTheme ? 'sub-warn-title-light' : 'sub-warn-title-dark'"
+                                  class="text-xs sm:text-sm font-black">هشدار پایان اعتبار تابلوی طلالایو</span>
+                            <span :class="isLightTheme ? 'sub-warn-badge-light' : 'sub-warn-badge-dark'"
+                                  class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black"
                                   x-text="subscriptionWarning?.daysRemaining === 1 ? 'کمتر از ۲۴ ساعت باقی‌مانده' : (subscriptionWarning?.daysRemaining + ' روز تا پایان اعتبار')"></span>
                         </div>
-                        <p class="text-[11px] sm:text-xs text-stone-300 mt-0.5 leading-relaxed truncate"
+                        <p :class="isLightTheme ? 'sub-warn-desc-light' : 'sub-warn-desc-dark'"
+                           class="text-[11px] sm:text-xs mt-0.5 leading-relaxed truncate"
                            x-text="subscriptionWarning?.message || 'جهت استمرار پخش زنده نرخ‌ها روی تلویزیون، لطفاً نسبت به تمدید اشتراک اقدام فرمایید.'"></p>
                     </div>
                 </div>
@@ -1855,7 +1937,8 @@
                         <span>&larr;</span>
                     </a>
                     <button @click="dismissSubscriptionWarning()" type="button"
-                            class="w-8 h-8 rounded-xl bg-white/10 hover:bg-rose-500/30 text-stone-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center cursor-pointer shrink-0"
+                            :class="isLightTheme ? 'sub-warn-close-light' : 'sub-warn-close-dark'"
+                            class="w-8 h-8 rounded-xl transition-colors flex items-center justify-center cursor-pointer shrink-0"
                             title="بستن هشدار">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
