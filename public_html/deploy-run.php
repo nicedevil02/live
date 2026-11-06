@@ -165,15 +165,16 @@ if (!empty($_GET['sync_blade']) || !empty($_GET['sync_files']) || !empty($_GET['
                 @file_put_contents($pubDest, $content);
             }
 
-            // Also sync to repositories if present
-            $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
-            if (!empty($foundRepos)) {
-                foreach ($foundRepos as $r) {
-                    $rDest = "$r/$relPath";
-                    $rDir = dirname($rDest);
-                    if (!is_dir($rDir)) @mkdir($rDir, 0755, true);
-                    @file_put_contents($rDest, $content);
-                }
+            // Note: We deliberately do not overwrite files in repositories directory here
+            // to avoid leaving uncommitted dirty files in cPanel Git working tree.
+        }
+    }
+
+    if (function_exists('shell_exec')) {
+        $foundRepos = glob("$targetDir/repositories/*", GLOB_ONLYDIR);
+        if (!empty($foundRepos)) {
+            foreach ($foundRepos as $r) {
+                @shell_exec('cd ' . escapeshellarg($r) . ' && git clean -fd 2>&1 && (git reset --hard FETCH_HEAD 2>&1 || git reset --hard origin/master 2>&1)');
             }
         }
     }
@@ -304,10 +305,6 @@ if (!$gitSuccess && !$zipExtracted) {
         $content = @file_get_contents($rawUrl, false, $ctx);
         $isJsChunk = substr($relPath, -3) === '.js';
         if ($content !== false && ($isJsChunk || strlen($content) > 5)) {
-            $srcDest = "$sourceDir/$relPath";
-            @mkdir(dirname($srcDest), 0755, true);
-            @file_put_contents($srcDest, $content);
-
             $dest = "$targetDir/$relPath";
             @mkdir(dirname($dest), 0755, true);
             @file_put_contents($dest, $content);
