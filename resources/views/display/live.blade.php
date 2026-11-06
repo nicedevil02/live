@@ -1819,7 +1819,50 @@
              x-transition:leave-end="-translate-y-full opacity-0"
              class="fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-600/95 text-white font-bold text-xs text-center backdrop-blur-md shadow-md flex items-center justify-center gap-2">
             <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-200 animate-ping"></span>
-            <span>نرخ‌ها در حال به‌روزرسانی — آخرین دریافت: <strong x-text="staleTimeText"></strong></span>
+            <span>نرخ‌ها در حال به‌روزرسانی: آخرین دریافت <strong x-text="staleTimeText"></strong></span>
+        </div>
+
+        {{-- نوار هشدار هوشمند ۳ روز پایانی اعتبار اشتراک با قابلیت بستن دستی توسط طلافروش --}}
+        <div x-show="showSubscriptionWarning && (subscriptionWarning?.active ?? false)"
+             x-cloak
+             x-transition:enter="transition ease-out duration-400"
+             x-transition:enter-start="-translate-y-full opacity-0"
+             x-transition:enter-end="translate-y-0 opacity-100"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="translate-y-0 opacity-100"
+             x-transition:leave-end="-translate-y-full opacity-0"
+             class="fixed top-2 sm:top-3 inset-x-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none">
+            <div class="pointer-events-auto max-w-4xl w-full rounded-2xl bg-gradient-to-r from-amber-950/95 via-stone-900/95 to-amber-950/95 border-2 border-amber-500/50 shadow-2xl backdrop-blur-2xl px-4 py-2.5 sm:px-6 sm:py-3 flex items-center justify-between gap-3 text-white">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-inner">
+                        ⚠️
+                    </span>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs sm:text-sm font-black text-amber-300">هشدار پایان اعتبار تابلوی طلالایو</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-amber-500/25 text-amber-200 border border-amber-500/40"
+                                  x-text="subscriptionWarning?.daysRemaining === 1 ? 'کمتر از ۲۴ ساعت باقی‌مانده' : (subscriptionWarning?.daysRemaining + ' روز تا پایان اعتبار')"></span>
+                        </div>
+                        <p class="text-[11px] sm:text-xs text-stone-300 mt-0.5 leading-relaxed truncate"
+                           x-text="subscriptionWarning?.message || 'جهت استمرار پخش زنده نرخ‌ها روی تلویزیون، لطفاً نسبت به تمدید اشتراک اقدام فرمایید.'"></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                    <a href="{{ route('admin.subscription.index') }}" target="_blank"
+                       class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/25 flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                        <span>تمدید اشتراک</span>
+                        <span>&larr;</span>
+                    </a>
+                    <button @click="dismissSubscriptionWarning()" type="button"
+                            class="w-8 h-8 rounded-xl bg-white/10 hover:bg-rose-500/30 text-stone-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center cursor-pointer shrink-0"
+                            title="بستن هشدار">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
 
         {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
@@ -3056,6 +3099,8 @@
             }
             return {
                 snapshotData: initialSnapshot,
+                subscriptionWarning: initialSnapshot?.subscriptionWarning || null,
+                showSubscriptionWarning: false,
                 isLoading: false, // چون داده‌ها را از سرور گرفته‌ایم
                 connectionState: 'online',
                 errorMessage: '',
@@ -3328,6 +3373,12 @@
                                 });
                             }
                             this.snapshotData = newData;
+                            if (newData && newData.subscriptionWarning !== undefined) {
+                                this.subscriptionWarning = newData.subscriptionWarning;
+                                if (!this.subscriptionWarning || !this.subscriptionWarning.active) {
+                                    this.showSubscriptionWarning = false;
+                                }
+                            }
                         }
  
                         this.connectionState = 'online';
@@ -3439,9 +3490,41 @@
                     }
                 },
 
+                initSubscriptionWarning() {
+                    if (!this.subscriptionWarning || !this.subscriptionWarning.active) {
+                        this.showSubscriptionWarning = false;
+                        return;
+                    }
+                    try {
+                        const uname = this.snapshotData?.username || '{{ $username }}';
+                        const dismissedUntil = localStorage.getItem('talalive_dismiss_sub_warn_' + uname);
+                        if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
+                            this.showSubscriptionWarning = false;
+                            return;
+                        }
+                    } catch (e) {}
+                    this.showSubscriptionWarning = true;
+                },
+
+                dismissSubscriptionWarning() {
+                    this.showSubscriptionWarning = false;
+                    try {
+                        const uname = this.snapshotData?.username || '{{ $username }}';
+                        // بسته ماندن هشدار تا ۸ ساعت در حافظه دستگاه
+                        const expireTime = Date.now() + (8 * 60 * 60 * 1000);
+                        localStorage.setItem('talalive_dismiss_sub_warn_' + uname, expireTime.toString());
+                    } catch (e) {}
+                },
+
                 handleKeydown(e) {
                     this.triggerControls();
                     if (['input', 'textarea', 'select'].includes(e.target.tagName?.toLowerCase())) return;
+
+                    if (e.key === 'Escape' && this.showSubscriptionWarning) {
+                        e.preventDefault();
+                        this.dismissSubscriptionWarning();
+                        return;
+                    }
 
                     switch (e.key) {
                         case 'ArrowUp':
@@ -3481,6 +3564,9 @@
                 },
 
                 init() {
+                    // مقداردهی و بررسی وضعیت هشدار انقضای اشتراک
+                    this.initSubscriptionWarning();
+
                     // ذخیره پایدار توکن و نام کاربری در حافظه محلی و کوکی تلویزیون جهت اتصال همیشگی
                     try {
                         const urlParams = new URLSearchParams(window.location.search);

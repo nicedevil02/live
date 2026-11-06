@@ -78,6 +78,7 @@ class PublicDisplayController extends Controller
             'isTv'               => $request->boolean('tv'),
             'isApp'              => $request->boolean('app'),
             'isNoIndex'          => $isNoIndex,
+            'subscriptionWarning'=> $snapshot['subscriptionWarning'] ?? null,
         ]);
 
         if ($isNoIndex) {
@@ -235,6 +236,25 @@ class PublicDisplayController extends Controller
         $settingsData['show_weather'] = (bool) ($settings->show_weather ?? true);
         $settingsData['show_weather_bg'] = (bool) ($settings->show_weather_bg ?? true);
 
+        // محاسبه هوشمند وضعیت انقضای اشتراک (نمایش هشدار ۳ روز پایانی اعتبار)
+        $subscriptionWarning = null;
+        if ($user->expires_at && !$user->is_super_admin && $user->expires_at->isFuture()) {
+            $hoursRemaining = (int) now()->diffInHours($user->expires_at, false);
+            $daysRemaining = (int) ceil($hoursRemaining / 24);
+            if ($daysRemaining <= 3 && $daysRemaining >= 1) {
+                $subscriptionWarning = [
+                    'active'         => true,
+                    'daysRemaining'  => $daysRemaining,
+                    'hoursRemaining' => $hoursRemaining,
+                    'expiresAt'      => $user->expires_at->toIso8601String(),
+                    'jalaliExpiry'   => \App\Models\User::toJalali($user->expires_at, false),
+                    'message'        => $daysRemaining === 1
+                        ? 'کمتر از ۲۴ ساعت تا پایان اعتبار اشتراک تابلوی طلالایو شما باقی مانده است.'
+                        : "تنها {$daysRemaining} روز تا پایان اعتبار اشتراک تابلوی طلالایو شما باقی مانده است.",
+                ];
+            }
+        }
+
         return [
             'username'               => $user->username,
             'shopName'               => $resolved['shopName'],
@@ -256,6 +276,7 @@ class PublicDisplayController extends Controller
             'settings'               => $settingsData,
             'weather'                => $weather,
             'bingWallpaper'          => $bingWallpaper,
+            'subscriptionWarning'    => $subscriptionWarning,
         ];
     }
 
