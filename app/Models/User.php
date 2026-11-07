@@ -92,6 +92,32 @@ class User extends Authenticatable
     }
 
     /**
+     * بررسی واجد شرایط بودن کاربر برای تخفیف افتتاحیه ۴۸ ساعت اول ثبت‌نام
+     */
+    public function isEligibleForWelcomeOffer(): bool
+    {
+        if ($this->is_super_admin || !$this->created_at || $this->isSubscribed()) {
+            return false;
+        }
+
+        $welcomeDeadline = $this->created_at->copy()->addHours(48);
+        return now()->lessThan($welcomeDeadline);
+    }
+
+    /**
+     * ساعات باقیمانده از مهلت ۴۸ ساعته افتتاحیه
+     */
+    public function welcomeOfferHoursLeft(): int
+    {
+        if (!$this->isEligibleForWelcomeOffer()) {
+            return 0;
+        }
+
+        $welcomeDeadline = $this->created_at->copy()->addHours(48);
+        return max(1, (int) ceil(now()->diffInMinutes($welcomeDeadline) / 60));
+    }
+
+    /**
      * تبدیل تاریخ به فرمت شمسی (جلالی)
      */
     public static function toJalali(?\DateTimeInterface $date, bool $withTime = true): string

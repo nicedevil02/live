@@ -73,8 +73,8 @@ class DashboardController extends Controller
             'is_all_done'        => $completedCount >= 4,
         ];
 
-        $isWelcomePeriod = $user->created_at ? (now()->diffInHours($user->created_at, false) <= 48) : false;
-        $welcomeHoursLeft = $user->created_at ? max(0, 48 - (int)now()->diffInHours($user->created_at, false)) : 0;
+        $isWelcomePeriod = $user->isEligibleForWelcomeOffer();
+        $welcomeHoursLeft = $user->welcomeOfferHoursLeft();
 
         return view('admin.dashboard', compact('username', 'onboardingChecklist', 'isWelcomePeriod', 'welcomeHoursLeft'));
     }

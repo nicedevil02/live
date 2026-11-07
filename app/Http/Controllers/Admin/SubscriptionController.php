@@ -204,8 +204,8 @@ class SubscriptionController extends Controller
             'account_owner'         => 'بهمن شاکری',
         ]);
 
-        $isWelcomePeriod = $user->created_at ? (now()->diffInHours($user->created_at, false) <= 48) : false;
-        $welcomeHoursLeft = $user->created_at ? max(0, 48 - (int)now()->diffInHours($user->created_at, false)) : 0;
+        $isWelcomePeriod = $user->isEligibleForWelcomeOffer();
+        $welcomeHoursLeft = $user->welcomeOfferHoursLeft();
 
         return view('admin.subscription.index', compact(
             'user',
@@ -251,7 +251,7 @@ class SubscriptionController extends Controller
 
         // بررسی و اعمال کد تخفیف در صورت ارسال
         if ($request->filled('coupon_code')) {
-            $couponResult = $couponService->applyCoupon($request->coupon_code, $baseAmount);
+            $couponResult = $couponService->applyCoupon($request->coupon_code, $baseAmount, $user);
             if ($couponResult['success']) {
                 $discountAmount = $couponResult['discount_amount'];
                 $couponId = $couponResult['coupon']->id;
@@ -317,7 +317,7 @@ class SubscriptionController extends Controller
         ]);
 
         $plan = SubscriptionPlan::findOrFail($request->plan_id);
-        $result = $couponService->applyCoupon($request->code, $plan->price);
+        $result = $couponService->applyCoupon($request->code, $plan->price, Auth::user());
 
         return response()->json($result);
     }
@@ -348,7 +348,7 @@ class SubscriptionController extends Controller
 
         // بررسی کد تخفیف در صورت ارسال
         if ($request->filled('coupon_code')) {
-            $couponResult = $couponService->applyCoupon($request->coupon_code, $baseAmount);
+            $couponResult = $couponService->applyCoupon($request->coupon_code, $baseAmount, $user);
             if ($couponResult['success']) {
                 $discountAmount = $couponResult['discount_amount'];
                 $couponId = $couponResult['coupon']->id;
