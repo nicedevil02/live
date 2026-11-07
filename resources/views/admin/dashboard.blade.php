@@ -182,7 +182,7 @@
             </div>
         </div>
     @endif
-    {{-- نوار پیشنهاد ویژه ۴۸ ساعت اول ثبت‌نام --}}
+    {{-- نوار پیشنهاد ویژه ۷۲ ساعت اول ثبت‌نام --}}
     @if(!empty($isWelcomePeriod))
         <div class="rounded-2xl p-4 sm:p-5 border-2 border-amber-500/60 bg-gradient-to-r from-amber-500/15 via-slate-900 to-amber-950/30 text-white shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3.5">
@@ -191,7 +191,7 @@
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="text-sm sm:text-base font-black text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۴۸ ساعت اول)</h3>
+                        <h3 class="text-sm sm:text-base font-black text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۷۲ ساعت اول)</h3>
                         <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500 text-white">
                             {{ $welcomeHoursLeft }} ساعت تا انقضا
                         </span>

@@ -151,11 +151,25 @@ class SubscriptionController extends Controller
                     ]);
                 }
 
-                // ثبت یا بروزرسانی کوپن تخفیف ۴۸ ساعت اول (تبدیل ۴,۷۰۰,۰۰۰ به ۳,۹۶۰,۰۰۰)
+                // ثبت یا بروزرسانی کوپن تخفیف ۷۲ ساعت اول (تبدیل ۴,۷۰۰,۰۰۰ به ۳,۹۶۰,۰۰۰)
+                DB::table('coupons')->updateOrInsert(
+                    ['code' => 'WELCOME72'],
+                    [
+                        'title'        => 'تخفیف ویژه ۷۲ ساعت اول ثبت‌نام گالری',
+                        'type'         => 'fixed',
+                        'value'        => 740000,
+                        'min_amount'   => 4000000,
+                        'max_discount' => 740000,
+                        'usage_limit'  => null,
+                        'is_active'    => true,
+                        'created_at'   => now(),
+                        'updated_at'   => now(),
+                    ]
+                );
                 DB::table('coupons')->updateOrInsert(
                     ['code' => 'WELCOME48'],
                     [
-                        'title'        => 'تخفیف ویژه ۴۸ ساعت اول ثبت‌نام گالری',
+                        'title'        => 'تخفیف ویژه ۷۲ ساعت اول ثبت‌نام گالری',
                         'type'         => 'fixed',
                         'value'        => 740000,
                         'min_amount'   => 4000000,

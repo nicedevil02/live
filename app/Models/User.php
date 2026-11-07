@@ -92,7 +92,7 @@ class User extends Authenticatable
     }
 
     /**
-     * بررسی واجد شرایط بودن کاربر برای تخفیف افتتاحیه ۴۸ ساعت اول ثبت‌نام
+     * بررسی واجد شرایط بودن کاربر برای تخفیف افتتاحیه ۷۲ ساعت اول ثبت‌نام
      */
     public function isEligibleForWelcomeOffer(): bool
     {
@@ -100,12 +100,12 @@ class User extends Authenticatable
             return false;
         }
 
-        $welcomeDeadline = $this->created_at->copy()->addHours(48);
+        $welcomeDeadline = $this->created_at->copy()->addHours(72);
         return now()->lessThan($welcomeDeadline);
     }
 
     /**
-     * ساعات باقیمانده از مهلت ۴۸ ساعته افتتاحیه
+     * ساعات باقیمانده از مهلت ۷۲ ساعته افتتاحیه
      */
     public function welcomeOfferHoursLeft(): int
     {
@@ -113,7 +113,7 @@ class User extends Authenticatable
             return 0;
         }
 
-        $welcomeDeadline = $this->created_at->copy()->addHours(48);
+        $welcomeDeadline = $this->created_at->copy()->addHours(72);
         return max(1, (int) ceil(now()->diffInMinutes($welcomeDeadline) / 60));
     }
 

@@ -1076,7 +1076,7 @@
                                     <span class="text-3xl font-bold text-amber-700 dark:text-amber-400 font-mono tabular-nums">۴,۷۰۰,۰۰۰</span>
                                     <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">تومان</span>
                                 </div>
-                                <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5 font-mono tabular-nums">تخفیف ۴۸ ساعت اول: ۳,۹۶۰,۰۰۰ ت</div>
+                                <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5 font-mono tabular-nums">تخفیف ۷۲ ساعت اول: ۳,۹۶۰,۰۰۰ ت</div>
                             </div>
                         </div>
                         <ul class="space-y-2.5 text-xs text-stone-700 dark:text-stone-300 border-t border-stone-300/60 dark:border-white/10 pt-4">
@@ -1289,7 +1289,7 @@
                                 <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">تومان</span>
                             </div>
                             <div class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">
-                                <span>تخفیف ۴۸ ساعت اول: ۳,۹۶۰,۰۰۰ تومان</span>
+                                <span>تخفیف ۷۲ ساعت اول: ۳,۹۶۰,۰۰۰ تومان</span>
                             </div>
                         </div>
                         <p class="text-xs text-stone-600 dark:text-stone-400 mb-6 leading-relaxed">

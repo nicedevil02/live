@@ -259,7 +259,7 @@
                     </div>
                     <div class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-black border border-emerald-500/20">
                         <span>🔥</span>
-                        <span>تخفیف ۴۸ ساعت اول ثبت‌نام: فقط ۳,۹۶۰,۰۰۰ تومان</span>
+                        <span>تخفیف ۷۲ ساعت اول ثبت‌نام: فقط ۳,۹۶۰,۰۰۰ تومان</span>
                     </div>
                     <div class="text-[11px] text-stone-500 dark:text-stone-400 mt-1 tabular-nums">معادل فقط ۳۳۰,۰۰۰ تومان / ماه در بازه تخفیف</div>
                 </div>
