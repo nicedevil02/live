@@ -28,12 +28,15 @@ if (!is_dir($targetDir)) {
 
 $criticalSyncFiles = [
     'routes/web.php',
+    'routes/console.php',
     'config/tv.php',
+    'app/Console/Commands/FetchBingWallpaper.php',
     'app/Http/Controllers/PublicDisplayController.php',
     'app/Http/Controllers/PublicPageController.php',
     'app/Http/Controllers/Admin/AuthController.php',
     'app/Http/Controllers/Admin/DashboardController.php',
     'app/Http/Controllers/Admin/SubscriptionController.php',
+    'app/Services/BingWallpaperService.php',
     'app/Services/MarketService.php',
     'app/Services/WeatherService.php',
     'app/Services/SmsService.php',
@@ -561,6 +564,13 @@ if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/boo
         $log[] = 'Artisan view:clear: ' . trim(\Illuminate\Support\Facades\Artisan::output());
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         $log[] = 'Artisan cache:clear: ' . trim(\Illuminate\Support\Facades\Artisan::output());
+
+        try {
+            \Illuminate\Support\Facades\Artisan::call('bing:wallpaper', ['--force' => true]);
+            $log[] = 'Artisan bing:wallpaper: ' . trim(\Illuminate\Support\Facades\Artisan::output());
+        } catch (\Throwable $bEx) {
+            $log[] = 'Artisan bing:wallpaper notice: ' . $bEx->getMessage();
+        }
 
         $tableStatus['tv_devices'] = \Illuminate\Support\Facades\Schema::hasTable('tv_devices');
         $tableStatus['tv_sessions'] = \Illuminate\Support\Facades\Schema::hasTable('tv_sessions');
