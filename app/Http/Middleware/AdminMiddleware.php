@@ -15,15 +15,16 @@ class AdminMiddleware
         }
 
         $user = Auth::user();
+        $isImpersonating = $request->session()->has('impersonator_id');
 
-        // بررسی تایید شدن حساب کاربری توسط سوپرادمین
-        if (!$user->is_approved && !$user->is_super_admin) {
+        // بررسی تایید شدن حساب کاربری توسط سوپرادمین (در حالت ورود با هویت کاربر، سوپرادمین مستثنی است)
+        if (!$user->is_approved && !$user->is_super_admin && !$isImpersonating) {
             Auth::logout();
             return redirect()->route('admin.login')->withErrors(['email' => 'حساب کاربری شما در انتظار تایید مدیریت است.']);
         }
 
-        // بررسی تاریخ انقضای اعتبار حساب
-        if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
+        // بررسی تاریخ انقضای اعتبار حساب (در حالت ورود با هویت کاربر، سوپرادمین مستثنی است)
+        if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin && !$isImpersonating) {
             Auth::logout();
             return redirect()->route('admin.login')->withErrors(['email' => 'اعتبار حساب کاربری شما به پایان رسیده است. جهت تمدید اعتبار با مدیریت تماس بگیرید.']);
         }

@@ -169,6 +169,10 @@ class UserController extends Controller
             return back()->with('error', 'شما هم‌اکنون با این حساب کاربری لاگین هستید.');
         }
 
+        if ($targetUser->is_super_admin) {
+            return back()->with('error', 'امکان ورود به حساب سایر مدیران کل وجود ندارد.');
+        }
+
         // ذخیره مشخصات سوپرادمین اصلی در نشست (Session)
         session()->put('impersonator_id', auth()->id());
         session()->put('impersonator_name', auth()->user()->name);
@@ -186,7 +190,7 @@ class UserController extends Controller
             'created_at'  => now(),
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', "شما با موفقیت به عنوان همکار «{$targetUser->name}» وارد شدید.");
+        return redirect()->route('admin.dashboard')->with('success', "شما با موفقیت به عنوان همکار «{$targetUser->name}» وارد پنل کاربری شدید.");
     }
 
     /**
@@ -195,12 +199,23 @@ class UserController extends Controller
     public function leaveImpersonate()
     {
         $impersonatorId = session()->pull('impersonator_id');
-        session()->forget('impersonator_name');
+        $impersonatorName = session()->pull('impersonator_name');
 
         if ($impersonatorId) {
             $superAdmin = User::find($impersonatorId);
             if ($superAdmin) {
                 \Illuminate\Support\Facades\Auth::login($superAdmin);
+
+                AuditLog::create([
+                    'id'          => 'log-' . now()->timestamp . rand(100, 999),
+                    'actor'       => $superAdmin->name,
+                    'action'      => 'leave_impersonate',
+                    'entity_type' => 'user',
+                    'entity_id'   => (string) $superAdmin->id,
+                    'payload'     => json_encode(['restored_admin' => $superAdmin->username]),
+                    'created_at'  => now(),
+                ]);
+
                 return redirect()->route('admin.users.index')->with('success', 'به پنل مدیریت کل (سوپرادمین) بازگشتید.');
             }
         }

@@ -145,7 +145,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     });
 
     // خروج از حساب کاربری طلافروش و بازگشت به سوپرادمین
-    Route::post('/leave-impersonate', [UserController::class, 'leaveImpersonate'])->name('impersonate.leave');
+    Route::match(['get', 'post'], '/leave-impersonate', [UserController::class, 'leaveImpersonate'])->name('impersonate.leave');
 
     // خرید و مدیریت اشتراک
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');

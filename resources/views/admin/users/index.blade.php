@@ -120,15 +120,30 @@
                                     <i data-lucide="calendar-plus" class="w-3 h-3 text-slate-400 shrink-0"></i>
                                     <span>ثبت‌نام: {{ $user->created_at ? \App\Models\User::toJalali($user->created_at) : 'نامشخص' }}</span>
                                 </div>
-                                @if($user->username)
-                                <a href="{{ route('display.live', ['username' => $user->username]) }}" target="_blank" rel="noopener noreferrer"
-                                   class="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
-                                   title="باز کردن تابلوی زنده این کاربر در برگه جدید">
-                                    <i data-lucide="tv" class="w-3 h-3 shrink-0"></i>
-                                    <span>مشاهده تابلو</span>
-                                    <span class="font-mono font-normal text-slate-500 dark:text-slate-400" dir="ltr">/{{ $user->username }}</span>
-                                </a>
-                                @endif
+                                <div class="mt-2 flex flex-wrap items-center gap-2">
+                                    @if($user->username)
+                                    <a href="{{ route('display.live', ['username' => $user->username]) }}" target="_blank" rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                                       title="باز کردن تابلوی زنده این کاربر در برگه جدید">
+                                        <i data-lucide="tv" class="w-3 h-3 shrink-0"></i>
+                                        <span>مشاهده تابلو</span>
+                                    </a>
+                                    @endif
+
+                                    @if($user->id !== auth()->id() && !$user->is_super_admin)
+                                        <span class="text-slate-300 dark:text-slate-700 text-xs">•</span>
+                                        <form action="{{ route('admin.users.impersonate', $user->id) }}" method="POST" class="inline"
+                                              onsubmit="return confirm('آیا می‌خواهید به عنوان «{{ addslashes($user->name) }}» وارد پنل کاربری شوید؟\n\n(در هر زمان می‌توانید از بالای صفحه با زدن «بازگشت به پنل سوپرادمین» به مدیریت کل برگردید.)');">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="inline-flex items-center gap-1 text-xs font-black text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:underline cursor-pointer"
+                                                    title="ورود مستقیم به پنل کاربری این کاربر">
+                                                <i data-lucide="log-in" class="w-3.5 h-3.5 shrink-0"></i>
+                                                <span>ورود به پنل کاربر</span>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
 
                             {{-- ۲. اطلاعات تماس --}}
@@ -212,11 +227,24 @@
                             {{-- ۵. عملیات مدیریت (طرح ۱: آیکون‌باتن‌های مدرن و فشرده) --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-1.5">
+                                    {{-- Impersonate Button (ورود مستقیم به پنل کاربری) --}}
+                                    @if($user->id !== auth()->id() && !$user->is_super_admin)
+                                        <form action="{{ route('admin.users.impersonate', $user->id) }}" method="POST" class="inline"
+                                              onsubmit="return confirm('آیا می‌خواهید به عنوان «{{ addslashes($user->name) }}» وارد پنل کاربری شوید؟\n\n(در هر زمان می‌توانید از بالای صفحه با زدن «بازگشت به پنل سوپرادمین» به مدیریت کل برگردید.)');">
+                                            @csrf
+                                            <button type="submit" 
+                                                    title="ورود به پنل کاربری «{{ $user->name }}»" 
+                                                    class="w-8 h-8 flex items-center justify-center rounded-xl bg-amber-50 text-amber-700 hover:bg-amber-500 hover:text-slate-950 dark:bg-amber-950/40 dark:text-amber-400 dark:hover:bg-amber-400 dark:hover:text-slate-950 border border-amber-200 dark:border-amber-800/50 shadow-sm transition-all cursor-pointer">
+                                                <i data-lucide="log-in" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+
                                     {{-- Approve Button --}}
                                     @if(!$user->is_approved)
                                         <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" title="تأیید عضویت و فعال‌سازی حساب" class="w-8 h-8 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950/40 dark:text-emerald-400 dark:hover:bg-emerald-600 dark:hover:text-white border border-emerald-200 dark:border-emerald-800/50 shadow-sm transition-all">
+                                            <button type="submit" title="تأیید عضویت و فعال‌سازی حساب" class="w-8 h-8 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950/40 dark:text-emerald-400 dark:hover:bg-emerald-600 dark:hover:text-white border border-emerald-200 dark:border-emerald-800/50 shadow-sm transition-all cursor-pointer">
                                                 <i data-lucide="check" class="w-4 h-4"></i>
                                             </button>
                                         </form>
@@ -225,14 +253,14 @@
                                     {{-- Extend Subscription Button --}}
                                     <button @click="openExtendModal({{ $user->id }}, '{{ addslashes($user->name) }}', {{ $user->trialDaysRemaining() }})" 
                                             title="تنظیم و تغییر مدت اعتبار" 
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white border border-blue-200 dark:border-blue-800/50 shadow-sm transition-all">
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white border border-blue-200 dark:border-blue-800/50 shadow-sm transition-all cursor-pointer">
                                         <i data-lucide="calendar" class="w-4 h-4"></i>
                                     </button>
 
                                     {{-- Change Password Button --}}
                                     <button @click="openPasswordModal({{ $user->id }}, '{{ addslashes($user->name) }}')" 
                                             title="تنظیم رمز عبور جدید" 
-                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-700 hover:text-white dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-200 dark:hover:text-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm transition-all">
+                                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-700 hover:text-white dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-200 dark:hover:text-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm transition-all cursor-pointer">
                                         <i data-lucide="key-round" class="w-4 h-4"></i>
                                     </button>
 
@@ -241,7 +269,7 @@
                                           onsubmit="return confirm('آیا از حذف کامل حساب کاربری «{{ addslashes($user->name) }}» و تمامی داده‌های مربوط به آن (پیکربندی‌ها، محصولات، فرمول‌ها) اطمینان صددرصد دارید؟ این عمل غیر قابل بازگشت است.');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" title="حذف حساب کاربری" class="w-8 h-8 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white dark:bg-rose-950/40 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white border border-rose-200 dark:border-rose-800/50 shadow-sm transition-all">
+                                        <button type="submit" title="حذف حساب کاربری" class="w-8 h-8 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white dark:bg-rose-950/40 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white border border-rose-200 dark:border-rose-800/50 shadow-sm transition-all cursor-pointer">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </form>

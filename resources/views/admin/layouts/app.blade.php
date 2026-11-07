@@ -155,14 +155,14 @@
         {{-- Main Area --}}
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
             @if(session('impersonator_id'))
-                <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs font-bold shadow-md z-40">
-                    <div class="flex items-center gap-2">
-                        <span class="text-base">🛡️</span>
-                        <span>شما هم‌اکنون در حال مدیریت و پشتیبانی پنل «{{ auth()->user()->name }}» هستید.</span>
+                <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs font-bold shadow-md z-40 border-b border-amber-500/30">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-base shrink-0 animate-pulse">🛡️</span>
+                        <span class="truncate">شما هم‌اکنون در حال مدیریت و بررسی پنل «{{ auth()->user()->name }}» (@{{ auth()->user()->username }}) هستید.</span>
                     </div>
-                    <form method="POST" action="{{ Route::has('admin.impersonate.leave') ? route('admin.impersonate.leave') : (Route::has('impersonate.leave') ? route('impersonate.leave') : url('/admin/leave-impersonate')) }}" class="m-0">
+                    <form method="POST" action="{{ route('admin.impersonate.leave') }}" class="m-0 shrink-0">
                         @csrf
-                        <button type="submit" class="px-3 py-1 bg-white text-slate-950 rounded-lg hover:bg-amber-100 transition-colors shadow-sm font-black flex items-center gap-1 cursor-pointer">
+                        <button type="submit" class="px-3.5 py-1.5 bg-white text-slate-950 rounded-xl hover:bg-amber-100 transition-colors shadow-sm font-black flex items-center gap-1.5 cursor-pointer text-xs">
                             <span>بازگشت به پنل سوپرادمین</span>
                             <span>&larr;</span>
                         </button>
