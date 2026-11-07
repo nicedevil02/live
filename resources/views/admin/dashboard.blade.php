@@ -37,150 +37,215 @@
         </div>
     @endif
 
-    {{-- چک‌لیست هوشمند راه‌اندازی ۴ مرحله‌ای گالری طلا --}}
-    @if(!auth()->user()->is_super_admin && isset($onboardingChecklist) && !$onboardingChecklist['is_all_done'])
-        <div x-data="{ hideChecklist: localStorage.getItem('talalive_hide_checklist_{{ auth()->id() }}') === '1' }"
-             x-show="!hideChecklist"
-             x-cloak
-             class="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-white dark:bg-slate-900 border-2 border-amber-500/35 shadow-md space-y-4">
+    @php
+        $tvConnected = !empty($onboardingChecklist['tv_connected']);
+        $productAdded = !empty($onboardingChecklist['product_added']);
+        $profileCustomized = !empty($onboardingChecklist['profile_customized']);
+    @endphp
 
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-800">
-                <div class="space-y-1 min-w-0">
-                    <div class="flex items-start justify-between gap-2">
-                        <div class="flex items-center gap-2 flex-wrap min-w-0">
-                            <span class="text-base sm:text-lg shrink-0">🚀</span>
-                            <h2 class="text-xs sm:text-base font-black text-slate-900 dark:text-white">
-                                راهنمای شروع سریع و راه‌اندازی تابلوی گالری
-                            </h2>
-                            <span class="px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                                {{ $onboardingChecklist['completed_count'] }} از {{ $onboardingChecklist['total_count'] }} تکمیل شده ({{ $onboardingChecklist['progress_percent'] }}٪)
-                            </span>
-                        </div>
-                        <button type="button"
-                                @click="hideChecklist = true; localStorage.setItem('talalive_hide_checklist_{{ auth()->id() }}', '1')"
-                                title="مخفی کردن چک‌لیست"
-                                class="md:hidden p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0">
-                            <i data-lucide="x" class="w-4 h-4"></i>
-                        </button>
+    {{-- ۱. هاب هوشمند راه‌اندازی و اتصال تلویزیون مغازه (فاز ۱ و ۲: تک‌مقصدی، بدون شلوغی و متن اضافه) --}}
+    @if(!auth()->user()->is_super_admin && !$tvConnected)
+        <div x-data="{
+                callRequested: false,
+                callLoading: false,
+                callMsg: ''
+             }"
+             class="rounded-2xl sm:rounded-3xl p-5 sm:p-7 bg-white dark:bg-slate-900 border-2 border-amber-500/40 shadow-xl shadow-amber-500/5 space-y-4 sm:space-y-5">
+
+            {{-- سربرگ هاب: عنوان و گام‌ها --}}
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-xl sm:text-2xl font-black shadow-md shadow-amber-500/20 shrink-0">
+                        📺
                     </div>
-                    <p class="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        با تکمیل این ۴ گام کوتاه، بیشترین بازدهی و زیبایی را روی تلویزیون ویترین یا سالن مغازه خواهید داشت.
-                    </p>
+                    <div>
+                        <h2 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                            راه‌اندازی تابلوی طلا روی تلویزیون مغازه (۳۰ ثانیه)
+                        </h2>
+                        <p class="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            در مرورگر تلویزیون آدرس <span class="font-mono font-bold text-amber-700 dark:text-amber-400" dir="ltr">talalive.ir/tv</span> را باز کنید و کد ۶ رقمی را اینجا بزنید:
+                        </p>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full md:w-auto shrink-0">
+                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0 flex-wrap">
                     <button type="button"
-                            onclick="window.startTalaliveSpotlightTour && window.startTalaliveSpotlightTour()"
-                            class="px-3 py-2.5 sm:py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-700 dark:text-indigo-300 text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
+                            @click="openWizard()"
+                            class="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
                         <span>✨</span>
-                        <span>تور نوری منوها</span>
-                    </button>
-                    <button type="button"
-                            onclick="window.openTalaliveGuide && window.openTalaliveGuide('panel')"
-                            class="px-3 py-2.5 sm:py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
-                        <span>🎓</span>
-                        <span>آموزش کامل پنل</span>
-                    </button>
-                    <button type="button"
-                            @click="hideChecklist = true; localStorage.setItem('talalive_hide_checklist_{{ auth()->id() }}', '1')"
-                            title="مخفی کردن چک‌لیست"
-                            class="hidden md:inline-flex p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
-                        <i data-lucide="x" class="w-4 h-4"></i>
+                        <span>راهنمای مرحله‌ای (۳ گام)</span>
                     </button>
                 </div>
             </div>
 
-            {{-- نوار پیشرفت --}}
-            <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                <div class="h-full bg-gradient-to-l from-emerald-500 to-amber-500 rounded-full transition-all duration-500"
-                     style="width: {{ $onboardingChecklist['progress_percent'] }}%;"></div>
+            {{-- فرم ورودی کد ۶ رقمی و اسکن QR --}}
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <div class="flex-1 relative">
+                    <input type="text"
+                           maxlength="8"
+                           x-model="pairCode"
+                           dir="ltr"
+                           placeholder="کد ۶ رقمی تلویزیون (مثلاً 548291)"
+                           @keydown.enter.prevent="pairWithCodeManual()"
+                           @input="
+                               let val = pairCode.toString();
+                               const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+                               const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
+                               for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
+                               pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
+                           "
+                           class="w-full h-12 sm:h-13 bg-slate-50 dark:bg-slate-950 border-2 border-amber-500/40 rounded-2xl px-4 text-center font-mono font-black text-lg sm:text-xl tracking-[0.25em] text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                </div>
+
+                <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0">
+                    <button type="button"
+                            @click="pairWithCodeManual()"
+                            :disabled="isPairing || pairCode.length < 6"
+                            class="h-12 sm:h-13 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 whitespace-nowrap">
+                        <span x-text="isPairing ? 'در حال اتصال...' : '🚀 اتصال تلویزیون'"></span>
+                    </button>
+
+                    <button type="button"
+                            @click="openScanner()"
+                            class="h-12 sm:h-13 px-3.5 sm:px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs whitespace-nowrap shadow-md shadow-indigo-600/20 transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>📷</span>
+                        <span>اسکن با دوربین</span>
+                    </button>
+                </div>
             </div>
 
-            {{-- کارت‌های ۴ گام راه‌اندازی --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-                {{-- گام ۱: ساخت حساب --}}
-                <div class="p-4 rounded-2xl border bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50 flex flex-col justify-between gap-3">
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between">
-                            <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
-                            <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">انجام شد</span>
-                        </div>
-                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۱. ساخت تابلوی اختصاصی</h3>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">تابلوی نرخ‌های زنده گالری شما فعال و آماده پخش است.</p>
-                    </div>
+            {{-- نوار ابزار کمکی پایین: لینک مستقیم + درخواست تماس رایگان --}}
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 text-xs">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button"
+                            x-show="!callRequested"
+                            :disabled="callLoading"
+                            @click="
+                                callLoading = true;
+                                fetch('{{ route('admin.request-setup-call') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(r => r.json())
+                                .then(data => {
+                                    callLoading = false;
+                                    if(data.success) {
+                                        callRequested = true;
+                                        callMsg = data.message;
+                                    }
+                                })
+                                .catch(e => { callLoading = false; });
+                            "
+                            class="text-[11.5px] font-bold text-indigo-700 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50">
+                        <span>📞</span>
+                        <span x-text="callLoading ? 'در حال ثبت درخواست...' : 'فرصت ندارید؟ درخواست تماس و راه‌اندازی تلفنی توسط کارشناس'"></span>
+                    </button>
+                    <span x-show="callRequested" x-cloak class="text-[11.5px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        <span>✓</span>
+                        <span>درخواست تماس با موفقیت ثبت شد؛ کارشناس فنی به زودی تماس می‌گیرد.</span>
+                    </span>
                 </div>
 
-                {{-- گام ۲: اتصال تلویزیون مغازه --}}
-                <div class="p-4 rounded-2xl border {{ $onboardingChecklist['tv_connected'] ? 'bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-50 dark:bg-slate-950/70 border-slate-200 dark:border-slate-800' }} flex flex-col justify-between gap-3">
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between">
-                            @if($onboardingChecklist['tv_connected'])
-                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
-                                <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">متصل شد</span>
-                            @else
-                                <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 text-xs font-black flex items-center justify-center">۲</span>
-                                <span class="text-[10px] font-bold text-amber-600 dark:text-amber-400">گام مهم</span>
-                            @endif
-                        </div>
-                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۲. اتصال تلویزیون مغازه</h3>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">اتصال تلویزیون هوشمند یا تی‌وی‌باکس با کد ۶ رقمی.</p>
-                    </div>
-                    @if(!$onboardingChecklist['tv_connected'])
-                        <button type="button"
-                                onclick="window.openTalaliveGuide && window.openTalaliveGuide('tv')"
-                                class="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition-all cursor-pointer text-center shadow-xs">
-                            📺 آموزش و اتصال تلویزیون
-                        </button>
-                    @endif
-                </div>
-
-                {{-- گام ۳: افزودن محصول به ویترین --}}
-                <div class="p-4 rounded-2xl border {{ $onboardingChecklist['product_added'] ? 'bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-50 dark:bg-slate-950/70 border-slate-200 dark:border-slate-800' }} flex flex-col justify-between gap-3">
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between">
-                            @if($onboardingChecklist['product_added'])
-                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
-                                <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">ثبت شد</span>
-                            @else
-                                <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-black flex items-center justify-center">۳</span>
-                                <span class="text-[10px] font-bold text-slate-400">پیشنهادی</span>
-                            @endif
-                        </div>
-                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۳. افزودن طلا به ویترین</h3>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">نمایش عکس و قیمت لحظه‌ای کارهای طلا در کنار نرخ‌ها.</p>
-                    </div>
-                    @if(!$onboardingChecklist['product_added'])
-                        <a href="{{ route('admin.products.index') }}"
-                           class="w-full py-2 px-3 rounded-xl bg-white dark:bg-slate-900 hover:border-amber-500 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all text-center">
-                            💍 افزودن اولین محصول &larr;
-                        </a>
-                    @endif
-                </div>
-
-                {{-- گام ۴: تنظیم پروفایل و QR شبکه اجتماعی --}}
-                <div class="p-4 rounded-2xl border {{ $onboardingChecklist['profile_customized'] ? 'bg-emerald-50/60 dark:bg-emerald-950/25 border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-50 dark:bg-slate-950/70 border-slate-200 dark:border-slate-800' }} flex flex-col justify-between gap-3">
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between">
-                            @if($onboardingChecklist['profile_customized'])
-                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center">✓</span>
-                                <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400">تنظیم شد</span>
-                            @else
-                                <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-black flex items-center justify-center">۴</span>
-                                <span class="text-[10px] font-bold text-slate-400">برندینگ</span>
-                            @endif
-                        </div>
-                        <h3 class="text-xs font-black text-slate-900 dark:text-white">۴. بارکد QR و پوسته گالری</h3>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">ثبت اینستاگرام یا روبیکا جهت نمایش QR کد روی تلویزیون.</p>
-                    </div>
-                    @if(!$onboardingChecklist['profile_customized'])
-                        <a href="{{ route('admin.shop-profile') }}"
-                           class="w-full py-2 px-3 rounded-xl bg-white dark:bg-slate-900 hover:border-amber-500 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all text-center">
-                            🏪 تنظیم پروفایل و QR &larr;
-                        </a>
-                    @endif
+                <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                    <span class="text-[11px] text-slate-400">لینک پخش:</span>
+                    <button type="button"
+                            onclick="navigator.clipboard.writeText('{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}'); alert('لینک اختصاصی کپی شد!');"
+                            class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
+                        کپی لینک
+                    </button>
+                    <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
+                       class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors flex items-center gap-1">
+                        <span>پیش‌نمایش</span>
+                        <span>↗</span>
+                    </a>
                 </div>
             </div>
         </div>
+    @endif
+
+    {{-- ۲. افشای تدریجی (Progressive Disclosure - پیشنهاد ۳): گام‌های پس از اتصال موفق تلویزیون --}}
+    @if(!auth()->user()->is_super_admin && $tvConnected)
+        @if(!$productAdded)
+            {{-- گام ۲: معرفی ویترین طلا (اسلایدر محصولات) --}}
+            <div x-data="{ dismissed: localStorage.getItem('talalive_dismiss_step2_{{ auth()->id() }}') === '1' }"
+                 x-show="!dismissed"
+                 x-cloak
+                 class="rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-2 border-indigo-500/35 bg-white dark:bg-slate-900 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4">
+                <div class="flex items-start gap-3.5">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-xl shrink-0">
+                        💍
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30">
+                                گام بعدی: ویترین طلا
+                            </span>
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                                نمایش تصاویر و قیمت لحظه‌ای زیورآلات شما روی تلویزیون
+                            </h3>
+                        </div>
+                        <p class="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                            عکس کارهای طلا را با وزن و اجرت ثبت کنید تا قیمت تمام‌شده هر کار لحظه‌ای و خودکار در کنار نرخ‌ها نمایش داده شود.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    <a href="{{ route('admin.products.index') }}"
+                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20">
+                        <span>افزودن اولین محصول طلا</span>
+                        <span>&larr;</span>
+                    </a>
+                    <button type="button"
+                            @click="dismissed = true; localStorage.setItem('talalive_dismiss_step2_{{ auth()->id() }}', '1')"
+                            class="px-3 py-2.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold transition-colors cursor-pointer">
+                        بعداً
+                    </button>
+                </div>
+            </div>
+        @elseif(!$profileCustomized)
+            {{-- گام ۳: تنظیم برندینگ و QR اختصاصی پیج اینستاگرام روی تلویزیون --}}
+            <div x-data="{ dismissed: localStorage.getItem('talalive_dismiss_step3_{{ auth()->id() }}') === '1' }"
+                 x-show="!dismissed"
+                 x-cloak
+                 class="rounded-2xl sm:rounded-3xl p-4 sm:p-5 border-2 border-amber-500/35 bg-white dark:bg-slate-900 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4">
+                <div class="flex items-start gap-3.5">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl shrink-0">
+                        🏪
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                                گام پایانی: برندینگ گالری
+                            </span>
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                                ساخت بارکد QR پیج اینستاگرام روی تلویزیون مغازه
+                            </h3>
+                        </div>
+                        <p class="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                            با ثبت آدرس اینستاگرام یا روبیکا، بارکد پیج شما در گوشه تلویزیون قرار می‌گیرد تا مشتریان با گوشی وارد پیج شما شوند.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    <a href="{{ route('admin.shop-profile') }}"
+                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
+                        <span>تنظیم نام و QR گالری</span>
+                        <span>&larr;</span>
+                    </a>
+                    <button type="button"
+                            @click="dismissed = true; localStorage.setItem('talalive_dismiss_step3_{{ auth()->id() }}', '1')"
+                            class="px-3 py-2.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold transition-colors cursor-pointer">
+                        بعداً
+                    </button>
+                </div>
+            </div>
+        @endif
     @endif
     {{-- نوار پیشنهاد ویژه ۷۲ ساعت اول ثبت‌نام --}}
     @if(!empty($isWelcomePeriod))
@@ -322,38 +387,29 @@
         @endif
     @endif
 
-    {{-- مرکز تابلوی هوشمند و تلویزیون مغازه (تجمیع ۳ بخش قبلی در یک هاب شیک و کم‌ارتفاع) --}}
-    @php
-        $tvConnected = !empty($onboardingChecklist['tv_connected']);
-    @endphp
+    {{-- مرکز تابلوی هوشمند و تلویزیون مغازه (در صورت اتصال قبلی تلویزیون) --}}
+    @if($tvConnected)
     <div x-data="{
-            showPairingBox: {{ $tvConnected ? 'false' : 'true' }},
+            showPairingBox: false,
             callRequested: false,
             callLoading: false,
             callMsg: ''
          }"
-         class="rounded-2xl sm:rounded-3xl border border-amber-500/30 bg-white dark:bg-slate-900 shadow-md p-4 sm:p-5 space-y-3.5">
+         class="rounded-2xl sm:rounded-3xl border border-emerald-500/30 bg-white dark:bg-slate-900 shadow-md p-4 sm:p-5 space-y-3.5">
 
         {{-- سربرگ هاب تلویزیون: وضعیت اتصال و ابزارهای سریع --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-2.5 flex-wrap">
-                <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
                     <i data-lucide="tv" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-amber-300">تلویزیون و تابلوی مغازه</h3>
-                        @if($tvConnected)
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                متصل و فعال
-                            </span>
-                        @else
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                                در انتظار اتصال تلویزیون
-                            </span>
-                        @endif
+                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-emerald-300">تلویزیون و تابلوی مغازه</h3>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            متصل و فعال
+                        </span>
                     </div>
                 </div>
             </div>
@@ -362,40 +418,8 @@
                 <button @click="openWizard()" type="button"
                         class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 transition-colors cursor-pointer flex items-center gap-1">
                     <span>✨</span>
-                    <span>راهنمای مرحله‌ای (ویزارد)</span>
+                    <span>راهنمای مرحله‌ای (۳ گام)</span>
                 </button>
-                @if(!$tvConnected)
-                    <button type="button"
-                            x-show="!callRequested"
-                            :disabled="callLoading"
-                            @click="
-                                callLoading = true;
-                                fetch('{{ route('admin.request-setup-call') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'Accept': 'application/json'
-                                    }
-                                })
-                                .then(r => r.json())
-                                .then(data => {
-                                    callLoading = false;
-                                    if(data.success) {
-                                        callRequested = true;
-                                        callMsg = data.message;
-                                    }
-                                })
-                                .catch(e => { callLoading = false; });
-                            "
-                            class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 transition-colors cursor-pointer flex items-center gap-1 disabled:opacity-50">
-                        <span>📞</span>
-                        <span x-text="callLoading ? 'در حال ثبت...' : 'درخواست تماس و نصب رایگان'"></span>
-                    </button>
-                    <span x-show="callRequested" x-cloak class="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                        ✓ درخواست ثبت شد؛ به زودی تماس می‌گیریم
-                    </span>
-                @endif
             </div>
         </div>
 
@@ -415,29 +439,27 @@
 
             <div class="flex items-center gap-2 shrink-0">
                 <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-                   class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs whitespace-nowrap shadow-sm shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                   class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs whitespace-nowrap shadow-sm shadow-emerald-600/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                     <span>مشاهده تابلو</span>
                     <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </a>
 
-                @if($tvConnected)
-                    <button type="button"
-                            @click="showPairingBox = !showPairingBox"
-                            class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1">
-                        <span x-text="showPairingBox ? 'بستن فرم اتصال' : 'اتصال دستگاه جدید'"></span>
-                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" :class="showPairingBox ? 'rotate-180' : ''"></i>
-                    </button>
-                @endif
+                <button type="button"
+                        @click="showPairingBox = !showPairingBox"
+                        class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1">
+                    <span x-text="showPairingBox ? 'بستن فرم اتصال' : 'اتصال تلویزیون دیگر'"></span>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" :class="showPairingBox ? 'rotate-180' : ''"></i>
+                </button>
             </div>
         </div>
 
-        {{-- بخش ۲: فرم اتصال سریع با کد یا بارکد (در صورت اتصال قبلی، فشرده و اختیاری است) --}}
+        {{-- بخش ۲: فرم اتصال تلویزیون دوم در صورت نیاز --}}
         <div x-show="showPairingBox"
              x-transition
              class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
             <div class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <i data-lucide="info" class="w-4 h-4 text-amber-500 shrink-0"></i>
-                <span>پین ۶ رقمی نمایش داده شده روی تلویزیون را وارد کنید یا بارکد را با دوربین اسکن نمایید:</span>
+                <span>پین ۶ رقمی نمایش داده شده روی تلویزیون دوم را وارد کنید یا بارکد را اسکن نمایید:</span>
             </div>
 
             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
@@ -471,6 +493,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     {{-- کارت‌های شاخص‌های کلیدی (شبکه ۲ در ۲ موبایل-فرست بدون فضای مرده) --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
