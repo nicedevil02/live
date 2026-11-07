@@ -184,27 +184,27 @@
     @endif
     {{-- نوار پیشنهاد ویژه ۷۲ ساعت اول ثبت‌نام --}}
     @if(!empty($isWelcomePeriod))
-        <div class="rounded-2xl p-4 sm:p-5 border-2 border-amber-500/60 bg-gradient-to-r from-amber-500/15 via-slate-900 to-amber-950/30 text-white shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0 shadow-md shadow-amber-500/30">
+        <div class="rounded-2xl p-3.5 sm:p-4.5 border-2 border-amber-500/60 bg-gradient-to-r from-amber-500/15 via-slate-900 to-amber-950/30 text-white shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-xl shrink-0 shadow-md shadow-amber-500/30">
                     🔥
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="text-sm sm:text-base font-black text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۷۲ ساعت اول)</h3>
-                        <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500 text-white">
+                        <h3 class="text-xs sm:text-sm font-black text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۷۲ ساعت اول)</h3>
+                        <span class="px-2 py-0.5 rounded-full text-[10.5px] font-black bg-rose-500 text-white">
                             {{ $welcomeHoursLeft }} ساعت تا انقضا
                         </span>
                     </div>
-                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-                        اشتراک سالانه الماس طلالایو به جای <span class="line-through text-slate-400">۴,۷۰۰,۰۰۰ تومان</span>، فقط با <strong class="text-amber-300 text-sm font-black">۳,۹۶۰,۰۰۰ تومان</strong> برای شما محاسبه می‌شود (۷۴۰,۰۰۰ تومان تخفیف ویژه افتتاحیه).
+                    <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-relaxed">
+                        اشتراک سالانه الماس طلالایو به جای <span class="line-through text-slate-400">۴,۷۰۰,۰۰۰ تومان</span>، فقط با <strong class="text-amber-300 font-black">۳,۹۶۰,۰۰۰ تومان</strong> محاسبه می‌شود (۷۴۰,۰۰۰ تومان تخفیف افتتاحیه).
                     </p>
                 </div>
             </div>
 
             <div class="shrink-0 w-full md:w-auto">
                 <a href="{{ route('admin.subscription.index') }}"
-                   class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/25 flex items-center justify-center gap-2">
+                   class="w-full md:w-auto px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 cursor-pointer">
                     <span>خرید با تخفیف ویژه (۳,۹۶۰,۰۰۰ ت)</span>
                     <span>&larr;</span>
                 </a>
@@ -212,63 +212,7 @@
         </div>
     @endif
 
-    {{-- کارت اختصاصی درخواست تماس و نصب رایگان تلویزیون توسط کارشناس --}}
-    @if(!empty($onboardingChecklist) && !$onboardingChecklist['tv_connected'])
-        <div x-data="{ requested: false, loading: false, msg: '' }" class="rounded-2xl p-4 sm:p-5 border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-900 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-black text-2xl shrink-0">
-                    📺
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm sm:text-base font-black text-white">در اتصال تلویزیون مغازه نیاز به راهنمایی دارید؟</h3>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">۱۰۰٪ رایگان</span>
-                    </div>
-                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-                        کارشناس فنی طلالایو در کمتر از ۳ دقیقه پشت تلفن، تابلوی زنده طلا را روی تلویزیون مغازه شما روشن می‌کند.
-                    </p>
-                    <div x-show="msg" x-text="msg" class="text-xs font-bold text-emerald-400 mt-1.5" x-cloak></div>
-                </div>
-            </div>
-
-            <div class="shrink-0 w-full md:w-auto">
-                <button type="button"
-                        x-show="!requested"
-                        :disabled="loading"
-                        @click="
-                            loading = true;
-                            fetch('{{ route('admin.request-setup-call') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Accept': 'application/json'
-                                }
-                            })
-                            .then(r => r.json())
-                            .then(data => {
-                                loading = false;
-                                if(data.success) {
-                                    requested = true;
-                                    msg = data.message;
-                                }
-                            })
-                            .catch(e => { loading = false; });
-                        "
-                        class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
-                    <span x-show="!loading">📞 درخواست تماس و نصب رایگان</span>
-                    <span x-show="loading" x-cloak>در حال ثبت درخواست...</span>
-                </button>
-
-                <div x-show="requested" x-cloak class="px-4 py-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-black text-xs flex items-center justify-center gap-1.5">
-                    <span>✓</span>
-                    <span>درخواست ثبت شد؛ به زودی تماس می‌گیریم</span>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    {{-- نوار وضعیت اشتراک / دوره آزمایشی (مخصوص گالری‌های غیر سوپرادمین) --}}
+    {{-- نوار وضعیت اشتراک / دوره آزمایشی (مخصوص گالری‌های غیر سوپرادمین - نسخه جمع‌وجور) --}}
     @if(!auth()->user()->is_super_admin && auth()->user()->expires_at)
         @php
             $daysLeft = auth()->user()->trialDaysRemaining();
@@ -280,307 +224,350 @@
 
         @if(!$isSubscribed)
             {{-- ۱. دوره آزمایشی رایگان ۱۴ روزه --}}
-            <div class="rounded-2xl p-5 border {{ $isUrgent ? 'bg-gradient-to-r from-rose-50 via-rose-50/70 to-rose-100/60 dark:from-rose-950/40 dark:via-slate-900 dark:to-slate-900 border-rose-200 dark:border-rose-500/30' : 'bg-gradient-to-r from-amber-50 via-amber-50/70 to-amber-100/70 dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-900 border-amber-200 dark:border-amber-500/30' }} flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl {{ $isUrgent ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30' : 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30' }} flex items-center justify-center font-black text-2xl shrink-0">
+            <div class="rounded-2xl p-3.5 sm:p-4 border {{ $isUrgent ? 'bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent border-rose-500/30' : 'bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/30' }} bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl {{ $isUrgent ? 'bg-rose-500/20 text-rose-500 border border-rose-500/30' : 'bg-amber-500/20 text-amber-500 border border-amber-500/30' }} flex items-center justify-center font-black text-xl shrink-0">
                         {{ $isUrgent ? '⚠️' : '🎁' }}
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">دوره آزمایشی رایگان فعال است</h3>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-black {{ $isUrgent ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30' : 'bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30' }}">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">دوره آزمایشی رایگان فعال است</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[11px] font-black {{ $isUrgent ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/30' }}">
                                 {{ $daysLeft }} روز باقی مانده
                             </span>
                         </div>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                            شما می‌توانید از تمامی امکانات تابلوی تلویزیون، فرمول‌ساز و اسلایدشوی محصولات بدون محدودیت استفاده نمایید. جهت خرید اشتراک سالانه با پشتیبانی فنی طلالایو تماس بگیرید.
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed hidden sm:block">
+                            تمامی امکانات تابلوی تلویزیون، فرمول‌ساز و اسلایدشوی محصولات بدون محدودیت فعال است.
                         </p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap">
-                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer">
-                        <i data-lucide="crown" class="w-4 h-4"></i>
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0 flex-wrap">
+                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                        <i data-lucide="crown" class="w-3.5 h-3.5"></i>
                         <span>خرید آنلاین اشتراک</span>
                     </a>
-                    <a href="tel:09187009064" class="flex-1 md:flex-none px-3.5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
-                        <span>📞 تماس: ۰۹۱۸۷۰۰۹۰۶۴</span>
-                    </a>
                     <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
-                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                       class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
                         <span>پشتیبانی تلگرام</span>
+                    </a>
+                    <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴">
+                        <span>📞</span>
                     </a>
                 </div>
             </div>
         @elseif($isWarning)
-            {{-- ۲. اشتراک خریداری‌شده رو به پایان (کمتر یا مساوی ۷ روز مانده) --}}
-            <div class="rounded-2xl p-5 border bg-gradient-to-r from-amber-50 via-rose-50/50 to-rose-100/60 dark:from-rose-950/40 dark:via-slate-900 dark:to-slate-900 border-rose-200 dark:border-rose-500/30 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30 flex items-center justify-center font-black text-2xl shrink-0">
+            {{-- ۲. اشتراک خریداری‌شده رو به پایان --}}
+            <div class="rounded-2xl p-3.5 sm:p-4 border bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent border-rose-500/30 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-500 border border-rose-500/30 flex items-center justify-center font-black text-xl shrink-0">
                         ⚠️
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">اعتبار اشتراک شما رو به پایان است</h3>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30">
-                                {{ $daysLeft }} روز باقی مانده (انقضا: {{ $jalaliExpire }})
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">اعتبار اشتراک رو به پایان است</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30">
+                                {{ $daysLeft }} روز باقی مانده (تا {{ $jalaliExpire }})
                             </span>
                         </div>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                            اعتبار زمانی تابلوی اختصاصی شما به زودی به پایان می‌رسد. لطفاً جهت جلوگیری از قطع پخش تلویزیون مغازه، نسبت به تمدید اشتراک اقدام فرمایید.
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed hidden sm:block">
+                            جهت جلوگیری از قطع پخش تلویزیون مغازه، نسبت به تمدید اشتراک اقدام فرمایید.
                         </p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap">
-                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer">
-                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0 flex-wrap">
+                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                         <span>تمدید آنلاین اشتراک</span>
                     </a>
-                    <a href="tel:09187009064" class="flex-1 md:flex-none px-3.5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
-                        <span>📞 تماس: ۰۹۱۸۷۰۰۹۰۶۴</span>
-                    </a>
                     <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
-                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                       class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
                         <span>پشتیبانی تلگرام</span>
+                    </a>
+                    <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴">
+                        <span>📞</span>
                     </a>
                 </div>
             </div>
         @else
-            {{-- ۳. اشتراک رسمی و فعال (سبز زمردی / سرمه‌ای لوکس با آرامش خاطر برای مشتری) --}}
-            <div class="rounded-2xl p-5 border bg-gradient-to-r from-emerald-50 via-teal-50/60 to-emerald-100/60 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900 border-emerald-200 dark:border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center font-black text-2xl shrink-0">
+            {{-- ۳. اشتراک رسمی و فعال --}}
+            <div class="rounded-2xl p-3 sm:p-3.5 border bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/30 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 flex items-center justify-center font-black text-lg shrink-0">
                         💎
                     </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">اشتراک رسمی طلالایو فعال است</h3>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30">
-                                {{ $daysLeft }} روز تا پایان اعتبار (تا {{ $jalaliExpire }})
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
-                            تمامی امکانات تابلوی هوشمند تلویزیون، فرمول‌ساز سود و ویترین طلا برای گالری <span class="font-bold text-slate-800 dark:text-slate-100">{{ auth()->user()->name }}</span> فعال و بدون محدودیت است.
-                        </p>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">اشتراک رسمی طلالایو فعال است</h3>
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                            {{ $daysLeft }} روز تا {{ $jalaliExpire }}
+                        </span>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2.5 w-full md:w-auto shrink-0 flex-wrap">
-                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
-                        <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i>
-                        <span>ارتقا / تمدید بسته</span>
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    <a href="{{ route('admin.subscription.index') }}" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                        <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-500"></i>
+                        <span>ارتقا / تمدید</span>
                     </a>
                     <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
-                       class="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-amber-500 hover:opacity-90 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-                        <span>پشتیبانی تلگرام</span>
+                       class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 shrink-0 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                        <span>پشتیبانی</span>
                     </a>
                 </div>
             </div>
         @endif
     @endif
 
-    {{-- لینک صفحه نمایش اختصاصی طلا با استایل لوکس طلایی --}}
-    <div class="rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-stone-900/80 dark:to-stone-900/80 shadow-lg shadow-amber-500/5">
-        <div class="flex items-center gap-3.5">
-            <div class="p-3.5 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-2xl border border-amber-500/30 shadow-sm shrink-0">
-                <i data-lucide="tv" class="w-6 h-6"></i>
-            </div>
-            <div>
-                <h3 class="text-base font-black text-slate-900 dark:text-amber-300">لینک تابلوی نمایشی اختصاصی شما</h3>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-stone-300 mt-1">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما با نرخ‌های زنده پخش شود.</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-2 w-full md:w-auto" dir="ltr">
-            <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
-                   class="tl-neu-inset rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-amber-300 w-full md:w-80 select-all font-mono font-bold">
-            <button onclick="navigator.clipboard.writeText(document.getElementById('displayUrlInput').value); alert('لینک اختصاصی کپی شد!');"
-                    class="tl-neu-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer">
-                کپی لینک
-            </button>
-            <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-               class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-md shadow-amber-500/25 transition-all flex items-center gap-1.5 cursor-pointer">
-                <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-4 h-4"></i>
-            </a>
-        </div>
-    </div>
+    {{-- مرکز تابلوی هوشمند و تلویزیون مغازه (تجمیع ۳ بخش قبلی در یک هاب شیک و کم‌ارتفاع) --}}
+    @php
+        $tvConnected = !empty($onboardingChecklist['tv_connected']);
+    @endphp
+    <div x-data="{
+            showPairingBox: {{ $tvConnected ? 'false' : 'true' }},
+            callRequested: false,
+            callLoading: false,
+            callMsg: ''
+         }"
+         class="rounded-2xl sm:rounded-3xl border border-amber-500/30 bg-white dark:bg-slate-900 shadow-md p-4 sm:p-5 space-y-3.5">
 
-    {{-- اتصال تلویزیون با کد فعال‌سازی یا اسکن بارکد QR --}}
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <div class="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl shrink-0">
-                <i data-lucide="tv-2" class="w-6 h-6"></i>
+        {{-- سربرگ هاب تلویزیون: وضعیت اتصال و ابزارهای سریع --}}
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-2.5 flex-wrap">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0">
+                    <i data-lucide="tv" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-amber-300">تلویزیون و تابلوی مغازه</h3>
+                        @if($tvConnected)
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                متصل و فعال
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                در انتظار اتصال تلویزیون
+                            </span>
+                        @endif
+                    </div>
+                </div>
             </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">اتصال تلویزیون به تابلوی مغازه</h3>
-                    <button @click="openWizard()" type="button" class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors cursor-pointer">
-                        ✨ راهنمای مرحله‌ای (ویزارد)
+
+            <div class="flex items-center gap-2 self-end sm:self-auto flex-wrap">
+                <button @click="openWizard()" type="button"
+                        class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 transition-colors cursor-pointer flex items-center gap-1">
+                    <span>✨</span>
+                    <span>راهنمای مرحله‌ای (ویزارد)</span>
+                </button>
+                @if(!$tvConnected)
+                    <button type="button"
+                            x-show="!callRequested"
+                            :disabled="callLoading"
+                            @click="
+                                callLoading = true;
+                                fetch('{{ route('admin.request-setup-call') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(r => r.json())
+                                .then(data => {
+                                    callLoading = false;
+                                    if(data.success) {
+                                        callRequested = true;
+                                        callMsg = data.message;
+                                    }
+                                })
+                                .catch(e => { callLoading = false; });
+                            "
+                            class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30 transition-colors cursor-pointer flex items-center gap-1 disabled:opacity-50">
+                        <span>📞</span>
+                        <span x-text="callLoading ? 'در حال ثبت...' : 'درخواست تماس و نصب رایگان'"></span>
+                    </button>
+                    <span x-show="callRequested" x-cloak class="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        ✓ درخواست ثبت شد؛ به زودی تماس می‌گیریم
+                    </span>
+                @endif
+            </div>
+        </div>
+
+        {{-- بخش ۱: لینک پخش مستقیم تابلوی اختصاصی --}}
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
+            <div class="flex-1 flex items-center gap-2 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-1.5 pl-2" dir="ltr">
+                <input type="text" readonly
+                       value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}"
+                       id="displayUrlInput"
+                       class="bg-transparent border-none text-xs text-slate-800 dark:text-amber-300 w-full select-all font-mono font-bold focus:outline-none px-2 py-1">
+                <button type="button"
+                        onclick="navigator.clipboard.writeText(document.getElementById('displayUrlInput').value); alert('لینک اختصاصی کپی شد!');"
+                        class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold whitespace-nowrap cursor-pointer transition-colors shadow-xs">
+                    کپی لینک
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
+                   class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs whitespace-nowrap shadow-sm shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>مشاهده تابلو</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+
+                @if($tvConnected)
+                    <button type="button"
+                            @click="showPairingBox = !showPairingBox"
+                            class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1">
+                        <span x-text="showPairingBox ? 'بستن فرم اتصال' : 'اتصال دستگاه جدید'"></span>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" :class="showPairingBox ? 'rotate-180' : ''"></i>
+                    </button>
+                @endif
+            </div>
+        </div>
+
+        {{-- بخش ۲: فرم اتصال سریع با کد یا بارکد (در صورت اتصال قبلی، فشرده و اختیاری است) --}}
+        <div x-show="showPairingBox"
+             x-transition
+             class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+            <div class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="info" class="w-4 h-4 text-amber-500 shrink-0"></i>
+                <span>پین ۶ رقمی نمایش داده شده روی تلویزیون را وارد کنید یا بارکد را با دوربین اسکن نمایید:</span>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                <button @click="openScanner()"
+                        type="button"
+                        class="qr-scan-btn font-black px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all shadow-sm hover:scale-[1.01] cursor-pointer flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
+                        style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                    <svg class="w-3.5 h-3.5 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>اسکن QR با دوربین</span>
+                </button>
+
+                <div class="flex items-center gap-1.5 flex-1 sm:flex-none">
+                    <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی" dir="ltr"
+                           @keydown.enter.prevent="pairWithCodeManual()"
+                           @input="
+                               let val = pairCode.toString();
+                               const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+                               const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
+                               for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
+                               pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
+                           "
+                           class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-850 dark:text-slate-100 w-full sm:w-32 text-center font-mono font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                    <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
+                            class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all cursor-pointer disabled:opacity-50 shrink-0">
+                        <span x-text="isPairing ? 'اتصال...' : 'ثبت'"></span>
                     </button>
                 </div>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">پین ۶ رقمی نمایش داده شده روی تلویزیون را وارد کنید یا با دوربین بارکد را اسکن نمایید.</p>
-            </div>
-        </div>
-        
-        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full lg:w-auto">
-            {{-- دکمه اسکن بارکد QR با دوربین --}}
-            <button @click="openScanner()" 
-                    type="button"
-                    class="qr-scan-btn flex-1 sm:flex-none font-bold px-4 py-2.5 rounded-xl text-sm whitespace-nowrap transition-all shadow-md hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
-                    style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35) !important;">
-                <svg class="w-4 h-4 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span style="color: #ffffff !important; font-weight: 800 !important;">اسکن بارکد (QR)</span>
-            </button>
-
-            <span class="hidden sm:inline text-xs text-slate-400 font-bold px-1">یا</span>
-
-            {{-- ورودی کد دستی ۶ رقمی با پشتیبانی کامل از حروف انگلیسی و ارقام --}}
-            <div class="flex items-center gap-1.5 w-full sm:w-auto">
-                <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی (حروف/اعداد)" dir="ltr"
-                       @keydown.enter.prevent="pairWithCodeManual()"
-                       @input="
-                           let val = pairCode.toString();
-                           const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-                           const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-                           for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
-                           pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-                       "
-                       class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-850 dark:text-slate-100 w-full sm:w-40 text-center font-mono font-bold placeholder:font-sans placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-amber-500/40">
-                <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
-                        class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0">
-                    <span x-text="isPairing ? 'در حال اتصال...' : 'ثبت کد'"></span>
-                </button>
             </div>
         </div>
     </div>
 
-    {{-- Header Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {{-- Status Card --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">وضعیت کلی سیستم</p>
-                    <h3 class="text-lg font-bold mt-1"
-                        :class="status.isHealthy ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'"
-                        x-text="status.apiStatus"></h3>
-                </div>
-                <div class="p-3 rounded-full"
-                     :class="status.isHealthy ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'">
-                    <i x-show="status.isHealthy" data-lucide="check-circle" class="w-6 h-6"></i>
-                    <i x-show="!status.isHealthy" data-lucide="alert-triangle" class="w-6 h-6"></i>
+    {{-- کارت‌های شاخص‌های کلیدی (شبکه ۲ در ۲ موبایل-فرست بدون فضای مرده) --}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        {{-- ۱. قیمت طلای ۱۸ عیار زنده تابلو --}}
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">قیمت طلای ۱۸ عیار تابلو</span>
+                <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i>
                 </div>
             </div>
-            <div class="mt-4 flex flex-col gap-1 text-sm text-slate-600 dark:text-slate-400">
-                <span class="flex items-center gap-1.5" x-text="status.isHealthy ? '📡 تمامی سرویس‌ها متصل و پایدار' : '🚨 نیاز به بررسی مجدد منابع یا اتصال'"></span>
+            <div class="mt-2.5">
+                <h3 class="text-base sm:text-2xl font-black text-amber-600 dark:text-amber-400 tabular-nums tracking-tight"
+                    x-text="isLoading ? '...' : status.gold18Price"></h3>
+                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">قیمت پایه فرمول‌های خرید</p>
             </div>
         </div>
 
-        {{-- Sync Card --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">آخرین همگام‌سازی تابلو</p>
-                    <h3 class="text-3xl font-black mt-1 text-slate-800 dark:text-slate-100 tabular-nums"
-                        x-text="isLoading ? '...' : status.updatedAt"></h3>
+        {{-- ۲. قیمت محاسبه‌شده طلای ۱۸ عیار جهانی (فرمول اونس و دلار) --}}
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">طلای ۱۸ جهانی (فرمول)</span>
+                <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="calculator" class="w-4 h-4"></i>
                 </div>
-                <button @click="loadData()" class="p-3 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25 border border-amber-500/20 transition-all cursor-pointer">
-                    <i data-lucide="refresh-cw" :class="isLoading ? 'animate-spin' : ''" class="w-6 h-6"></i>
+            </div>
+            <div class="mt-2.5">
+                <h3 class="text-base sm:text-2xl font-black text-amber-600 dark:text-amber-400 tabular-nums tracking-tight"
+                    x-text="isLoading ? '...' : status.formula18Price"></h3>
+                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">محاسبه بر اساس اونس و تتر</p>
+            </div>
+        </div>
+
+        {{-- ۳. آخرین همگام‌سازی تابلو --}}
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">آخرین همگام‌سازی تابلو</span>
+                <button type="button" @click="loadData()" title="به‌روزرسانی دستی"
+                        class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25 flex items-center justify-center transition-all cursor-pointer shrink-0">
+                    <i data-lucide="refresh-cw" :class="isLoading ? 'animate-spin' : ''" class="w-4 h-4"></i>
                 </button>
             </div>
-            <div class="mt-4 flex flex-col gap-1 text-sm text-slate-600 dark:text-slate-400">
-                <span class="flex items-center gap-1.5">💾 رفرش خودکار هر ۳۰ ثانیه</span>
+            <div class="mt-2.5">
+                <h3 class="text-base sm:text-2xl font-black text-slate-800 dark:text-slate-100 tabular-nums tracking-tight"
+                    x-text="isLoading ? '...' : status.updatedAt"></h3>
+                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">رفرش خودکار هر ۳۰ ثانیه</p>
             </div>
         </div>
 
-        {{-- Alert Card --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">هشدارهای قیمت</p>
-                    <h3 class="text-lg font-bold mt-1"
-                        :class="status.staleCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-800 dark:text-slate-100'"
-                        x-text="status.alerts"></h3>
-                </div>
-                <div class="p-3 rounded-full"
-                     :class="status.staleCount > 0 ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'">
-                    <i x-show="status.staleCount > 0" data-lucide="alert-circle" class="w-6 h-6"></i>
-                    <i x-show="status.staleCount === 0" data-lucide="check-circle-2" class="w-6 h-6"></i>
+        {{-- ۴. وضعیت سرویس‌ها و هشدارها --}}
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">وضعیت سرویس‌ها</span>
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                     :class="status.isHealthy ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-rose-500/15 text-rose-600 dark:text-rose-400'">
+                    <i x-show="status.isHealthy" data-lucide="check-circle" class="w-4 h-4"></i>
+                    <i x-show="!status.isHealthy" data-lucide="alert-triangle" class="w-4 h-4"></i>
                 </div>
             </div>
-            <div class="mt-4 flex flex-col gap-1 text-sm text-slate-600 dark:text-slate-400">
-                <span class="flex items-center gap-1.5">📈 عدم آپدیت ناشی از بسته بودن بازار است</span>
-            </div>
-        </div>
-
-        {{-- Gold 18k Live Card --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">قیمت طلای ۱۸ عیار تابلو</p>
-                    <h3 class="text-3xl font-black mt-1 text-amber-600 dark:text-amber-400 tabular-nums"
-                        x-text="isLoading ? '...' : status.gold18Price"></h3>
-                </div>
-                <div class="p-3 rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
-                    <i data-lucide="trending-up" class="w-6 h-6"></i>
-                </div>
-            </div>
-            <div class="mt-4 flex flex-col gap-1 text-sm text-slate-600 dark:text-slate-400">
-                <span class="flex items-center gap-1.5">قیمت پایه برای فرمول‌های خرید و پیش‌نمایش</span>
+            <div class="mt-2.5">
+                <h3 class="text-xs sm:text-base font-black truncate"
+                    :class="status.isHealthy ? (status.staleCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400') : 'text-rose-600 dark:text-rose-400'"
+                    x-text="status.apiStatus"></h3>
+                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate"
+                   x-text="status.alerts"></p>
             </div>
         </div>
 
-        {{-- Gold 18k Formula Card --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">قیمت محاسبه‌شده طلای ۱۸ عیار جهانی</p>
-                    <h3 class="text-3xl font-black mt-1 text-amber-600 dark:text-amber-400 tabular-nums"
-                        x-text="isLoading ? '...' : status.formula18Price"></h3>
-                </div>
-                <div class="p-3 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25">
-                    <i data-lucide="calculator" class="w-6 h-6"></i>
-                </div>
-            </div>
-            <div class="mt-4 flex flex-col gap-1 text-sm text-slate-600 dark:text-slate-400">
-                <span class="flex items-center gap-1.5">خروجی مستقیم بخش نحوه محاسبه اونس و دلار</span>
-            </div>
-        </div>
     </div>
 
     {{-- Quick Actions --}}
-    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 pt-4">دسترسی سریع</h3>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="{{ route('admin.formulas') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all">
-            <div class="w-12 h-12 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <i data-lucide="variable" class="w-6 h-6"></i>
+    <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 pt-2">دسترسی سریع</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
+        <a href="{{ route('admin.formulas') }}" class="group flex flex-col items-center justify-center gap-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-0.5 transition-all">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="variable" class="w-5 h-5"></i>
             </div>
-            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">مدیریت فرمول‌ها</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">مدیریت فرمول‌ها</span>
         </a>
-        <a href="{{ route('admin.products.index') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all">
-            <div class="w-12 h-12 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <i data-lucide="gem" class="w-6 h-6"></i>
+        <a href="{{ route('admin.products.index') }}" class="group flex flex-col items-center justify-center gap-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-0.5 transition-all">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="gem" class="w-5 h-5"></i>
             </div>
-            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">تصاویر و اسلایدر</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">تصاویر و اسلایدر</span>
         </a>
-        <a href="{{ route('admin.display-control') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-emerald-400/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all">
-            <div class="w-12 h-12 bg-emerald-500/15 border border-emerald-500/25 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <i data-lucide="monitor" class="w-6 h-6"></i>
+        <a href="{{ route('admin.display-control') }}" class="group flex flex-col items-center justify-center gap-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl hover:border-emerald-400/50 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-0.5 transition-all">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 bg-emerald-500/15 border border-emerald-500/25 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="monitor" class="w-5 h-5"></i>
             </div>
-            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">تنظیمات تابلو و پوسته</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">تنظیمات تابلو و پوسته</span>
         </a>
         @if(auth()->user()->is_super_admin)
-        <a href="{{ route('admin.sources') }}" class="group flex flex-col items-center justify-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all">
-            <div class="w-12 h-12 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <i data-lucide="rss" class="w-6 h-6"></i>
+        <a href="{{ route('admin.sources') }}" class="group flex flex-col items-center justify-center gap-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl hover:border-amber-400/50 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-0.5 transition-all">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 bg-amber-500/15 border border-amber-500/25 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="rss" class="w-5 h-5"></i>
             </div>
-            <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">پیکربندی API</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">پیکربندی API</span>
         </a>
         @endif
     </div>
