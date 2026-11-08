@@ -539,7 +539,7 @@
             <div class="mt-2.5">
                 <h3 class="text-base sm:text-2xl font-black text-slate-800 dark:text-slate-100 tabular-nums tracking-tight"
                     x-text="isLoading ? '...' : status.updatedAt"></h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">رفرش خودکار هر ۳۰ ثانیه</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">رفرش خودکار هر ۱۰ ثانیه</p>
             </div>
         </div>
 
@@ -805,7 +805,7 @@ function dashboardPage() {
 
         async init() {
             await this.loadData();
-            setInterval(() => this.loadData(), 30000);
+            setInterval(() => this.loadData(), 10000);
         },
 
         openWizard() {

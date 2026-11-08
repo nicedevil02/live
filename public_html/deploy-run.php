@@ -121,6 +121,7 @@ $criticalSyncFiles = [
     'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
     'database/migrations/2026_11_08_130000_update_display_items_currency_to_commodities.php',
     'database/migrations/2026_11_08_141500_update_display_items_labels_and_positions.php',
+    'database/migrations/2026_11_08_153000_update_usdt_label_to_crypto_currency.php',
     'public_html/build/manifest.json',
     'public_html/build/assets/app-DdRkyIzc.css',
     'public_html/build/assets/app-34mOoJaZ.js',

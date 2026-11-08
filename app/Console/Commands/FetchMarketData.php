@@ -15,10 +15,8 @@ class FetchMarketData extends Command
     {
         $this->info('Fetching market data...');
         
-        $now = \Illuminate\Support\Carbon::now('Asia/Tehran');
-        $hour = $now->hour;
-        
-        $iterations = ($hour >= 9 && $hour < 22) ? 6 : 1;
+        // اجرای ۶ بار در هر دقیقه با فواصل ۱۰ ثانیه‌ای (پایش مستمر و زنده)
+        $iterations = 6;
 
         for ($i = 0; $i < $iterations; $i++) {
             Cache::lock('market_fetch_lock', 25)->get(function () use ($service) {

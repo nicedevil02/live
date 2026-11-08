@@ -71,19 +71,27 @@ class MarketService
             }
         }
 
-        // ۳. واکشی تتر از زیپودو (Zipodo)
-        $usdtConfig = ApiSourceConfig::where('key', 'usdt')->first();
-        if (!$usdtConfig || $usdtConfig->is_active) {
-            $this->fetchUsdt($usdtConfig);
+        // ۳. واکشی تتر از زیپودو (Zipodo) صرفاً در صورت عدم دریافت تتر از کانال بله یا کهنگی بیش از ۳۰ ثانیه (فال‌بک)
+        $usdtCache = MarketCache::where('symbol', 'usdt')->first();
+        $isUsdtStale = !$usdtCache || !$usdtCache->fetched_at || (now()->timestamp - $usdtCache->fetched_at->timestamp > 30);
+        if ($isUsdtStale) {
+            $usdtConfig = ApiSourceConfig::where('key', 'usdt')->first();
+            if (!$usdtConfig || $usdtConfig->is_active) {
+                $this->fetchUsdt($usdtConfig);
+            }
         }
     }
 
     public function fetchFastMovingPrices(): void
     {
-        // دریافت پرسرعت تتر از زیپودو
-        $usdtConfig = ApiSourceConfig::where('key', 'usdt')->first();
-        if (!$usdtConfig || $usdtConfig->is_active) {
-            $this->fetchUsdt($usdtConfig);
+        // در صورت کهنه بودن تتر (بیش از ۳۰ ثانیه)، از فال‌بک زیپودو استفاده کن
+        $usdtCache = MarketCache::where('symbol', 'usdt')->first();
+        $isUsdtStale = !$usdtCache || !$usdtCache->fetched_at || (now()->timestamp - $usdtCache->fetched_at->timestamp > 30);
+        if ($isUsdtStale) {
+            $usdtConfig = ApiSourceConfig::where('key', 'usdt')->first();
+            if (!$usdtConfig || $usdtConfig->is_active) {
+                $this->fetchUsdt($usdtConfig);
+            }
         }
     }
 
@@ -214,7 +222,7 @@ class MarketService
             'coin_gerami'  => '/(?:سکه\s*)?گرمی(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'oil_brent'    => '/(?:🛢\s*)?(?:نفت(?:\s*برنت)?|برنت)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'silver_ounce' => '/(?:(?:انس|اونس)(?:\s*(?:جهانی|نقره))*\s*نقره|نقره\s*(?:جهانی|انس)?)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
-            'usdt'         => '/(?:تتر|usdt)(?:\s*(?:دیجیتال|نقدی))*\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'usdt'         => '/(?:💵\s*)?(?:تتر|usdt)(?:\s*[\(（]?\s*(?:دلار\s*دیجیتال|ارز\s*دیجیتال|دیجیتال|نقدی)\s*[\)）]?)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'bitcoin'      => '/بیت\s*[\x{200c}\x{200d}]?کوین\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
         ];
 
@@ -803,9 +811,8 @@ class MarketService
 
     public function currentRefreshIntervalSeconds(): int
     {
-        $hour = now('Asia/Tehran')->hour;
-        // در ساعات کاری هر ۱۰ ثانیه، خارج از آن هر ۱ دقیقه (۶۰ ثانیه)
-        return ($hour >= 9 && $hour < 22) ? 10 : 60;
+        // آپدیت ۲۴ ساعته هر ۱۰ ثانیه
+        return 10;
     }
 
     public function getPriceFeed(?\App\Models\User $user = null): array
@@ -830,7 +837,7 @@ class MarketService
             'coin_bahar'     => 'سکه بهار آزادی',
             'coin_nim'       => 'نیم سکه',
             'coin_rob'       => 'ربع سکه',
-            'usdt'           => 'تتر (دلار دیجیتال)',
+            'usdt'           => 'تتر (ارز دیجیتال)',
             'mesghal17'      => 'آبشده',
             'ounce'          => 'انس جهانی طلا',
             'coin_gerami'    => 'سکه گرمی',

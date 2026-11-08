@@ -75,17 +75,17 @@ function rateTicker() {
                 this.loaded = true;
             }
             clearTimeout(this.timer);
-            this.timer = setTimeout(() => this.load(), 120000);
+            this.timer = setTimeout(() => this.load(), 10000);
         },
 
         mapRows(data) {
             if (!data || !Array.isArray(data.priceFeed)) return [];
             
             const targetOrder = [
-                { key: 'mesghal17', defaultLabel: 'مظنه مثقال' },
+                { key: 'mesghal17', defaultLabel: 'آبشده' },
                 { key: 'gold18', defaultLabel: 'طلای ۱۸ عیار' },
                 { key: 'coin_emami', defaultLabel: 'سکه امامی' },
-                { key: 'usdt', defaultLabel: 'تتر (دلار دیجیتال)' }
+                { key: 'usdt', defaultLabel: 'تتر (ارز دیجیتال)' }
             ];
 
             const feedMap = {};
