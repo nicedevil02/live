@@ -85,7 +85,7 @@ function rateTicker() {
                 { key: 'mesghal17', defaultLabel: 'آبشده' },
                 { key: 'gold18', defaultLabel: 'طلای ۱۸ عیار' },
                 { key: 'coin_emami', defaultLabel: 'سکه امامی' },
-                { key: 'usdt', defaultLabel: 'تتر (ارز دیجیتال)' }
+                { key: 'usdt', defaultLabel: 'تتر (دلار دیجیتال)' }
             ];
 
             const feedMap = {};

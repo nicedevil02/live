@@ -851,7 +851,7 @@ class MarketService
             'coin_bahar'     => 'سکه بهار آزادی',
             'coin_nim'       => 'نیم سکه',
             'coin_rob'       => 'ربع سکه',
-            'usdt'           => 'تتر (ارز دیجیتال)',
+            'usdt'           => 'تتر (دلار دیجیتال)',
             'mesghal17'      => 'آبشده',
             'ounce'          => 'انس جهانی طلا',
             'coin_gerami'    => 'سکه گرمی',

@@ -681,7 +681,7 @@ class AuthController extends Controller
             ['key' => 'coin_bahar',     'label' => 'سکه بهار آزادی',      'order' => 5],
             ['key' => 'coin_nim',       'label' => 'نیم سکه',            'order' => 6],
             ['key' => 'coin_rob',       'label' => 'ربع سکه',            'order' => 7],
-            ['key' => 'usdt',           'label' => 'تتر (ارز دیجیتال)',  'order' => 8],
+            ['key' => 'usdt',           'label' => 'تتر (دلار دیجیتال)', 'order' => 8],
             ['key' => 'mesghal17',      'label' => 'آبشده',              'order' => 9],
             ['key' => 'ounce',          'label' => 'انس جهانی طلا',      'order' => 10],
             ['key' => 'coin_gerami',    'label' => 'سکه گرمی',           'order' => 11],

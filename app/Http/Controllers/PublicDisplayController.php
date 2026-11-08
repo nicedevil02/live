@@ -54,7 +54,7 @@ class PublicDisplayController extends Controller
 
         $pageTitle = "قیمت لحظه‌ای طلا و سکه — {$galleryDisplayName} در {$cityFullDisplay} | طلالایو";
         $metaDescription = "مشاهده قیمت لحظه‌ای طلا ۱۸ عیار، سکه و مسکوکات در {$galleryDisplayName} {$cityFullDisplay}. تابلوی آنلاین ویترین طلافروشی متصل به شبکه هوشمند ابری طلالایو.";
-        $galleryIntro = "تابلوی اعلام قیمت لحظه‌ای طلا، مسکوکات و ارز {$galleryDisplayName} واقع در {$cityFullDisplay}. نرخ‌ها به صورت خودکار و برخط مطابق آخرین نوسانات بازار طلا و اتحادیه به‌روزرسانی می‌شوند.";
+        $galleryIntro = "تابلوی اعلام قیمت لحظه‌ای طلا، مسکوکات و تتر {$galleryDisplayName} واقع در {$cityFullDisplay}. نرخ‌ها به صورت خودکار و برخط مطابق آخرین نوسانات بازار طلا و اتحادیه به‌روزرسانی می‌شوند.";
         $phone = $user->displaySetting?->phone ?? '';
 
         $isNoIndex = $isExpired || $request->has('tv') || $request->has('app');

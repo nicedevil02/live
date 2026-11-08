@@ -224,7 +224,7 @@
                 </div>
 
                 <div class="rate-row">
-                    <span>تتر (ارز دیجیتال)</span>
+                    <span>تتر (دلار دیجیتال)</span>
                     <div>
                         <strong>{{ formatVal($rates['usdt'] ?? 0) }}</strong>
                         <small style="font-size: 10px; opacity: 0.8;">تومان</small>

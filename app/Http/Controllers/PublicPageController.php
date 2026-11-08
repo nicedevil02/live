@@ -462,7 +462,7 @@ class PublicPageController extends Controller
             ['symbol' => 'coin_rob', 'name' => 'ربع سکه', 'value' => $ratesData['rates']['coin_rob'] ?: 15200000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'coin_gerami', 'name' => 'سکه گرمی', 'value' => $ratesData['rates']['coin_gerami'] ?: 7200000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'ounce', 'name' => 'انس جهانی طلا', 'value' => $ratesData['rates']['ons'] ?: 2720, 'unit' => 'دلار', 'direction' => 'flat', 'is_stale' => false],
-            ['symbol' => 'usdt', 'name' => 'تتر (ارز دیجیتال)', 'value' => $ratesData['rates']['usdt'] ?: 89500, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'usdt', 'name' => 'تتر (دلار دیجیتال)', 'value' => $ratesData['rates']['usdt'] ?: 89500, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'oil_brent', 'name' => 'نفت برنت', 'value' => $ratesData['rates']['oil_brent'] ?: 98.32, 'unit' => 'دلار', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'silver_ounce', 'name' => 'انس جهانی نقره', 'value' => $ratesData['rates']['silver_ounce'] ?: 31.45, 'unit' => 'دلار', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'global_mesghal', 'name' => 'مظنه جهانی طلا', 'value' => $ratesData['rates']['global_mesghal'] ?: 26150000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
@@ -477,7 +477,7 @@ class PublicPageController extends Controller
             ['key' => 'coin_rob', 'label' => 'ربع سکه', 'enabled' => true, 'order' => 6],
             ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'enabled' => true, 'order' => 7],
             ['key' => 'ounce', 'label' => 'انس جهانی طلا', 'enabled' => true, 'order' => 8],
-            ['key' => 'usdt', 'label' => 'تتر (ارز دیجیتال)', 'enabled' => true, 'order' => 9],
+            ['key' => 'usdt', 'label' => 'تتر (دلار دیجیتال)', 'enabled' => true, 'order' => 9],
             ['key' => 'oil_brent', 'label' => 'نفت برنت', 'enabled' => true, 'order' => 10],
             ['key' => 'silver_ounce', 'label' => 'انس جهانی نقره', 'enabled' => true, 'order' => 11],
             ['key' => 'global_mesghal', 'label' => 'مظنه جهانی طلا', 'enabled' => true, 'order' => 12],
@@ -603,7 +603,7 @@ class PublicPageController extends Controller
                 ],
                 'commodities' => [
                     'usdt' => [
-                        'name' => 'تتر (ارز دیجیتال)',
+                        'name' => 'تتر (دلار دیجیتال)',
                         'price' => (float)($rates['usdt'] ?? 0),
                         'unit' => 'تومان'
                     ],
