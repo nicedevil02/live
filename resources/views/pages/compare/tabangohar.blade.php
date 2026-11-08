@@ -125,9 +125,9 @@
                             <td class="p-4 text-emerald-600 dark:text-emerald-400 font-bold bg-amber-500/5">سریع (زیر ۳ دقیقه با ورود آدرس در مرورگر)</td>
                         </tr>
                         <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
-                            <td class="p-4 font-semibold text-stone-900 dark:text-stone-100">پوشش نرخ ارزهای پرکاربرد</td>
+                            <td class="p-4 font-semibold text-stone-900 dark:text-stone-100">پوشش کالاهای جهانی و کریپتو</td>
                             <td class="p-4">پشتیبانی در پلن‌های مشخص</td>
-                            <td class="p-4 text-emerald-600 dark:text-emerald-400 font-bold bg-amber-500/5">پشتیبانی کامل (تتر، دلار، درهم و انس)</td>
+                            <td class="p-4 text-emerald-600 dark:text-emerald-400 font-bold bg-amber-500/5">پوشش کامل (تتر، نفت برنت، انس نقره و طلا)</td>
                         </tr>
                         <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40 transition-colors">
                             <td class="p-4 font-semibold text-stone-900 dark:text-stone-100">پوشش بازار نقره و انواع شمش</td>

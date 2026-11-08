@@ -157,8 +157,8 @@
                     <strong>{{ formatVal($rates['coin_nim'] ?? 0) }}</strong>
                 </div>
                 <div class="ticker-item">
-                    <span>دلار:</span>
-                    <strong>{{ formatVal($rates['dollar'] ?? 0) }}</strong>
+                    <span>تتر (USDT):</span>
+                    <strong>{{ formatVal($rates['usdt'] ?? 0) }}</strong>
                 </div>
                 <div class="ticker-item">
                     <span>انس جهانی:</span>
@@ -224,9 +224,9 @@
                 </div>
 
                 <div class="rate-row">
-                    <span>دلار آزاد تهران</span>
+                    <span>تتر (دلار دیجیتال)</span>
                     <div>
-                        <strong>{{ formatVal($rates['dollar'] ?? 0) }}</strong>
+                        <strong>{{ formatVal($rates['usdt'] ?? 0) }}</strong>
                         <small style="font-size: 10px; opacity: 0.8;">تومان</small>
                     </div>
                 </div>

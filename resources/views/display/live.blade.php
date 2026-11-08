@@ -2165,7 +2165,7 @@
                     <div :class="themeKey === 'imperial-pearl' ? 'bg-amber-500/15 text-amber-900 border border-amber-500/30' : (isLightTheme ? 'bg-blue-600/10 text-blue-700' : 'bg-amber-400/10 text-amber-300 border border-amber-400/20')" 
                          class="mt-1 px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5">
                          <span>✦</span>
-                         <span>نرخ‌گذاری لحظه‌ای طلا و ارز — {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
+                         <span>نرخ‌گذاری زنده طلا و مسکوکات · {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
                          <span>✦</span>
                     </div>
                     {{-- دکمه صفحه اصلی طلالایو --}}
@@ -3176,7 +3176,7 @@
             // پیش‌مقداردهی displayHtml برای مقادیر اولیه
             if (initialSnapshot && initialSnapshot.priceFeed) {
                 initialSnapshot.priceFeed.forEach(item => {
-                    const decimals = (item.symbol === 'ounce' || item.symbol === 'bitcoin') ? 2 : 0;
+                    const decimals = (['ounce', 'bitcoin', 'oil_brent', 'silver_ounce'].includes(item.symbol)) ? 2 : 0;
                     item.displayHtml = formatNumber(item.value, decimals);
                 });
             }
@@ -3415,7 +3415,7 @@
                             if (this.snapshotData && this.snapshotData.priceFeed) {
                                 newData.priceFeed.forEach(newItem => {
                                     const oldItem = this.snapshotData.priceFeed.find(n => n.symbol === newItem.symbol);
-                                    const decimals = (newItem.symbol === 'ounce' || newItem.symbol === 'bitcoin') ? 2 : 0;
+                                    const decimals = (['ounce', 'bitcoin', 'oil_brent', 'silver_ounce'].includes(newItem.symbol)) ? 2 : 0;
                                     const currentFormatted = formatNumber(newItem.value, decimals);
                                     newItem.displayHtml = currentFormatted;
                                     
@@ -3451,7 +3451,7 @@
                                 });
                             } else {
                                 newData.priceFeed.forEach(item => {
-                                    const decimals = (item.symbol === 'ounce' || item.symbol === 'bitcoin') ? 2 : 0;
+                                    const decimals = (['ounce', 'bitcoin', 'oil_brent', 'silver_ounce'].includes(item.symbol)) ? 2 : 0;
                                     item.displayHtml = formatNumber(item.value, decimals);
                                 });
                             }

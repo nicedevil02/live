@@ -56,12 +56,12 @@ class FormulaController extends Controller
         $feed = collect($service->getPriceFeed(auth()->user()))->keyBy('symbol');
 
         $ouncePrice = $feed->get('ounce')['value'] ?? 0;
-        $usdRate    = $feed->get('usd')['value'] ?? 0;
+        $usdtRate   = $feed->get('usdt')['value'] ?? $feed->get('usd')['value'] ?? 0;
         $gold18Tablo = $feed->get('gold18')['value'] ?? 0;
 
-        // فرمول واقعی: (اونس × دلار × 0.75) ÷ 31.1035
-        $gold18Real = ($ouncePrice > 0 && $usdRate > 0)
-            ? round(($ouncePrice * $usdRate * 0.75) / 31.1035)
+        // فرمول واقعی بر مبنای اونس جهانی و تتر: (اونس × تتر × 0.75) ÷ 31.1035
+        $gold18Real = ($ouncePrice > 0 && $usdtRate > 0)
+            ? round(($ouncePrice * $usdtRate * 0.75) / 31.1035)
             : 0;
 
         $formula = FormulaConfig::where('user_id', auth()->id())->first();
@@ -69,11 +69,12 @@ class FormulaController extends Controller
 
         return response()->json([
             'ouncePrice'    => $ouncePrice,
-            'usdRate'       => $usdRate,
+            'usdtRate'      => $usdtRate,
+            'usdRate'       => $usdtRate,
             'gold18Tablo'   => $gold18Tablo,
             'gold18Real'    => $gold18Real,
             'buyGold'       => round($buyGold),
-            'formula'       => '(ouncePrice * usdRate * 0.75) / 31.1035',
+            'formula'       => '(ouncePrice * usdtRate * 0.75) / 31.1035',
         ]);
     }
 }

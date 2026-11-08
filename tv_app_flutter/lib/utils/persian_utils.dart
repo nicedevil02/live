@@ -25,7 +25,7 @@ class PersianUtils {
 
   static String formatPrice(dynamic raw, {int decimals = 0, String symbol = ''}) {
     if (raw == null) return '۰';
-    if (symbol == 'ounce' || symbol == 'bitcoin') {
+    if (symbol == 'ounce' || symbol == 'bitcoin' || symbol == 'oil_brent' || symbol == 'silver_ounce') {
       decimals = 2;
     }
 
@@ -55,7 +55,7 @@ class PersianUtils {
   static String formatPriceString(String raw, {String symbol = ''}) {
     final clean = raw.trim();
     if (clean.isEmpty) return '۰';
-    final decimals = (symbol == 'ounce' || symbol == 'bitcoin') ? 2 : 0;
+    final decimals = (symbol == 'ounce' || symbol == 'bitcoin' || symbol == 'oil_brent' || symbol == 'silver_ounce') ? 2 : 0;
     return formatPrice(raw, decimals: decimals);
   }
 
@@ -77,7 +77,7 @@ class PersianUtils {
 
   static String formatSignedChangeValue(dynamic val, {String symbol = ''}) {
     if (val == null) return '۰';
-    final decimals = (symbol == 'ounce' || symbol == 'bitcoin') ? 2 : 0;
+    final decimals = (symbol == 'ounce' || symbol == 'bitcoin' || symbol == 'oil_brent' || symbol == 'silver_ounce') ? 2 : 0;
     num n = 0;
     if (val is num) {
       n = val;

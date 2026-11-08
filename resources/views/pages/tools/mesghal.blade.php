@@ -161,7 +161,7 @@
                 <span class="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-[11px] font-bold">معیار طلای جهانی</span>
                 <h3 class="text-base font-black text-stone-900 dark:text-white">۳. مظنه جهانی طلا</h3>
                 <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                    <strong>مظنه جهانی</strong> از حاصل‌ضرب قیمت هر اونس تروا در بازار بین‌المللی در قیمت لحظه‌ای تتر یا دلار آزاد تقسیم بر ۹.۵۷۴۲ به دست می‌آید و کف تئوریک قیمت طلای داخلی بدون حباب سیاسی است.
+                    <strong>مظنه جهانی</strong> از حاصل‌ضرب قیمت هر اونس تروا در بازار بین‌المللی در قیمت لحظه‌ای تتر دیجیتال تقسیم بر ۹.۵۷۴۲ به دست می‌آید و کف تئوریک قیمت طلای داخلی بدون حباب سیاسی است.
                 </p>
             </div>
         </div>
@@ -198,7 +198,7 @@
                     <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
                         <td class="p-4 font-bold">مظنه جهانی (انس)</td>
                         <td class="p-4 text-stone-900 dark:text-stone-100 font-bold">پیوسته و ۲۴ ساعته</td>
-                        <td class="p-4 text-stone-500 dark:text-stone-400 text-xs">(انس جهانی × دلار آزاد) ÷ ۹.۵۷۴۲</td>
+                        <td class="p-4 text-stone-500 dark:text-stone-400 text-xs">(انس جهانی × تتر) ÷ ۹.۵۷۴۲</td>
                         <td class="p-4 text-stone-500 dark:text-stone-400 text-xs">محاسبه حباب طلا و مقایسه قاچاق ورودی/خروجی</td>
                     </tr>
                 </tbody>

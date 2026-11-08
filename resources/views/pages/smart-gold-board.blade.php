@@ -305,17 +305,14 @@
                 </div>
                 <div class="space-y-1.5">
                     <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">
-                        پشتیبانی چندمنظوره از تابلوهای صرافی، نقره و شمش
+                        پشتیبانی از تابلوی تخصصی نقره، شمش و مظنه جهانی
                     </h3>
                     <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 max-w-2xl leading-relaxed">
-                        علاوه بر طلا و جواهر، امکان راه‌اندازی اختصاصی <a href="{{ route('public.currency-exchange-board') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">تابلو صرافی و نرخ ارز</a> و همچنین <a href="{{ route('public.silver-bullion-board') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">تابلو نرخ نقره و شمش</a> با ردیف‌های تفکیکی عیارهای ۹۹۹ و ۹۲۵ فراهم است.
+                        علاوه بر طلا و مسکوکات، امکان راه‌اندازی اختصاصی <a href="{{ route('public.silver-bullion-board') }}" class="text-amber-700 dark:text-amber-400 font-bold hover:underline">تابلو نرخ نقره و شمش</a> با ردیف‌های تفکیکی عیارهای ۹۹۹ و ۹۲۵ و مظنه جهانی طلا فراهم است.
                     </p>
                 </div>
             </div>
             <div class="flex items-center gap-3 shrink-0 flex-wrap">
-                <a href="{{ route('public.currency-exchange-board') }}" class="min-h-11 px-5 py-2.5 rounded-xl tl-btn-bullion font-bold text-xs inline-flex items-center justify-center">
-                    مشاهده تابلوی صرافی
-                </a>
                 <a href="{{ route('public.silver-bullion-board') }}" class="min-h-11 px-5 py-2.5 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-100 font-bold text-xs inline-flex items-center justify-center">
                     مشاهده تابلوی نقره
                 </a>
@@ -367,17 +364,6 @@
             </details>
         </div>
     </section>
-
-    {{-- لینک به بازار مجاور: صرافی و نرخ ارز --}}
-    <div class="relative z-10 p-6 sm:p-8 rounded-3xl tl-neu-card flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="space-y-1 text-center sm:text-right">
-            <h3 class="text-base font-bold text-stone-900 dark:text-stone-100">آیا در کنار طلا، معاملات ارزی و حواله نیز انجام می‌دهید؟</h3>
-            <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-400">سامانه طلالایو نسخه اختصاصی نمایشگر دو نرخه خرید و فروش انواع ارز و حواله را برای صرافی‌ها ارائه می‌دهد.</p>
-        </div>
-        <a href="{{ route('public.currency-exchange-board') }}" class="min-h-11 px-6 py-3 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 font-bold text-xs inline-flex items-center justify-center shrink-0">
-            مشاهده تابلو صرافی و نرخ ارز
-        </a>
-    </div>
 
     {{-- لینک به بازار مجاور: نقره و شمش --}}
     <div class="relative z-10 p-6 sm:p-8 rounded-3xl tl-neu-card flex flex-col sm:flex-row items-center justify-between gap-4">

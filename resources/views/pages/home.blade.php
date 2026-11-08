@@ -779,26 +779,22 @@
             </div>
         </div>
 
-        {{-- پنل پشتیبانی از نرخ ارز، شمش و نقره --}}
+        {{-- پنل پشتیبانی از نرخ تتر، نفت برنت، شمش و نقره --}}
         <div class="mt-8 p-6 sm:p-8 rounded-3xl tl-neu-card flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="space-y-2 text-right">
                 <div class="flex items-center gap-2.5">
                     <span class="tl-neu-icon-orb w-10 h-10 rounded-xl flex items-center justify-center shrink-0">
-                        @include('partials.ui-icon', ['name' => 'currency', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
+                        @include('partials.ui-icon', ['name' => 'bolt', 'class' => 'w-5 h-5 text-amber-700 dark:text-amber-400'])
                     </span>
                     <h3 class="text-base font-bold text-stone-900 dark:text-stone-50">
-                        پوشش کامل نرخ انواع ارز، نقره و شمش در کنار طلا و سکه
+                        پوشش نرخ تتر دیجیتال، نفت برنت، نقره و بازارهای جهانی در کنار طلا و سکه
                     </h3>
                 </div>
                 <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 max-w-2xl leading-relaxed">
-                    علاوه بر طلا و مسکوکات، تابلوی طلالایو ردیف‌های دلار، یورو، درهم، تتر و نرخ‌های شمش و نقره (گرم ۹۹۹ و ۹۲۵) را با قابلیت فعال‌سازی یا مخفی‌سازی مستقل در اختیار گالری‌ها و صرافی‌ها قرار می‌دهد.
+                    علاوه بر طلا و مسکوکات، تابلوی طلالایو ردیف‌های تتر (دلار دیجیتال)، نفت برنت، انس جهانی نقره، مظنه جهانی طلا و نرخ‌های شمش و نقره (گرم ۹۹۹ و ۹۲۵) را با قابلیت فعال‌سازی یا مخفی‌سازی مستقل در اختیار گالری‌ها قرار می‌دهد.
                 </p>
             </div>
             <div class="flex items-center gap-3 shrink-0 flex-wrap">
-                <a href="/currency-exchange-board" class="min-h-11 px-4 py-2.5 rounded-xl tl-btn-bullion font-bold text-xs inline-flex items-center gap-1.5">
-                    <span>تابلو صرافی و نرخ ارز</span>
-                    @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
-                </a>
                 <a href="/silver-bullion-board" class="min-h-11 px-4 py-2.5 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold text-xs inline-flex items-center gap-1.5">
                     <span>تابلو نقره و شمش</span>
                     @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])

@@ -178,7 +178,6 @@ class SitemapController extends Controller
                 'image' => ['loc' => 'https://talalive.ir/images/tv-preview.webp', 'title' => 'تابلوی طلا بدون دستگاه و سخت‌افزار واسط'],
             ],
             ['url' => 'https://talalive.ir/online-gold-price-board', 'lastmod' => $this->getViewLastMod('pages.online-gold-price-board')],
-            ['url' => 'https://talalive.ir/currency-exchange-board', 'lastmod' => $this->getViewLastMod('pages.currency-exchange-board')],
             ['url' => 'https://talalive.ir/silver-bullion-board', 'lastmod' => $this->getViewLastMod('pages.silver-bullion-board')],
             ['url' => 'https://talalive.ir/compare/tabangohar', 'lastmod' => $this->getViewLastMod('pages.compare.tabangohar')],
             ['url' => 'https://talalive.ir/compare/tgju-tv', 'lastmod' => $this->getViewLastMod('pages.compare.tgju-tv')],

@@ -12,7 +12,6 @@ return [
                 'public.digital-rate-board',
                 'public.gold-board-without-device',
                 'public.online-gold-price-board',
-                'public.currency-exchange-board',
                 'public.silver-bullion-board',
                 'public.demo',
                 'public.app',
@@ -32,8 +31,8 @@ return [
                 [
                     'route' => 'public.digital-rate-board',
                     'icon'  => 'monitor',
-                    'title' => 'تابلو دیجیتال طلا و صرافی',
-                    'desc'  => 'مانیتور نرخ لحظه‌ای طلا و صرافی',
+                    'title' => 'تابلو دیجیتال طلا و سکه',
+                    'desc'  => 'مانیتور نرخ لحظه‌ای طلا و مسکوکات',
                 ],
                 [
                     'route' => 'public.gold-board-without-device',
@@ -46,13 +45,6 @@ return [
                     'icon'  => 'bolt',
                     'title' => 'تابلو آنلاین قیمت طلا',
                     'desc'  => 'به‌روزرسانی خودکار نرخ‌های صنفی',
-                ],
-                [
-                    'route' => 'public.currency-exchange-board',
-                    'icon'  => 'currency',
-                    'title' => 'تابلو نرخ ارز صرافی',
-                    'desc'  => 'ویژه صرافی‌ها و مراکز ارزی',
-                    'badge' => 'به‌زودی',
                 ],
                 [
                     'route' => 'public.silver-bullion-board',

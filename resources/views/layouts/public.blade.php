@@ -59,7 +59,7 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="@yield('title', 'سامانه هوشمند تابلوی طلافروشی و نمایشگر طلا فروشی | طلالایو')">
-    <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، سکه و ارز ویژه تلویزیون مغازه‌های طلافروشی و طلا فروشی‌ها.')">
+    <meta property="og:description" content="@yield('meta_description', 'سامانه ابری تابلوی هوشمند نرخ لحظه ای طلا، سکه و فلزات گرانبها ویژه تلویزیون مغازه‌های طلافروشی.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="طلالایو">
     <meta property="og:image" content="@yield('og_image', asset('images/og-cover.png'))">
@@ -111,7 +111,7 @@
             "addressCountry": "IR"
           },
           "foundingDate": "2024",
-          "description": "سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه و ارز و ویترین دیجیتال گالری‌های طلا و جواهر و مغازه طلا فروشی بدون نیاز به مینی‌کیس.",
+          "description": "سامانه ابری تابلوی هوشمند اعلام نرخ طلا، سکه، تتر و ویترین دیجیتال گالری‌های طلا و جواهر بدون نیاز به مینی‌کیس.",
           "contactPoint": [
             {
               "@@type": "ContactPoint",
@@ -385,7 +385,7 @@
                     </div>
                 </div>
                 <p class="text-stone-700 dark:text-stone-300 text-xs leading-relaxed">
-                    سامانه تخصصی طلالایو: نمایش آنلاین نرخ لحظه‌ای طلا، سکه و ارز روی انواع تلویزیون‌های هوشمند بدون نیاز به خرید کیس، مینی‌کامپیوتر یا دستگاه سخت‌افزاری واسط.
+                    سامانه تخصصی طلالایو: نمایش آنلاین نرخ لحظه‌ای طلا، سکه، تتر و فلزات گرانبها روی انواع تلویزیون‌های هوشمند بدون نیاز به خرید کیس، مینی‌کامپیوتر یا دستگاه سخت‌افزاری واسط.
                 </p>
                 <div class="space-y-2 text-xs text-stone-600 dark:text-stone-400 border-t border-stone-300/60 dark:border-white/10 pt-3">
                     <div class="flex items-start gap-2">
@@ -419,10 +419,9 @@
                 </div>
                 <ul class="space-y-2 text-xs">
                     <li><a href="{{ route('public.smart-gold-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلوی هوشمند طلافروشی</a></li>
-                    <li><a href="{{ route('public.digital-rate-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلوی دیجیتال نرخ طلا و ارز</a></li>
+                    <li><a href="{{ route('public.digital-rate-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلوی دیجیتال نرخ طلا و سکه</a></li>
                     <li><a href="{{ route('public.gold-board-without-device') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلو طلا بدون خرید دستگاه</a></li>
                     <li><a href="{{ route('public.online-gold-price-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">تابلو آنلاین قیمت لحظه‌ای طلا</a></li>
-                    <li><a href="{{ route('public.currency-exchange-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"><span>تابلو نرخ صرافی و ارزها</span><span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 leading-tight">به‌زودی</span></a></li>
                     <li><a href="{{ route('public.silver-bullion-board') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"><span>تابلوی شمش و آبشده نقره</span><span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 leading-tight">به‌زودی</span></a></li>
                     <li><a href="{{ route('public.demo') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">دموی آنلاین تابلوی طلا</a></li>
                     <li><a href="{{ route('public.app') }}" class="hover:text-amber-700 dark:hover:text-amber-400 transition-colors">اپلیکیشن اندروید تی‌وی و موبایل</a></li>

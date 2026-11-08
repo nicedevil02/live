@@ -81,7 +81,6 @@ class AuditSeoRoutes extends Command
             '/digital-rate-board',
             '/gold-board-without-device',
             '/online-gold-price-board',
-            '/currency-exchange-board',
             '/silver-bullion-board',
             '/compare/tabangohar',
             '/compare/tgju-tv',

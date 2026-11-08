@@ -90,7 +90,7 @@
                 </p>
                 <div class="flex flex-col gap-1 mt-2">
                     <p class="text-xs text-slate-500">
-                        اونس: <span x-text="preview ? formatNumber(preview.ouncePrice, 2) : '-'"></span> $ · دلار: <span x-text="preview ? formatNumber(preview.usdRate) : '-'"></span> تومان
+                        اونس: <span x-text="preview ? formatNumber(preview.ouncePrice, 2) : '-'"></span> $ · تتر: <span x-text="preview ? formatNumber(preview.usdRate) : '-'"></span> تومان
                     </p>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                 <p class="text-2xl font-black text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.ouncePrice, 2) : '---'"></p>
             </div>
             <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4">
-                <p class="text-xs text-slate-500 mb-1">نرخ دلار (تومان)</p>
+                <p class="text-xs text-slate-500 mb-1">نرخ تتر (تومان)</p>
                 <p class="text-2xl font-black text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.usdRate) : '---'"></p>
             </div>
             <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4">
@@ -129,7 +129,7 @@
             </div>
         </div>
         <p class="text-xs text-slate-400 mt-4 font-mono text-center">
-            (اونس × دلار × 0.75) ÷ 31.1035 = قیمت طلای ۱۸ عیار
+            (اونس × تتر × 0.75) ÷ 31.1035 = قیمت طلای ۱۸ عیار جهانی
         </p>
     </div>
 </div>

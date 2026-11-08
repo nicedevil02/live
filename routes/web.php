@@ -222,7 +222,7 @@ Route::prefix('compare')->name('public.compare.')->group(function () {
     Route::get('/tablotala', [PublicPageController::class, 'compareTablotala'])->name('tablotala');
 });
 Route::get('/online-gold-price-board', [PublicPageController::class, 'onlineGoldPriceBoard'])->name('public.online-gold-price-board');
-Route::get('/currency-exchange-board', [PublicPageController::class, 'currencyExchangeBoard'])->name('public.currency-exchange-board');
+Route::redirect('/currency-exchange-board', '/smart-gold-board', 301)->name('public.currency-exchange-board');
 Route::get('/silver-bullion-board', [PublicPageController::class, 'silverBullionBoard'])->name('public.silver-bullion-board');
 Route::get('/android-tv-gold-board', [PublicPageController::class, 'androidTvGoldBoard'])->name('public.android-tv-gold-board');
 

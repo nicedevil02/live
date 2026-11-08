@@ -212,9 +212,9 @@ class MarketService
             'coin_nim'     => '/(?:سکه\s*)?نیم(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'coin_rob'     => '/(?:سکه\s*)?ربع(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'coin_gerami'  => '/(?:سکه\s*)?گرمی(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
-            'usd'          => '/دلار(?:\s*(?:نقدی|سبزه|هرات|تهران|آزاد))*\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
-            'euro'         => '/یورو\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
-            'dirham'       => '/درهم\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'oil_brent'    => '/(?:🛢\s*)?(?:نفت(?:\s*برنت)?|برنت)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'silver_ounce' => '/(?:(?:انس|اونس)(?:\s*(?:جهانی|نقره))*\s*نقره|نقره\s*(?:جهانی|انس)?)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'usdt'         => '/(?:تتر|usdt)(?:\s*(?:دیجیتال|نقدی))*\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'bitcoin'      => '/بیت\s*[\x{200c}\x{200d}]?کوین\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
         ];
 
@@ -224,7 +224,7 @@ class MarketService
                 $val = (float)str_replace(',', '', $matches[1]);
 
                 // Circuit Breaker & بررسی سلامت دامنه قیمت:
-                // نرخ طلای ۱۸ و ۲۴ عیار نمی‌تواند زیر ۱ میلیون تومان باشد (مثلاً نشت قیمت ارز)
+                // نرخ طلای ۱۸ و ۲۴ عیار نمی‌تواند زیر ۱ میلیون تومان باشد
                 if (in_array($key, ['raw_gold18', 'raw_gold24']) && $val < 1000000) {
                     \Log::warning("MarketService: Extracted abnormal low value for {$key}: {$val}");
                     continue;
@@ -237,6 +237,21 @@ class MarketService
                 // نرخ سکه تمام و قطعات نمی‌تواند زیر ۱.۵ میلیون تومان باشد
                 if (str_starts_with($key, 'coin_') && $val < 1500000) {
                     \Log::warning("MarketService: Extracted abnormal low value for {$key}: {$val}");
+                    continue;
+                }
+                // نرخ نفت برنت (۲۰ تا ۳۰۰ دلار)
+                if ($key === 'oil_brent' && ($val < 20 || $val > 300)) {
+                    \Log::warning("MarketService: Extracted abnormal value for oil_brent: {$val}");
+                    continue;
+                }
+                // نرخ انس نقره (۵ تا ۲۰۰ دلار)
+                if ($key === 'silver_ounce' && ($val < 5 || $val > 200)) {
+                    \Log::warning("MarketService: Extracted abnormal value for silver_ounce: {$val}");
+                    continue;
+                }
+                // نرخ تتر (حداقل ۲۰ هزار تومان)
+                if ($key === 'usdt' && $val < 20000) {
+                    \Log::warning("MarketService: Extracted abnormal low value for usdt: {$val}");
                     continue;
                 }
 
@@ -298,17 +313,32 @@ class MarketService
             $this->savePriceItem('bitcoin', round($rates['bitcoin'], 2), 'دلار', $apiDate);
         }
 
-        // ۴. ذخیره انواع مسکوکات
-        $coinSymbols = ['coin_emami', 'coin_bahar', 'coin_nim', 'coin_rob', 'coin_gerami'];
-        foreach ($coinSymbols as $sym) {
-            if (isset($rates[$sym]) && $rates[$sym] > 0) {
-                $this->savePriceItem($sym, $rates[$sym], 'تومان', $apiDate);
-            }
+        // ۴. ذخیره نفت برنت (دلار)
+        if (isset($rates['oil_brent']) && $rates['oil_brent'] > 0) {
+            $this->savePriceItem('oil_brent', round($rates['oil_brent'], 2), 'دلار', $apiDate);
         }
 
-        // ۵. ذخیره ارزها (دلار نقدی، یورو، درهم)
-        $currencySymbols = ['usd', 'euro', 'dirham'];
-        foreach ($currencySymbols as $sym) {
+        // ۵. ذخیره انس جهانی نقره (دلار)
+        if (isset($rates['silver_ounce']) && $rates['silver_ounce'] > 0) {
+            $this->savePriceItem('silver_ounce', round($rates['silver_ounce'], 2), 'دلار', $apiDate);
+        }
+
+        // ۶. ذخیره تتر (تومان)
+        if (isset($rates['usdt']) && $rates['usdt'] > 0) {
+            $this->savePriceItem('usdt', round($rates['usdt']), 'تومان', $apiDate);
+        }
+
+        // ۷. محاسبه و ذخیره مظنه جهانی طلا: (انس جهانی طلا × تتر) ÷ ۹.۵۷۴۲
+        $ounceVal = $rates['ounce'] ?? MarketCache::where('symbol', 'ounce')->value('value');
+        $usdtVal  = $rates['usdt'] ?? MarketCache::where('symbol', 'usdt')->value('value');
+        if ($ounceVal > 0 && $usdtVal > 0) {
+            $globalMesghal = round(($ounceVal * $usdtVal) / 9.5742);
+            $this->savePriceItem('global_mesghal', $globalMesghal, 'تومان', $apiDate);
+        }
+
+        // ۸. ذخیره انواع مسکوکات
+        $coinSymbols = ['coin_emami', 'coin_bahar', 'coin_nim', 'coin_rob', 'coin_gerami'];
+        foreach ($coinSymbols as $sym) {
             if (isset($rates[$sym]) && $rates[$sym] > 0) {
                 $this->savePriceItem($sym, $rates[$sym], 'تومان', $apiDate);
             }
@@ -417,19 +447,19 @@ class MarketService
         $apiDate = now()->format('Y-m-d');
 
         $units = [
-            'gold18'       => 'تومان',
-            'gold24'       => 'تومان',
-            'mesghal17'    => 'تومان',
-            'ounce'        => 'دلار',
-            'coin_emami'   => 'تومان',
-            'coin_bahar'   => 'تومان',
-            'coin_nim'     => 'تومان',
-            'coin_rob'     => 'تومان',
-            'coin_gerami'  => 'تومان',
-            'usd'          => 'تومان',
-            'euro'         => 'تومان',
-            'dirham'       => 'تومان',
-            'usdt'         => 'تومان',
+            'gold18'         => 'تومان',
+            'gold24'         => 'تومان',
+            'mesghal17'      => 'تومان',
+            'ounce'          => 'دلار',
+            'coin_emami'     => 'تومان',
+            'coin_bahar'     => 'تومان',
+            'coin_nim'       => 'تومان',
+            'coin_rob'       => 'تومان',
+            'coin_gerami'    => 'تومان',
+            'usdt'           => 'تومان',
+            'oil_brent'      => 'دلار',
+            'silver_ounce'   => 'دلار',
+            'global_mesghal' => 'تومان',
         ];
 
         // ۱. طلای ۲۴ عیار محاسباتی
@@ -437,14 +467,22 @@ class MarketService
             $rates['gold24'] = round($rates['gold18'] / 0.75);
         }
 
-        // ۲. تتر محاسباتی از دلار در صورت نبود منبع زیپودو
+        // ۲. تتر محاسباتی در صورت نبود
         if (isset($rates['usd']) && !isset($rates['usdt'])) {
             $rates['usdt'] = $rates['usd'];
         }
+        unset($rates['usd'], $rates['euro'], $rates['dirham']);
 
         // ۳. مثقال ۱۷ محاسباتی از روی طلای ۱۸ عیار طبق ضریب اتحادیه ۷۰۵
         if (isset($rates['gold18']) && !isset($rates['mesghal17'])) {
             $rates['mesghal17'] = round($rates['gold18'] * self::MESGHAL_TO_GRAM_18K);
+        }
+
+        // ۴. مظنه جهانی طلا محاسباتی
+        $ounceVal = $rates['ounce'] ?? MarketCache::where('symbol', 'ounce')->value('value');
+        $usdtVal  = $rates['usdt'] ?? MarketCache::where('symbol', 'usdt')->value('value');
+        if ($ounceVal > 0 && $usdtVal > 0) {
+            $rates['global_mesghal'] = round(($ounceVal * $usdtVal) / 9.5742);
         }
 
         foreach ($rates as $symbol => $val) {
@@ -477,6 +515,7 @@ class MarketService
                     $val = (float)$payload['price'];
                     if ($val > 0) {
                         $this->savePriceItem('usdt', $val, 'تومان', now()->format('Y-m-d'));
+                        $this->updateGlobalMesghalFromCache();
 
                         if ($usdtConfig) {
                             $usdtConfig->update([
@@ -500,6 +539,7 @@ class MarketService
                     if ($nobiPrice > 0) {
                         $valToman = round($nobiPrice / 10);
                         $this->savePriceItem('usdt', $valToman, 'تومان', now()->format('Y-m-d'));
+                        $this->updateGlobalMesghalFromCache();
                         if ($usdtConfig) {
                             $usdtConfig->update([
                                 'last_status' => 'ok',
@@ -533,6 +573,7 @@ class MarketService
                     if ($nobiPrice > 0) {
                         $valToman = round($nobiPrice / 10);
                         $this->savePriceItem('usdt', $valToman, 'تومان', now()->format('Y-m-d'));
+                        $this->updateGlobalMesghalFromCache();
                         if ($usdtConfig) {
                             $usdtConfig->update([
                                 'last_status' => 'ok',
@@ -557,6 +598,23 @@ class MarketService
                 $this->logFetchResult($usdtConfig, 'error', "خطا: " . $e->getMessage());
             }
             return false;
+        }
+    }
+
+    /**
+     * محاسبه مجدد مظنه جهانی طلا بر مبنای آخرین مقادیر انس و تتر در کش
+     */
+    protected function updateGlobalMesghalFromCache(): void
+    {
+        try {
+            $ounce = MarketCache::where('symbol', 'ounce')->value('value');
+            $usdt  = MarketCache::where('symbol', 'usdt')->value('value');
+            if ($ounce > 0 && $usdt > 0) {
+                $globalMesghal = round(($ounce * $usdt) / 9.5742);
+                $this->savePriceItem('global_mesghal', $globalMesghal, 'تومان', now()->format('Y-m-d'));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('updateGlobalMesghalFromCache error: ' . $e->getMessage());
         }
     }
 
@@ -765,11 +823,21 @@ class MarketService
         $gold18 = $cache->get('gold18')?->value ?? 0;
 
         $symbols = [
-            'gold18' => 'طلای ۱۸ عیار', 'mesghal17' => 'مثقال ۱۷', 'ounce' => 'انس جهانی',
-            'buy_gold' => 'گرم خرید ۱۸', 'gold24' => 'طلای ۲۴ عیار', 'usd' => 'دلار',
-            'coin_emami' => 'سکه امامی', 'coin_bahar' => 'سکه بهار آزادی', 'coin_nim' => 'نیم سکه',
-            'coin_rob' => 'ربع سکه', 'coin_gerami' => 'سکه گرمی', 'euro' => 'یورو',
-            'dirham' => 'درهم', 'usdt' => 'تتر', 'bitcoin' => 'بیت کوین',
+            'gold18'         => 'طلای ۱۸ عیار',
+            'mesghal17'      => 'مثقال ۱۷',
+            'ounce'          => 'انس جهانی',
+            'buy_gold'       => 'گرم خرید ۱۸',
+            'gold24'         => 'طلای ۲۴ عیار',
+            'coin_emami'     => 'سکه امامی',
+            'coin_bahar'     => 'سکه بهار آزادی',
+            'coin_nim'       => 'نیم سکه',
+            'coin_rob'       => 'ربع سکه',
+            'coin_gerami'    => 'سکه گرمی',
+            'usdt'           => 'تتر (دلار دیجیتال)',
+            'oil_brent'      => 'نفت برنت',
+            'silver_ounce'   => 'انس جهانی نقره',
+            'global_mesghal' => 'مظنه جهانی طلا',
+            'bitcoin'        => 'بیت کوین',
         ];
 
         $feed = [];
@@ -794,6 +862,19 @@ class MarketService
                 $changePct = $c?->change_percent ?? 0;
                 $dir = $c?->direction ?? 'flat';
 
+                // مقادیر پیش‌فرض در صورت خالی بودن اولیه دیتابیس
+                if ($sym === 'oil_brent' && $val <= 0) {
+                    $val = 98.32;
+                } elseif ($sym === 'silver_ounce' && $val <= 0) {
+                    $val = 31.45;
+                } elseif ($sym === 'global_mesghal' && $val <= 0) {
+                    $ounceRef = $cache->get('ounce')?->value ?? 0;
+                    $usdtRef  = $cache->get('usdt')?->value ?? 0;
+                    if ($ounceRef > 0 && $usdtRef > 0) {
+                        $val = round(($ounceRef * $usdtRef) / 9.5742);
+                    }
+                }
+
                 $isStale = true;
                 if ($c && $c->fetched_at) {
                     $ageSeconds = max(0, now()->timestamp - $c->fetched_at->timestamp);
@@ -801,12 +882,18 @@ class MarketService
                 }
             }
 
+            $isDollarUnit = in_array($sym, ['ounce', 'bitcoin', 'oil_brent', 'silver_ounce'], true);
+
             $feed[] = [
-                'symbol' => $sym, 'label' => $label, 'value' => $val,
-                'unit' => ($sym === 'ounce' || $sym === 'bitcoin') ? 'دلار' : ($c?->unit ?? 'تومان'),
-                'change_value' => $changeVal, 'change_percent' => $changePct,
-                'direction' => $dir, 'is_stale' => $isStale,
-                'fetched_at' => $c?->fetched_at?->toISOString() ?? now()->toISOString(),
+                'symbol'         => $sym,
+                'label'          => $label,
+                'value'          => $val,
+                'unit'           => $isDollarUnit ? 'دلار' : ($c?->unit ?? 'تومان'),
+                'change_value'   => $changeVal,
+                'change_percent' => $changePct,
+                'direction'      => $dir,
+                'is_stale'       => $isStale,
+                'fetched_at'     => $c?->fetched_at?->toISOString() ?? now()->toISOString(),
             ];
         }
         return $feed;

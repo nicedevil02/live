@@ -681,14 +681,14 @@ class AuthController extends Controller
             ['key' => 'coin_bahar', 'label' => 'سکه بهار آزادی', 'order' => 5],
             ['key' => 'coin_nim', 'label' => 'نیم سکه', 'order' => 6],
             ['key' => 'coin_rob', 'label' => 'ربع سکه', 'order' => 7],
-            ['key' => 'usd', 'label' => 'دلار', 'order' => 8],
-            ['key' => 'euro', 'label' => 'یورو', 'order' => 9],
-            ['key' => 'dirham', 'label' => 'درهم', 'order' => 10],
-            ['key' => 'bitcoin', 'label' => 'بیت کوین', 'order' => 11],
-            ['key' => 'ounce', 'label' => 'انس جهانی', 'order' => 12],
-            ['key' => 'mesghal17', 'label' => 'مثقال ۱۷', 'order' => 13],
-            ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'order' => 14],
-            ['key' => 'usdt', 'label' => 'تتر', 'order' => 15],
+            ['key' => 'usdt', 'label' => 'تتر (دلار دیجیتال)', 'order' => 8],
+            ['key' => 'oil_brent', 'label' => 'نفت برنت', 'order' => 9],
+            ['key' => 'silver_ounce', 'label' => 'انس جهانی نقره', 'order' => 10],
+            ['key' => 'global_mesghal', 'label' => 'مظنه جهانی طلا', 'order' => 11],
+            ['key' => 'bitcoin', 'label' => 'بیت کوین', 'order' => 12],
+            ['key' => 'ounce', 'label' => 'انس جهانی', 'order' => 13],
+            ['key' => 'mesghal17', 'label' => 'مثقال ۱۷', 'order' => 14],
+            ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'order' => 15],
         ];
 
         foreach ($items as $item) {

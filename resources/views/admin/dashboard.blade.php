@@ -512,7 +512,7 @@
             </div>
         </div>
 
-        {{-- ۲. قیمت محاسبه‌شده طلای ۱۸ عیار جهانی (فرمول اونس و دلار) --}}
+        {{-- ۲. قیمت محاسبه‌شده طلای ۱۸ عیار جهانی (فرمول اونس و تتر) --}}
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
             <div class="flex items-center justify-between gap-2">
                 <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">طلای ۱۸ جهانی (فرمول)</span>

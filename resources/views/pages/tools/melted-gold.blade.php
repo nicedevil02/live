@@ -205,7 +205,7 @@
                     <tr class="hover:bg-stone-50 dark:hover:bg-stone-800/40">
                         <td class="p-4 sm:p-5 font-bold">شمش استاندارد ۲۴ عیار</td>
                         <td class="p-4 sm:p-5 text-stone-900 dark:text-stone-100 font-bold">شمش وکیوم ۹۹۹.۹ دارای سرتیفیکیت</td>
-                        <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">قیمت بر مبنای انس جهانی و دلار آزاد</td>
+                        <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">قیمت بر مبنای انس جهانی و تتر</td>
                         <td class="p-4 sm:p-5 text-xs text-emerald-700 dark:text-emerald-400 font-bold">معاف از ارزش افزوده اصل طلا</td>
                         <td class="p-4 sm:p-5 text-xs text-stone-500 dark:text-stone-400">سرمایه‌گذاری کلان و ذخیره دارایی</td>
                     </tr>

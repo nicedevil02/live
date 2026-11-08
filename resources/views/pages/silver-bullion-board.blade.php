@@ -117,7 +117,7 @@
                         <td class="p-3.5 font-bold">قیمت گرم نقره ۹۹۹ (ساچمه خالص)</td>
                         <td class="p-3.5 font-mono text-stone-900 dark:text-stone-100 font-bold">۹۹۹.۹</td>
                         <td class="p-3.5">هر گرم</td>
-                        <td class="p-3.5">انس جهانی نقره + دلار آزاد</td>
+                        <td class="p-3.5">انس جهانی نقره و تتر</td>
                         <td class="p-3.5">مبنای معاملات خام و ریخته‌گری</td>
                     </tr>
                     <tr class="hover:bg-stone-50/60 dark:hover:bg-stone-850/40">
@@ -279,13 +279,13 @@
 
             <details class="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 open:pb-6 transition-all">
                 <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base select-none">
-                    <span>آیا می‌توان در یک نمایشگر، هم‌زمان نرخ طلا، سکه، نقره و ارز را نمایش داد؟</span>
+                    <span>آیا می‌توان در یک نمایشگر، هم‌زمان نرخ طلا، سکه، نقره، تتر و نفت برنت را نمایش داد؟</span>
                     <span class="text-stone-400 group-open:rotate-180 transition-transform duration-200">
                         @include('partials.ui-icon', ['name' => 'chevron-down', 'class' => 'w-5 h-5'])
                     </span>
                 </summary>
                 <div class="pt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed border-t border-stone-100 dark:border-stone-800/80 mt-3">
-                    بله؛ در پنل کاربری طلالایو می‌توانید هر ترکیبی از ردیف‌ها را که تمایل دارید فعال سازید. برای مثال ردیف‌های شمش طلا و نقره را در کنار مظنه طلا و ارزهایی نظیر درهم یا دلار قرار دهید. برای بررسی راهکار ارزی، صفحه <a href="{{ route('public.currency-exchange-board') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">تابلو صرافی و نرخ ارز</a> را ببینید.
+                    بله؛ در پنل کاربری طلالایو می‌توانید هر ترکیبی از ردیف‌ها را که تمایل دارید فعال سازید. برای مثال ردیف‌های شمش طلا و نقره را در کنار مظنه طلا، تتر (دلار دیجیتال)، نفت برنت، انس جهانی نقره و مظنه جهانی قرار دهید.
                 </div>
             </details>
 
@@ -344,9 +344,9 @@
                 'desc' => 'سامانه ابری نمایش زنده نرخ طلا و مسکوکات روی تلویزیون مغازه.'
             ],
             [
-                'url' => route('public.currency-exchange-board'),
-                'title' => 'تابلو صرافی و نرخ ارز',
-                'desc' => 'نمایشگر دیجیتال دو نرخه قیمت انواع ارز، اسکناس و حواله.'
+                'url' => route('public.digital-rate-board'),
+                'title' => 'تابلوی دیجیتال نرخ طلا و سکه',
+                'desc' => 'نمایشگر مدرن نرخ زنده طلا و مسکوکات بدون نیاز به مینی‌کیس.'
             ],
             [
                 'url' => route('public.tools.karat-converter'),
