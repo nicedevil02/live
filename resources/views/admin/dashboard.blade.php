@@ -523,7 +523,7 @@
             <div class="mt-2.5">
                 <h3 class="text-base sm:text-2xl font-black text-amber-600 dark:text-amber-400 tabular-nums tracking-tight"
                     x-text="isLoading ? '...' : status.formula18Price"></h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">محاسبه بر اساس اونس و تتر</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">محاسبه بر اساس اونس و تتر (دلار دیجیتال)</p>
             </div>
         </div>
 

@@ -222,7 +222,8 @@ class MarketService
             'coin_gerami'  => '/(?:سکه\s*)?گرمی(?:\s*سکه)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'oil_brent'    => '/(?:🛢\s*)?(?:نفت(?:\s*برنت)?|برنت)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'silver_ounce' => '/(?:(?:انس|اونس)(?:\s*(?:جهانی|نقره))*\s*نقره|نقره\s*(?:جهانی|انس)?)\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
-            'usdt'         => '/(?:💵\s*)?(?:تتر|usdt)(?:\s*[\(（]?\s*(?:دلار\s*دیجیتال|ارز\s*دیجیتال|دیجیتال|نقدی)\s*[\)）]?)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'usdt'         => '/(?:🪙\s*)?(?:تتر|usdt)(?:\s*[\(（]?\s*ارز\s*دیجیتال\s*[\)）]?)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
+            'usdt_dollar'  => '/(?:💵\s*)?(?:تتر|usdt)(?:\s*[\(（]?\s*دلار\s*دیجیتال\s*[\)）]?)?\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
             'bitcoin'      => '/بیت\s*[\x{200c}\x{200d}]?کوین\s*:[^\d\r\n:]{0,30}([\d,\.]+)/iu',
         ];
 
@@ -258,8 +259,8 @@ class MarketService
                     continue;
                 }
                 // نرخ تتر (حداقل ۲۰ هزار تومان)
-                if ($key === 'usdt' && $val < 20000) {
-                    \Log::warning("MarketService: Extracted abnormal low value for usdt: {$val}");
+                if (in_array($key, ['usdt', 'usdt_dollar']) && $val < 20000) {
+                    \Log::warning("MarketService: Extracted abnormal low value for {$key}: {$val}");
                     continue;
                 }
 
@@ -267,6 +268,14 @@ class MarketService
                     $rates[$key] = $val;
                 }
             }
+        }
+
+        // فال‌بک متقابل بین تتر ارز دیجیتال و تتر دلار دیجیتال در صورت غیبت یکی از آن‌ها
+        if (empty($rates['usdt']) && !empty($rates['usdt_dollar'])) {
+            $rates['usdt'] = $rates['usdt_dollar'];
+        }
+        if (empty($rates['usdt_dollar']) && !empty($rates['usdt'])) {
+            $rates['usdt_dollar'] = $rates['usdt'];
         }
 
         // بررسی اینکه آیا حداقل یکی از نرخ‌های پایه طلا (مثقال یا طلای ۱۸) استخراج شده است یا خیر
@@ -331,16 +340,21 @@ class MarketService
             $this->savePriceItem('silver_ounce', round($rates['silver_ounce'], 2), 'دلار', $apiDate);
         }
 
-        // ۶. ذخیره تتر (تومان)
+        // ۶. ذخیره تتر تابلوی اصلی (تتر ارز دیجیتال)
         if (isset($rates['usdt']) && $rates['usdt'] > 0) {
             $this->savePriceItem('usdt', round($rates['usdt']), 'تومان', $apiDate);
         }
 
-        // ۷. محاسبه و ذخیره مظنه جهانی طلا: (انس جهانی طلا × تتر) ÷ ۹.۵۷۴۲
+        // ۷. ذخیره تتر دلار دیجیتال (جهت محاسبات نرخ طلای ۱۸ جهانی و مظنه جهانی)
+        if (isset($rates['usdt_dollar']) && $rates['usdt_dollar'] > 0) {
+            $this->savePriceItem('usdt_dollar', round($rates['usdt_dollar']), 'تومان', $apiDate);
+        }
+
+        // ۸. محاسبه و ذخیره مظنه جهانی طلا: (انس جهانی طلا × تتر دلار دیجیتال) ÷ ۹.۵۷۴۲
         $ounceVal = $rates['ounce'] ?? MarketCache::where('symbol', 'ounce')->value('value');
-        $usdtVal  = $rates['usdt'] ?? MarketCache::where('symbol', 'usdt')->value('value');
-        if ($ounceVal > 0 && $usdtVal > 0) {
-            $globalMesghal = round(($ounceVal * $usdtVal) / 9.5742);
+        $calcUsdt = $rates['usdt_dollar'] ?? MarketCache::where('symbol', 'usdt_dollar')->value('value') ?? $rates['usdt'] ?? MarketCache::where('symbol', 'usdt')->value('value');
+        if ($ounceVal > 0 && $calcUsdt > 0) {
+            $globalMesghal = round(($ounceVal * $calcUsdt) / 9.5742);
             $this->savePriceItem('global_mesghal', $globalMesghal, 'تومان', $apiDate);
         }
 
@@ -616,7 +630,7 @@ class MarketService
     {
         try {
             $ounce = MarketCache::where('symbol', 'ounce')->value('value');
-            $usdt  = MarketCache::where('symbol', 'usdt')->value('value');
+            $usdt  = MarketCache::where('symbol', 'usdt_dollar')->value('value') ?? MarketCache::where('symbol', 'usdt')->value('value');
             if ($ounce > 0 && $usdt > 0) {
                 $globalMesghal = round(($ounce * $usdt) / 9.5742);
                 $this->savePriceItem('global_mesghal', $globalMesghal, 'تومان', now()->format('Y-m-d'));

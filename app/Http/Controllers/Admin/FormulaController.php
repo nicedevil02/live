@@ -55,13 +55,15 @@ class FormulaController extends Controller
         $service = resolve(\App\Services\MarketService::class);
         $feed = collect($service->getPriceFeed(auth()->user()))->keyBy('symbol');
 
-        $ouncePrice = $feed->get('ounce')['value'] ?? 0;
-        $usdtRate   = $feed->get('usdt')['value'] ?? $feed->get('usd')['value'] ?? 0;
-        $gold18Tablo = $feed->get('gold18')['value'] ?? 0;
+        $ouncePrice     = $feed->get('ounce')['value'] ?? 0;
+        $usdtDollarRate = \App\Models\MarketCache::where('symbol', 'usdt_dollar')->value('value')
+            ?? $feed->get('usdt')['value']
+            ?? 0;
+        $gold18Tablo    = $feed->get('gold18')['value'] ?? 0;
 
-        // فرمول واقعی بر مبنای اونس جهانی و تتر: (اونس × تتر × 0.75) ÷ 31.1035
-        $gold18Real = ($ouncePrice > 0 && $usdtRate > 0)
-            ? round(($ouncePrice * $usdtRate * 0.75) / 31.1035)
+        // فرمول واقعی بر مبنای اونس جهانی و تتر (دلار دیجیتال): (اونس × تتر × 0.75) ÷ 31.1035
+        $gold18Real = ($ouncePrice > 0 && $usdtDollarRate > 0)
+            ? round(($ouncePrice * $usdtDollarRate * 0.75) / 31.1035)
             : 0;
 
         $formula = FormulaConfig::where('user_id', auth()->id())->first();
@@ -69,8 +71,8 @@ class FormulaController extends Controller
 
         return response()->json([
             'ouncePrice'    => $ouncePrice,
-            'usdtRate'      => $usdtRate,
-            'usdRate'       => $usdtRate,
+            'usdtRate'      => $usdtDollarRate,
+            'usdRate'       => $usdtDollarRate,
             'gold18Tablo'   => $gold18Tablo,
             'gold18Real'    => $gold18Real,
             'buyGold'       => round($buyGold),
