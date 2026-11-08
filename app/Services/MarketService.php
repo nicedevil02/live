@@ -824,19 +824,19 @@ class MarketService
 
         $symbols = [
             'gold18'         => 'طلای ۱۸ عیار',
-            'mesghal17'      => 'مثقال ۱۷',
-            'ounce'          => 'انس جهانی',
             'buy_gold'       => 'گرم خرید ۱۸',
             'gold24'         => 'طلای ۲۴ عیار',
             'coin_emami'     => 'سکه امامی',
             'coin_bahar'     => 'سکه بهار آزادی',
             'coin_nim'       => 'نیم سکه',
             'coin_rob'       => 'ربع سکه',
-            'coin_gerami'    => 'سکه گرمی',
             'usdt'           => 'تتر (دلار دیجیتال)',
-            'oil_brent'      => 'نفت برنت',
-            'silver_ounce'   => 'انس جهانی نقره',
+            'mesghal17'      => 'آبشده',
+            'ounce'          => 'انس جهانی طلا',
+            'coin_gerami'    => 'سکه گرمی',
             'global_mesghal' => 'مظنه جهانی طلا',
+            'silver_ounce'   => 'انس جهانی نقره',
+            'oil_brent'      => 'نفت برنت',
             'bitcoin'        => 'بیت کوین',
         ];
 

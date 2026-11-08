@@ -455,7 +455,7 @@ class PublicPageController extends Controller
 
         $demoFeed = [
             ['symbol' => 'gold18', 'name' => 'طلای ۱۸ عیار', 'value' => $ratesData['rates']['gold18'] ?: 3650000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
-            ['symbol' => 'mesghal17', 'name' => 'مظنه مثقال ۱۷', 'value' => $ratesData['rates']['mesghal'] ?: 15800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
+            ['symbol' => 'mesghal17', 'name' => 'آبشده', 'value' => $ratesData['rates']['mesghal'] ?: 15800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'coin_emami', 'name' => 'سکه امامی', 'value' => $ratesData['rates']['coin_emami'] ?: 43500000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'coin_bahar', 'name' => 'تمام بهار آزادی', 'value' => $ratesData['rates']['coin_bahar'] ?: 39800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
             ['symbol' => 'coin_nim', 'name' => 'نیم سکه', 'value' => $ratesData['rates']['coin_nim'] ?: 23800000, 'unit' => 'تومان', 'direction' => 'flat', 'is_stale' => false],
@@ -470,7 +470,7 @@ class PublicPageController extends Controller
 
         $demoItems = [
             ['key' => 'gold18', 'label' => 'طلای ۱۸ عیار', 'enabled' => true, 'order' => 1],
-            ['key' => 'mesghal17', 'label' => 'مظنه مثقال ۱۷', 'enabled' => true, 'order' => 2],
+            ['key' => 'mesghal17', 'label' => 'آبشده', 'enabled' => true, 'order' => 2],
             ['key' => 'coin_emami', 'label' => 'سکه امامی', 'enabled' => true, 'order' => 3],
             ['key' => 'coin_bahar', 'label' => 'تمام بهار آزادی', 'enabled' => true, 'order' => 4],
             ['key' => 'coin_nim', 'label' => 'نیم سکه', 'enabled' => true, 'order' => 5],
@@ -564,7 +564,7 @@ class PublicPageController extends Controller
                         'unit' => 'تومان'
                     ],
                     'mesghal_17k' => [
-                        'name' => 'مظنه مثقال ۱۷ عیار (تهران)',
+                        'name' => 'آبشده',
                         'price' => (float)$rates['mesghal'],
                         'unit' => 'تومان'
                     ],

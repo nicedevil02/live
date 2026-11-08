@@ -674,21 +674,21 @@ class AuthController extends Controller
 
         // ایجاد آیتم‌های تابلوی پیش‌فرض برای مغازه جدید
         $items = [
-            ['key' => 'gold18', 'label' => 'طلای ۱۸ عیار', 'order' => 1],
-            ['key' => 'buy_gold', 'label' => 'گرم خرید ۱۸ عیار', 'order' => 2],
-            ['key' => 'gold24', 'label' => 'طلای ۲۴ عیار', 'order' => 3],
-            ['key' => 'coin_emami', 'label' => 'سکه امامی', 'order' => 4],
-            ['key' => 'coin_bahar', 'label' => 'سکه بهار آزادی', 'order' => 5],
-            ['key' => 'coin_nim', 'label' => 'نیم سکه', 'order' => 6],
-            ['key' => 'coin_rob', 'label' => 'ربع سکه', 'order' => 7],
-            ['key' => 'usdt', 'label' => 'تتر (دلار دیجیتال)', 'order' => 8],
-            ['key' => 'oil_brent', 'label' => 'نفت برنت', 'order' => 9],
-            ['key' => 'silver_ounce', 'label' => 'انس جهانی نقره', 'order' => 10],
-            ['key' => 'global_mesghal', 'label' => 'مظنه جهانی طلا', 'order' => 11],
-            ['key' => 'bitcoin', 'label' => 'بیت کوین', 'order' => 12],
-            ['key' => 'ounce', 'label' => 'انس جهانی', 'order' => 13],
-            ['key' => 'mesghal17', 'label' => 'مثقال ۱۷', 'order' => 14],
-            ['key' => 'coin_gerami', 'label' => 'سکه گرمی', 'order' => 15],
+            ['key' => 'gold18',         'label' => 'طلای ۱۸ عیار',        'order' => 1],
+            ['key' => 'buy_gold',       'label' => 'گرم خرید ۱۸ عیار',    'order' => 2],
+            ['key' => 'gold24',         'label' => 'طلای ۲۴ عیار',        'order' => 3],
+            ['key' => 'coin_emami',     'label' => 'سکه امامی',          'order' => 4],
+            ['key' => 'coin_bahar',     'label' => 'سکه بهار آزادی',      'order' => 5],
+            ['key' => 'coin_nim',       'label' => 'نیم سکه',            'order' => 6],
+            ['key' => 'coin_rob',       'label' => 'ربع سکه',            'order' => 7],
+            ['key' => 'usdt',           'label' => 'تتر (دلار دیجیتال)',  'order' => 8],
+            ['key' => 'mesghal17',      'label' => 'آبشده',              'order' => 9],
+            ['key' => 'ounce',          'label' => 'انس جهانی طلا',      'order' => 10],
+            ['key' => 'coin_gerami',    'label' => 'سکه گرمی',           'order' => 11],
+            ['key' => 'global_mesghal', 'label' => 'مظنه جهانی طلا',     'order' => 12],
+            ['key' => 'silver_ounce',   'label' => 'انس جهانی نقره',     'order' => 13],
+            ['key' => 'oil_brent',      'label' => 'نفت برنت',           'order' => 14],
+            ['key' => 'bitcoin',        'label' => 'بیت کوین',           'order' => 15],
         ];
 
         foreach ($items as $item) {

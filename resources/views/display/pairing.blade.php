@@ -550,9 +550,9 @@
                                 </div>
                             </div>
 
-                            {{-- آیتم ۳: مظنه / آبشده --}}
+                            {{-- آیتم ۳: آبشده --}}
                             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">مظنه / مثقال طلا</div>
+                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">آبشده</div>
                                 <div class="text-base sm:text-lg md:text-xl font-black text-amber-400 font-mono tracking-tight mt-0.5">۱۶,۶۸۰,۰۰۰</div>
                                 <div class="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1 mt-0.5">
                                     <span>+۰.۳۸٪</span>
@@ -560,9 +560,9 @@
                                 </div>
                             </div>
 
-                            {{-- آیتم ۴: انس جهانی --}}
+                            {{-- آیتم ۴: انس جهانی طلا --}}
                             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 md:p-3 text-right">
-                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">انس طلا (دلار)</div>
+                                <div class="text-[10px] sm:text-xs text-slate-400 font-semibold">انس جهانی طلا (دلار)</div>
                                 <div class="text-base sm:text-lg md:text-xl font-black text-blue-400 font-mono tracking-tight mt-0.5">۲,۵۱۴.۵۰ $</div>
                                 <div class="text-[10px] text-rose-400 font-mono flex items-center justify-end gap-1 mt-0.5">
                                     <span>-۰.۱۵٪</span>

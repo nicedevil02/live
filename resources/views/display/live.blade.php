@@ -3256,7 +3256,13 @@
                     const items = this.snapshotData?.displayItems || [];
                     const feed = this.snapshotData?.priceFeed || [];
                     const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
-                    return feed.filter(f => enabledKeys.includes(f.symbol)).sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol));
+                    return feed
+                        .filter(f => enabledKeys.includes(f.symbol))
+                        .sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol))
+                        .map(f => {
+                            const di = items.find(i => i.key === f.symbol);
+                            return (di && di.label) ? { ...f, label: di.label } : f;
+                        });
                 },
                 isItemStale(item) {
                     if (!item) return false;
