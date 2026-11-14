@@ -135,7 +135,7 @@ $criticalSyncFiles = [
     'public_html/vendor/sortable.min.js',
     'public_html/vendor/qrcode-generator.min.js',
     'public_html/build/manifest.json',
-    'public_html/build/assets/app-Clh65f51.css',
+    'public_html/build/assets/app-DOvBCpHz.css',
     'public_html/build/assets/app-34mOoJaZ.js',
     'public_html/downloads/talalive-tv.json',
     'public_html/deploy-run.php',
