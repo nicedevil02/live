@@ -33,6 +33,53 @@
         @include('admin.products.partials.create-form')
     </div>
 
+    {{-- Showcase Visibility Mode (Full-Width Rates vs Product Showcase) --}}
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-xl border transition-colors"
+                     :class="hideShowcase ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-500/30' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">حالت نمایش ویترین در تابلو</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5"
+                       x-text="hideShowcase ? 'ویترین روی تابلو بسته است و کارت‌های نرخ به‌صورت تمام‌صفحه با فونت درشت‌تر نمایش داده می‌شوند.' : 'ویترین محصولات در کنار کارت‌های نرخ زنده روی تابلو نمایش داده می‌شود.'"></p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shrink-0 flex-wrap">
+                <button type="button"
+                        @click="setShowcaseHidden(false)"
+                        :disabled="isSavingVisibility"
+                        class="flex items-center gap-2 min-h-[40px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer disabled:opacity-50"
+                        :class="!hideShowcase
+                            ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-300 shadow-sm border border-emerald-500/30'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'">
+                    <span class="w-2 h-2 rounded-full" :class="!hideShowcase ? 'bg-emerald-500' : 'bg-slate-400/50'"></span>
+                    <span>نمایش با ویترین محصول</span>
+                </button>
+
+                <button type="button"
+                        @click="setShowcaseHidden(true)"
+                        :disabled="isSavingVisibility"
+                        class="flex items-center gap-2 min-h-[40px] px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer disabled:opacity-50"
+                        :class="hideShowcase
+                            ? 'bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-300 shadow-sm border border-amber-500/40'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'">
+                    <span class="w-2 h-2 rounded-full" :class="hideShowcase ? 'bg-amber-500' : 'bg-slate-400/50'"></span>
+                    <span>تمام‌صفحه نرخ‌ها (بستن ویترین)</span>
+                </button>
+            </div>
+        </div>
+
+        <div x-show="hideShowcase" x-cloak x-transition
+             class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+            <span>حالت تمام‌صفحه نرخ‌ها فعال است؛ ستون ویترین در تلویزیون نمایش داده نمی‌شود، اما محصولات ثبت‌شده شما محفوظ هستند و هر زمان بخواهید می‌توانید دوباره فعال کنید.</span>
+        </div>
+    </div>
+
     {{-- Slider Timing Card --}}
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -257,6 +304,8 @@ document.addEventListener('alpine:init', () => {
         sortableInstance: null,
         sliderInterval: @json(auth()->user()->displaySetting->slider_interval_sec ?? 8),
         isSavingTiming: false,
+        hideShowcase: @json((bool) (optional(auth()->user()->displaySetting)->hide_showcase ?? false)),
+        isSavingVisibility: false,
         emptyShowcaseMode: @json(auth()->user()->displaySetting->empty_showcase_mode ?? 'guide'),
         emptyShowcaseTitle: @json(auth()->user()->displaySetting->empty_showcase_title ?? ''),
         emptyShowcaseText: @json(auth()->user()->displaySetting->empty_showcase_text ?? ''),
@@ -334,6 +383,38 @@ document.addEventListener('alpine:init', () => {
                 this.showToast(e.message || 'خطا در ذخیره زمان‌بندی', 'error');
             } finally {
                 this.isSavingTiming = false;
+            }
+        },
+
+        async setShowcaseHidden(nextHidden) {
+            const targetVal = Boolean(nextHidden);
+            if (this.hideShowcase === targetVal || this.isSavingVisibility) return;
+            const prevVal = this.hideShowcase;
+            this.hideShowcase = targetVal;
+            this.isSavingVisibility = true;
+            try {
+                const res = await fetch("{{ route('admin.showcase-visibility.update') }}", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ hide_showcase: targetVal })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    throw new Error(data.message || 'خطا در تغییر وضعیت نمایش ویترین');
+                }
+                this.hideShowcase = Boolean(data.hide_showcase ?? targetVal);
+                this.showToast(data.message || (this.hideShowcase
+                    ? 'حالت تمام‌صفحه نرخ‌ها روی تابلو فعال شد.'
+                    : 'نمایش ویترین محصولات دوباره روی تابلو فعال شد.'), 'success');
+            } catch (e) {
+                this.hideShowcase = prevVal;
+                this.showToast(e.message || 'خطا در ارتباط با سرور', 'error');
+            } finally {
+                this.isSavingVisibility = false;
             }
         },
 

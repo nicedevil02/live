@@ -439,4 +439,27 @@ class DisplaySettingController extends Controller
             'empty_showcase_theme' => $settings->empty_showcase_theme,
         ]);
     }
+
+    /**
+     * تغییر سریع وضعیت نمایش ویترین محصولات یا حالت تمام‌صفحه نرخ‌ها
+     */
+    public function updateShowcaseVisibility(Request $request)
+    {
+        self::ensureBoardEnhancementColumnsExist();
+        $request->validate([
+            'hide_showcase' => 'required|boolean',
+        ]);
+
+        $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()]);
+        $settings->hide_showcase = $request->boolean('hide_showcase');
+        $settings->published_at = now();
+        $settings->save();
+
+        return response()->json([
+            'message'       => $settings->hide_showcase
+                ? 'حالت تمام‌صفحه نرخ‌ها فعال شد و ویترین در تابلو مخفی گردید.'
+                : 'نمایش ویترین محصولات دوباره روی تابلو فعال شد.',
+            'hide_showcase' => (bool) $settings->hide_showcase,
+        ]);
+    }
 }

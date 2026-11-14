@@ -2291,9 +2291,9 @@
             </header>
 
             {{-- Main Content --}}
-            <div class="flex flex-1 flex-row gap-3 min-h-0" :class="Boolean(settings.hide_showcase) ? 'rates-fullwidth' : ''">
+            <div class="flex flex-1 flex-row gap-3 min-h-0" :class="isShowcaseHidden ? 'rates-fullwidth' : ''">
                 {{-- Product Slider --}}
-                <section x-show="!Boolean(settings.hide_showcase)"
+                <section x-show="!isShowcaseHidden"
                          @touchstart.passive="onTouchStart($event)"
                          @touchend.passive="onTouchEnd($event)"
                          :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']"
@@ -2907,10 +2907,10 @@
                     </template>
                 </div>
 
-                {{-- سمت چپ: کنترل سریع اسلایدر، قطع اتصال، حالت سبک و ساعت آخرین بروزرسانی --}}
+                {{-- سمت چپ: کنترل سریع اسلایدر، قطع اتصال، تمام‌صفحه نرخ‌ها، حالت سبک و ساعت آخرین بروزرسانی --}}
                 <div class="flex items-center gap-2 z-10 font-bold text-xs shrink-0" :class="theme.textSecondary">
                     {{-- کنترل سریع ویترین (ریموت / لمسی) --}}
-                    <div x-show="!Boolean(settings.hide_showcase) && products.length > 1"
+                    <div x-show="!isShowcaseHidden && products.length > 1"
                          class="hidden xl:flex items-center gap-1 px-2 py-1 rounded-full border"
                          :class="isLightTheme ? 'bg-black/5 border-black/10 text-slate-700' : 'bg-white/5 border-white/10 text-slate-200'">
                         <button type="button" @click="prevProduct()" class="px-1.5 py-0.5 rounded-full hover:bg-amber-500/20 cursor-pointer" title="اسلاید قبلی (کلید راست)">‹</button>
@@ -2930,6 +2930,21 @@
                             title="قطع اتصال این تلویزیون و خروج از تابلو">
                         <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
                         <span>خروج</span>
+                    </button>
+
+                    {{-- دکمه حالت تمام‌صفحه نرخ‌ها با بستن ویترین --}}
+                    <button @click="toggleShowcaseFullwidth()"
+                            type="button"
+                            :aria-pressed="isShowcaseHidden"
+                            class="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm select-none"
+                            :class="isShowcaseHidden
+                                ? (isLightTheme ? 'bg-amber-600 text-white border-amber-700 shadow-md ring-2 ring-amber-400/30' : 'bg-amber-500/25 text-amber-200 border-amber-400/60 shadow-[0_0_12px_rgba(245,158,11,0.35)]')
+                                : (isLightTheme ? 'bg-black/5 hover:bg-black/10 text-slate-700 border-black/10' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10')"
+                            :title="isShowcaseHidden ? 'بازگشت به نمایش ویترین محصولات در کنار نرخ‌ها' : 'بستن ستون ویترین و نمایش تمام‌صفحه نرخ‌ها'">
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                        <span>تمام‌صفحه نرخ‌ها</span>
+                        <span class="w-2 h-2 rounded-full transition-colors duration-200"
+                              :class="isShowcaseHidden ? 'bg-amber-400 ring-2 ring-amber-300/50' : 'bg-slate-400/50'"></span>
                     </button>
 
                     {{-- دکمه حالت سبک / روان --}}
@@ -3072,7 +3087,7 @@
             </div>
 
             {{-- ویترین محصولات قابل لمس در موبایل --}}
-            <div x-show="!Boolean(settings.hide_showcase) && activeProduct"
+            <div x-show="!isShowcaseHidden && activeProduct"
                  @touchstart.passive="onTouchStart($event)"
                  @touchend.passive="onTouchEnd($event)"
                  class="rounded-2xl border overflow-hidden shadow-md"
@@ -3157,7 +3172,7 @@
             </div>
 
             {{-- پیام خوش‌آمدگویی وقتی ویترین خالی است --}}
-            <div x-show="!Boolean(settings.hide_showcase) && !activeProduct && settings.empty_showcase_mode === 'custom_message'"
+            <div x-show="!isShowcaseHidden && !activeProduct && settings.empty_showcase_mode === 'custom_message'"
                  class="rounded-2xl border p-4 text-center space-y-1.5"
                  :class="isLightTheme ? 'bg-white/95 border-slate-200 text-slate-900' : 'bg-slate-900/90 border-white/15 text-white'">
                 <h3 class="text-sm font-black" x-text="settings.empty_showcase_title || 'خوش‌آمدگویی به مشتریان محترم گالری'"></h3>
@@ -3517,6 +3532,22 @@
                 touchStartY: null,
                 showDisconnectModal: false,
                 disconnectFocusIndex: 0,
+                lastServerHideShowcase: Boolean(initialSnapshot?.settings?.hide_showcase),
+                localHideShowcase: (function() {
+                    try {
+                        const saved = localStorage.getItem('display_hide_showcase_override');
+                        const savedBase = localStorage.getItem('display_hide_showcase_server');
+                        const currentServer = initialSnapshot?.settings?.hide_showcase ? '1' : '0';
+                        if ((saved === '1' || saved === '0') && savedBase === currentServer) {
+                            return saved === '1';
+                        }
+                        if (saved !== null) {
+                            localStorage.removeItem('display_hide_showcase_override');
+                            localStorage.removeItem('display_hide_showcase_server');
+                        }
+                    } catch (e) {}
+                    return null;
+                })(),
                 isMobileViewport: (typeof window !== 'undefined') ? (window.innerWidth < 768 && window.innerHeight > window.innerWidth) : false,
                 forceTvView: (function() {
                     try { return sessionStorage.getItem('display_force_tv') === '1'; } catch (e) { return false; }
@@ -3546,6 +3577,33 @@
                     try {
                         localStorage.setItem('display_eco_mode', this.ecoMode ? 'true' : 'false');
                     } catch (e) {}
+                },
+
+                get isShowcaseHidden() {
+                    return this.localHideShowcase !== null
+                        ? this.localHideShowcase
+                        : Boolean(this.settings?.hide_showcase);
+                },
+
+                toggleShowcaseFullwidth() {
+                    const nextHidden = !this.isShowcaseHidden;
+                    this.localHideShowcase = nextHidden;
+                    const serverFlag = Boolean(this.settings?.hide_showcase) ? '1' : '0';
+                    try {
+                        localStorage.setItem('display_hide_showcase_override', nextHidden ? '1' : '0');
+                        localStorage.setItem('display_hide_showcase_server', serverFlag);
+                    } catch (e) {}
+                    if (nextHidden) {
+                        if (this.sliderTimer) {
+                            clearInterval(this.sliderTimer);
+                            this.sliderTimer = null;
+                        }
+                    } else if (!this.sliderPaused) {
+                        this.startSlider();
+                    }
+                    this.showHudFeedback(nextHidden
+                        ? 'حالت تمام‌صفحه نرخ‌ها: فعال (ویترین مخفی شد)'
+                        : 'حالت تمام‌صفحه نرخ‌ها: غیرفعال (ویترین نمایان است)');
                 },
 
                 triggerControls() {
@@ -3820,7 +3878,7 @@
                     }
                     const intervalSec = Number(this.settings?.slider_interval_sec) || 8;
                     this.sliderTimer = setInterval(() => {
-                        if (this.sliderPaused || Boolean(this.settings?.hide_showcase)) {
+                        if (this.sliderPaused || this.isShowcaseHidden) {
                             return;
                         }
                         if (this.products.length > 0) {
@@ -3964,6 +4022,16 @@
                             if (!previewTheme && ((!oldPub && newPub) || (oldPub && newPub && oldPub !== newPub))) {
                                 window.location.reload();
                                 return;
+                            }
+
+                            const newServerHide = Boolean(newData.settings.hide_showcase);
+                            if (newServerHide !== this.lastServerHideShowcase) {
+                                this.lastServerHideShowcase = newServerHide;
+                                this.localHideShowcase = null;
+                                try {
+                                    localStorage.removeItem('display_hide_showcase_override');
+                                    localStorage.removeItem('display_hide_showcase_server');
+                                } catch (e) {}
                             }
 
                             if (this.settings.slider_interval_sec !== newData.settings.slider_interval_sec) {
@@ -4245,13 +4313,13 @@
                             this.zoomOut();
                             break;
                         case 'ArrowLeft':
-                            if (!this.isMobileCustomerView && !Boolean(this.settings?.hide_showcase) && this.products.length > 1) {
+                            if (!this.isMobileCustomerView && !this.isShowcaseHidden && this.products.length > 1) {
                                 e.preventDefault();
                                 this.nextProduct();
                             }
                             break;
                         case 'ArrowRight':
-                            if (!this.isMobileCustomerView && !Boolean(this.settings?.hide_showcase) && this.products.length > 1) {
+                            if (!this.isMobileCustomerView && !this.isShowcaseHidden && this.products.length > 1) {
                                 e.preventDefault();
                                 this.prevProduct();
                             }
@@ -4259,7 +4327,7 @@
                         case ' ':
                         case 'p':
                         case 'P':
-                            if (!this.isMobileCustomerView && !Boolean(this.settings?.hide_showcase) && this.products.length > 0) {
+                            if (!this.isMobileCustomerView && !this.isShowcaseHidden && this.products.length > 0) {
                                 e.preventDefault();
                                 this.toggleSliderPause();
                             }
