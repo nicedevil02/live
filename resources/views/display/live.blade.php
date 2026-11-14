@@ -3397,16 +3397,22 @@
                 async refreshSnapshot() {
                     try {
                         const username = this.snapshotData?.username || 'admin';
-                        const displayToken = new URLSearchParams(window.location.search).get('key') || '';
-                        const res = await fetch('/api/display/snapshot/' + username + '?key=' + displayToken + '&t=' + Date.now());
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const displayToken = urlParams.get('key') || '';
+                        const previewTheme = urlParams.get('preview_theme') || '';
+                        const res = await fetch('/api/display/snapshot/' + username + '?key=' + displayToken + (previewTheme ? '&preview_theme=' + encodeURIComponent(previewTheme) : '') + '&t=' + Date.now());
                         if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
                         const newData = await res.json();
+
+                        if (previewTheme && THEMES[previewTheme] && newData && newData.settings) {
+                            newData.settings.theme_mode = previewTheme;
+                        }
 
                         if (newData && newData.settings) {
                             const oldPub = this.snapshotData?.settings?.published_at;
                             const newPub = newData.settings.published_at;
-                            // بررسی تغییر وضعیت انتشار (شامل اولین انتشار)
-                            if ((!oldPub && newPub) || (oldPub && newPub && oldPub !== newPub)) {
+                            // بررسی تغییر وضعیت انتشار (در حالت پیش‌نمایش موقت رفرش کامل انجام نمی‌شود)
+                            if (!previewTheme && ((!oldPub && newPub) || (oldPub && newPub && oldPub !== newPub))) {
                                 window.location.reload();
                                 return;
                             }

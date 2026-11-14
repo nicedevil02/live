@@ -192,8 +192,18 @@ class PublicDisplayController extends Controller
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
         $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
 
+        $validPreviewThemes = [
+            'dark-glass', 'light-modern', 'gold-royal', 'blue-ocean', 'purple-haze',
+            'emerald-night', 'rose-dark', 'imperial-onyx', 'imperial-pearl',
+            'pure-black', 'bing-daily', 'bing-studio', 'bing-ceramic',
+        ];
+        $requestedPreviewTheme = (string) request()->query('preview_theme', '');
+        $effectiveThemeMode = in_array($requestedPreviewTheme, $validPreviewThemes, true)
+            ? $requestedPreviewTheme
+            : ($settings->theme_mode ?? 'light-modern');
+
         $bingWallpaper = null;
-        if (str_starts_with($settings->theme_mode ?? '', 'bing-')) {
+        if (str_starts_with($effectiveThemeMode, 'bing-')) {
             try {
                 $bingWallpaper = app(\App\Services\BingWallpaperService::class)->getTodayWallpaper();
             } catch (\Throwable $e) {
@@ -225,6 +235,7 @@ class PublicDisplayController extends Controller
         }
 
         $settingsData = $settings->toArray();
+        $settingsData['theme_mode'] = $effectiveThemeMode;
         $settingsData['city_slug'] = $resolved['citySlug'];
         $settingsData['city_name'] = $resolved['cityName'];
         $settingsData['city_full_display'] = $resolved['cityFullDisplay'];

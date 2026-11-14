@@ -153,7 +153,7 @@
                 <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
                     <span class="text-[11px] text-slate-400">لینک پخش:</span>
                     <button type="button"
-                            onclick="navigator.clipboard.writeText('{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}'); alert('لینک اختصاصی کپی شد!');"
+                            onclick="window.copyAdminText('{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}', 'لینک اختصاصی تابلو کپی شد.');"
                             class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
                         کپی لینک
                     </button>
@@ -247,143 +247,176 @@
             </div>
         @endif
     @endif
-    {{-- نوار پیشنهاد ویژه ۷۲ ساعت اول ثبت‌نام --}}
-    @if(!empty($isWelcomePeriod))
-        <div class="rounded-2xl p-3.5 sm:p-4.5 border-2 border-amber-500/60 bg-gradient-to-r from-amber-500/15 via-slate-900 to-amber-950/30 text-white shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-xl shrink-0 shadow-md shadow-amber-500/30">
-                    🔥
+    {{-- نوار یکپارچه وضعیت اشتراک / پیشنهاد افتتاحیه --}}
+    @php
+        $showSubBanner = !auth()->user()->is_super_admin && auth()->user()->expires_at;
+        $daysLeft = $showSubBanner ? auth()->user()->trialDaysRemaining() : 0;
+        $isSubscribed = $showSubBanner ? auth()->user()->isSubscribed() : false;
+        $jalaliExpire = $showSubBanner ? \App\Models\User::toJalali(auth()->user()->expires_at, false) : '';
+        $isUrgent = $showSubBanner && $daysLeft <= 2;
+        $isWarning = $showSubBanner && $daysLeft <= 7;
+    @endphp
+
+    @if(!empty($isWelcomePeriod) && ($showSubBanner && !$isSubscribed))
+        {{-- بنر ترکیبی پیشنهاد افتتاحیه ۷۲ ساعته + دوره آزمایشی رایگان --}}
+        <div class="rounded-2xl p-3.5 sm:p-4 border border-amber-500/45 bg-white dark:bg-slate-900 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-lg shrink-0 shadow-sm">
+                    <i data-lucide="crown" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="text-xs sm:text-sm font-black text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۷۲ ساعت اول)</h3>
-                        <span class="px-2 py-0.5 rounded-full text-[10.5px] font-black bg-rose-500 text-white">
-                            {{ $welcomeHoursLeft }} ساعت تا انقضا
+                        <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">دوره آزمایشی رایگان + پیشنهاد افتتاحیه ۷۲ ساعته</h3>
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-black {{ $isUrgent ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30' }}">
+                            {{ $daysLeft }} روز اعتبار · {{ $welcomeHoursLeft }} ساعت تخفیف
                         </span>
                     </div>
-                    <p class="text-[11px] sm:text-xs text-slate-300 mt-0.5 leading-relaxed">
-                        اشتراک سالانه الماس طلالایو به جای <span class="line-through text-slate-400">۴,۷۰۰,۰۰۰ تومان</span>، فقط با <strong class="text-amber-300 font-black">۳,۹۶۰,۰۰۰ تومان</strong> محاسبه می‌شود (۷۴۰,۰۰۰ تومان تخفیف افتتاحیه).
+                    <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                        اشتراک سالانه الماس به جای <span class="line-through text-slate-400">۴,۷۰۰,۰۰۰ تومان</span>، با <strong class="text-amber-700 dark:text-amber-400 font-black">۳,۹۶۰,۰۰۰ تومان</strong> (۷۴۰,۰۰۰ تومان تخفیف افتتاحیه).
                     </p>
                 </div>
             </div>
-
-            <div class="shrink-0 w-full md:w-auto">
+            <div class="flex items-center gap-2 w-full lg:w-auto shrink-0 flex-wrap">
                 <a href="{{ route('admin.subscription.index') }}"
-                   class="w-full md:w-auto px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/25 flex items-center justify-center gap-1.5 cursor-pointer">
-                    <span>خرید با تخفیف ویژه (۳,۹۶۰,۰۰۰ ت)</span>
+                   class="flex-1 lg:flex-none px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                    <span>خرید با تخفیف (۳,۹۶۰,۰۰۰ ت)</span>
                     <span>&larr;</span>
+                </a>
+                <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
+                   class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                    <span>پشتیبانی تلگرام</span>
+                </a>
+                <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center justify-center" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴" aria-label="تماس تلفنی پشتیبانی">
+                    <i data-lucide="phone" class="w-3.5 h-3.5"></i>
                 </a>
             </div>
         </div>
-    @endif
-
-    {{-- نوار وضعیت اشتراک / دوره آزمایشی (مخصوص گالری‌های غیر سوپرادمین - نسخه جمع‌وجور) --}}
-    @if(!auth()->user()->is_super_admin && auth()->user()->expires_at)
-        @php
-            $daysLeft = auth()->user()->trialDaysRemaining();
-            $isSubscribed = auth()->user()->isSubscribed();
-            $jalaliExpire = \App\Models\User::toJalali(auth()->user()->expires_at, false);
-            $isUrgent = $daysLeft <= 2;
-            $isWarning = $daysLeft <= 7;
-        @endphp
-
-        @if(!$isSubscribed)
-            {{-- ۱. دوره آزمایشی رایگان ۱۴ روزه --}}
-            <div class="rounded-2xl p-3.5 sm:p-4 border {{ $isUrgent ? 'bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent border-rose-500/30' : 'bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/30' }} bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+    @else
+        @if(!empty($isWelcomePeriod))
+            <div class="rounded-2xl p-3.5 sm:p-4 border border-amber-500/50 bg-white dark:bg-slate-900 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl {{ $isUrgent ? 'bg-rose-500/20 text-rose-500 border border-rose-500/30' : 'bg-amber-500/20 text-amber-500 border border-amber-500/30' }} flex items-center justify-center font-black text-xl shrink-0">
-                        {{ $isUrgent ? '⚠️' : '🎁' }}
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shrink-0">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">دوره آزمایشی رایگان فعال است</h3>
-                            <span class="px-2 py-0.5 rounded-full text-[11px] font-black {{ $isUrgent ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/30' }}">
-                                {{ $daysLeft }} روز باقی مانده
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-amber-400">پیشنهاد طلایی راه‌اندازی گالری شما (محدود به ۷۲ ساعت اول)</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[10.5px] font-black bg-rose-600 text-white">
+                                {{ $welcomeHoursLeft }} ساعت تا انقضا
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed hidden sm:block">
-                            تمامی امکانات تابلوی تلویزیون، فرمول‌ساز و اسلایدشوی محصولات بدون محدودیت فعال است.
+                        <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+                            اشتراک سالانه الماس به جای <span class="line-through text-slate-400">۴,۷۰۰,۰۰۰ تومان</span>، فقط با <strong class="text-amber-700 dark:text-amber-300 font-black">۳,۹۶۰,۰۰۰ تومان</strong> (۷۴۰,۰۰۰ تومان تخفیف افتتاحیه).
                         </p>
                     </div>
                 </div>
-
-                <div class="flex items-center gap-2 w-full md:w-auto shrink-0 flex-wrap">
-                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
-                        <i data-lucide="crown" class="w-3.5 h-3.5"></i>
-                        <span>خرید آنلاین اشتراک</span>
-                    </a>
-                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
-                       class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
-                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-                        <span>پشتیبانی تلگرام</span>
-                    </a>
-                    <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴">
-                        <span>📞</span>
+                <div class="shrink-0 w-full md:w-auto">
+                    <a href="{{ route('admin.subscription.index') }}"
+                       class="w-full md:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>خرید با تخفیف ویژه (۳,۹۶۰,۰۰۰ ت)</span>
+                        <span>&larr;</span>
                     </a>
                 </div>
             </div>
-        @elseif($isWarning)
-            {{-- ۲. اشتراک خریداری‌شده رو به پایان --}}
-            <div class="rounded-2xl p-3.5 sm:p-4 border bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent border-rose-500/30 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-500 border border-rose-500/30 flex items-center justify-center font-black text-xl shrink-0">
-                        ⚠️
+        @endif
+
+        @if($showSubBanner)
+            @if(!$isSubscribed)
+                <div class="rounded-2xl p-3.5 sm:p-4 border {{ $isUrgent ? 'border-rose-500/35' : 'border-amber-500/30' }} bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl {{ $isUrgent ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30' : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30' }} flex items-center justify-center shrink-0">
+                            <i data-lucide="{{ $isUrgent ? 'alert-triangle' : 'gift' }}" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">دوره آزمایشی رایگان فعال است</h3>
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-black {{ $isUrgent ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30' }}">
+                                    {{ $daysLeft }} روز باقی مانده
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed hidden sm:block">
+                                تمامی امکانات تابلوی تلویزیون، فرمول‌ساز و اسلایدشوی محصولات بدون محدودیت فعال است.
+                            </p>
+                        </div>
                     </div>
-                    <div>
+
+                    <div class="flex items-center gap-2 w-full md:w-auto shrink-0 flex-wrap">
+                        <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                            <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+                            <span>خرید آنلاین اشتراک</span>
+                        </a>
+                        <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
+                           class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                            <span>پشتیبانی تلگرام</span>
+                        </a>
+                        <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center justify-center" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴" aria-label="تماس تلفنی پشتیبانی">
+                            <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+            @elseif($isWarning)
+                <div class="rounded-2xl p-3.5 sm:p-4 border border-rose-500/35 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 flex items-center justify-center shrink-0">
+                            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">اعتبار اشتراک رو به پایان است</h3>
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30">
+                                    {{ $daysLeft }} روز باقی مانده (تا {{ $jalaliExpire }})
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed hidden sm:block">
+                                جهت جلوگیری از قطع پخش تلویزیون مغازه، نسبت به تمدید اشتراک اقدام فرمایید.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full md:w-auto shrink-0 flex-wrap">
+                        <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            <span>تمدید آنلاین اشتراک</span>
+                        </a>
+                        <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
+                           class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                            <span>پشتیبانی تلگرام</span>
+                        </a>
+                        <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center justify-center" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴" aria-label="تماس تلفنی پشتیبانی">
+                            <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+            @else
+                <div class="rounded-2xl p-3 sm:p-3.5 border border-emerald-500/30 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">اعتبار اشتراک رو به پایان است</h3>
-                            <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30">
-                                {{ $daysLeft }} روز باقی مانده (تا {{ $jalaliExpire }})
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">اشتراک رسمی طلالایو فعال است</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                                {{ $daysLeft }} روز تا {{ $jalaliExpire }}
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed hidden sm:block">
-                            جهت جلوگیری از قطع پخش تلویزیون مغازه، نسبت به تمدید اشتراک اقدام فرمایید.
-                        </p>
                     </div>
-                </div>
 
-                <div class="flex items-center gap-2 w-full md:w-auto shrink-0 flex-wrap">
-                    <a href="{{ route('admin.subscription.index') }}" class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                        <span>تمدید آنلاین اشتراک</span>
-                    </a>
-                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
-                       class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
-                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-                        <span>پشتیبانی تلگرام</span>
-                    </a>
-                    <a href="tel:09187009064" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1" title="تماس: ۰۹۱۸۷۰۰۹۰۶۴">
-                        <span>📞</span>
-                    </a>
-                </div>
-            </div>
-        @else
-            {{-- ۳. اشتراک رسمی و فعال --}}
-            <div class="rounded-2xl p-3 sm:p-3.5 border bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/30 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 flex items-center justify-center font-black text-lg shrink-0">
-                        💎
-                    </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">اشتراک رسمی طلالایو فعال است</h3>
-                        <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
-                            {{ $daysLeft }} روز تا {{ $jalaliExpire }}
-                        </span>
+                    <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                        <a href="{{ route('admin.subscription.index') }}" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer">
+                            <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-500"></i>
+                            <span>ارتقا / تمدید</span>
+                        </a>
+                        <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
+                           class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 shrink-0 text-sky-600 dark:text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                            <span>پشتیبانی</span>
+                        </a>
                     </div>
                 </div>
-
-                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
-                    <a href="{{ route('admin.subscription.index') }}" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer">
-                        <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-500"></i>
-                        <span>ارتقا / تمدید</span>
-                    </a>
-                    <a href="https://t.me/talalive" rel="noopener noreferrer" target="_blank"
-                       class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 shrink-0 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-                        <span>پشتیبانی</span>
-                    </a>
-                </div>
-            </div>
+            @endif
         @endif
     @endif
 
@@ -397,28 +430,45 @@
          }"
          class="rounded-2xl sm:rounded-3xl border border-emerald-500/30 bg-white dark:bg-slate-900 shadow-md p-4 sm:p-5 space-y-3.5">
 
-        {{-- سربرگ هاب تلویزیون: وضعیت اتصال و ابزارهای سریع --}}
+        {{-- سربرگ هاب تلویزیون: وضعیت اتصال واقعی و ابزارهای سریع --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-2.5 flex-wrap">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                <div class="w-9 h-9 rounded-xl {{ !empty($tvTelemetry['isOnlineNow']) ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30' : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30' }} border flex items-center justify-center shrink-0">
                     <i data-lucide="tv" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-emerald-300">تلویزیون و تابلوی مغازه</h3>
-                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            متصل و فعال
-                        </span>
+                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-slate-100">تلویزیون و تابلوی مغازه</h3>
+                        @if(!empty($tvTelemetry['isOnlineNow']))
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                آنلاین هم‌اکنون ({{ $tvTelemetry['onlineCount'] }} دستگاه)
+                            </span>
+                        @elseif(!empty($tvTelemetry['lastSeenText']))
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                آخرین اتصال: {{ $tvTelemetry['lastSeenText'] }}
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                                جفت‌شده (آماده پخش)
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center gap-2 self-end sm:self-auto flex-wrap">
+                <a href="{{ route('admin.devices.index') }}"
+                   class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="monitor-smartphone" class="w-3.5 h-3.5"></i>
+                    <span>تلویزیون‌های من ({{ $tvTelemetry['activeCount'] ?? 1 }})</span>
+                </a>
                 <button @click="openWizard()" type="button"
                         class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 transition-colors cursor-pointer flex items-center gap-1">
-                    <span>✨</span>
-                    <span>راهنمای مرحله‌ای (۳ گام)</span>
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                    <span>راهنمای ۳ گام</span>
                 </button>
             </div>
         </div>
@@ -431,7 +481,7 @@
                        id="displayUrlInput"
                        class="bg-transparent border-none text-xs text-slate-800 dark:text-amber-300 w-full select-all font-mono font-bold focus:outline-none px-2 py-1">
                 <button type="button"
-                        onclick="navigator.clipboard.writeText(document.getElementById('displayUrlInput').value); alert('لینک اختصاصی کپی شد!');"
+                        onclick="window.copyAdminText(document.getElementById('displayUrlInput').value, 'لینک اختصاصی تابلو کپی شد.');"
                         class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold whitespace-nowrap cursor-pointer transition-colors shadow-xs">
                     کپی لینک
                 </button>
@@ -562,6 +612,241 @@
             </div>
         </div>
 
+    </div>
+
+    {{-- میز کار روزانه طلافروش (نرخ‌های کلیدی + ماشین‌حساب پشت دخل + پیام ویترین) --}}
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-5">
+        {{-- ستون راست: نرخ‌های کلیدی تابلو و اشتراک‌گذاری + وضعیت ویترین --}}
+        <div class="xl:col-span-7 space-y-4">
+            {{-- کارت نرخ‌های کلیدی تابلو --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="coins" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">نرخ‌های کلیدی تابلو</h3>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">به‌روزرسانی خودکار هر ۱۰ ثانیه برای پاسخ سریع به مشتری</p>
+                        </div>
+                    </div>
+                    <button type="button"
+                            @click="copyMarketRatesForSocial()"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-colors cursor-pointer shadow-xs">
+                        <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                        <span>کپی نرخ‌ها برای واتساپ و کانال</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                    <template x-for="tile in keyRates" :key="tile.symbol">
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/70">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300 truncate" x-text="tile.label"></span>
+                                <span x-show="tile.changePercent !== 0"
+                                      class="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded-md"
+                                      :class="tile.changePercent > 0 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : 'bg-rose-500/15 text-rose-700 dark:text-rose-300'"
+                                      x-text="(tile.changePercent > 0 ? '+' : '') + tile.changePercent + '٪'"></span>
+                            </div>
+                            <p class="text-sm sm:text-base font-black text-slate-900 dark:text-white tabular-nums mt-1.5"
+                               x-text="tile.formatted"></p>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500" x-text="tile.unit"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            {{-- کارت وضعیت اسلایدر و پیام اختصاصی تابلو --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="megaphone" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black text-slate-900 dark:text-white">وضعیت اسلایدر و پیام تابلو</h3>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                @if(($productsCount ?? 0) > 0)
+                                    هم‌اکنون {{ $productsCount }} تصویر کالا در ویترین تابلو در حال پخش است.
+                                @else
+                                    اسلایدری فعال نیست؛ می‌توانید یک پیام خوش‌آمد یا اعلان ویژه روی تابلو نمایش دهید.
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('admin.products.index') }}"
+                           class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors">
+                            مدیریت ویترین
+                        </a>
+                        <button type="button"
+                                @click="showNoticeEditor = !showNoticeEditor"
+                                class="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-bold transition-colors cursor-pointer">
+                            <span x-text="showNoticeEditor ? 'بستن پیام' : 'تنظیم پیام تابلو'"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div x-show="showNoticeEditor" x-cloak x-transition class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                    @if(($productsCount ?? 0) > 0)
+                        <p class="text-[11px] text-amber-800 dark:text-amber-300 bg-amber-500/10 border border-amber-500/25 rounded-xl px-3 py-2 font-semibold">
+                            توجه: پیام زیر زمانی جایگزین بخش ویترین تابلو می‌شود که محصولات اسلایدر را موقتاً مخفی یا خالی کرده باشید.
+                        </p>
+                    @endif
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" @click="applyQuickNotice('custom_message', 'فروش ویژه گالری با کمترین اجرت', 'انواع طلای ۱۸ عیار بدون اجرت و کم‌اجرت موجود است.', 'gold')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer">
+                            قالب فروش کم‌اجرت
+                        </button>
+                        <button type="button" @click="applyQuickNotice('custom_message', 'سفارش ساخت اختصاصی طلا', 'پذیرش سفارش ساخت با لیزر و طراحی اختصاصی با نام شما.', 'royal')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer">
+                            قالب سفارش ساخت
+                        </button>
+                        <button type="button" @click="applyQuickNotice('guide', '', '', 'gold')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer">
+                            حالت راهنمای پیش‌فرض
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label for="dash-notice-title" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">تیتر پیام تابلو</label>
+                            <input id="dash-notice-title" type="text" x-model="notice.empty_showcase_title" placeholder="مثلاً: خرید و فروش طلای آبشده با فاکتور رسمی"
+                                   class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                        </div>
+                        <div>
+                            <label for="dash-notice-mode" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">حالت نمایش</label>
+                            <select id="dash-notice-mode" x-model="notice.empty_showcase_mode"
+                                    class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                                <option value="custom_message">نمایش پیام اختصاصی</option>
+                                <option value="guide">نمایش کارت راهنمای پیش‌فرض</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="dash-notice-text" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">متن پیام</label>
+                        <textarea id="dash-notice-text" rows="2" x-model="notice.empty_showcase_text" placeholder="توضیح کوتاه برای مشتریان..."
+                                  class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40"></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" @click="saveQuickNotice()" :disabled="isSavingNotice"
+                                class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-colors cursor-pointer disabled:opacity-50">
+                            <span x-text="isSavingNotice ? 'در حال ثبت...' : 'اعمال پیام روی تابلو'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ستون چپ: ماشین‌حساب سریع فروش پشت دخل --}}
+        <div class="xl:col-span-5">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs h-full flex flex-col justify-between space-y-4">
+                <div>
+                    <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
+                                <i data-lucide="calculator" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">ماشین‌حساب سریع فروش</h3>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">محاسبه فوری قیمت نهایی با نرخ زنده ۱۸ عیار</p>
+                            </div>
+                        </div>
+                        <button type="button"
+                                x-show="calc.manualRate"
+                                @click="resetCalcToLiveRate()"
+                                class="text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer">
+                            بازگشت به نرخ تابلو
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 mt-4">
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label for="calc-rate-input" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">نرخ گرم ۱۸ (تومان)</label>
+                                <input id="calc-rate-input" type="number" min="0"
+                                       x-model.number="calc.goldPrice"
+                                       @input="calc.manualRate = true"
+                                       class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm font-black tabular-nums text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                            </div>
+                            <div>
+                                <label for="calc-weight-input" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">وزن کالا (گرم)</label>
+                                <input id="calc-weight-input" type="number" step="0.01" min="0"
+                                       x-model.number="calc.weight"
+                                       class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm font-black tabular-nums text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[10.5px] font-bold text-slate-500 dark:text-slate-400">وزن سریع:</span>
+                            <template x-for="w in [1, 2.5, 5, 10]" :key="w">
+                                <button type="button" @click="calc.weight = w"
+                                        :class="Number(calc.weight) === w ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent'"
+                                        class="px-2 py-0.5 rounded-lg border text-[11px] font-bold tabular-nums cursor-pointer transition-colors"
+                                        x-text="w + ' گرم'"></button>
+                            </template>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="calc-wage-input" class="text-[11px] font-bold text-slate-600 dark:text-slate-300">اجرت ساخت</label>
+                                    <button type="button"
+                                            @click="calc.wageType = calc.wageType === 'percent' ? 'toman' : 'percent'"
+                                            class="text-[10px] font-black text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
+                                            x-text="calc.wageType === 'percent' ? 'تغییر به تومان/گرم' : 'تغییر به درصد'"></button>
+                                </div>
+                                <div class="relative">
+                                    <input id="calc-wage-input" type="number" step="0.5" min="0"
+                                           x-model.number="calc.wageValue"
+                                           class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl pl-12 pr-3 py-2 text-xs sm:text-sm font-black tabular-nums text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400" x-text="calc.wageType === 'percent' ? '٪' : 'ت/گ'"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="calc-profit-input" class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">سود فروشنده (٪)</label>
+                                <div class="relative">
+                                    <input id="calc-profit-input" type="number" step="0.5" min="0"
+                                           x-model.number="calc.profitPercent"
+                                           class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl pl-8 pr-3 py-2 text-xs sm:text-sm font-black tabular-nums text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">٪</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-2 pt-0.5">
+                            <label class="inline-flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                                <input type="checkbox" x-model="calc.includeVat" class="rounded border-slate-300 text-amber-500 focus:ring-amber-500">
+                                <span>مالیات ارزش افزوده (روی اجرت و سود)</span>
+                            </label>
+                            <select x-show="calc.includeVat" x-model.number="calc.vatPercent" aria-label="درصد مالیات"
+                                    class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white">
+                                <option :value="10">۱۰٪</option>
+                                <option :value="9">۹٪</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- جمع کل ماشین‌حساب --}}
+                <div class="p-3.5 rounded-2xl bg-slate-900 dark:bg-stone-950 text-white space-y-2">
+                    <div class="grid grid-cols-3 gap-2 text-[10.5px] text-slate-300 border-b border-white/10 pb-2 tabular-nums">
+                        <div>طلای خام: <span class="block font-bold text-white mt-0.5" x-text="formatFa(calcResult.rawGold)"></span></div>
+                        <div>اجرت: <span class="block font-bold text-white mt-0.5" x-text="formatFa(calcResult.wage)"></span></div>
+                        <div>سود و مالیات: <span class="block font-bold text-white mt-0.5" x-text="formatFa(calcResult.profit + calcResult.vat)"></span></div>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 pt-0.5">
+                        <div>
+                            <span class="text-[11px] text-slate-300 block">قیمت نهایی مشتری</span>
+                            <span class="text-lg sm:text-xl font-black text-amber-400 tabular-nums" x-text="formatFa(calcResult.total) + ' تومان'"></span>
+                        </div>
+                        <button type="button" @click="copyCalcQuote()"
+                                class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-colors cursor-pointer shrink-0">
+                            کپی اعلام قیمت
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Quick Actions --}}
@@ -782,8 +1067,60 @@
 @push('scripts')
 <script src="{{ asset('vendor/html5-qrcode.min.js') }}"></script>
 <script>
+window.copyAdminText = function(text, successMsg) {
+    const msg = successMsg || 'با موفقیت کپی شد.';
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        navigator.clipboard.writeText(text).then(() => {
+            if (window.showAdminToast) window.showAdminToast(msg, 'success');
+        }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            ta.remove();
+            if (window.showAdminToast) window.showAdminToast(msg, 'success');
+        });
+    } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        ta.remove();
+        if (window.showAdminToast) window.showAdminToast(msg, 'success');
+    }
+};
+
 function dashboardPage() {
     return {
+        shopMeta: @json($shopMeta ?? ['shopName' => 'گالری طلا', 'shopPhone' => '', 'publicUrl' => '']),
+        showNoticeEditor: @json(($productsCount ?? 0) === 0),
+        isSavingNotice: false,
+        notice: @json($showcaseConfig ?? ['empty_showcase_mode' => 'guide', 'empty_showcase_title' => '', 'empty_showcase_text' => '', 'empty_showcase_theme' => 'gold']),
+        keyRates: [
+            { symbol: 'gold18', label: 'طلای ۱۸ عیار', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
+            { symbol: 'buy_gold', label: 'گرم خرید ۱۸', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
+            { symbol: 'mesghal17', label: 'آبشده', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
+            { symbol: 'coin_emami', label: 'سکه امامی', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
+            { symbol: 'usdt', label: 'تتر (دلار دیجیتال)', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
+            { symbol: 'ounce', label: 'انس جهانی طلا', formatted: '---', value: 0, changePercent: 0, unit: 'دلار' }
+        ],
+        calc: {
+            goldPrice: 0,
+            liveGoldPrice: 0,
+            manualRate: false,
+            weight: 3.5,
+            wageType: 'percent',
+            wageValue: 10,
+            profitPercent: 7,
+            includeVat: true,
+            vatPercent: 10
+        },
         status: {
             updatedAt: '-',
             apiStatus: 'در حال بررسی...',
@@ -802,6 +1139,112 @@ function dashboardPage() {
         isProcessingPair: false,
         cameraError: null,
         html5QrCodeScanner: null,
+
+        get calcResult() {
+            const rate = Math.max(0, Number(this.calc.goldPrice) || 0);
+            const weight = Math.max(0, Number(this.calc.weight) || 0);
+            const rawGold = rate * weight;
+            let wage = 0;
+            if (this.calc.wageType === 'percent') {
+                wage = rawGold * (Math.max(0, Number(this.calc.wageValue) || 0) / 100);
+            } else {
+                wage = weight * Math.max(0, Number(this.calc.wageValue) || 0);
+            }
+            const profit = (rawGold + wage) * (Math.max(0, Number(this.calc.profitPercent) || 0) / 100);
+            const vat = this.calc.includeVat ? ((wage + profit) * (Math.max(0, Number(this.calc.vatPercent) || 0) / 100)) : 0;
+            return {
+                rawGold: Math.round(rawGold),
+                wage: Math.round(wage),
+                profit: Math.round(profit),
+                vat: Math.round(vat),
+                total: Math.round(rawGold + wage + profit + vat)
+            };
+        },
+
+        formatFa(val, decimals = 0) {
+            const num = Number(val || 0);
+            if (!Number.isFinite(num)) return '۰';
+            if (decimals > 0) {
+                return new Intl.NumberFormat('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(num);
+            }
+            return new Intl.NumberFormat('fa-IR').format(Math.round(num));
+        },
+
+        resetCalcToLiveRate() {
+            this.calc.manualRate = false;
+            if (this.calc.liveGoldPrice > 0) {
+                this.calc.goldPrice = Math.round(this.calc.liveGoldPrice);
+            }
+        },
+
+        copyMarketRatesForSocial() {
+            const nowTime = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+            const lines = [
+                'نرخ لحظه‌ای طلا و سکه | ' + (this.shopMeta.shopName || 'گالری طلا'),
+                'ساعت بروزرسانی: ' + nowTime,
+                '-----------------------'
+            ];
+            this.keyRates.forEach(item => {
+                if (item.value > 0) {
+                    lines.push(item.label + ': ' + item.formatted + ' ' + item.unit);
+                }
+            });
+            lines.push('-----------------------');
+            if (this.shopMeta.shopPhone) lines.push('تلفن تماس: ' + this.shopMeta.shopPhone);
+            if (this.shopMeta.publicUrl) lines.push('تابلوی آنلاین: ' + this.shopMeta.publicUrl);
+            window.copyAdminText(lines.join('\n'), 'متن نرخ‌های روز برای اشتراک‌گذاری کپی شد.');
+        },
+
+        copyCalcQuote() {
+            const res = this.calcResult;
+            if (res.total <= 0) {
+                if (window.showAdminToast) window.showAdminToast('لطفاً وزن و نرخ طلا را وارد کنید.', 'error');
+                return;
+            }
+            const wageLabel = this.calc.wageType === 'percent'
+                ? (this.calc.wageValue + '٪')
+                : (this.formatFa(this.calc.wageValue) + ' تومان/گرم');
+            const lines = [
+                'برآورد قیمت طلا | ' + (this.shopMeta.shopName || 'گالری طلا'),
+                'نرخ طلای ۱۸ عیار: ' + this.formatFa(this.calc.goldPrice) + ' تومان',
+                'وزن کالا: ' + this.calc.weight + ' گرم',
+                'اجرت: ' + wageLabel + ' | سود: ' + this.calc.profitPercent + '٪',
+                'مبلغ نهایی قابل پرداخت: ' + this.formatFa(res.total) + ' تومان'
+            ];
+            if (this.shopMeta.shopPhone) lines.push('تماس: ' + this.shopMeta.shopPhone);
+            window.copyAdminText(lines.join('\n'), 'متن اعلام قیمت برای مشتری کپی شد.');
+        },
+
+        applyQuickNotice(mode, title, text, theme) {
+            this.notice.empty_showcase_mode = mode;
+            this.notice.empty_showcase_title = title;
+            this.notice.empty_showcase_text = text;
+            this.notice.empty_showcase_theme = theme || 'gold';
+        },
+
+        async saveQuickNotice() {
+            this.isSavingNotice = true;
+            try {
+                const res = await fetch('{{ route('admin.empty-showcase.update') }}', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(this.notice)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.message || 'خطا در ثبت پیام تابلو');
+                if (window.showAdminToast) {
+                    window.showAdminToast(data.message || 'پیام تابلو با موفقیت ذخیره و اعمال شد.', 'success');
+                }
+            } catch (e) {
+                if (window.showAdminToast) window.showAdminToast(e.message || 'خطا در ارتباط با سرور', 'error');
+            } finally {
+                this.isSavingNotice = false;
+            }
+        },
 
         async init() {
             await this.loadData();
@@ -829,7 +1272,7 @@ function dashboardPage() {
             code = code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
 
             if (!code || code.length < 6) {
-                alert('لطفا کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.');
+                if (window.showAdminToast) window.showAdminToast('لطفاً کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.', 'error');
                 return;
             }
             this.isPairing = true;
@@ -846,14 +1289,15 @@ function dashboardPage() {
                 const data = await res.json();
                 if (data && data.success) {
                     this.isWizardOpen = false;
-                    alert('🎉 ' + (data.message || 'تلویزیون با موفقیت متصل شد!'));
+                    if (window.showAdminToast) window.showAdminToast(data.message || 'تلویزیون با موفقیت متصل شد!', 'success');
                     this.pairCode = '';
-                    window.location.reload();
+                    setTimeout(() => window.location.reload(), 800);
                 } else {
-                    alert((data && data.message) ? data.message : 'کد فعال‌سازی نامعتبر است یا منقضی شده است. لطفا تلویزیون را رفرش فرمایید.');
+                    const errMsg = (data && data.message) ? data.message : 'کد فعال‌سازی نامعتبر است یا منقضی شده است. لطفاً تلویزیون را رفرش فرمایید.';
+                    if (window.showAdminToast) window.showAdminToast(errMsg, 'error');
                 }
             } catch (err) {
-                alert('خطا در برقراری ارتباط با سرور');
+                if (window.showAdminToast) window.showAdminToast('خطا در برقراری ارتباط با سرور', 'error');
             } finally {
                 this.isPairing = false;
             }
@@ -972,7 +1416,7 @@ function dashboardPage() {
                     });
                     data = await res.json();
                 } else {
-                    alert('بارکد اسکن‌شده نامعتبر است: ' + decodedText);
+                    if (window.showAdminToast) window.showAdminToast('بارکد اسکن‌شده نامعتبر است: ' + decodedText, 'error');
                     this.isProcessingPair = false;
                     await this.startCamera();
                     return;
@@ -980,23 +1424,26 @@ function dashboardPage() {
 
                 if (data && data.success) {
                     this.isScannerOpen = false;
-                    alert('🎉 ' + (data.message || 'تلویزیون با موفقیت متصل شد! اکنون تابلوی طلای شما روی نمایشگر پخش می‌شود.'));
+                    if (window.showAdminToast) window.showAdminToast(data.message || 'تلویزیون با موفقیت متصل شد! اکنون تابلوی طلای شما روی نمایشگر پخش می‌شود.', 'success');
                     await this.loadData();
                 } else {
-                    alert((data && data.message) ? data.message : 'خطا در اتصال به تلویزیون.');
+                    const errMsg = (data && data.message) ? data.message : 'خطا در اتصال به تلویزیون.';
+                    if (window.showAdminToast) window.showAdminToast(errMsg, 'error');
                     this.isProcessingPair = false;
                     await this.startCamera();
                 }
             } catch (e) {
                 console.error("Pairing error:", e);
-                alert('خطا در اتصال با سرور. لطفاً مجدداً امتحان کنید.');
+                if (window.showAdminToast) window.showAdminToast('خطا در اتصال با سرور. لطفاً مجدداً امتحان کنید.', 'error');
                 this.isProcessingPair = false;
                 await this.startCamera();
             }
         },
 
         async loadData() {
-            this.isLoading = true;
+            if (this.status.gold18Price === '-') {
+                this.isLoading = true;
+            }
             try {
                 const username = '{{ $username }}';
                 const displayToken = '{{ auth()->user()->display_token }}';
@@ -1017,8 +1464,31 @@ function dashboardPage() {
                 const health = await healthRes.json();
                 const preview = await previewRes.json();
 
-                const stales = snapshot.priceFeed ? snapshot.priceFeed.filter(item => item.is_stale).length : 0;
-                const gold18 = snapshot.priceFeed ? snapshot.priceFeed.find(item => item.symbol === 'gold18')?.value : null;
+                const feedList = Array.isArray(snapshot.priceFeed) ? snapshot.priceFeed : [];
+                const stales = feedList.filter(item => item.is_stale).length;
+                const gold18Item = feedList.find(item => item.symbol === 'gold18');
+                const gold18 = gold18Item ? Number(gold18Item.value || 0) : 0;
+
+                if (gold18 > 0) {
+                    this.calc.liveGoldPrice = Math.round(gold18);
+                    if (!this.calc.manualRate || this.calc.goldPrice <= 0) {
+                        this.calc.goldPrice = Math.round(gold18);
+                    }
+                }
+
+                this.keyRates = this.keyRates.map(tile => {
+                    const match = feedList.find(f => f.symbol === tile.symbol);
+                    const val = match ? Number(match.value || 0) : (tile.symbol === 'buy_gold' && preview?.buyGold ? Number(preview.buyGold) : 0);
+                    const decimals = tile.symbol === 'ounce' ? 2 : 0;
+                    const changePct = match && match.change_percent != null ? Number(match.change_percent) : 0;
+                    return {
+                        ...tile,
+                        label: (match && match.label) ? match.label : tile.label,
+                        value: val,
+                        formatted: val > 0 ? this.formatFa(val, decimals) : '---',
+                        changePercent: Number.isFinite(changePct) ? Number(changePct.toFixed(2)) : 0
+                    };
+                });
 
                 // سیستم سالم است اگر API پاسخ بدهد، حتی اگر برخی قیمت‌ها به دلیل بسته بودن بازار استاتیک باشند
                 const isHealthy = health && health.status === 'ok';
@@ -1029,7 +1499,7 @@ function dashboardPage() {
                     alerts: stales > 0 ? `${stales} قیمت استاتیک (بدون آپدیت)` : 'بدون خطای همگام‌سازی',
                     staleCount: stales,
                     isHealthy: isHealthy,
-                    gold18Price: gold18 ? new Intl.NumberFormat('fa-IR').format(Math.round(gold18)) + ' تومان' : 'نامشخص',
+                    gold18Price: gold18 > 0 ? new Intl.NumberFormat('fa-IR').format(Math.round(gold18)) + ' تومان' : 'نامشخص',
                     formula18Price: (preview && preview.gold18Real) ? new Intl.NumberFormat('fa-IR').format(Math.round(preview.gold18Real)) + ' تومان' : 'نامشخص'
                 };
             } catch (e) {

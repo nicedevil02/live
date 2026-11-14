@@ -188,9 +188,9 @@
                     if (!res.ok) {
                         if (res.status === 422) {
                             errors = result.errors || {};
-                            if (result.message) alert(result.message);
+                            if (result.message) window.showAdminToast ? window.showAdminToast(result.message, 'error') : alert(result.message);
                         } else {
-                            alert('خطایی در سیستم رخ داده است');
+                            window.showAdminToast ? window.showAdminToast('خطایی در سیستم رخ داده است', 'error') : alert('خطایی در سیستم رخ داده است');
                         }
                         return;
                     }
@@ -198,7 +198,7 @@
                     form = { title: '', weight_gram: '', profit_value: '', profit_type: 'percent', badge: 'none', base_gold_price: {{ $latestGoldPrice }} };
                     imageUrl = ''; imageFile = null; previewUrl = null; open = false;
                     if ($refs.createFileInput) $refs.createFileInput.value = '';
-                } catch(e) { alert('خطا در ارتباط با سرور'); }
+                } catch(e) { window.showAdminToast ? window.showAdminToast('خطا در ارتباط با سرور', 'error') : alert('خطا در ارتباط با سرور'); }
                 finally { isCreating = false; }
             }" :disabled="isCreating || isCompressing" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25">
                 <i x-show="!isCreating" data-lucide="check-circle" class="w-5 h-5"></i>

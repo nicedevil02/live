@@ -194,7 +194,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script src="{{ asset('vendor/sortable.min.js') }}"></script>
 <script>
 /**
  * تابع بهینه‌سازی و کاهش حجم تصویر در کلاینت بدون افت کیفیت محسوس

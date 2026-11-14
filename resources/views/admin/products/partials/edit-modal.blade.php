@@ -177,16 +177,17 @@ function editProductForm() {
                 const updated = await res.json();
                 if (!res.ok) {
                     if (res.status === 422 && updated.errors) {
-                        const msg = Object.values(updated.errors).flat().join('\n');
-                        alert('خطای اعتبارسنجی:\n' + msg);
+                        const msg = Object.values(updated.errors).flat().join('، ');
+                        window.showAdminToast ? window.showAdminToast('خطای اعتبارسنجی: ' + msg, 'error') : alert('خطای اعتبارسنجی:\n' + msg);
                     } else {
-                        alert(updated.message || 'خطا در بروزرسانی محصول');
+                        const m = updated.message || 'خطا در بروزرسانی محصول';
+                        window.showAdminToast ? window.showAdminToast(m, 'error') : alert(m);
                     }
                     return;
                 }
                 this.$dispatch('product-edited', updated);
             } catch(e) {
-                alert('خطا در ارتباط با سرور');
+                window.showAdminToast ? window.showAdminToast('خطا در ارتباط با سرور', 'error') : alert('خطا در ارتباط با سرور');
             } finally {
                 this.isSaving = false;
             }
@@ -202,12 +203,13 @@ function editProductForm() {
                 });
                 const img = await res.json();
                 if (!res.ok) {
-                    alert(img.message || 'خطا در افزودن آدرس تصویر');
+                    const m = img.message || 'خطا در افزودن آدرس تصویر';
+                    window.showAdminToast ? window.showAdminToast(m, 'error') : alert(m);
                     return;
                 }
                 this.localProduct.images.push(img);
                 this.imageUrl = '';
-            } catch(e) { alert('خطا در افزودن لینک'); }
+            } catch(e) { window.showAdminToast ? window.showAdminToast('خطا در افزودن لینک', 'error') : alert('خطا در افزودن لینک'); }
         },
 
         async handleAutoUploadFile(event) {
@@ -226,14 +228,15 @@ function editProductForm() {
                 });
                 if (!res.ok) {
                     const result = await res.json().catch(() => ({}));
-                    alert(result.message || 'خطا در آپلود تصویر');
+                    const m = result.message || 'خطا در آپلود تصویر';
+                    window.showAdminToast ? window.showAdminToast(m, 'error') : alert(m);
                     return;
                 }
                 const img = await res.json();
                 this.localProduct.images.push(img);
                 if (this.$refs.fileInput) this.$refs.fileInput.value = '';
             } catch(e) {
-                alert('خطا در فشرده‌سازی یا آپلود تصویر');
+                window.showAdminToast ? window.showAdminToast('خطا در فشرده‌سازی یا آپلود تصویر', 'error') : alert('خطا در فشرده‌سازی یا آپلود تصویر');
             } finally {
                 this.isUploading = false;
                 this.$nextTick(() => lucide.createIcons());
@@ -249,11 +252,12 @@ function editProductForm() {
                 });
                 if (!res.ok) {
                     const err = await res.json().catch(() => ({}));
-                    alert(err.message || 'خطا در حذف تصویر');
+                    const m = err.message || 'خطا در حذف تصویر';
+                    window.showAdminToast ? window.showAdminToast(m, 'error') : alert(m);
                     return;
                 }
                 this.localProduct.images = this.localProduct.images.filter(i => i.id !== imageId);
-            } catch(e) { alert('خطا در حذف تصویر'); }
+            } catch(e) { window.showAdminToast ? window.showAdminToast('خطا در حذف تصویر', 'error') : alert('خطا در حذف تصویر'); }
         }
     };
 }

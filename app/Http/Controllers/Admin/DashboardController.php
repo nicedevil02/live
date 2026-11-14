@@ -19,18 +19,67 @@ class DashboardController extends Controller
         $tvConnected = false;
         $productAdded = false;
         $profileCustomized = false;
+        $productsCount = 0;
+        $setting = null;
+        $tvTelemetry = [
+            'activeCount'  => 0,
+            'onlineCount'  => 0,
+            'isOnlineNow'  => false,
+            'lastSeenText' => null,
+            'primaryLabel' => '',
+        ];
 
         try {
+            $activeDevices = collect();
             if (Schema::hasTable('tv_devices')) {
-                $tvConnected = TvDevice::where('user_id', $user->id)
+                $activeDevices = TvDevice::where('user_id', $user->id)
                     ->whereNull('revoked_at')
-                    ->exists();
+                    ->orderByDesc('last_seen_at')
+                    ->get();
+                $tvConnected = $activeDevices->isNotEmpty();
             }
+
+            if ($activeDevices->isNotEmpty()) {
+                $onlineCount = $activeDevices->filter(function ($dev) {
+                    if (!$dev->last_seen_at) return false;
+                    $dt = $dev->last_seen_at instanceof \DateTimeInterface
+                        ? \Carbon\Carbon::instance($dev->last_seen_at)
+                        : \Carbon\Carbon::parse($dev->last_seen_at);
+                    return $dt->gt(now()->subMinutes(3));
+                })->count();
+
+                $latestSeen = $activeDevices->first()?->last_seen_at;
+                $latestSeenParsed = $latestSeen
+                    ? ($latestSeen instanceof \DateTimeInterface ? \Carbon\Carbon::instance($latestSeen) : \Carbon\Carbon::parse($latestSeen))
+                    : null;
+
+                $tvTelemetry = [
+                    'activeCount'  => $activeDevices->count(),
+                    'onlineCount'  => $onlineCount,
+                    'isOnlineNow'  => $onlineCount > 0,
+                    'lastSeenText' => $latestSeenParsed ? \App\Models\User::toJalali($latestSeenParsed) : null,
+                    'primaryLabel' => $activeDevices->first()?->label ?: 'تلویزیون ویترین مغازه',
+                ];
+            }
+
             if (!$tvConnected && Schema::hasTable('tv_sessions')) {
-                $tvConnected = DB::table('tv_sessions')
+                $pairedSession = DB::table('tv_sessions')
                     ->where('paired_user_id', $user->id)
                     ->where('is_paired', true)
-                    ->exists();
+                    ->orderByDesc('updated_at')
+                    ->first();
+                if ($pairedSession) {
+                    $tvConnected = true;
+                    $sessionLastSeen = $pairedSession->last_seen_at ?? $pairedSession->updated_at ?? null;
+                    $parsedSeen = $sessionLastSeen ? \Carbon\Carbon::parse($sessionLastSeen) : null;
+                    $tvTelemetry = [
+                        'activeCount'  => 1,
+                        'onlineCount'  => ($parsedSeen && $parsedSeen->gt(now()->subMinutes(3))) ? 1 : 0,
+                        'isOnlineNow'  => (bool) ($parsedSeen && $parsedSeen->gt(now()->subMinutes(3))),
+                        'lastSeenText' => $parsedSeen ? \App\Models\User::toJalali($parsedSeen) : null,
+                        'primaryLabel' => 'مرورگر / تلویزیون متصل',
+                    ];
+                }
             }
         } catch (\Throwable $e) {
             \Log::warning('Onboarding TV status check failed: ' . $e->getMessage());
@@ -39,6 +88,7 @@ class DashboardController extends Controller
         try {
             if (Schema::hasTable('product_slide')) {
                 $productAdded = ProductSlide::where('user_id', $user->id)->exists();
+                $productsCount = ProductSlide::where('user_id', $user->id)->where('is_visible', true)->count();
             }
         } catch (\Throwable $e) {
             \Log::warning('Onboarding ProductSlide check failed: ' . $e->getMessage());
@@ -46,6 +96,7 @@ class DashboardController extends Controller
 
         try {
             if (Schema::hasTable('display_settings')) {
+                DisplaySettingController::ensureEmptyShowcaseColumnsExist();
                 $setting = DisplaySetting::where('user_id', $user->id)->first();
                 if ($setting) {
                     $hasSocialOrQr = !empty(trim((string) $setting->instagram))
@@ -76,7 +127,28 @@ class DashboardController extends Controller
         $isWelcomePeriod = $user->isEligibleForWelcomeOffer();
         $welcomeHoursLeft = $user->welcomeOfferHoursLeft();
 
-        return view('admin.dashboard', compact('username', 'onboardingChecklist', 'isWelcomePeriod', 'welcomeHoursLeft'));
+        $shopMeta = [
+            'shopName'  => !empty($setting?->shop_name) ? $setting->shop_name : ($user->name ?? 'گالری طلا'),
+            'shopPhone' => $setting?->phone ?: ($user->phone ?? ''),
+            'publicUrl' => url('/' . $username),
+        ];
+        $showcaseConfig = [
+            'empty_showcase_mode'  => $setting?->empty_showcase_mode ?: 'guide',
+            'empty_showcase_title' => $setting?->empty_showcase_title ?? '',
+            'empty_showcase_text'  => $setting?->empty_showcase_text ?? '',
+            'empty_showcase_theme' => $setting?->empty_showcase_theme ?: 'gold',
+        ];
+
+        return view('admin.dashboard', compact(
+            'username',
+            'onboardingChecklist',
+            'isWelcomePeriod',
+            'welcomeHoursLeft',
+            'tvTelemetry',
+            'productsCount',
+            'shopMeta',
+            'showcaseConfig'
+        ));
     }
 
     /**

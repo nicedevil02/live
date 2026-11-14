@@ -146,7 +146,7 @@
                     $isRevoked = !is_null($dev->revoked_at);
                     $lastSeenParsed = $dev->last_seen_at ? ($dev->last_seen_at instanceof \DateTimeInterface ? $dev->last_seen_at : \Carbon\Carbon::parse($dev->last_seen_at)) : null;
                     $lastSeenText = $lastSeenParsed ? \App\Models\User::toJalali($lastSeenParsed) : 'نامشخص';
-                    $isRecent = $lastSeenParsed && now()->diffInMinutes($lastSeenParsed) < 30;
+                    $isRecent = $lastSeenParsed && $lastSeenParsed->gt(now()->subMinutes(15));
                 @endphp
                 <div class="bg-white dark:bg-slate-900 border {{ $isRevoked ? 'border-rose-200 dark:border-rose-900/40 opacity-80' : 'border-slate-200 dark:border-slate-800' }} rounded-3xl p-6 shadow-sm flex flex-col justify-between transition-all hover:shadow-md">
                     <div>
@@ -478,7 +478,7 @@ function devicesPage() {
             code = code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
 
             if (!code || code.length < 6) {
-                alert('لطفا کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.');
+                window.showAdminToast ? window.showAdminToast('لطفاً کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.', 'error') : alert('لطفا کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.');
                 return;
             }
             this.isPairing = true;
@@ -495,14 +495,17 @@ function devicesPage() {
                 const data = await res.json();
                 if (data && data.success) {
                     this.isWizardOpen = false;
-                    alert('🎉 ' + (data.message || 'تلویزیون با موفقیت متصل شد!'));
+                    const okMsg = data.message || 'تلویزیون با موفقیت متصل شد!';
+                    if (window.showAdminToast) window.showAdminToast(okMsg, 'success');
+                    else alert(okMsg);
                     this.pairCode = '';
-                    window.location.reload();
+                    setTimeout(() => window.location.reload(), 800);
                 } else {
-                    alert((data && data.message) ? data.message : 'کد فعال‌سازی نامعتبر است یا منقضی شده است. لطفا صفحه تلویزیون را رفرش فرمایید.');
+                    const errMsg = (data && data.message) ? data.message : 'کد فعال‌سازی نامعتبر است یا منقضی شده است. لطفا صفحه تلویزیون را رفرش فرمایید.';
+                    window.showAdminToast ? window.showAdminToast(errMsg, 'error') : alert(errMsg);
                 }
             } catch (err) {
-                alert('خطا در برقراری ارتباط با سرور. لطفاً مجدداً امتحان کنید.');
+                window.showAdminToast ? window.showAdminToast('خطا در برقراری ارتباط با سرور. لطفاً مجدداً امتحان کنید.', 'error') : alert('خطا در برقراری ارتباط با سرور. لطفاً مجدداً امتحان کنید.');
             } finally {
                 this.isPairing = false;
             }
@@ -620,7 +623,8 @@ function devicesPage() {
                     });
                     data = await res.json();
                 } else {
-                    alert('بارکد اسکن‌شده نامعتبر است: ' + decodedText);
+                    const m = 'بارکد اسکن‌شده نامعتبر است: ' + decodedText;
+                    window.showAdminToast ? window.showAdminToast(m, 'error') : alert(m);
                     this.isProcessingPair = false;
                     await this.startCamera();
                     return;
@@ -628,16 +632,19 @@ function devicesPage() {
 
                 if (data && data.success) {
                     this.isScannerOpen = false;
-                    alert('🎉 ' + (data.message || 'تلویزیون با موفقیت متصل شد! اکنون تابلوی طلای شما روی نمایشگر پخش می‌شود.'));
-                    window.location.reload();
+                    const okMsg = data.message || 'تلویزیون با موفقیت متصل شد! اکنون تابلوی طلای شما روی نمایشگر پخش می‌شود.';
+                    if (window.showAdminToast) window.showAdminToast(okMsg, 'success');
+                    else alert(okMsg);
+                    setTimeout(() => window.location.reload(), 800);
                 } else {
-                    alert((data && data.message) ? data.message : 'خطا در اتصال به تلویزیون.');
+                    const errMsg = (data && data.message) ? data.message : 'خطا در اتصال به تلویزیون.';
+                    window.showAdminToast ? window.showAdminToast(errMsg, 'error') : alert(errMsg);
                     this.isProcessingPair = false;
                     await this.startCamera();
                 }
             } catch (e) {
                 console.error("Pairing error:", e);
-                alert('خطا در اتصال با سرور. لطفاً مجدداً امتحان کنید.');
+                window.showAdminToast ? window.showAdminToast('خطا در اتصال با سرور. لطفاً مجدداً امتحان کنید.', 'error') : alert('خطا در اتصال با سرور. لطفاً مجدداً امتحان کنید.');
                 this.isProcessingPair = false;
                 await this.startCamera();
             }

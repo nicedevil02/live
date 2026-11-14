@@ -2,8 +2,8 @@
 <html lang="fa" dir="rtl" x-data="adminThemeHandler()" :class="{ 'dark': darkMode }" @talalive-toggle-sidebar.window="mobileMenu = Boolean($event.detail && $event.detail.open)">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'پنل مدیریت') - Live Gold</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>@yield('title', 'پنل مدیریت') - طلالایو</title>
 
     <script>
         // منطق اجبار به حالت روشن در اولین بازدید و جداکردن از سیستم‌عامل
@@ -217,9 +217,43 @@
                 </div>
             </header>
 
-            <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+            <main class="flex-1 overflow-y-auto p-4 pb-24 lg:p-8 lg:pb-8">
                 @yield('content')
             </main>
+
+            {{-- نوار ناوبری سریع موبایل (پاک و دست‌یافتنی در پایین صفحه) --}}
+            <nav aria-label="ناوبری سریع موبایل"
+                 class="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-slate-200/90 dark:border-stone-800 bg-white/95 dark:bg-stone-950/95 backdrop-blur-xl shadow-[0_-8px_24px_-6px_rgba(15,23,42,0.1)] pb-[env(safe-area-inset-bottom)]">
+                <div class="grid grid-cols-5 h-16 px-1">
+                    <a href="{{ route('admin.dashboard') }}"
+                       class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl text-[10px] font-bold transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-amber-700 dark:text-amber-400' : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white' }}">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                        <span>داشبورد</span>
+                    </a>
+                    <a href="{{ route('admin.products.index') }}"
+                       class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl text-[10px] font-bold transition-colors {{ request()->routeIs('admin.products.*') ? 'text-amber-700 dark:text-amber-400' : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white' }}">
+                        <i data-lucide="gem" class="w-5 h-5"></i>
+                        <span>ویترین</span>
+                    </a>
+                    <a href="{{ route('admin.display-control') }}"
+                       class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl text-[10px] font-bold transition-colors {{ request()->routeIs('admin.display-control') ? 'text-amber-700 dark:text-amber-400' : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white' }}">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+                        <span>تابلو</span>
+                    </a>
+                    <a href="{{ route('admin.devices.index') }}"
+                       class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl text-[10px] font-bold transition-colors {{ request()->routeIs('admin.devices.*') ? 'text-amber-700 dark:text-amber-400' : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white' }}">
+                        <i data-lucide="tv" class="w-5 h-5"></i>
+                        <span>تلویزیون</span>
+                    </a>
+                    <button type="button"
+                            @click="mobileMenu = true"
+                            class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl text-[10px] font-bold text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                            aria-label="باز کردن منوی کامل">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                        <span>منو</span>
+                    </button>
+                </div>
+            </nav>
         </div>
     </div>
 
@@ -256,13 +290,80 @@
         window.addEventListener('alpine:initialized', renderLucideIcons);
     </script>
 
+    {{-- کانتینر اعلان‌های غیرمسدودکننده سراسری پنل --}}
+    <div id="admin-toast-container"
+         role="status"
+         aria-live="polite"
+         class="fixed bottom-20 left-4 lg:bottom-6 lg:left-6 z-[90] flex flex-col gap-2 max-w-sm w-[calc(100vw-2rem)] sm:w-auto pointer-events-none"></div>
+
+    <script>
+        window.showAdminToast = function(message, type = 'success', duration = 4200) {
+            const container = document.getElementById('admin-toast-container');
+            if (!container || !message) return;
+
+            const palette = {
+                success: {
+                    box: 'bg-white dark:bg-stone-900 border-emerald-500/50 text-slate-900 dark:text-stone-100',
+                    badge: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+                    icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+                },
+                error: {
+                    box: 'bg-white dark:bg-stone-900 border-rose-500/50 text-slate-900 dark:text-stone-100',
+                    badge: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
+                    icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+                },
+                info: {
+                    box: 'bg-white dark:bg-stone-900 border-amber-500/50 text-slate-900 dark:text-stone-100',
+                    badge: 'bg-amber-500/15 text-amber-800 dark:text-amber-300',
+                    icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+                }
+            };
+            const theme = palette[type] || palette.info;
+
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-xl backdrop-blur-xl transition-all duration-300 opacity-0 translate-y-2 ' + theme.box;
+
+            const badge = document.createElement('span');
+            badge.className = 'w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ' + theme.badge;
+            badge.innerHTML = theme.icon;
+
+            const textEl = document.createElement('span');
+            textEl.className = 'text-xs sm:text-sm font-bold leading-relaxed flex-1';
+            textEl.textContent = String(message);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.setAttribute('aria-label', 'بستن اعلان');
+            closeBtn.className = 'min-w-[32px] min-h-[32px] rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer shrink-0';
+            closeBtn.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+
+            let timerId = null;
+            const dismiss = () => {
+                if (timerId) clearTimeout(timerId);
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 250);
+            };
+            closeBtn.addEventListener('click', dismiss);
+
+            toast.appendChild(badge);
+            toast.appendChild(textEl);
+            toast.appendChild(closeBtn);
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            });
+            timerId = setTimeout(dismiss, duration);
+        };
+    </script>
+
     {{-- مودال جامع خوش‌آمدگویی، آموزش پنل و اتصال تلویزیون + تور نوری منوها --}}
     @include('admin.partials.onboarding-guide')
 
     {{-- اعلان هوشمند و زیبا برای نصب وب‌اپلیکیشن PWA ویژه پنل حساب کاربری --}}
     <div id="pwa-install-toast"
-         style="display: none; position: fixed; bottom: 16px; left: 16px; z-index: 70;"
-         class="max-w-md w-[calc(100vw-32px)] sm:w-auto bg-white/95 dark:bg-slate-900/95 border-2 border-amber-500/80 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl transition-all duration-300">
+         style="display: none;"
+         class="fixed bottom-20 left-4 lg:bottom-4 lg:left-4 z-[70] max-w-md w-[calc(100vw-32px)] sm:w-auto bg-white/95 dark:bg-slate-900/95 border-2 border-amber-500/80 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl transition-all duration-300">
         
         <div class="flex items-start gap-3.5">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center text-slate-950 text-2xl shadow-lg shadow-amber-500/30 shrink-0">

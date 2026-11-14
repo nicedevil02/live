@@ -242,13 +242,33 @@
                 </p>
 
                 {{-- آدرس لینک QR --}}
-                <div class="space-y-1.5">
-                    <label class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                <div class="space-y-2">
+                    <label for="shop-qr-link" class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
                         <i data-lucide="link" class="w-4 h-4 text-slate-400"></i>
                         <span>لینک مقصد (URL کامل)</span>
                     </label>
-                    <input type="text" dir="ltr" x-model="form.qr_link" placeholder="https://rubika.ir/my_channel"
+                    <input id="shop-qr-link" type="text" dir="ltr" x-model="form.qr_link" placeholder="https://rubika.ir/my_channel"
                            class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-left font-mono">
+                    <p x-show="qrLinkWarning" x-cloak class="text-[11px] font-bold text-amber-700 dark:text-amber-400" x-text="qrLinkWarning"></p>
+                    <div class="flex flex-wrap gap-1.5 pt-0.5">
+                        <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 self-center ml-1">انتخاب سریع:</span>
+                        <button type="button" @click="fillQrFromSocial('instagram')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
+                            از اینستاگرام من
+                        </button>
+                        <button type="button" @click="fillQrFromSocial('rubika')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
+                            از کانال روبیکا من
+                        </button>
+                        <button type="button" @click="fillQrFromSocial('phone')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
+                            تماس مستقیم مغازه
+                        </button>
+                        <button type="button" @click="fillQrFromSocial('board')"
+                                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
+                            تابلوی آنلاین گالری
+                        </button>
+                    </div>
                 </div>
 
                 {{-- عنوان بالای QR --}}
@@ -271,15 +291,18 @@
                            class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
                 </div>
 
-                {{-- پیش‌نمایش زنده در کارت تلویزیون --}}
+                {{-- پیش‌نمایش زنده واقعی کد QR در کارت تلویزیون --}}
                 <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
-                    <div class="min-w-0">
-                        <span class="text-[10px] text-amber-500 font-bold uppercase tracking-wider block">پیش‌نمایش در تابلوی تلویزیون</span>
-                        <p class="text-xs font-black text-slate-800 dark:text-slate-100 truncate mt-1" x-text="form.qr_label || 'عضویت در شبکه‌های اجتماعی'"></p>
-                        <p class="text-[11px] text-slate-400 truncate mt-0.5" x-text="form.qr_desc || 'اسکن جهت مشاهده در موبایل'"></p>
+                    <div class="min-w-0 flex-1">
+                        <span class="text-[10px] text-amber-700 dark:text-amber-400 font-black block"
+                              x-text="form.qr_link && form.qr_link.trim() ? 'پیش‌نمایش واقعی QR اختصاصی در تلویزیون' : 'حالت پیش‌فرض: QR تابلوی آنلاین گالری'"></span>
+                        <p class="text-xs font-black text-slate-800 dark:text-slate-100 truncate mt-1" x-text="form.qr_label || (form.qr_link ? 'اسکن کنید' : 'همراه ما باشید')"></p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5" x-text="form.qr_desc || (form.qr_link ? 'عضویت در شبکه‌های اجتماعی' : 'اسکن جهت مشاهده در موبایل')"></p>
+                        <p class="text-[10px] font-mono text-slate-400 dark:text-slate-500 truncate mt-1" dir="ltr" x-text="effectiveQrUrl"></p>
                     </div>
-                    <div class="w-14 h-14 bg-white p-1 rounded-xl shadow-xs shrink-0 flex items-center justify-center">
-                        <img src="{{ asset('images/sample-qr.png') }}" onerror="this.src='/icons/icon-72x72.png'" class="w-full h-full object-contain" alt="QR">
+                    <div class="w-20 h-20 bg-white p-1.5 rounded-xl border border-slate-200 shadow-xs shrink-0 flex items-center justify-center overflow-hidden"
+                         x-html="qrSvgMarkup"
+                         aria-label="پیش‌نمایش زنده کد QR">
                     </div>
                 </div>
             </div>
@@ -290,6 +313,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('vendor/qrcode-generator.min.js') }}"></script>
 <script>
 function cityPicker(initialSlug, provincesData) {
     return {
@@ -438,6 +462,7 @@ function cityPicker(initialSlug, provincesData) {
 function shopProfileManager() {
     return {
         isSaving: false,
+        defaultBoardUrl: @js(url('/' . auth()->user()->username)),
         toast: { show: false, message: '', type: 'success' },
         form: {
             shop_name: @json($settings->shop_name ?? $user->name ?? ''),
@@ -450,8 +475,84 @@ function shopProfileManager() {
             qr_desc: @json($settings->qr_desc ?? '')
         },
 
+        get effectiveQrUrl() {
+            const raw = (this.form.qr_link || '').trim();
+            return raw || this.defaultBoardUrl;
+        },
+
+        get qrLinkWarning() {
+            const raw = (this.form.qr_link || '').trim();
+            if (!raw) return '';
+            if (/^(https?:\/\/|tel:)/i.test(raw)) return '';
+            return 'پیشنهاد: برای اسکن مطمئن توسط دوربین گوشی، آدرس را با https:// شروع کنید.';
+        },
+
+        get qrSvgMarkup() {
+            const value = this.effectiveQrUrl.slice(0, 900);
+            if (typeof window.qrcode !== 'function') {
+                return '<span class="text-[10px] text-slate-400 font-bold">QR</span>';
+            }
+            try {
+                const qr = window.qrcode(0, 'M');
+                qr.addData(value);
+                qr.make();
+                const count = qr.getModuleCount();
+                const quiet = 1;
+                const total = count + quiet * 2;
+                let pathData = '';
+                for (let r = 0; r < count; r++) {
+                    for (let c = 0; c < count; c++) {
+                        if (qr.isDark(r, c)) {
+                            pathData += `M${c + quiet},${r + quiet}h1v1h-1z`;
+                        }
+                    }
+                }
+                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges" class="w-full h-full"><rect width="${total}" height="${total}" fill="#ffffff"/><path d="${pathData}" fill="#0f172a"/></svg>`;
+            } catch (e) {
+                return '<span class="text-[10px] text-rose-500 font-bold">لینک طولانی</span>';
+            }
+        },
+
+        fillQrFromSocial(kind) {
+            if (kind === 'instagram') {
+                const raw = (this.form.instagram || '').trim().replace(/^@+/, '');
+                if (!raw) {
+                    this.showToast('ابتدا شناسه اینستاگرام گالری را در بخش سمت راست وارد کنید.', 'error');
+                    return;
+                }
+                this.form.qr_link = raw.startsWith('http') ? raw : 'https://instagram.com/' + raw;
+                if (!this.form.qr_label) this.form.qr_label = 'صفحه اینستاگرام گالری';
+                if (!this.form.qr_desc) this.form.qr_desc = 'مشاهده مدل‌ها و کارهای جدید';
+            } else if (kind === 'rubika') {
+                const raw = (this.form.rubika || '').trim().replace(/^@+/, '');
+                if (!raw) {
+                    this.showToast('ابتدا شناسه کانال روبیکا یا پیام‌رسان را وارد کنید.', 'error');
+                    return;
+                }
+                this.form.qr_link = raw.startsWith('http') ? raw : 'https://rubika.ir/' + raw;
+                if (!this.form.qr_label) this.form.qr_label = 'کانال نرخ لحظه‌ای گالری';
+                if (!this.form.qr_desc) this.form.qr_desc = 'اسکن جهت عضویت در کانال قیمت‌ها';
+            } else if (kind === 'phone') {
+                const raw = (this.form.phone || '').trim().replace(/[^\d+]/g, '');
+                if (!raw) {
+                    this.showToast('ابتدا شماره تماس مغازه را وارد کنید.', 'error');
+                    return;
+                }
+                this.form.qr_link = 'tel:' + raw;
+                if (!this.form.qr_label) this.form.qr_label = 'تماس و سفارش تلفنی';
+                if (!this.form.qr_desc) this.form.qr_desc = 'اسکن جهت شماره‌گیری مستقیم';
+            } else if (kind === 'board') {
+                this.form.qr_link = this.defaultBoardUrl;
+                if (!this.form.qr_label) this.form.qr_label = 'تابلوی آنلاین قیمت‌ها';
+                if (!this.form.qr_desc) this.form.qr_desc = 'مشاهده قیمت زنده در موبایل';
+            }
+        },
+
         showToast(message, type = 'success') {
             this.toast = { show: true, message, type };
+            if (window.showAdminToast) {
+                window.showAdminToast(message, type === 'success' ? 'success' : 'error');
+            }
             setTimeout(() => this.toast.show = false, 3500);
         },
 

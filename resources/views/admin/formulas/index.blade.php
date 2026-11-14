@@ -41,21 +41,71 @@
                 </span>
             </p>
 
-            <div class="flex items-center gap-4 mb-6">
+            <div class="flex items-center gap-4 mb-4">
                 {{-- A --}}
                 <div class="flex-1">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                        ضریب A <span class="text-xs font-normal text-amber-600 dark:text-amber-400">(قابل تغییر)</span>
+                    <label for="formula-a-input" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        ضریب A <span class="text-xs font-normal text-amber-700 dark:text-amber-400">(قابل تغییر)</span>
                     </label>
-                    <input type="number" min="1" x-model.number="a"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-amber-300 dark:border-amber-600 rounded-xl px-4 py-3 text-xl font-black text-center focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-shadow text-amber-700 dark:text-amber-400">
+                    <input id="formula-a-input" type="number" step="any" min="0.01" x-model.number="a" @input="syncPctFromRatio()"
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-amber-400 dark:border-amber-600 rounded-xl px-4 py-3 text-xl font-black text-center tabular-nums focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-shadow text-amber-700 dark:text-amber-400">
                 </div>
                 <div class="text-2xl font-black text-slate-400 dark:text-slate-500 mt-5">÷</div>
                 {{-- B --}}
                 <div class="flex-1">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">مقسوم‌علیه B</label>
-                    <input type="number" min="1" x-model.number="b"
-                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xl font-black text-center text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow">
+                    <label for="formula-b-input" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">مقسوم‌علیه B</label>
+                    <input id="formula-b-input" type="number" step="any" min="0.01" x-model.number="b" @input="syncPctFromRatio()"
+                           class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xl font-black text-center tabular-nums text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow">
+                </div>
+            </div>
+
+            {{-- انتخاب سریع نرخ عرف بازار + تنظیم درصدی --}}
+            <div class="mb-5 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/70 space-y-3">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <span class="text-xs font-black text-slate-700 dark:text-slate-300">انتخاب سریع بر اساس عرف بازار:</span>
+                    <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full tabular-nums"
+                          :class="discountPercent <= 0 ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300' : 'bg-blue-500/15 text-blue-700 dark:text-blue-300'"
+                          x-text="discountPercent > 0 ? discountPercent + '٪ زیر تابلو' : (discountPercent < 0 ? Math.abs(discountPercent) + '٪ بالای تابلو' : 'برابر تابلو')"></span>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                    <button type="button" @click="applyPreset(740, 750)"
+                            :class="Number(a) === 740 && Number(b) === 750 ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'"
+                            class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer">
+                        ۱.۳۳٪ کمتر (۷۴۰ / ۷۵۰)
+                    </button>
+                    <button type="button" @click="applyPreset(742.5, 750)"
+                            :class="Number(a) === 742.5 && Number(b) === 750 ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'"
+                            class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer">
+                        ۱٪ کمتر
+                    </button>
+                    <button type="button" @click="applyPreset(735, 750)"
+                            :class="Number(a) === 735 && Number(b) === 750 ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'"
+                            class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer">
+                        ۲٪ کمتر (۷۳۵ / ۷۵۰)
+                    </button>
+                    <button type="button" @click="applyPreset(727.5, 750)"
+                            :class="Number(a) === 727.5 && Number(b) === 750 ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'"
+                            class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer">
+                        ۳٪ کمتر
+                    </button>
+                    <button type="button" @click="applyPreset(750, 750)"
+                            :class="Number(a) === 750 && Number(b) === 750 ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'"
+                            class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors cursor-pointer">
+                        برابر تابلو
+                    </button>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <label for="quick-pct-input" class="text-[11px] font-bold text-slate-600 dark:text-slate-400 whitespace-nowrap">یا درصد کسر دلخواه:</label>
+                    <input id="quick-pct-input"
+                           type="number"
+                           step="0.1"
+                           min="0"
+                           max="30"
+                           x-model="pctInput"
+                           @input="applyPercentDiscount(pctInput)"
+                           placeholder="مثلاً 1.5"
+                           class="w-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-center tabular-nums text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                    <span class="text-xs text-slate-500 dark:text-slate-400">درصد زیر نرخ تابلو</span>
                 </div>
             </div>
 
@@ -83,26 +133,31 @@
 
             {{-- Live API price --}}
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 mb-4 text-white">
-                <p class="text-sm text-slate-400 mb-1">قیمت طلای ۱۸ عیار پایه (دریافتی تابلو)</p>
+                <p class="text-sm text-slate-300 mb-1">قیمت طلای ۱۸ عیار پایه (دریافتی تابلو)</p>
                 <p class="text-3xl font-black tabular-nums text-amber-400">
                     <span x-text="preview ? formatNumber(preview.gold18Tablo) : '---'"></span>
-                    <span class="text-base font-normal text-slate-400 mr-2">تومان</span>
+                    <span class="text-base font-normal text-slate-300 mr-2">تومان</span>
                 </p>
                 <div class="flex flex-col gap-1 mt-2">
-                    <p class="text-xs text-slate-500">
-                        اونس: <span x-text="preview ? formatNumber(preview.ouncePrice, 2) : '-'"></span> $ · تتر: <span x-text="preview ? formatNumber(preview.usdRate) : '-'"></span> تومان
+                    <p class="text-xs text-slate-300 tabular-nums">
+                        اونس: <span x-text="preview ? formatNumber(preview.ouncePrice, 2) : '-'"></span> $ · تتر: <span x-text="preview ? formatNumber(preview.usdtRate ?? preview.usdRate) : '-'"></span> تومان
                     </p>
                 </div>
             </div>
 
-            {{-- Buy price with current formula --}}
+            {{-- Buy price with live instant formula preview --}}
             <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 rounded-xl p-5 mb-4">
-                <p class="text-sm text-emerald-600 dark:text-emerald-400 mb-1">گرم خرید ۱۸ عیار (محاسباتی)</p>
+                <div class="flex items-center justify-between gap-2 mb-1">
+                    <p class="text-sm font-bold text-emerald-800 dark:text-emerald-300">گرم خرید ۱۸ عیار (پیش‌نمایش لحظه‌ای)</p>
+                    <span class="text-[11px] font-black px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 tabular-nums"
+                          x-show="preview && computedBuyGold > 0"
+                          x-text="diffFromTablo < 0 ? formatNumber(Math.abs(diffFromTablo)) + ' تومان کمتر' : (diffFromTablo > 0 ? formatNumber(diffFromTablo) + ' تومان بیشتر' : 'برابر تابلو')"></span>
+                </div>
                 <p class="text-3xl font-black tabular-nums text-emerald-700 dark:text-emerald-300">
-                    <span x-text="preview ? formatNumber(preview.buyGold) : '---'"></span>
-                    <span class="text-base font-normal text-emerald-500 mr-2">تومان</span>
+                    <span x-text="preview && computedBuyGold > 0 ? formatNumber(computedBuyGold) : '---'"></span>
+                    <span class="text-base font-normal text-emerald-700 dark:text-emerald-400 mr-2">تومان</span>
                 </p>
-                <p class="text-xs text-emerald-600 dark:text-emerald-500 mt-1" x-text="'فرمول: (طلای تابلو × ' + a + ') ÷ ' + b"></p>
+                <p class="text-xs text-emerald-700 dark:text-emerald-400 mt-1.5 tabular-nums" x-text="'فرمول فعلی: (طلای تابلو × ' + (a || 0) + ') ÷ ' + (b || 1)"></p>
             </div>
 
             <div class="text-xs text-slate-400 dark:text-slate-500 text-center mt-auto">
@@ -120,8 +175,8 @@
                 <p class="text-2xl font-black text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.ouncePrice, 2) : '---'"></p>
             </div>
             <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4">
-                <p class="text-xs text-slate-500 mb-1">نرخ تتر (دلار دیجیتال)</p>
-                <p class="text-2xl font-black text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.usdRate) : '---'"></p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">نرخ تتر (دلار دیجیتال)</p>
+                <p class="text-2xl font-black tabular-nums text-slate-800 dark:text-white" x-text="preview ? formatNumber(preview.usdtRate ?? preview.usdRate) : '---'"></p>
             </div>
             <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4">
                 <p class="text-xs text-amber-600 mb-1">قیمت واقعی طلای ۱۸ عیار</p>
@@ -141,6 +196,7 @@ function formulasPage() {
     return {
         a: 740,
         b: 750,
+        pctInput: '1.33',
         preview: null,
         message: { text: '', type: '' },
         isSaving: false,
@@ -148,6 +204,7 @@ function formulasPage() {
 
         async init() {
             await this.loadData();
+            this.syncPctFromRatio();
         },
 
         async loadData() {
@@ -168,33 +225,78 @@ function formulasPage() {
             }
         },
 
+        get computedBuyGold() {
+            const base = Number(this.preview?.gold18Tablo || 0);
+            const aVal = Number(this.a || 0);
+            const bVal = Number(this.b || 0);
+            if (base <= 0 || aVal <= 0 || bVal <= 0) return Number(this.preview?.buyGold || 0);
+            return Math.round((base * aVal) / bVal);
+        },
+
+        get diffFromTablo() {
+            const base = Number(this.preview?.gold18Tablo || 0);
+            if (base <= 0 || this.computedBuyGold <= 0) return 0;
+            return Math.round(this.computedBuyGold - base);
+        },
+
+        get discountPercent() {
+            const aVal = Number(this.a || 0);
+            const bVal = Number(this.b || 0);
+            if (aVal <= 0 || bVal <= 0) return 0;
+            return Number((((bVal - aVal) / bVal) * 100).toFixed(2));
+        },
+
+        syncPctFromRatio() {
+            const pct = this.discountPercent;
+            this.pctInput = pct > 0 ? String(pct) : '';
+        },
+
+        applyPreset(newA, newB) {
+            this.a = newA;
+            this.b = newB;
+            this.syncPctFromRatio();
+        },
+
+        applyPercentDiscount(rawVal) {
+            if (rawVal === '' || rawVal === null) return;
+            const pct = Number(rawVal);
+            if (Number.isNaN(pct) || pct < 0 || pct >= 50) return;
+            const baseB = Number(this.b || 750) > 0 ? Number(this.b || 750) : 750;
+            this.b = baseB;
+            this.a = Number((baseB * (1 - pct / 100)).toFixed(2));
+        },
+
         livePreviewPrice() {
-            if (this.preview && this.preview.gold18Real) {
-                return Math.round((this.preview.gold18Real * this.a) / this.b);
-            }
-            return Math.round((6940000 * this.a) / this.b);
+            return this.computedBuyGold;
         },
 
         async saveFormula() {
-            if (this.b <= 0 || this.a <= 0) {
+            const aVal = Number(this.a);
+            const bVal = Number(this.b);
+            if (!aVal || aVal <= 0 || !bVal || bVal <= 0) {
                 this.showMessage('A و B باید بزرگتر از صفر باشند.', 'error');
                 return;
             }
             this.isSaving = true;
             try {
-                await fetch('/admin/formulas/buy', {
+                const saveRes = await fetch('/admin/formulas/buy', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ buy_multiplier_a: this.a, buy_divisor_b: this.b })
+                    body: JSON.stringify({ buy_multiplier_a: aVal, buy_divisor_b: bVal })
                 });
+                if (!saveRes.ok) {
+                    const err = await saveRes.json().catch(() => ({}));
+                    throw new Error(err.message || 'خطا در ذخیره فرمول');
+                }
                 const previewRes = await fetch('/admin/formulas/global-18k-preview', { headers: { 'Accept': 'application/json' } });
                 this.preview = await previewRes.json();
-                this.showMessage('فرمول خرید با موفقیت ذخیره شد.', 'success');
+                this.showMessage('فرمول خرید با موفقیت ذخیره و روی تابلو اعمال شد.', 'success');
             } catch (e) {
-                this.showMessage(e.message, 'error');
+                this.showMessage(e.message || 'خطا در ذخیره فرمول', 'error');
             } finally {
                 this.isSaving = false;
             }
@@ -202,6 +304,9 @@ function formulasPage() {
 
         showMessage(text, type = 'success') {
             this.message = { text, type };
+            if (window.showAdminToast) {
+                window.showAdminToast(text, type === 'success' ? 'success' : 'error');
+            }
             setTimeout(() => this.message = { text: '', type: '' }, 3500);
         },
 
