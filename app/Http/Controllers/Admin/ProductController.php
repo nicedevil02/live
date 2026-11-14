@@ -291,13 +291,33 @@ class ProductController extends Controller
                     }
 
                     if ($src) {
+                        // اصلاح جهت EXIF در تصاویر موبایلی JPEG قبل از تبدیل به WebP
+                        if ($mime === 'image/jpeg' && function_exists('exif_read_data') && function_exists('imagerotate')) {
+                            $exif = @exif_read_data($realPath);
+                            $orientation = (int) ($exif['Orientation'] ?? 1);
+                            $angle = match ($orientation) {
+                                3 => 180,
+                                6 => -90,
+                                8 => 90,
+                                default => 0,
+                            };
+                            if ($angle !== 0) {
+                                $rotated = @imagerotate($src, $angle, 0);
+                                if ($rotated) {
+                                    imagedestroy($src);
+                                    $src = $rotated;
+                                }
+                            }
+                        }
+
                         $origW = imagesx($src);
                         $origH = imagesy($src);
-                        $maxW = 1200;
+                        $maxDim = 1200;
 
-                        if ($origW > $maxW) {
-                            $newW = $maxW;
-                            $newH = (int) round(($origH * $maxW) / $origW);
+                        if ($origW > $maxDim || $origH > $maxDim) {
+                            $scale = min($maxDim / $origW, $maxDim / $origH);
+                            $newW = max(1, (int) round($origW * $scale));
+                            $newH = max(1, (int) round($origH * $scale));
                             $dst = imagecreatetruecolor($newW, $newH);
                             // حفظ شفافیت در صورت وجود لایه آلفا
                             imagealphablending($dst, false);

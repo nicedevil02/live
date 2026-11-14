@@ -189,7 +189,7 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideSwap { 0% { opacity: 0; transform: scale(1.03) translate3d(0,0,0); } 100% { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
         @keyframes crossFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-        .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; will-change: opacity; }
+        .animate-crossFade { animation: crossFadeIn 0.7s ease-in-out forwards; }
         /* شیوه سخت‌افزاری اپل: ترنزیشن مقیاس مستقیم روی کارت گرافیک (Zero CPU / 60-120 FPS GPU Compositing) */
         .apple-zoom-img {
             position: absolute;
@@ -466,7 +466,6 @@
                 radial-gradient(ellipse 75% 65% at 85% 15%, rgba(49, 46, 129, 0.35) 0%, transparent 70%),
                 radial-gradient(ellipse 65% 55% at 15% 85%, rgba(15, 23, 42, 0.70) 0%, transparent 70%),
                 linear-gradient(145deg, #0f172a 0%, #070b14 50%, #020617 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .theme-bg-gold-royal {
@@ -475,7 +474,6 @@
                 radial-gradient(ellipse 75% 65% at 50% 12%, rgba(217, 119, 6, 0.22) 0%, transparent 65%),
                 radial-gradient(ellipse 60% 50% at 15% 85%, rgba(180, 83, 9, 0.18) 0%, transparent 65%),
                 linear-gradient(145deg, #1c0b02 0%, #0d0501 50%, #050200 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .theme-bg-blue-ocean {
@@ -484,7 +482,6 @@
                 radial-gradient(ellipse 75% 65% at 50% 12%, rgba(6, 182, 212, 0.22) 0%, transparent 65%),
                 radial-gradient(ellipse 65% 55% at 85% 85%, rgba(14, 165, 233, 0.18) 0%, transparent 65%),
                 linear-gradient(145deg, #06192e 0%, #030d1a 50%, #00040a 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .theme-bg-purple-haze {
@@ -493,7 +490,6 @@
                 radial-gradient(ellipse 75% 65% at 50% 12%, rgba(192, 38, 211, 0.22) 0%, transparent 65%),
                 radial-gradient(ellipse 65% 55% at 15% 85%, rgba(147, 51, 234, 0.18) 0%, transparent 65%),
                 linear-gradient(145deg, #1b072c 0%, #0e0317 50%, #04010a 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .theme-bg-emerald-night {
@@ -502,7 +498,6 @@
                 radial-gradient(ellipse 75% 65% at 50% 12%, rgba(16, 185, 129, 0.22) 0%, transparent 65%),
                 radial-gradient(ellipse 65% 55% at 85% 85%, rgba(5, 150, 105, 0.18) 0%, transparent 65%),
                 linear-gradient(145deg, #02261b 0%, #01140e 50%, #000604 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .theme-bg-rose-dark {
@@ -511,7 +506,6 @@
                 radial-gradient(ellipse 75% 65% at 50% 12%, rgba(244, 63, 94, 0.22) 0%, transparent 65%),
                 radial-gradient(ellipse 65% 55% at 15% 85%, rgba(225, 29, 72, 0.18) 0%, transparent 65%),
                 linear-gradient(145deg, #2b020d 0%, #150006 50%, #060002 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .theme-bg-pure-black {
@@ -532,13 +526,10 @@
                 radial-gradient(ellipse 70% 60% at 50% 85%, rgba(254, 215, 170, 0.30) 0%, transparent 70%),
                 radial-gradient(ellipse 50% 50% at 85% 85%, rgba(224, 231, 255, 0.28) 0%, transparent 70%),
                 linear-gradient(135deg, #fdfbf7 0%, #f7f5f0 50%, #f1f4f9 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .neu-card-light-modern {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.72) 0%, rgba(248, 250, 252, 0.50) 100%) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 0 rgba(255, 255, 255, 0.4), -5px -5px 14px rgba(255, 255, 255, 0.9), 5px 8px 20px rgba(148, 163, 184, 0.22) !important;
             border: 1px solid rgba(255, 255, 255, 0.88) !important;
             transform: translateZ(0);
@@ -557,13 +548,10 @@
                 radial-gradient(ellipse 65% 50% at 15% 15%, rgba(251, 191, 36, 0.08) 0%, transparent 60%),
                 radial-gradient(ellipse 60% 45% at 85% 85%, rgba(180, 83, 9, 0.09) 0%, transparent 60%),
                 linear-gradient(145deg, #07090f 0%, #030407 50%, #000103 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .neu-card-imperial-onyx {
             background: linear-gradient(145deg, rgba(22, 28, 42, 0.52) 0%, rgba(10, 14, 23, 0.68) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1px solid rgba(251, 191, 36, 0.38) !important;
             box-shadow: 
                 inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.22),
@@ -586,8 +574,6 @@
         .neu-hero-gold-imperial {
             position: relative;
             background: linear-gradient(145deg, rgba(69, 26, 3, 0.88) 0%, rgba(30, 11, 2, 0.94) 50%, rgba(15, 5, 1, 0.98) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(251, 191, 36, 0.70) !important;
             box-shadow: 
                 inset 0 2px 2px 0 rgba(255, 255, 255, 0.40),
@@ -624,13 +610,10 @@
                 radial-gradient(ellipse 65% 50% at 85% 85%, rgba(217, 119, 6, 0.10) 0%, transparent 60%),
                 radial-gradient(ellipse 50% 50% at 85% 15%, rgba(224, 231, 255, 0.45) 0%, transparent 60%),
                 linear-gradient(145deg, #fafafa 0%, #f4f5f9 50%, #ebedf5 100%) !important;
-            background-attachment: fixed !important;
         }
 
         .neu-card-imperial-pearl {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.72) 100%) !important;
-            backdrop-filter: blur(12px) saturate(135%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(135%) !important;
             border: 1.5px solid rgba(217, 119, 6, 0.35) !important;
             box-shadow: 
                 inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
@@ -655,8 +638,6 @@
         .neu-hero-gold-pearl {
             position: relative;
             background: linear-gradient(145deg, rgba(255, 253, 245, 0.97) 0%, rgba(254, 243, 199, 0.72) 50%, rgba(253, 230, 138, 0.50) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(217, 119, 6, 0.65) !important;
             box-shadow: 
                 inset 0 2px 2px 0 rgba(255, 255, 255, 1),
@@ -933,8 +914,6 @@
 
         .neu-card-dark-glass {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.48), rgba(15, 23, 42, 0.65)) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), -4px -4px 14px rgba(255, 255, 255, 0.04), 8px 12px 28px rgba(0, 0, 0, 0.65) !important;
             border: 1px solid rgba(255, 255, 255, 0.12) !important;
             transform: translateZ(0);
@@ -948,8 +927,6 @@
 
         .neu-card-gold-royal {
             background: linear-gradient(145deg, rgba(69, 26, 3, 0.55), rgba(20, 8, 0, 0.8)) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.22), -4px -4px 14px rgba(245, 158, 11, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(245, 158, 11, 0.22) !important;
             transform: translateZ(0);
@@ -963,8 +940,6 @@
 
         .neu-card-blue-ocean {
             background: linear-gradient(145deg, rgba(10, 25, 47, 0.55), rgba(2, 12, 27, 0.82)) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(34, 211, 238, 0.18), -4px -4px 14px rgba(6, 182, 212, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(6, 182, 212, 0.2) !important;
             transform: translateZ(0);
@@ -978,8 +953,6 @@
 
         .neu-card-purple-haze {
             background: linear-gradient(145deg, rgba(30, 11, 54, 0.55), rgba(15, 5, 29, 0.82)) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(232, 121, 249, 0.18), -4px -4px 14px rgba(217, 70, 239, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(217, 70, 239, 0.2) !important;
             transform: translateZ(0);
@@ -993,8 +966,6 @@
 
         .neu-card-emerald-night {
             background: linear-gradient(145deg, rgba(2, 44, 34, 0.55), rgba(1, 28, 21, 0.82)) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.18), -4px -4px 14px rgba(16, 185, 129, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(16, 185, 129, 0.2) !important;
             transform: translateZ(0);
@@ -1008,8 +979,6 @@
 
         .neu-card-rose-dark {
             background: linear-gradient(145deg, rgba(63, 2, 18, 0.55), rgba(28, 0, 7, 0.82)) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(251, 113, 133, 0.18), -4px -4px 14px rgba(244, 63, 94, 0.08), 8px 12px 28px rgba(0, 0, 0, 0.75) !important;
             border: 1px solid rgba(244, 63, 94, 0.2) !important;
             transform: translateZ(0);
@@ -1023,8 +992,6 @@
 
         .neu-card-pure-black {
             background: linear-gradient(145deg, rgba(24, 24, 27, 0.75), rgba(9, 9, 11, 0.92)) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), -3px -3px 10px rgba(255, 255, 255, 0.03), 6px 8px 24px rgba(0, 0, 0, 0.95) !important;
             border: 1px solid rgba(255, 255, 255, 0.11) !important;
             transform: translateZ(0);
@@ -1040,8 +1007,6 @@
         .neu-hero-blue-ocean {
             position: relative;
             background: linear-gradient(145deg, rgba(6, 40, 75, 0.85) 0%, rgba(2, 18, 38, 0.94) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(34, 211, 238, 0.65) !important;
             box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(6, 182, 212, 0.40), 0 0 16px rgba(34, 211, 238, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
@@ -1064,8 +1029,6 @@
         .neu-hero-purple-haze {
             position: relative;
             background: linear-gradient(145deg, rgba(55, 12, 85, 0.85) 0%, rgba(22, 5, 36, 0.94) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(217, 70, 239, 0.65) !important;
             box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(192, 38, 211, 0.40), 0 0 16px rgba(217, 70, 239, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
@@ -1088,8 +1051,6 @@
         .neu-hero-emerald-night {
             position: relative;
             background: linear-gradient(145deg, rgba(4, 55, 40, 0.85) 0%, rgba(1, 24, 17, 0.94) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(52, 211, 153, 0.65) !important;
             box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(16, 185, 129, 0.40), 0 0 16px rgba(52, 211, 153, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
@@ -1112,8 +1073,6 @@
         .neu-hero-rose-dark {
             position: relative;
             background: linear-gradient(145deg, rgba(75, 4, 25, 0.85) 0%, rgba(30, 1, 9, 0.94) 100%) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
             border: 1.5px solid rgba(251, 113, 133, 0.65) !important;
             box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.35), 0 10px 28px -4px rgba(244, 63, 94, 0.40), 0 0 16px rgba(251, 113, 133, 0.20) !important;
             transform: translate3d(0, 0, 0) !important;
@@ -1136,8 +1095,6 @@
         .neu-hero-pure-black {
             position: relative;
             background: linear-gradient(145deg, rgba(20, 20, 23, 0.95) 0%, rgba(5, 5, 6, 0.98) 100%) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
             border: 1.5px solid rgba(251, 191, 36, 0.65) !important;
             box-shadow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.25), 0 10px 28px -4px rgba(0, 0, 0, 0.9), 0 0 16px rgba(251, 191, 36, 0.15) !important;
             transform: translate3d(0, 0, 0) !important;
@@ -1545,9 +1502,8 @@
             position: absolute;
             top: -30px;
             width: 2px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(56, 189, 248, 0.8) 50%, rgba(255, 255, 255, 0.95) 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(125, 211, 252, 0.88) 45%, #ffffff 100%);
             border-radius: 9999px;
-            filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.85));
             will-change: transform;
             animation: hdrRainFall linear infinite;
         }
@@ -1615,7 +1571,6 @@
         .hdr-cloud {
             position: absolute;
             will-change: transform;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
         }
         .hdr-cloud-1 {
             top: 10px;
@@ -1717,6 +1672,59 @@
         }
 
         /* =========================================================================
+           حالت هوشمند کاهش بار GPU مخصوص تلویزیون و اندرویدباکس (TV GPU-Lite Layer)
+           حفظ تمام انیمیشن‌ها، رنگ‌ها و امکانات با جایگزینی بلورهای پرهزینه با شیشه مات سبک
+           ========================================================================= */
+        .tv-gpu-lite [class*="backdrop-blur"],
+        .tv-gpu-lite [class*="neu-card"],
+        .tv-gpu-lite [class*="neu-hero"],
+        .tv-gpu-lite .price-grid-backdrop,
+        .tv-gpu-lite .slider-info-card-adaptive,
+        .tv-gpu-lite .slider-price-badge-adaptive,
+        .tv-gpu-lite .slider-top-badge,
+        .tv-gpu-lite .slider-chip,
+        .tv-gpu-lite header,
+        .tv-gpu-lite footer,
+        .tv-gpu-lite section,
+        .tv-gpu-lite [role="dialog"] {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .tv-gpu-lite .slider-info-card-adaptive {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(2, 6, 23, 0.92)) !important;
+        }
+        .tv-gpu-lite.theme-light-modern .slider-info-card-adaptive,
+        .tv-gpu-lite.theme-imperial-pearl .slider-info-card-adaptive,
+        .tv-gpu-lite.theme-bing-ceramic .slider-info-card-adaptive {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.88)) !important;
+        }
+        .tv-gpu-lite .slider-chip-dark {
+            background: rgba(15, 23, 42, 0.68) !important;
+            border-color: rgba(255, 255, 255, 0.22) !important;
+        }
+        .tv-gpu-lite .slider-chip-light {
+            background: rgba(255, 255, 255, 0.84) !important;
+            border-color: rgba(15, 23, 42, 0.12) !important;
+        }
+        .tv-gpu-lite .neu-card-bing-obsidian {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.84) 0%, rgba(2, 6, 23, 0.92) 100%) !important;
+        }
+        .tv-gpu-lite .neu-card-bing-studio {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.82) 0%, rgba(15, 23, 42, 0.90) 100%) !important;
+        }
+        .tv-gpu-lite .neu-card-bing-ceramic {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.90) 100%) !important;
+        }
+        .tv-gpu-lite .neu-hero-gold-obsidian,
+        .tv-gpu-lite .neu-hero-gold-studio {
+            background: linear-gradient(145deg, rgba(55, 20, 2, 0.92) 0%, rgba(20, 8, 0, 0.97) 100%) !important;
+        }
+        .tv-gpu-lite .neu-hero-gold-ceramic {
+            background: linear-gradient(145deg, rgba(255, 253, 245, 0.98) 0%, rgba(254, 243, 199, 0.92) 100%) !important;
+        }
+
+        /* =========================================================================
            حالت سبک / روان (Eco / Lite Mode Engine)
            توقف کامل تمام انیمیشن‌ها، فیلترهای بلور و پردازش‌های سنگین گرافیکی
            جهت کارکرد روان و بی‌نقص روی سیستم‌ها و تلویزیون‌های ضعیف
@@ -1726,6 +1734,7 @@
         .eco-mode *::after {
             animation: none !important;
             transition: none !important;
+            will-change: auto !important;
         }
 
         /* غیرفعال‌سازی فیلتر بلور پس‌زمینه در تمام بخش‌ها برای رفع فشار GPU */
@@ -1784,9 +1793,14 @@
            کاهش ۹۴ درصدی پردازش‌های شیدر GPU همراه با حفظ ۱۰۰٪ ظاهر شیشه‌ای و بردرهای لوکس
            ========================================================================= */
         .price-grid-backdrop {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-bing-daily:not(.tv-gpu-lite):not(.eco-mode) .price-grid-backdrop,
+        .theme-bing-studio:not(.tv-gpu-lite):not(.eco-mode) .price-grid-backdrop,
+        .theme-bing-ceramic:not(.tv-gpu-lite):not(.eco-mode) .price-grid-backdrop {
             backdrop-filter: blur(14px) saturate(140%);
             -webkit-backdrop-filter: blur(14px) saturate(140%);
-            background: rgba(0, 0, 0, 0.05);
         }
 
         .theme-imperial-pearl .price-grid-backdrop,
@@ -1795,11 +1809,16 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
-        /* لغو فیلترهای بلور مجزای ۱۶ کارت درون استیج (استفاده از بلور یکپارچه پس‌زمینه) */
+        /* لغو فیلترهای بلور مجزای کارت‌ها درون استیج و آزادسازی تکسچرهای بی‌حرکت در GPU */
         .price-grid [class*="neu-card"],
         .price-grid [class*="neu-hero"] {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
+        }
+
+        .price-grid [class*="neu-card"]:not(:hover) {
+            transform: none;
+            backface-visibility: visible;
         }
 
         .eco-mode .price-grid-backdrop {
@@ -1886,8 +1905,8 @@
         }
     </style>
 </head>
-<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="if (!isMobileCustomerView) toggleFullscreen()" @keydown.window="handleKeydown($event)">
-    <main x-show="!isLoading" :class="[theme.bg, 'theme-' + themeKey, ecoMode ? 'eco-mode' : '', isMobileCustomerView ? 'relative min-h-screen w-full overflow-x-hidden overflow-y-auto select-auto' : 'fixed inset-0 w-screen h-screen overflow-hidden select-none']" class="transition-colors duration-1000">
+<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '', isTvGpuLite ? 'tv-gpu-lite' : '']" x-data="displayApp(@js($snapshot))" @dblclick="if (!isMobileCustomerView) toggleFullscreen()" @keydown.window="handleKeydown($event)">
+    <main x-show="!isLoading" :class="[theme.bg, 'theme-' + themeKey, ecoMode ? 'eco-mode' : '', isTvGpuLite ? 'tv-gpu-lite' : '', isMobileCustomerView ? 'relative min-h-screen w-full overflow-x-hidden overflow-y-auto select-auto' : 'fixed inset-0 w-screen h-screen overflow-hidden select-none']" class="transition-colors duration-1000">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -1966,24 +1985,26 @@
             </div>
         </div>
 
-        {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با فیلترهای کنتراست داینامیک سینمایی) --}}
-        <div x-show="isBingTheme" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
-            <img :src="bingWallpaperUrl" 
-                 alt="تصویر پس‌زمینه روز تابلوی طلالایو" 
-                 width="1920" height="1080"
-                 loading="lazy" decoding="async"
-                 class="w-full h-full object-cover transition-opacity duration-1000"
-                 x-on:error="$el.src = '/images/bing/today.jpg'">
+        {{-- Bing Daily Wallpaper Canvas (عکس روز بینگ با لایه کنتراست سبک بدون بلور تمام‌صفحه) --}}
+        <template x-if="isBingTheme">
+            <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+                <img :src="bingWallpaperUrl" 
+                     alt="تصویر پس‌زمینه روز تابلوی طلالایو" 
+                     width="1920" height="1080"
+                     loading="lazy" decoding="async"
+                     class="w-full h-full object-cover transition-opacity duration-1000"
+                     x-on:error="$el.src = '/images/bing/today.jpg'">
 
-            {{-- 1. Scrim ابسیدین لوکس: لایه مخملین سینمایی برای مهار اشعه زننده و حفظ زیبایی تصویر --}}
-            <div x-show="themeKey === 'bing-daily'" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/65 to-slate-950/50 backdrop-blur-[1px] backdrop-contrast-[1.10]"></div>
+                {{-- 1. Scrim ابسیدین لوکس: لایه مخملین سینمایی برای مهار اشعه زننده و حفظ زیبایی تصویر --}}
+                <div x-show="themeKey === 'bing-daily'" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/65 to-slate-950/50"></div>
 
-            {{-- 2. Scrim استودیو: لایه ملایم نیمه‌تاریک --}}
-            <div x-show="themeKey === 'bing-studio'" class="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px]"></div>
+                {{-- 2. Scrim استودیو: لایه ملایم نیمه‌تاریک --}}
+                <div x-show="themeKey === 'bing-studio'" class="absolute inset-0 bg-slate-950/50"></div>
 
-            {{-- 3. Scrim پرسلین سرامیک: لایه روشن طبیعی --}}
-            <div x-show="themeKey === 'bing-ceramic'" class="absolute inset-0 bg-slate-950/20 backdrop-contrast-[1.05]"></div>
-        </div>
+                {{-- 3. Scrim پرسلین سرامیک: لایه روشن طبیعی --}}
+                <div x-show="themeKey === 'bing-ceramic'" class="absolute inset-0 bg-slate-950/20"></div>
+            </div>
+        </template>
 
         {{-- Luxury Silk Wave Vector (اختصاصی تم روشن - کاملاً استاتیک و بدون هیچ‌گونه بار پردازنده) --}}
         <template x-if="themeKey === 'light-modern'">
@@ -2026,103 +2047,116 @@
             </div>
         </template>
 
-        {{-- Apple Premium Ambient Floating Orbs Engine (۱۲ گوی نورانی، تفکیک‌شده، متحرک و سبک اپل) --}}
-        <div class="ambient-orb-container" :class="'theme-' + themeKey" x-show="!ecoMode && !isBingTheme && themeKey !== 'pure-black'">
-            <div class="ambient-orb orb-1"></div>
-            <div class="ambient-orb orb-2"></div>
-            <div class="ambient-orb orb-3"></div>
-            <div class="ambient-orb orb-4"></div>
-            <div class="ambient-orb orb-5"></div>
-            <div class="ambient-orb orb-6"></div>
-            <div class="ambient-orb orb-7"></div>
-            <div class="ambient-orb orb-8"></div>
-            <div class="ambient-orb orb-9"></div>
-            <div class="ambient-orb orb-10"></div>
-            <div class="ambient-orb orb-11"></div>
-            <div class="ambient-orb orb-12"></div>
-        </div>
+        {{-- Apple Premium Ambient Floating Orbs Engine (۱۲ گوی نورانی، فقط هنگام فعال بودن پوسته گوی‌دار) --}}
+        <template x-if="!ecoMode && !isBingTheme && themeKey !== 'pure-black'">
+            <div class="ambient-orb-container" :class="'theme-' + themeKey">
+                <div class="ambient-orb orb-1"></div>
+                <div class="ambient-orb orb-2"></div>
+                <div class="ambient-orb orb-3"></div>
+                <div class="ambient-orb orb-4"></div>
+                <div class="ambient-orb orb-5"></div>
+                <div class="ambient-orb orb-6"></div>
+                <div class="ambient-orb orb-7"></div>
+                <div class="ambient-orb orb-8"></div>
+                <div class="ambient-orb orb-9"></div>
+                <div class="ambient-orb orb-10"></div>
+                <div class="ambient-orb orb-11"></div>
+                <div class="ambient-orb orb-12"></div>
+            </div>
+        </template>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
-        <div id="tv-stage-viewport" x-show="showTvStage" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
+        <template x-if="showTvStage">
+        <div id="tv-stage-viewport" x-init="applyStageScale(); $nextTick(() => applyStageScale())" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
             <div id="tv-stage-canvas" class="pointer-events-auto absolute left-0 top-0 w-[1920px] h-[1080px] p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none">
 
             {{-- Header --}}
             <header :class="theme.headerBg" class="display-header rounded-[2rem] px-8 py-3.5 h-[136px] flex flex-row items-center justify-between gap-4 shrink-0 animate-fadeInUp shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 relative overflow-hidden">
 
-                {{-- جلوه زنده و متحرک وضعیت جوی شهر (منحصراً در نوار بالای تابلو با وضوح بالا) --}}
+                {{-- جلوه زنده و متحرک وضعیت جوی شهر (ساخت DOM منحصراً برای وضعیت فعال فعلی با x-if) --}}
                 <template x-if="weather && (settings.show_weather_bg ?? true) && !ecoMode">
                     <div class="weather-header-stage absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-[2rem]">
                         
                         {{-- ۱. باران و رعدوبرق در هدر --}}
-                        <div x-show="weather.icon === 'rain' || weather.icon === 'thunder'" class="absolute inset-0 overflow-hidden" :class="weather.icon === 'thunder' ? 'hdr-thunder-active' : ''">
-                            @for($i = 0; $i < 36; $i++)
-                                @php
-                                    $left = ($i * 2.77) . '%';
-                                    $delay = (round((($i * 13) % 180) / 100, 2)) . 's';
-                                    $dur = (round(0.42 + ((($i * 7) % 30) / 100), 2)) . 's';
-                                    $h = (18 + (($i * 5) % 20)) . 'px';
-                                    $op = round(0.55 + (($i % 4) * 0.15), 2);
-                                @endphp
-                                <span class="hdr-raindrop" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; height: {{ $h }}; opacity: {{ $op }};"></span>
-                            @endfor
-                        </div>
+                        <template x-if="weather.icon === 'rain' || weather.icon === 'thunder'">
+                            <div class="absolute inset-0 overflow-hidden" :class="weather.icon === 'thunder' ? 'hdr-thunder-active' : ''">
+                                @for($i = 0; $i < 36; $i++)
+                                    @php
+                                        $left = ($i * 2.77) . '%';
+                                        $delay = (round((($i * 13) % 180) / 100, 2)) . 's';
+                                        $dur = (round(0.42 + ((($i * 7) % 30) / 100), 2)) . 's';
+                                        $h = (18 + (($i * 5) % 20)) . 'px';
+                                        $op = round(0.55 + (($i % 4) * 0.15), 2);
+                                    @endphp
+                                    <span class="hdr-raindrop" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; height: {{ $h }}; opacity: {{ $op }};"></span>
+                                @endfor
+                            </div>
+                        </template>
 
                         {{-- ۲. برف در هدر --}}
-                        <div x-show="weather.icon === 'snow'" class="absolute inset-0 overflow-hidden">
-                            @for($i = 0; $i < 28; $i++)
-                                @php
-                                    $left = ($i * 3.57) . '%';
-                                    $delay = (round((($i * 23) % 300) / 100, 2)) . 's';
-                                    $dur = (round(2.2 + ((($i * 5) % 20) / 10), 1)) . 's';
-                                    $size = (5 + (($i * 3) % 8)) . 'px';
-                                    $sway = (($i % 2 === 0 ? 1 : -1) * (12 + (($i * 4) % 24))) . 'px';
-                                @endphp
-                                <span class="hdr-snowflake" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }}; --sway: {{ $sway }};"></span>
-                            @endfor
-                        </div>
+                        <template x-if="weather.icon === 'snow'">
+                            <div class="absolute inset-0 overflow-hidden">
+                                @for($i = 0; $i < 28; $i++)
+                                    @php
+                                        $left = ($i * 3.57) . '%';
+                                        $delay = (round((($i * 23) % 300) / 100, 2)) . 's';
+                                        $dur = (round(2.2 + ((($i * 5) % 20) / 10), 1)) . 's';
+                                        $size = (5 + (($i * 3) % 8)) . 'px';
+                                        $sway = (($i % 2 === 0 ? 1 : -1) * (12 + (($i * 4) % 24))) . 'px';
+                                    @endphp
+                                    <span class="hdr-snowflake" style="left: {{ $left }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }}; --sway: {{ $sway }};"></span>
+                                @endfor
+                            </div>
+                        </template>
 
                         {{-- ۳. آفتابی و روز صاف در هدر --}}
-                        <div x-show="weather.icon === 'sun'" class="absolute inset-0 overflow-hidden">
-                            <div class="hdr-sun-glow"></div>
-                            <div class="hdr-sun-beam"></div>
-                            @for($i = 0; $i < 16; $i++)
-                                @php
-                                    $left = (round(5 + ($i * 6), 1)) . '%';
-                                    $top = (15 + (($i * 17) % 65)) . '%';
-                                    $delay = (round($i * 0.4, 2)) . 's';
-                                    $dur = (3 + ($i % 4)) . 's';
-                                @endphp
-                                <span class="hdr-sun-mote" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }};"></span>
-                            @endfor
-                        </div>
+                        <template x-if="weather.icon === 'sun'">
+                            <div class="absolute inset-0 overflow-hidden">
+                                <div class="hdr-sun-glow"></div>
+                                <div class="hdr-sun-beam"></div>
+                                @for($i = 0; $i < 16; $i++)
+                                    @php
+                                        $left = (round(5 + ($i * 6), 1)) . '%';
+                                        $top = (15 + (($i * 17) % 65)) . '%';
+                                        $delay = (round($i * 0.4, 2)) . 's';
+                                        $dur = (3 + ($i % 4)) . 's';
+                                    @endphp
+                                    <span class="hdr-sun-mote" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }};"></span>
+                                @endfor
+                            </div>
+                        </template>
 
                         {{-- ۴. آسمان شب و ستاره‌ها در هدر --}}
-                        <div x-show="weather.icon === 'moon'" class="absolute inset-0 overflow-hidden">
-                            <div class="hdr-night-glow"></div>
-                            @for($i = 0; $i < 28; $i++)
-                                @php
-                                    $left = (round(3 + ($i * 3.4), 1)) . '%';
-                                    $top = (10 + (($i * 23) % 75)) . '%';
-                                    $delay = (round((($i * 7) % 25) / 10, 1)) . 's';
-                                    $dur = (1.5 + (($i % 4) * 0.5)) . 's';
-                                    $size = (2 + ($i % 3)) . 'px';
-                                @endphp
-                                <span class="hdr-star" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }};"></span>
-                            @endfor
-                        </div>
+                        <template x-if="weather.icon === 'moon'">
+                            <div class="absolute inset-0 overflow-hidden">
+                                <div class="hdr-night-glow"></div>
+                                @for($i = 0; $i < 28; $i++)
+                                    @php
+                                        $left = (round(3 + ($i * 3.4), 1)) . '%';
+                                        $top = (10 + (($i * 23) % 75)) . '%';
+                                        $delay = (round((($i * 7) % 25) / 10, 1)) . 's';
+                                        $dur = (1.5 + (($i % 4) * 0.5)) . 's';
+                                        $size = (2 + ($i % 3)) . 'px';
+                                    @endphp
+                                    <span class="hdr-star" style="left: {{ $left }}; top: {{ $top }}; animation-delay: {{ $delay }}; animation-duration: {{ $dur }}; width: {{ $size }}; height: {{ $size }};"></span>
+                                @endfor
+                            </div>
+                        </template>
 
                         {{-- ۵. ابرها در هدر (کاملاً واضح و متحرک) --}}
-                        <div x-show="weather.icon === 'cloud' || weather.icon === 'cloud-sun'" class="hdr-cloud-wrapper">
-                            <svg class="hdr-cloud hdr-cloud-1 text-white/45 dark:text-white/30" viewBox="0 0 120 60" fill="currentColor">
-                                <path d="M25 45h70a18 18 0 0 0 5-35 24 24 0 0 0-45-8 18 18 0 0 0-30 18 16 16 0 0 0 0 25z"/>
-                            </svg>
-                            <svg class="hdr-cloud hdr-cloud-2 text-sky-100/50 dark:text-sky-200/25" viewBox="0 0 140 70" fill="currentColor">
-                                <path d="M30 52h80a20 20 0 0 0 6-39 28 28 0 0 0-52-10 20 20 0 0 0-34 20 18 18 0 0 0 0 29z"/>
-                            </svg>
-                            <svg class="hdr-cloud hdr-cloud-3 text-slate-100/45 dark:text-slate-300/25" viewBox="0 0 110 55" fill="currentColor">
-                                <path d="M22 42h66a16 16 0 0 0 5-31 22 22 0 0 0-41-8 16 16 0 0 0-30 16 14 14 0 0 0 0 23z"/>
-                            </svg>
-                        </div>
+                        <template x-if="weather.icon === 'cloud' || weather.icon === 'cloud-sun'">
+                            <div class="hdr-cloud-wrapper">
+                                <svg class="hdr-cloud hdr-cloud-1 text-white/45 dark:text-white/30" viewBox="0 0 120 60" fill="currentColor">
+                                    <path d="M25 45h70a18 18 0 0 0 5-35 24 24 0 0 0-45-8 18 18 0 0 0-30 18 16 16 0 0 0 0 25z"/>
+                                </svg>
+                                <svg class="hdr-cloud hdr-cloud-2 text-sky-100/50 dark:text-sky-200/25" viewBox="0 0 140 70" fill="currentColor">
+                                    <path d="M30 52h80a20 20 0 0 0 6-39 28 28 0 0 0-52-10 20 20 0 0 0-34 20 18 18 0 0 0 0 29z"/>
+                                </svg>
+                                <svg class="hdr-cloud hdr-cloud-3 text-slate-100/45 dark:text-slate-300/25" viewBox="0 0 110 55" fill="currentColor">
+                                    <path d="M22 42h66a16 16 0 0 0 5-31 22 22 0 0 0-41-8 16 16 0 0 0-30 16 14 14 0 0 0 0 23z"/>
+                                </svg>
+                            </div>
+                        </template>
 
                     </div>
                 </template>
@@ -2238,48 +2272,48 @@
 
                     {{-- ویجت آب‌وهوای زنده شهر مغازه (طرح اول) --}}
                     <template x-if="weather && (settings.show_weather ?? true)">
-                        <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/90 border-amber-300/50 text-amber-950 shadow-[-2px_-2px_6px_rgba(255,255,255,1),3px_3px_8px_rgba(148,163,184,0.2)]' : 'bg-white/80 border-slate-200 text-slate-800 shadow-sm') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/40 border-amber-400/35 text-amber-100 shadow-[inset_0_1px_1px_rgba(251,191,36,0.2),0_4px_12px_rgba(0,0,0,0.6)]' : (isBingTheme ? 'bg-white/10 border-white/15 text-white backdrop-blur-xl' : 'bg-black/20 border-white/10 text-white backdrop-blur-md'))"
-                             class="flex items-center gap-2 px-3 py-1.5 rounded-2xl border transition-all duration-300 shrink-0 select-none shadow-sm hover:scale-[1.02]">
+                        <div :class="isLightTheme ? (themeKey === 'imperial-pearl' ? 'bg-white/95 border-amber-300/60 text-amber-950 shadow-[-2px_-2px_6px_rgba(255,255,255,1),0_8px_20px_rgba(148,163,184,0.22)]' : 'bg-white/90 border-slate-200/90 text-slate-900 shadow-[0_8px_20px_rgba(15,23,42,0.09)]') : (themeKey === 'imperial-onyx' ? 'bg-amber-950/50 border-amber-400/45 text-amber-50 shadow-[inset_0_1px_1px_rgba(251,191,36,0.28),0_8px_22px_rgba(0,0,0,0.65)]' : (isBingTheme ? 'bg-slate-950/45 border-white/25 text-white backdrop-blur-xl shadow-[0_10px_26px_rgba(0,0,0,0.45)]' : 'bg-white/[0.08] border-white/20 text-white shadow-[0_10px_26px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.14)]'))"
+                             class="flex items-center gap-3.5 px-4 xl:px-5 py-2.5 xl:py-3 rounded-2xl border transition-all duration-300 shrink-0 select-none hover:scale-[1.02]">
                             
                             {{-- آیکون وضعیت آب‌وهوا --}}
-                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                            <div class="w-12 h-12 xl:w-14 xl:h-14 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 shadow-inner"
                                  :class="weather.iconBg || 'bg-amber-500/20 text-amber-400'">
                                 <template x-if="weather.icon === 'sun'">
-                                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
                                 </template>
                                 <template x-if="weather.icon === 'moon'">
-                                    <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                                 </template>
                                 <template x-if="weather.icon === 'cloud-sun'">
-                                    <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41M2 12h2m17.66 5.66A6 6 0 0012 10a6 6 0 00-6 6h15z"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41M2 12h2m17.66 5.66A6 6 0 0012 10a6 6 0 00-6 6h15z"/></svg>
                                 </template>
                                 <template x-if="weather.icon === 'cloud'">
-                                    <svg class="w-4 h-4 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h11a5 5 0 001.5-9.77A7 7 0 005.5 11 4 4 0 003 15z"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h11a5 5 0 001.5-9.77A7 7 0 005.5 11 4 4 0 003 15z"/></svg>
                                 </template>
                                 <template x-if="weather.icon === 'rain'">
-                                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 13v6m-4-4v6m-4-4v6M20 16.58A5 5 0 0018 7h-1.26A8 8 0 104 15.25"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 13v6m-4-4v6m-4-4v6M20 16.58A5 5 0 0018 7h-1.26A8 8 0 104 15.25"/></svg>
                                 </template>
                                 <template x-if="weather.icon === 'snow'">
-                                    <svg class="w-4 h-4 text-cyan-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m17 7l-14-14m0 14L19 5"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-cyan-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m10-10H2m17 7l-14-14m0 14L19 5"/></svg>
                                 </template>
                                 <template x-if="weather.icon === 'thunder'">
-                                    <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                    <svg class="w-7 h-7 xl:w-8 xl:h-8 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                                 </template>
                             </div>
 
                             {{-- جزییات دما و نام شهر --}}
-                            <div class="flex flex-col text-right leading-tight">
-                                <div class="flex items-center gap-1" dir="ltr">
-                                    <span class="text-base xl:text-lg font-black font-mono tracking-tight" x-text="weather.temp_farsi + '°C'"></span>
-                                    <span :class="theme.textPrimary" class="text-xs font-bold truncate max-w-[80px]" dir="rtl" x-text="weather.city"></span>
+                            <div class="flex flex-col text-right justify-center gap-1 min-w-0">
+                                <div class="flex items-baseline gap-2" dir="ltr">
+                                    <span class="text-2xl xl:text-[28px] font-black font-mono tracking-tight leading-none" x-text="weather.temp_farsi + '°C'"></span>
+                                    <span :class="theme.textPrimary" class="text-sm xl:text-base font-extrabold leading-none truncate max-w-[125px]" dir="rtl" x-text="weather.city"></span>
                                 </div>
-                                <span :class="theme.textSecondary" class="text-[10px] font-semibold opacity-80 truncate max-w-[100px]" x-text="weather.description"></span>
+                                <span :class="theme.textSecondary" class="text-xs xl:text-sm font-bold opacity-90 truncate max-w-[190px] leading-tight" x-text="weather.description"></span>
                             </div>
                         </div>
                     </template>
 
                     {{-- خط عمودی جداکننده --}}
-                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-16"></div>
+                    <div :class="isLightTheme ? 'bg-black/10' : 'bg-white/10'" class="w-[1px] h-20"></div>
 
                     {{-- ساعت و تاریخ --}}
                     <div class="flex flex-col items-center justify-center text-center">
@@ -2307,6 +2341,7 @@
                                      style="contain: paint layout; will-change: opacity;">
                                     <img :key="'img-slot-' + slot.key"
                                          :src="slot.url || activeProductImageUrl" 
+                                         decoding="async"
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                          :alt="activeProduct?.title || ''"
                                          class="apple-zoom-img"
@@ -2836,9 +2871,9 @@
                                                         : (item.change_percent > 0 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25' : (item.change_percent < 0 ? 'bg-rose-500/15 text-rose-400 border-rose-500/25' : 'bg-white/5 text-slate-400 border-white/10'))))),
                                         index < 3 ? 'gap-2.5 text-sm xl:text-base px-3.5 py-1.5' : 'gap-2 text-xs xl:text-sm px-2.5 py-1'
                                     ]" dir="ltr">
-                                        <span x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
+                                        <span x-text="item.formattedPercentText || (formatSignedNumber(item.change_percent, 2) + '%')"></span>
                                         <span class="opacity-30">|</span>
-                                        <span x-text="(item.symbol === 'ounce' || item.symbol === 'bitcoin') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value)"></span>
+                                        <span x-text="item.formattedChangeValueText || ((item.symbol === 'ounce' || item.symbol === 'bitcoin') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value))"></span>
                                     </div>
 
                                     {{-- کپسول واحد پول (تومان / دلار) با اندازه و استایل کاملاً هماهنگ با کپسول درصد --}}
@@ -2861,7 +2896,7 @@
             </div>
 
             {{-- Premium Glassmorphic Footer --}}
-            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between gap-3 shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-5 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
+            <footer :class="[theme.footerBg, (isBingTheme && !ecoMode && !isTvGpuLite) ? 'backdrop-blur-2xl' : '']" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between gap-3 shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-5" style="animation-delay: 200ms;" dir="rtl">
                 
                 {{-- Background decorative glows inside the footer --}}
                 <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.15),transparent_50%)]"></div>
@@ -2963,7 +2998,7 @@
 
                     <span class="flex items-center gap-2 bg-black/15 dark:bg-white/10 border border-white/10 rounded-full px-3.5 py-1.5 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500" :class="ecoMode ? '' : 'animate-[pulse_1.5s_infinite]'"></span>
-                        <span dir="ltr" class="font-mono text-[11px]" x-text="errorMessage || (snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---')"></span>
+                        <span dir="ltr" class="font-mono text-[11px]" x-text="errorMessage || updatedTimeSecText"></span>
                     </span>
                 </div>
 
@@ -2971,11 +3006,11 @@
 
             </div>
         </div>
+        </template>
 
-        {{-- نمای اختصاصی موبایل مشتریان (هنگام اسکن QR روی گوشی هوشمند) --}}
-        <section x-show="isMobileCustomerView"
-                 x-cloak
-                 dir="rtl"
+        {{-- نمای اختصاصی موبایل مشتریان (هنگام اسکن QR روی گوشی هوشمند - فقط روی موبایل رندر می‌شود) --}}
+        <template x-if="isMobileCustomerView">
+        <section dir="rtl"
                  :class="(connectionState !== 'online' || (snapshotData?.isStale ?? false)) ? 'pt-11' : 'pt-4'"
                  class="relative z-20 mx-auto w-full max-w-md px-3.5 pb-8 space-y-3.5">
 
@@ -3119,6 +3154,7 @@
                     <div class="p-3.5 space-y-3">
                         <div class="relative rounded-xl overflow-hidden bg-slate-950/20 aspect-[4/3]">
                             <img :src="activeProductImageUrl"
+                                 decoding="async"
                                  x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                  :alt="activeProduct?.title || ''"
                                  class="w-full h-full object-cover">
@@ -3183,10 +3219,11 @@
             <footer class="pt-2 pb-4 text-center text-[11px] font-semibold opacity-75 space-y-1">
                 <p>
                     <span>آخرین به‌روزرسانی تابلو:</span>
-                    <span dir="ltr" class="font-mono" x-text="snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---'"></span>
+                    <span dir="ltr" class="font-mono" x-text="updatedTimeSecText"></span>
                 </p>
             </footer>
         </section>
+        </template>
 
         {{-- مودال اختصاصی قطع اتصال سازگار با ریموت کنترل تلویزیون --}}
         <div x-show="showDisconnectModal"
@@ -3479,15 +3516,111 @@
         };
 
 
+        const FA_NUM_FMT_0 = (typeof Intl !== 'undefined') ? new Intl.NumberFormat('fa-IR') : null;
+        const FA_NUM_FMT_1 = (typeof Intl !== 'undefined') ? new Intl.NumberFormat('fa-IR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : null;
+        const FA_NUM_FMT_2 = (typeof Intl !== 'undefined') ? new Intl.NumberFormat('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : null;
+        const FA_TIME_SEC_FMT = (typeof Intl !== 'undefined') ? new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : null;
+        const FA_TIME_MIN_FMT = (typeof Intl !== 'undefined') ? new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit' }) : null;
+        const FA_WEEKDAY_FMT = (typeof Intl !== 'undefined') ? new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }) : null;
+        const FA_DATE_FMT = (typeof Intl !== 'undefined') ? new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }) : null;
+        const TEHRAN_CLOCK_FMT = (function() {
+            try {
+                return new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Tehran', hour12: false, hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return null;
+            }
+        })();
+
         function formatNumber(value, decimals = 0) {
+            if (decimals === 0 && FA_NUM_FMT_0) return FA_NUM_FMT_0.format(Math.round(value));
+            if (decimals === 1 && FA_NUM_FMT_1) return FA_NUM_FMT_1.format(value);
+            if (decimals === 2 && FA_NUM_FMT_2) return FA_NUM_FMT_2.format(value);
             if (decimals > 0) return new Intl.NumberFormat('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
-            return new Intl.NumberFormat('fa-IR').format(Math.round(value));
+            return String(Math.round(value));
         }
 
         function formatSignedNumber(value, decimals = 0) {
             const number = Number(value || 0);
             const prefix = number > 0 ? '+' : number < 0 ? '-' : '';
             return prefix + formatNumber(Math.abs(number), decimals);
+        }
+
+        function buildOrderedMetricsBundle(data) {
+            const items = data?.displayItems || [];
+            const feed = data?.priceFeed || [];
+            const itemMap = Object.create(null);
+            const enabledKeys = [];
+            const sortedItems = items
+                .filter(i => i.enabled && i.key !== 'exchange_gold')
+                .sort((a, b) => a.order - b.order);
+            for (let i = 0; i < sortedItems.length; i++) {
+                const di = sortedItems[i];
+                enabledKeys.push(di.key);
+                itemMap[di.key] = di;
+            }
+            const keyOrder = Object.create(null);
+            for (let i = 0; i < enabledKeys.length; i++) {
+                keyOrder[enabledKeys[i]] = i;
+            }
+            let gold18IsStale = false;
+            const metrics = [];
+            for (let i = 0; i < feed.length; i++) {
+                const f = feed[i];
+                if (keyOrder[f.symbol] === undefined) continue;
+                const di = itemMap[f.symbol];
+                const label = (di && di.label) ? di.label : f.label;
+                const isOunceOrBtc = (f.symbol === 'ounce' || f.symbol === 'bitcoin');
+                const entry = {
+                    ...f,
+                    label,
+                    _isBuy18: /خرید.*(18|۱۸)/.test(label || ''),
+                    formattedPercentText: formatSignedNumber(f.change_percent, 2) + '%',
+                    formattedChangeValueText: formatSignedNumber(f.change_value, isOunceOrBtc ? 2 : 0),
+                };
+                if (entry.symbol === 'gold18') {
+                    gold18IsStale = Boolean(entry.is_stale);
+                }
+                metrics.push(entry);
+            }
+            metrics.sort((a, b) => keyOrder[a.symbol] - keyOrder[b.symbol]);
+            return { metrics, gold18IsStale };
+        }
+
+        function formatUpdatedAtBundle(dt) {
+            if (!dt) return { secText: '---', minText: '---' };
+            try {
+                const d = new Date(dt);
+                if (isNaN(d.getTime())) return { secText: dt, minText: dt };
+                return {
+                    secText: FA_TIME_SEC_FMT ? FA_TIME_SEC_FMT.format(d) : d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                    minText: FA_TIME_MIN_FMT ? FA_TIME_MIN_FMT.format(d) : d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
+                };
+            } catch (e) {
+                return { secText: dt, minText: dt };
+            }
+        }
+
+        function detectTvGpuLite() {
+            try {
+                if ({{ (($isTv ?? false) || ($isApp ?? false)) ? 'true' : 'false' }}) {
+                    return true;
+                }
+                const p = new URLSearchParams(window.location.search);
+                if (p.get('tv') === '1' || p.get('app') === '1') {
+                    return true;
+                }
+                const ua = navigator.userAgent || '';
+                if (/Tizen|Web0S|webOS|SMART-TV|SmartTV|BRAVIA|HbbTV|NetCast|AOSP|MiTV|MIBOX|Amlogic|Rockchip|CrKey/i.test(ua)) {
+                    return true;
+                }
+                if (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2) {
+                    return true;
+                }
+                if (/Android/i.test(ua) && typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) {
+                    return true;
+                }
+            } catch (e) {}
+            return false;
         }
 
         function displayApp(initialSnapshot) {
@@ -3498,8 +3631,21 @@
                     item.displayHtml = formatNumber(item.value, decimals);
                 });
             }
+            const initMetricsBundle = buildOrderedMetricsBundle(initialSnapshot);
+            const initUpdatedBundle = formatUpdatedAtBundle(initialSnapshot?.updatedAt);
+            const initNow = new Date();
+            const initDayKey = `${initNow.getFullYear()}-${initNow.getMonth()}-${initNow.getDate()}`;
+            let cachedQrTarget = '';
+            let cachedQrSvg = '';
+            let cachedTehranFallbackKey = -1;
+            let cachedTehranFallbackMin = 0;
+
             return {
                 snapshotData: initialSnapshot,
+                orderedMetricsList: initMetricsBundle.metrics,
+                gold18ItemIsStale: initMetricsBundle.gold18IsStale,
+                updatedTimeSecTextValue: initUpdatedBundle.secText,
+                staleTimeTextValue: initUpdatedBundle.minText,
                 subscriptionWarning: initialSnapshot?.subscriptionWarning || null,
                 showSubscriptionWarning: false,
                 isLoading: false, // چون داده‌ها را از سرور گرفته‌ایم
@@ -3517,7 +3663,12 @@
                 ],
                 storyActive: false,
                 sliderTimer: null,
-                now: new Date(),
+                clockDayKey: initDayKey,
+                timeTextValue: FA_TIME_SEC_FMT ? FA_TIME_SEC_FMT.format(initNow) : initNow.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                weekDayValue: FA_WEEKDAY_FMT ? FA_WEEKDAY_FMT.format(initNow) : initNow.toLocaleDateString('fa-IR', { weekday: 'long' }),
+                dateTextValue: FA_DATE_FMT ? FA_DATE_FMT.format(initNow) : initNow.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }),
+                clockMinutesFallback: (initNow.getHours() * 60) + initNow.getMinutes(),
+                isTvGpuLite: detectTvGpuLite(),
                 refreshTimer: null,
                 isFullscreen: false,
                 zoomLevel: parseFloat(localStorage.getItem('display_zoom') || '1.0'),
@@ -3627,16 +3778,7 @@
                     return '/icons/icon-512x512.png';
                 },
                 get orderedMetrics() {
-                    const items = this.snapshotData?.displayItems || [];
-                    const feed = this.snapshotData?.priceFeed || [];
-                    const enabledKeys = items.filter(i => i.enabled && i.key !== 'exchange_gold').sort((a,b) => a.order - b.order).map(i => i.key);
-                    return feed
-                        .filter(f => enabledKeys.includes(f.symbol))
-                        .sort((a,b) => enabledKeys.indexOf(a.symbol) - enabledKeys.indexOf(b.symbol))
-                        .map(f => {
-                            const di = items.find(i => i.key === f.symbol);
-                            return (di && di.label) ? { ...f, label: di.label } : f;
-                        });
+                    return this.orderedMetricsList;
                 },
                 isItemStale(item) {
                     if (!item) return false;
@@ -3645,9 +3787,8 @@
                     // اگر اسنپ‌شات کلی تابلو کهنه شده باشد
                     if (this.snapshotData?.isStale) return true;
                     // برای خرید طلای ۱۸، اگر طلای ۱۸ عیار کهنه باشد
-                    if (/خرید.*(18|۱۸)/.test(item.label || '')) {
-                        const g18 = this.orderedMetrics.find(m => m.symbol === 'gold18');
-                        if (g18 && g18.is_stale) return true;
+                    if (item._isBuy18 && this.gold18ItemIsStale) {
+                        return true;
                     }
                     return Boolean(item.is_stale);
                 },
@@ -3718,6 +3859,9 @@
                 },
                 get qrSvgMarkup() {
                     const target = this.qrTargetUrl;
+                    if (target === cachedQrTarget && cachedQrSvg) {
+                        return cachedQrSvg;
+                    }
                     if (!target || typeof window.qrcode !== 'function') {
                         return '<div class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">QR</div>';
                     }
@@ -3739,7 +3883,9 @@
                                 }
                             }
                         }
-                        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" class="w-full h-full block" shape-rendering="crispEdges" role="img" aria-label="QR Code"><rect width="100%" height="100%" fill="#ffffff"/><path d="${pathData}" fill="#0f172a"/></svg>`;
+                        cachedQrTarget = target;
+                        cachedQrSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" class="w-full h-full block" shape-rendering="crispEdges" role="img" aria-label="QR Code"><rect width="100%" height="100%" fill="#ffffff"/><path d="${pathData}" fill="#0f172a"/></svg>`;
+                        return cachedQrSvg;
                     } catch (e) {
                         return '<div class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">QR</div>';
                     }
@@ -3753,17 +3899,19 @@
                     if (typeof this.currentTehranMinutes === 'number' && !isNaN(this.currentTehranMinutes)) {
                         return this.currentTehranMinutes;
                     }
-                    try {
-                        const tehranClock = this.now.toLocaleTimeString('en-GB', {
-                            timeZone: 'Asia/Tehran',
-                            hour12: false,
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        return this.parseTimeToMinutes(tehranClock, (this.now.getHours() * 60) + this.now.getMinutes());
-                    } catch (e) {
-                        return (this.now.getHours() * 60) + this.now.getMinutes();
+                    const fallbackKey = this.clockMinutesFallback;
+                    if (cachedTehranFallbackKey === fallbackKey) {
+                        return cachedTehranFallbackMin;
                     }
+                    cachedTehranFallbackKey = fallbackKey;
+                    if (TEHRAN_CLOCK_FMT) {
+                        try {
+                            cachedTehranFallbackMin = this.parseTimeToMinutes(TEHRAN_CLOCK_FMT.format(new Date()), fallbackKey);
+                            return cachedTehranFallbackMin;
+                        } catch (e) {}
+                    }
+                    cachedTehranFallbackMin = fallbackKey;
+                    return cachedTehranFallbackMin;
                 },
                 get isDayWindow() {
                     const nowMin = this.effectiveTehranMinutes;
@@ -3849,20 +3997,11 @@
                     }
                     return Math.round(base + profit);
                 },
-                get weekDay() { return this.now.toLocaleDateString('fa-IR', { weekday: 'long' }); },
-                get dateText() { return this.now.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }); },
-                get timeText() { return this.now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); },
-                get staleTimeText() {
-                    const dt = this.snapshotData?.updatedAt;
-                    if (!dt) return '---';
-                    try {
-                        const d = new Date(dt);
-                        if (isNaN(d.getTime())) return dt;
-                        return d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-                    } catch (e) {
-                        return dt;
-                    }
-                },
+                get weekDay() { return this.weekDayValue; },
+                get dateText() { return this.dateTextValue; },
+                get timeText() { return this.timeTextValue; },
+                get updatedTimeSecText() { return this.updatedTimeSecTextValue; },
+                get staleTimeText() { return this.staleTimeTextValue; },
                 get refreshIntervalMs() {
                     const seconds = Number(this.snapshotData?.refreshIntervalSeconds || 60);
                     return Math.max(seconds, 5) * 1000;
@@ -4070,9 +4209,13 @@
                                             const symbolToReset = newItem.symbol;
                                             const targetValue = newItem.value;
                                             setTimeout(() => {
-                                                const targetItem = this.snapshotData.priceFeed.find(n => n.symbol === symbolToReset);
+                                                const targetItem = this.snapshotData?.priceFeed?.find(n => n.symbol === symbolToReset);
                                                 if (targetItem && targetItem.value === targetValue) {
                                                     targetItem.displayHtml = currentFormatted;
+                                                }
+                                                const cachedItem = this.orderedMetricsList.find(m => m.symbol === symbolToReset);
+                                                if (cachedItem && cachedItem.value === targetValue) {
+                                                    cachedItem.displayHtml = currentFormatted;
                                                 }
                                             }, 2300);
                                         }
@@ -4085,6 +4228,12 @@
                                 });
                             }
                             this.snapshotData = newData;
+                            const nextMetricsBundle = buildOrderedMetricsBundle(newData);
+                            this.orderedMetricsList = nextMetricsBundle.metrics;
+                            this.gold18ItemIsStale = nextMetricsBundle.gold18IsStale;
+                            const nextUpdatedBundle = formatUpdatedAtBundle(newData.updatedAt);
+                            this.updatedTimeSecTextValue = nextUpdatedBundle.secText;
+                            this.staleTimeTextValue = nextUpdatedBundle.minText;
                             if (typeof newData.tehranMinutes === 'number') {
                                 this.tehranAnchorMinutes = newData.tehranMinutes;
                                 this.tehranAnchorPerfMs = (typeof performance !== 'undefined') ? performance.now() : 0;
@@ -4103,6 +4252,10 @@
                                     this.showSubscriptionWarning = false;
                                 }
                             }
+                        } else if (newData && newData.updatedAt) {
+                            const nextUpdatedBundle = formatUpdatedAtBundle(newData.updatedAt);
+                            this.updatedTimeSecTextValue = nextUpdatedBundle.secText;
+                            this.staleTimeTextValue = nextUpdatedBundle.minText;
                         }
  
                         this.connectionState = 'online';
@@ -4444,12 +4597,31 @@
                     this.startSlider();
                     this.$watch('settings.slider_interval_sec', () => this.startSlider());
 
-                    // ساعت و همگام‌سازی خودکار ساعت تهران برای پوسته روز و شب
+                    // ساعت و همگام‌سازی خودکار ساعت تهران برای پوسته روز و شب (فقط تغییر ثانیه/دقیقه و تغییر روز)
                     setInterval(() => {
-                        this.now = new Date();
+                        const d = new Date();
+                        const nextTimeText = FA_TIME_SEC_FMT
+                            ? FA_TIME_SEC_FMT.format(d)
+                            : d.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        if (this.timeTextValue !== nextTimeText) {
+                            this.timeTextValue = nextTimeText;
+                        }
+                        const dayKey = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+                        if (this.clockDayKey !== dayKey) {
+                            this.clockDayKey = dayKey;
+                            this.weekDayValue = FA_WEEKDAY_FMT ? FA_WEEKDAY_FMT.format(d) : d.toLocaleDateString('fa-IR', { weekday: 'long' });
+                            this.dateTextValue = FA_DATE_FMT ? FA_DATE_FMT.format(d) : d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
+                        }
+                        const nextFallbackMin = (d.getHours() * 60) + d.getMinutes();
+                        if (this.clockMinutesFallback !== nextFallbackMin) {
+                            this.clockMinutesFallback = nextFallbackMin;
+                        }
                         if (typeof this.tehranAnchorMinutes === 'number' && typeof performance !== 'undefined') {
                             const elapsedMinutes = Math.floor((performance.now() - this.tehranAnchorPerfMs) / 60000);
-                            this.currentTehranMinutes = (this.tehranAnchorMinutes + Math.max(0, elapsedMinutes)) % 1440;
+                            const nextTehranMinutes = (this.tehranAnchorMinutes + Math.max(0, elapsedMinutes)) % 1440;
+                            if (this.currentTehranMinutes !== nextTehranMinutes) {
+                                this.currentTehranMinutes = nextTehranMinutes;
+                            }
                         }
                     }, 1000);
 
