@@ -151,6 +151,163 @@
                     </div>
                 </label>
             </div>
+
+            {{-- چیدمان، جزئیات ویترین و پیام پایین تابلو --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">چیدمان تابلو، ویترین و نوار اعلان</h3>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                          x-text="Boolean(settings.hide_showcase) ? 'نرخ تمام‌عرض' : 'نرخ + ویترین محصول'"></span>
+                </div>
+
+                <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40 cursor-pointer transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">حالت تمام‌صفحه نرخ‌ها (بستن ویترین محصولات)</span>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">ستون اسلایدر محصول مخفی می‌شود و کارت‌های قیمت با فونت درشت‌تر تمام عرض صفحه را می‌گیرند.</div>
+                        </div>
+                    </div>
+                    <button type="button" role="switch" :aria-checked="Boolean(settings.hide_showcase)"
+                            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                            @click.prevent="settings.hide_showcase = !Boolean(settings.hide_showcase)">
+                        <span class="h-6 w-11 rounded-full transition-colors" :class="Boolean(settings.hide_showcase) ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'"></span>
+                        <span class="absolute left-[3px] top-[3px] h-4.5 w-4.5 rounded-full bg-white transition-transform shadow-xs" :class="Boolean(settings.hide_showcase) ? 'translate-x-5' : ''"></span>
+                    </button>
+                </label>
+
+                <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 space-y-2.5 transition-opacity"
+                     :class="Boolean(settings.hide_showcase) ? 'opacity-50' : ''">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">جزئیات قابل نمایش روی اسلاید محصول</span>
+                        <span x-show="Boolean(settings.hide_showcase)" class="text-[11px] text-amber-600 dark:text-amber-400 font-bold">در حالت تمام‌صفحه غیرفعال است</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <label class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 cursor-pointer">
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-200">نمایش وزن</span>
+                            <button type="button" role="switch" :aria-checked="Boolean(settings.show_weight ?? true)"
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                                    @click.prevent="settings.show_weight = !Boolean(settings.show_weight ?? true)">
+                                <span class="h-5 w-9 rounded-full transition-colors" :class="(settings.show_weight ?? true) ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'"></span>
+                                <span class="absolute left-[2px] top-[2px] h-4 w-4 rounded-full bg-white transition-transform shadow-xs" :class="(settings.show_weight ?? true) ? 'translate-x-4' : ''"></span>
+                            </button>
+                        </label>
+                        <label class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 cursor-pointer">
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-200">اجرت ساخت</span>
+                            <button type="button" role="switch" :aria-checked="Boolean(settings.show_labor ?? true)"
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                                    @click.prevent="settings.show_labor = !Boolean(settings.show_labor ?? true)">
+                                <span class="h-5 w-9 rounded-full transition-colors" :class="(settings.show_labor ?? true) ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'"></span>
+                                <span class="absolute left-[2px] top-[2px] h-4 w-4 rounded-full bg-white transition-transform shadow-xs" :class="(settings.show_labor ?? true) ? 'translate-x-4' : ''"></span>
+                            </button>
+                        </label>
+                        <label class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 cursor-pointer">
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-200">سود فروشنده</span>
+                            <button type="button" role="switch" :aria-checked="Boolean(settings.show_profit ?? true)"
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                                    @click.prevent="settings.show_profit = !Boolean(settings.show_profit ?? true)">
+                                <span class="h-5 w-9 rounded-full transition-colors" :class="(settings.show_profit ?? true) ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'"></span>
+                                <span class="absolute left-[2px] top-[2px] h-4 w-4 rounded-full bg-white transition-transform shadow-xs" :class="(settings.show_profit ?? true) ? 'translate-x-4' : ''"></span>
+                            </button>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pt-1 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <label for="footer_ticker_text" class="text-xs font-bold text-slate-700 dark:text-slate-300">متن پیام یا نوار اعلان پایین تابلو (اختیاری)</label>
+                        <span class="text-[11px] font-mono tabular-nums text-slate-400" x-text="(settings.footer_ticker_text || '').length + ' / 300'"></span>
+                    </div>
+                    <div class="flex gap-2">
+                        <input id="footer_ticker_text" type="text" maxlength="300" x-model="settings.footer_ticker_text"
+                               placeholder="مثال: خرید و فروش طلا و سکه با فاکتور رسمی و کمترین کارمزد"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500">
+                        <button type="button" x-show="(settings.footer_ticker_text || '').trim().length > 0"
+                                @click="settings.footer_ticker_text = ''"
+                                class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0 cursor-pointer">
+                            پاک کردن
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+                        <span class="text-[11px] text-slate-400">نمونه‌های آماده:</span>
+                        <button type="button" @click="settings.footer_ticker_text = 'خرید و فروش انواع طلا و سکه با فاکتور رسمی و کمترین کارمزد'"
+                                class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer">
+                            تضمین فاکتور رسمی
+                        </button>
+                        <button type="button" @click="settings.footer_ticker_text = 'تعویض طلای کهنه با نو با نرخ لحظه‌ای و بدون کسر اضافی'"
+                                class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer">
+                            تعویض طلای کهنه
+                        </button>
+                        <button type="button" @click="settings.footer_ticker_text = 'سفارش ساخت پلاک، حکاکی لیزری و سرویس اختصاصی پذیرفته می‌شود'"
+                                class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer">
+                            سفارش ساخت اختصاصی
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{-- تغییر خودکار پوسته روز و شب --}}
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-sky-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+                        <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">تغییر خودکار پوسته روز و شب</h3>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20">ساعت رسمی تهران</span>
+                </div>
+
+                <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/40 cursor-pointer transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">زمان‌بندی خودکار روشن در روز و تیره در شب</span>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">حتی اگر ساعت تلویزیون دقیق نباشد، تابلو به‌صورت خودکار با ساعت سرور تنظیم می‌شود.</div>
+                        </div>
+                    </div>
+                    <button type="button" role="switch" :aria-checked="Boolean(settings.auto_theme_enabled)"
+                            class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                            @click.prevent="settings.auto_theme_enabled = !Boolean(settings.auto_theme_enabled)">
+                        <span class="h-6 w-11 rounded-full transition-colors" :class="Boolean(settings.auto_theme_enabled) ? 'bg-sky-500' : 'bg-slate-300 dark:bg-slate-700'"></span>
+                        <span class="absolute left-[3px] top-[3px] h-4.5 w-4.5 rounded-full bg-white transition-transform shadow-xs" :class="Boolean(settings.auto_theme_enabled) ? 'translate-x-5' : ''"></span>
+                    </button>
+                </label>
+
+                <div x-show="Boolean(settings.auto_theme_enabled)" x-transition class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <div class="p-3.5 rounded-xl border border-amber-200/80 dark:border-amber-800/50 bg-amber-50/40 dark:bg-amber-950/20 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-amber-700 dark:text-amber-300">تنظیمات بازه روز</span>
+                            <input type="time" dir="ltr" x-model="settings.day_start_time"
+                                   class="px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-800 dark:text-slate-100">
+                        </div>
+                        <select x-model="settings.day_theme_mode"
+                                class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-100">
+                            <template x-for="theme in THEME_OPTIONS" :key="'day-' + theme.id">
+                                <option :value="theme.id" :selected="settings.day_theme_mode === theme.id" x-text="theme.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100/60 dark:bg-slate-800/50 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black text-slate-700 dark:text-slate-200">تنظیمات بازه شب</span>
+                            <input type="time" dir="ltr" x-model="settings.night_start_time"
+                                   class="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-800 dark:text-slate-100">
+                        </div>
+                        <select x-model="settings.night_theme_mode"
+                                class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-100">
+                            <template x-for="theme in THEME_OPTIONS" :key="'night-' + theme.id">
+                                <option :value="theme.id" :selected="settings.night_theme_mode === theme.id" x-text="theme.name"></option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- Right Column: Display Items Toggles --}}
@@ -321,7 +478,7 @@
 <script>
 function displayControlPage() {
     return {
-        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, show_weather: true, show_weather_bg: true, shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
+        settings: { theme_mode: 'light-modern', slider_interval_sec: 8, show_weight: true, show_labor: true, show_profit: true, show_weather: true, show_weather_bg: true, hide_showcase: false, auto_theme_enabled: false, day_theme_mode: 'light-modern', night_theme_mode: 'imperial-onyx', day_start_time: '07:00', night_start_time: '18:30', footer_ticker_text: '', shop_name: '', phone: '', instagram: '', rubika: '', qr_link: '', qr_label: '', qr_desc: '', published_at: null },
         items: [],
         message: { text: '', type: '' },
         isSaving: false,
@@ -356,7 +513,14 @@ function displayControlPage() {
         ],
 
         init(settingsData, itemsData) {
-            if (settingsData) this.settings = { ...this.settings, ...settingsData };
+            if (settingsData) {
+                this.settings = { ...this.settings, ...settingsData };
+                if (!this.settings.day_theme_mode) this.settings.day_theme_mode = 'light-modern';
+                if (!this.settings.night_theme_mode) this.settings.night_theme_mode = 'imperial-onyx';
+                if (!this.settings.day_start_time) this.settings.day_start_time = '07:00';
+                if (!this.settings.night_start_time) this.settings.night_start_time = '18:30';
+                if (this.settings.footer_ticker_text == null) this.settings.footer_ticker_text = '';
+            }
             if (itemsData) this.items = [...itemsData].sort((a, b) => a.order - b.order);
             this.normalizeItemOrder();
             this.captureBaseline();
@@ -375,8 +539,18 @@ function displayControlPage() {
             return JSON.stringify({
                 theme_mode: this.settings.theme_mode,
                 slider_interval_sec: Number(this.settings.slider_interval_sec || 8),
+                show_weight: Boolean(this.settings.show_weight ?? true),
+                show_labor: Boolean(this.settings.show_labor ?? true),
+                show_profit: Boolean(this.settings.show_profit ?? true),
                 show_weather: Boolean(this.settings.show_weather ?? true),
                 show_weather_bg: Boolean(this.settings.show_weather_bg ?? true),
+                hide_showcase: Boolean(this.settings.hide_showcase ?? false),
+                auto_theme_enabled: Boolean(this.settings.auto_theme_enabled ?? false),
+                day_theme_mode: this.settings.day_theme_mode || 'light-modern',
+                night_theme_mode: this.settings.night_theme_mode || 'imperial-onyx',
+                day_start_time: this.settings.day_start_time || '07:00',
+                night_start_time: this.settings.night_start_time || '18:30',
+                footer_ticker_text: (this.settings.footer_ticker_text || '').trim(),
                 items: this.items.map(i => ({
                     key: i.key,
                     enabled: Boolean(i.enabled),

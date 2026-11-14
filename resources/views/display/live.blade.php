@@ -52,6 +52,7 @@
     </script>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('fonts/vazirmatn.css') }}">
+    <script src="{{ asset('vendor/qrcode-generator.min.js') }}"></script>
     {{-- Polyfills برای اجرای روان روی انواع وب‌ویوهای قدیمی تلویزیون بدون نیاز به آپدیت --}}
     <script>
         (function() {
@@ -399,6 +400,23 @@
         }
         .price-grid {
             grid-template-rows: 1.5fr 1fr 1fr 1fr;
+        }
+        .rates-fullwidth .tv-price-featured {
+            font-size: 4.85rem !important;
+            line-height: 1 !important;
+        }
+        .rates-fullwidth .tv-price-regular {
+            font-size: 3.15rem !important;
+            line-height: 1.05 !important;
+        }
+        @keyframes footer-ticker-rtl {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .animate-footer-ticker-rtl {
+            display: inline-block;
+            white-space: nowrap;
+            animation: footer-ticker-rtl 22s linear infinite;
         }
         @media (min-width: 1280px) and (max-height: 760px) {
             .display-shell { gap: 0.5rem; padding: 0.75rem; }
@@ -1868,8 +1886,8 @@
         }
     </style>
 </head>
-<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="toggleFullscreen" @keydown.window="handleKeydown($event)">
-    <main x-show="!isLoading" :class="[theme.bg, 'theme-' + themeKey, ecoMode ? 'eco-mode' : '']" class="fixed inset-0 w-screen h-screen overflow-hidden transition-colors duration-1000 select-none">
+<body :class="[isLightTheme ? 'bg-slate-50 text-slate-900' : 'bg-black text-white', ecoMode ? 'eco-mode' : '']" x-data="displayApp(@js($snapshot))" @dblclick="if (!isMobileCustomerView) toggleFullscreen()" @keydown.window="handleKeydown($event)">
+    <main x-show="!isLoading" :class="[theme.bg, 'theme-' + themeKey, ecoMode ? 'eco-mode' : '', isMobileCustomerView ? 'relative min-h-screen w-full overflow-x-hidden overflow-y-auto select-auto' : 'fixed inset-0 w-screen h-screen overflow-hidden select-none']" class="transition-colors duration-1000">
 
         {{-- نوار وضعیت اتصال آفلاین هوشمند (Self-Healing Offline Notice) --}}
         <div x-show="connectionState !== 'online'"
@@ -1885,7 +1903,7 @@
             <span x-text="errorMessage || 'در حال تلاش مجدد برای اتصال به اینترنت مغازه... (آخرین قیمت‌های معتبر در حال نمایش است)'"></span>
         </div>
 
-        {{-- نوار هشدار دادهٔ کهنه (W-06 Stale Data Warning Banner) --}}
+        {{-- نوار وضعیت نرخ‌های ثبت‌شده بازار --}}
         <div x-show="connectionState === 'online' && (snapshotData?.isStale ?? false)"
              x-cloak
              x-transition:enter="transition ease-out duration-300"
@@ -1896,7 +1914,7 @@
              x-transition:leave-end="-translate-y-full opacity-0"
              class="fixed top-0 inset-x-0 z-50 py-1.5 px-4 bg-amber-600/95 text-white font-bold text-xs text-center backdrop-blur-md shadow-md flex items-center justify-center gap-2">
             <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-200 animate-ping"></span>
-            <span>نرخ‌ها در حال به‌روزرسانی: آخرین دریافت <strong x-text="staleTimeText"></strong></span>
+            <span>نمایش آخرین نرخ‌های ثبت‌شده بازار · به‌روزرسانی ثبت‌شده: <strong x-text="staleTimeText"></strong></span>
         </div>
 
         {{-- نوار هشدار هوشمند ۳ روز پایانی اعتبار اشتراک با قابلیت بستن دستی توسط طلافروش --}}
@@ -2025,7 +2043,7 @@
         </div>
 
         {{-- بوم مجازی با نسبت طلایی ۱۶:۹ با مقیاس‌گذاری خودکار سخت‌افزاری --}}
-        <div id="tv-stage-viewport" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
+        <div id="tv-stage-viewport" x-show="showTvStage" class="fixed inset-0 z-10 w-screen h-screen overflow-hidden pointer-events-none">
             <div id="tv-stage-canvas" class="pointer-events-auto absolute left-0 top-0 w-[1920px] h-[1080px] p-4 xl:p-5 pb-3.5 flex flex-col justify-between gap-2 overflow-hidden select-none">
 
             {{-- Header --}}
@@ -2138,14 +2156,10 @@
                         </template>
                     </div>
 
-                    {{-- QR Code (فریم لوکس با خط اسکن لیزری ملایم) --}}
+                    {{-- QR Code (رندر برداری محلی بدون وابستگی اینترنتی با خط اسکن لیزری ملایم) --}}
                     <div class="flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] shrink-0">
                         <div class="relative bg-white p-2 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/30 shrink-0 overflow-hidden group">
-                            <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(settings.qr_link || (window.location.origin + '/' + (snapshotData.username || '')))" 
-                                 alt="کد QR اختصاصی تابلوی طلافروشی {{ $galleryDisplayName ?? 'طلالایو' }}" 
-                                 width="112" height="112"
-                                 loading="lazy" decoding="async"
-                                 class="w-24 h-24 xl:w-28 xl:h-28 object-contain rounded-lg">
+                            <div class="w-24 h-24 xl:w-28 xl:h-28 rounded-lg overflow-hidden bg-white" x-html="qrSvgMarkup"></div>
                             {{-- خط اسکن لیزری امبینت --}}
                             <div class="pointer-events-none absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_rgba(251,191,36,0.85)] animate-laser-sweep"></div>
                         </div>
@@ -2167,15 +2181,6 @@
                          <span>✦</span>
                          <span>نرخ‌گذاری زنده طلا و مسکوکات · {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
                          <span>✦</span>
-                    </div>
-                    {{-- دکمه صفحه اصلی طلالایو --}}
-                    <div class="mt-1.5 flex items-center justify-center">
-                        <a href="{{ url('/') }}" target="_blank" 
-                           :class="isLightTheme ? 'bg-amber-500/15 text-amber-900 border-amber-500/30 hover:bg-amber-500/25' : 'bg-white/10 text-amber-300 border-white/10 hover:bg-white/15'"
-                           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold border transition-all shadow-xs">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                            <span>صفحه اصلی طلالایو</span>
-                        </a>
                     </div>
 
                     {{-- سئوی محلی گوگل و متن معرفی (نامرئی بصری - مخصوص موتورهای جستجو) --}}
@@ -2286,9 +2291,13 @@
             </header>
 
             {{-- Main Content --}}
-            <div class="flex flex-1 flex-row gap-3 min-h-0">
+            <div class="flex flex-1 flex-row gap-3 min-h-0" :class="Boolean(settings.hide_showcase) ? 'rates-fullwidth' : ''">
                 {{-- Product Slider --}}
-                <section :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']" class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
+                <section x-show="!Boolean(settings.hide_showcase)"
+                         @touchstart.passive="onTouchStart($event)"
+                         @touchend.passive="onTouchEnd($event)"
+                         :class="[theme.card, isLightTheme ? 'border-black/5' : 'border-white/10']"
+                         class="relative overflow-hidden rounded-[3rem] w-[35%] h-auto min-h-0 max-h-none group border shadow-3xl shrink-0 transition-transform duration-500 hover:scale-[1.015]">
                     <template x-if="activeProduct">
                         <div class="absolute inset-0" style="contain: paint layout; isolation: isolate;">
                             <!-- لایه‌های دوگانه پینگ‌پنگ جهت ترنزیشن فید متقاطع واقعی و ری‌استارت پیوسته کن‌برنز -->
@@ -2301,10 +2310,17 @@
                                          x-on:error="$event.target.src = '/icons/icon-512x512.png'"
                                          :alt="activeProduct?.title || ''"
                                          class="apple-zoom-img"
-                                         :class="slot.zoomed && !ecoMode ? 'is-zooming' : ''"
+                                         :class="slot.zoomed && !ecoMode && !sliderPaused ? 'is-zooming' : ''"
                                          :style="'--zoom-duration: ' + (Math.max(Number(settings?.slider_interval_sec) || 8, 3)) + 's;'">
                                 </div>
                             </template>
+
+                            <!-- نشانگر توقف موقت اسلایدر با ریموت/کلید Space -->
+                            <div x-show="sliderPaused" x-cloak
+                                 class="absolute top-16 right-8 z-30 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 text-amber-300 border border-amber-400/40 px-3 py-1 text-xs font-black backdrop-blur-md shadow-lg">
+                                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                <span>پخش متوقف است</span>
+                            </div>
 
                             <!-- نشان لوکس داینامیک محصول در بالای اسلایدر -->
                             <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
@@ -2312,7 +2328,7 @@
                                      :class="{
                                          'slider-top-badge': !activeProduct.badge || activeProduct.badge === 'none',
                                          'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-600 shadow-emerald-900/40': activeProduct.badge === 'no_wage',
-                                         'bg-gradient-to-r from-purple-700 via-violet-600 to-pink-600 shadow-purple-900/40': activeProduct.badge === 'best_seller',
+                                         'bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-700 shadow-amber-900/40': activeProduct.badge === 'best_seller',
                                          'bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 shadow-blue-900/40': activeProduct.badge === 'new_collection',
                                          'bg-gradient-to-r from-rose-600 via-red-600 to-amber-600 shadow-rose-900/40': activeProduct.badge === 'special_discount'
                                      }">
@@ -2326,7 +2342,7 @@
                                               'best_seller': 'پرفروش‌ترین ویترین',
                                               'new_collection': 'کالکشن جدید',
                                               'special_discount': 'تخفیف ویژه امروز'
-                                          }[activeProduct.badge] || 'پیشنهاد شگفت‌انگیز'">
+                                          }[activeProduct.badge] || 'پیشنهاد ویژه گالری'">
                                     </span>
                                 </div>
                             </div>
@@ -2344,18 +2360,25 @@
                                                class="break-words text-2xl xl:text-3xl font-black leading-tight line-clamp-1" 
                                                x-text="activeProduct.title"></p>
                                             <div class="mt-2 flex items-center gap-2 flex-wrap">
-                                                <template x-if="settings.show_weight">
+                                                <template x-if="Boolean(settings.show_weight ?? true) && Number(activeProduct.weight_gram) > 0">
                                                     <span :class="isLightTheme ? 'slider-chip-light' : 'slider-chip-dark'" class="slider-chip">
                                                         <span class="opacity-80">وزن:</span>
                                                         <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProduct.weight_gram"></span>
                                                         <span class="opacity-80">گرم</span>
                                                     </span>
                                                 </template>
-                                                <template x-if="settings.show_profit">
+                                                <template x-if="Boolean(settings.show_labor ?? true) && Number(activeProduct.labor_fee || 0) > 0">
                                                     <span :class="isLightTheme ? 'slider-chip-light' : 'slider-chip-dark'" class="slider-chip">
-                                                        <span class="opacity-80">سود:</span>
-                                                        <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProductProfitPercent"></span>
-                                                        <span class="opacity-80">%</span>
+                                                        <span class="opacity-80">اجرت ساخت:</span>
+                                                        <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="formatNumber(activeProduct.labor_fee)"></span>
+                                                        <span class="opacity-80">تومان</span>
+                                                    </span>
+                                                </template>
+                                                <template x-if="activeProductSpecChip">
+                                                    <span :class="isLightTheme ? 'slider-chip-light' : 'slider-chip-dark'" class="slider-chip">
+                                                        <span class="opacity-80" x-text="activeProductSpecChip.label"></span>
+                                                        <span class="tabular-nums font-black" :class="isLightTheme ? 'text-amber-700' : 'text-amber-300'" x-text="activeProductSpecChip.value"></span>
+                                                        <span class="opacity-80" x-text="activeProductSpecChip.unit"></span>
                                                     </span>
                                                 </template>
                                             </div>
@@ -2734,15 +2757,15 @@
                                         <p :class="[item.symbol === 'gold18' ? (isLightTheme ? 'text-amber-950 font-black' : 'text-amber-200 font-black') : theme.textPrimary, index < 3 ? 'text-2xl xl:text-3xl' : 'text-lg xl:text-xl']"
                                            class="market-tile-label min-w-0 font-black tracking-tight drop-shadow-sm line-clamp-1 shrink-0" style="line-height:1.2;" x-text="item.label"></p>
 
-                                        {{-- نشانگر وضعیت زنده (لحظه‌ای / قدیمی) بعد از عنوان کارت --}}
+                                        {{-- نشانگر وضعیت نرخ (لحظه‌ای / نرخ پایانی) بعد از عنوان کارت --}}
                                         <template x-if="isItemStale(item)">
                                             <span class="inline-flex items-center rounded-full font-bold border shadow-sm shrink-0"
                                                   :class="[
-                                                      isLightTheme ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+                                                      isLightTheme ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-amber-500/15 text-amber-300 border-amber-500/30',
                                                       index < 3 ? 'gap-1.5 text-xs xl:text-sm px-2.5 py-1' : 'gap-1 text-[10px] xl:text-[11px] px-2 py-0.5'
                                                   ]">
                                                 <span :class="index < 3 ? 'w-2 h-2' : 'w-1.5 h-1.5'" class="rounded-full bg-amber-500 shrink-0"></span>
-                                                <span>قدیمی</span>
+                                                <span>نرخ پایانی</span>
                                             </span>
                                         </template>
                                         <template x-if="!isItemStale(item)">
@@ -2838,58 +2861,81 @@
             </div>
 
             {{-- Premium Glassmorphic Footer --}}
-            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-6 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
+            <footer :class="theme.footerBg" class="relative overflow-hidden rounded-[1.75rem] border flex items-center justify-between gap-3 shrink-0 h-14 animate-fadeInUp shadow-[0_15px_35px_rgba(0,0,0,0.3)] px-5 backdrop-blur-2xl" style="animation-delay: 200ms;" dir="rtl">
                 
                 {{-- Background decorative glows inside the footer --}}
                 <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.15),transparent_50%)]"></div>
 
-                {{-- سمت راست: کپسول تبلیغ و راه‌اندازی اختصاصی TalaLive و لینک برگشتی به شهر --}}
-                <div class="flex items-center gap-3 h-full z-10">
-                    <a href="{{ url('/?home=1') }}" 
-                       @click="try { sessionStorage.setItem('skip_redirect', '1'); } catch(e) {}"
-                       class="group flex items-center gap-2.5 px-4 py-1.5 rounded-full border transition-all duration-300 hover:scale-105 shadow-sm cursor-pointer"
-                       :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/30 text-amber-950 hover:bg-amber-500/20' : 'bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-600/20 border-amber-400/40 text-amber-200 shadow-[0_0_18px_rgba(245,158,11,0.2)] hover:border-amber-300/60'"
-                       title="مشاهده صفحه اصلی سامانه طلالایو">
-                        <span class="flex h-2.5 w-2.5 relative">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+                {{-- سمت راست: هویت گالری و بازگشت سریع به نمای موبایل در صورت اجبار روی گوشی --}}
+                <div class="flex items-center gap-2.5 h-full z-10 shrink-0">
+                    <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border shadow-sm"
+                         :class="isLightTheme ? 'bg-amber-500/10 border-amber-500/30 text-amber-950' : 'bg-amber-500/15 border-amber-400/35 text-amber-200'">
+                        <span class="flex h-2 w-2 relative shrink-0">
+                            <span x-show="!ecoMode" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>
-                        <span class="text-xs font-black tracking-wide">راه‌اندازی تابلوی هوشمند:</span>
-                        <span class="font-mono font-black text-xs px-2.5 py-0.5 rounded-full" :class="isLightTheme ? 'bg-amber-300/80 text-amber-950' : 'bg-amber-400/30 text-amber-300 border border-amber-400/40'">TalaLive.ir</span>
-                    </a>
+                        <span class="text-xs font-black tracking-wide truncate max-w-[220px]" x-text="settings.shop_name || '{{ $galleryDisplayName ?? 'گالری طلا' }}'"></span>
+                        <span class="opacity-35">|</span>
+                        <span class="text-[11px] font-bold opacity-85">{{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
+                    </div>
 
-                    <a href="{{ url('/cities/' . ($citySlug ?? 'tehran')) }}" 
-                       class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 hover:border-amber-400/40 transition-all hover:scale-105"
-                       :class="isLightTheme ? 'text-slate-800 bg-black/5 hover:bg-black/10' : 'text-slate-200 bg-white/5 hover:bg-white/10'">
-                        <span>مراکز طلای {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}</span>
-                        <span>←</span>
-                    </a>
+                    <button x-show="isMobileViewport && forceTvView" x-cloak
+                            type="button"
+                            @click="setMobileView()"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-colors cursor-pointer"
+                            :class="isLightTheme ? 'bg-slate-900 text-white border-slate-900 hover:bg-slate-800' : 'bg-amber-400 text-slate-950 border-amber-300 hover:bg-amber-300'">
+                        <span>نمای موبایل</span>
+                    </button>
                 </div>
 
-
-                {{-- مرکز: هویت و فناوری پلتفرم کشوری --}}
-                <div class="hidden xl:flex items-center gap-2 justify-center z-10 text-xs font-black" :class="theme.textPrimary">
-                    <span class="opacity-90">پلتفرم هوشمند نمایش نرخ و ویترین آنلاین طلا</span>
-                    <span class="opacity-25">✦</span>
-                    <span :class="isLightTheme ? 'text-slate-500' : 'text-slate-400'" class="font-normal font-mono">By <span class="font-bold text-slate-400 dark:text-slate-300">Bahman Dev</span></span>
+                {{-- مرکز: نوار اعلان اختصاصی گالری یا وضعیت زمان‌بندی پوسته --}}
+                <div class="flex-1 min-w-0 mx-2 flex items-center justify-center overflow-hidden z-10 text-xs font-bold" :class="theme.textPrimary">
+                    <template x-if="hasFooterTicker">
+                        <div class="w-full overflow-hidden flex items-center justify-center px-3 py-1 rounded-full border"
+                             :class="isLightTheme ? 'bg-amber-50/90 border-amber-300/70 text-amber-950' : 'bg-white/5 border-amber-400/25 text-amber-100'">
+                            <div x-show="footerTickerText.length > 60 && !ecoMode" class="w-full overflow-hidden">
+                                <span class="animate-footer-ticker-rtl font-bold text-xs xl:text-sm" x-text="'✦  ' + footerTickerText + '  ✦'"></span>
+                            </div>
+                            <div x-show="footerTickerText.length <= 60 || ecoMode" class="truncate text-center font-bold text-xs xl:text-sm" x-text="footerTickerText"></div>
+                        </div>
+                    </template>
+                    <template x-if="!hasFooterTicker">
+                        <div class="hidden xl:flex items-center gap-2 opacity-75 text-[11px] font-semibold" :class="theme.textSecondary">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400/80"></span>
+                            <span x-text="Boolean(settings.auto_theme_enabled) && !previewTheme ? ('تغییر خودکار پوسته روز و شب فعال است (' + (isDayWindow ? 'حالت روز' : 'حالت شب') + ')') : 'نرخ‌گذاری لحظه‌ای طلا، سکه و ارز'"></span>
+                        </div>
+                    </template>
                 </div>
 
-                {{-- سمت چپ: دکمه خروج + دکمه حالت سبک/روان + وضعیت اتصال و بروزرسانی لحظه‌ای --}}
-                <div class="flex items-center gap-2.5 z-10 font-bold text-xs" :class="theme.textSecondary">
-                    {{-- دکمه قطع اتصال و خروج از تابلو --}}
-                    <button @click="disconnectBoard()" 
+                {{-- سمت چپ: کنترل سریع اسلایدر، قطع اتصال، حالت سبک و ساعت آخرین بروزرسانی --}}
+                <div class="flex items-center gap-2 z-10 font-bold text-xs shrink-0" :class="theme.textSecondary">
+                    {{-- کنترل سریع ویترین (ریموت / لمسی) --}}
+                    <div x-show="!Boolean(settings.hide_showcase) && products.length > 1"
+                         class="hidden xl:flex items-center gap-1 px-2 py-1 rounded-full border"
+                         :class="isLightTheme ? 'bg-black/5 border-black/10 text-slate-700' : 'bg-white/5 border-white/10 text-slate-200'">
+                        <button type="button" @click="prevProduct()" class="px-1.5 py-0.5 rounded-full hover:bg-amber-500/20 cursor-pointer" title="اسلاید قبلی (کلید راست)">‹</button>
+                        <button type="button" @click="toggleSliderPause()" class="px-1.5 py-0.5 rounded-full hover:bg-amber-500/20 cursor-pointer tabular-nums text-[11px]"
+                                :title="sliderPaused ? 'ادامه پخش (Space)' : 'مکث اسلایدر (Space)'">
+                            <span x-text="sliderPaused ? '▶' : '⏸'"></span>
+                            <span class="mr-1" x-text="(activeIndex + 1) + '/' + products.length"></span>
+                        </button>
+                        <button type="button" @click="nextProduct()" class="px-1.5 py-0.5 rounded-full hover:bg-amber-500/20 cursor-pointer" title="اسلاید بعدی (کلید چپ)">›</button>
+                    </div>
+
+                    {{-- دکمه قطع اتصال با مودال اختصاصی --}}
+                    <button @click="openDisconnectModal()" 
                             type="button"
                             class="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm select-none"
                             :class="isLightTheme ? 'bg-black/5 hover:bg-rose-500 hover:text-white text-slate-700 border-black/10' : 'bg-white/5 hover:bg-rose-500/80 hover:text-white text-slate-300 border-white/10'"
                             title="قطع اتصال این تلویزیون و خروج از تابلو">
-                        <span class="text-xs transition-transform duration-200 group-hover:scale-110">🔌</span>
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
                         <span>خروج</span>
                     </button>
 
-                    {{-- دکمه حالت سبک / روان (Eco / Smooth Mode Toggle) --}}
+                    {{-- دکمه حالت سبک / روان --}}
                     <button @click="toggleEcoMode()" 
                             type="button"
-                            class="group flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm select-none"
+                            class="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm select-none"
                             :class="ecoMode 
                                 ? (isLightTheme ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-400/30' : 'bg-emerald-500/25 text-emerald-300 border-emerald-400/60 shadow-[0_0_12px_rgba(16,185,129,0.35)]') 
                                 : (isLightTheme ? 'bg-black/5 hover:bg-black/10 text-slate-700 border-black/10' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10')"
@@ -2908,6 +2954,263 @@
 
             </footer>
 
+            </div>
+        </div>
+
+        {{-- نمای اختصاصی موبایل مشتریان (هنگام اسکن QR روی گوشی هوشمند) --}}
+        <section x-show="isMobileCustomerView"
+                 x-cloak
+                 dir="rtl"
+                 :class="(connectionState !== 'online' || (snapshotData?.isStale ?? false)) ? 'pt-11' : 'pt-4'"
+                 class="relative z-20 mx-auto w-full max-w-md px-3.5 pb-8 space-y-3.5">
+
+            {{-- هدر گالری در موبایل --}}
+            <header class="rounded-2xl border p-4 backdrop-blur-md space-y-3"
+                    :class="isLightTheme ? 'bg-white/95 border-slate-200 text-slate-900 shadow-sm' : 'bg-slate-900/90 border-white/15 text-white shadow-xl'">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full shrink-0"
+                                  :class="(connectionState === 'online' && !(snapshotData?.isStale ?? false)) ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+                            <h1 class="text-lg font-black leading-snug break-words"
+                                x-text="settings.shop_name || '{{ $galleryDisplayName ?? 'گالری طلا' }}'"></h1>
+                        </div>
+                        <p class="text-xs font-semibold mt-1 opacity-75">
+                            {{ $cityFullDisplay ?? $cityName ?? 'تهران' }}
+                            <span class="mx-1">·</span>
+                            <span x-text="(connectionState === 'online' && !(snapshotData?.isStale ?? false)) ? 'نرخ لحظه‌ای بازار' : 'نرخ پایانی ثبت‌شده'"></span>
+                        </p>
+                    </div>
+                    <div class="text-left shrink-0">
+                        <div dir="ltr" class="font-mono text-base font-black tabular-nums" x-text="timeText"></div>
+                        <div class="text-[11px] font-semibold opacity-70 mt-0.5" x-text="weekDay"></div>
+                    </div>
+                </div>
+
+                {{-- دکمه‌های دسترسی سریع مشتری --}}
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <a x-show="settings.phone"
+                       :href="'tel:' + cleanPhoneHref(settings.phone)"
+                       class="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 rounded-xl text-xs font-bold border transition-colors"
+                       :class="isLightTheme ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25'">
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>تماس</span>
+                    </a>
+                    <a x-show="settings.instagram"
+                       :href="instagramHref(settings.instagram)"
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 rounded-xl text-xs font-bold border transition-colors"
+                       :class="isLightTheme ? 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100' : 'bg-amber-500/15 text-amber-300 border-amber-500/30 hover:bg-amber-500/25'">
+                        <span>اینستاگرام</span>
+                    </a>
+                    <button x-show="settings.rubika"
+                            type="button"
+                            @click="copyText(settings.rubika, 'شناسه روبیکا کپی شد')"
+                            class="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer"
+                            :class="isLightTheme ? 'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-200' : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/15'">
+                        <span>روبیکا</span>
+                    </button>
+                    <button type="button"
+                            @click="copyBoardShareLink()"
+                            class="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer"
+                            :class="isLightTheme ? 'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-200' : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/15'">
+                        <span>کپی لینک تابلو</span>
+                    </button>
+                    <button type="button"
+                            @click="forceTvLayout()"
+                            class="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-3.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer mr-auto"
+                            :class="isLightTheme ? 'bg-slate-900 text-white border-slate-900' : 'bg-amber-400 text-slate-950 border-amber-300'">
+                        <span>نمای تلویزیون</span>
+                    </button>
+                </div>
+            </header>
+
+            {{-- اعلان اختصاصی گالری در موبایل --}}
+            <div x-show="hasFooterTicker"
+                 class="rounded-2xl border px-4 py-3 text-xs font-bold leading-relaxed flex items-center gap-2.5"
+                 :class="isLightTheme ? 'bg-amber-50 border-amber-200 text-amber-950' : 'bg-amber-500/15 border-amber-400/30 text-amber-100'">
+                <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                <p x-text="footerTickerText"></p>
+            </div>
+
+            {{-- جدول نرخ‌های موبایل --}}
+            <div class="grid grid-cols-2 gap-2.5">
+                <template x-for="(item, index) in orderedMetrics" :key="'mob-' + item.symbol">
+                    <div :class="[
+                            index === 0 ? 'col-span-2 p-4' : 'col-span-1 p-3.5',
+                            item.symbol === 'gold18'
+                                ? (isLightTheme ? 'bg-gradient-to-br from-amber-50 to-amber-100/80 border-amber-300 text-amber-950' : 'bg-gradient-to-br from-amber-950/80 to-slate-900 border-amber-500/45 text-amber-100')
+                                : (isLightTheme ? 'bg-white/95 border-slate-200 text-slate-900' : 'bg-slate-900/90 border-white/15 text-white')
+                         ]"
+                         class="rounded-2xl border shadow-sm flex flex-col justify-between gap-2 min-w-0">
+                        <div class="flex items-center justify-between gap-1.5">
+                            <p class="font-black leading-snug truncate" :class="index === 0 ? 'text-base' : 'text-xs'" x-text="item.label"></p>
+                            <span class="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold border"
+                                  :class="isItemStale(item)
+                                      ? (isLightTheme ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-amber-500/15 text-amber-300 border-amber-500/30')
+                                      : (isLightTheme ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30')"
+                                  x-text="isItemStale(item) ? 'نرخ پایانی' : 'لحظه‌ای'"></span>
+                        </div>
+
+                        <div class="flex items-baseline justify-between gap-2 pt-1">
+                            <span class="font-black tabular-nums tracking-tight truncate"
+                                  :class="index === 0 ? 'text-3xl' : 'text-lg sm:text-xl'"
+                                  x-html="item.displayHtml"></span>
+                            <span class="text-[11px] font-bold opacity-75 shrink-0" x-text="item.unit"></span>
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] font-bold pt-1 border-t"
+                             :class="isLightTheme ? 'border-slate-200/70' : 'border-white/10'">
+                            <span dir="ltr" class="tabular-nums"
+                                  :class="item.change_percent > 0 ? 'text-emerald-500' : (item.change_percent < 0 ? 'text-rose-500' : 'opacity-65')"
+                                  x-text="formatSignedNumber(item.change_percent, 2) + '%'"></span>
+                            <span dir="ltr" class="tabular-nums opacity-80"
+                                  x-text="(item.symbol === 'ounce' || item.symbol === 'bitcoin' || item.symbol === 'oil_brent' || item.symbol === 'silver_ounce') ? formatSignedNumber(item.change_value, 2) : formatSignedNumber(item.change_value)"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            {{-- ویترین محصولات قابل لمس در موبایل --}}
+            <div x-show="!Boolean(settings.hide_showcase) && activeProduct"
+                 @touchstart.passive="onTouchStart($event)"
+                 @touchend.passive="onTouchEnd($event)"
+                 class="rounded-2xl border overflow-hidden shadow-md"
+                 :class="isLightTheme ? 'bg-white/95 border-slate-200 text-slate-900' : 'bg-slate-900/90 border-white/15 text-white'">
+                <div class="flex items-center justify-between gap-2 px-4 py-2.5 border-b"
+                     :class="isLightTheme ? 'border-slate-200' : 'border-white/10'">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-black">ویترین گالری</span>
+                        <span x-show="products.length > 1" class="text-[11px] font-bold opacity-70 tabular-nums"
+                              x-text="(activeIndex + 1) + ' از ' + products.length"></span>
+                    </div>
+                    <div x-show="products.length > 1" class="flex items-center gap-1.5">
+                        <button type="button" @click="prevProduct()"
+                                aria-label="محصول قبلی"
+                                class="w-11 h-11 rounded-xl border flex items-center justify-center font-black text-base cursor-pointer"
+                                :class="isLightTheme ? 'border-slate-200 bg-slate-50 text-slate-800' : 'border-white/15 bg-white/5 text-white'">‹</button>
+                        <button type="button" @click="toggleSliderPause()"
+                                :aria-label="sliderPaused ? 'ادامه پخش' : 'مکث اسلایدر'"
+                                class="w-11 h-11 rounded-xl border flex items-center justify-center text-xs font-black cursor-pointer"
+                                :class="isLightTheme ? 'border-slate-200 bg-slate-50 text-slate-800' : 'border-white/15 bg-white/5 text-white'"
+                                x-text="sliderPaused ? '▶' : '⏸'"></button>
+                        <button type="button" @click="nextProduct()"
+                                aria-label="محصول بعدی"
+                                class="w-11 h-11 rounded-xl border flex items-center justify-center font-black text-base cursor-pointer"
+                                :class="isLightTheme ? 'border-slate-200 bg-slate-50 text-slate-800' : 'border-white/15 bg-white/5 text-white'">›</button>
+                    </div>
+                </div>
+                <template x-if="activeProduct">
+                    <div class="p-3.5 space-y-3">
+                        <div class="relative rounded-xl overflow-hidden bg-slate-950/20 aspect-[4/3]">
+                            <img :src="activeProductImageUrl"
+                                 x-on:error="$event.target.src = '/icons/icon-512x512.png'"
+                                 :alt="activeProduct?.title || ''"
+                                 class="w-full h-full object-cover">
+                            <span x-show="activeProduct.badge && activeProduct.badge !== 'none'"
+                                  class="absolute top-2.5 left-2.5 rounded-full px-3 py-1 text-[11px] font-black text-white bg-slate-950/75 backdrop-blur-md"
+                                  x-text="{
+                                      'no_wage': 'بدون اجرت / کم‌اجرت',
+                                      'best_seller': 'پرفروش‌ترین ویترین',
+                                      'new_collection': 'کالکشن جدید',
+                                      'special_discount': 'تخفیف ویژه امروز'
+                                  }[activeProduct.badge] || ''"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <h2 class="text-base font-black leading-snug" x-text="activeProduct.title"></h2>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span x-show="Boolean(settings.show_weight ?? true) && Number(activeProduct.weight_gram) > 0"
+                                      class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold border"
+                                      :class="isLightTheme ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-white/5 border-white/15 text-slate-200'">
+                                    <span>وزن:</span>
+                                    <span class="tabular-nums font-black" x-text="activeProduct.weight_gram"></span>
+                                    <span>گرم</span>
+                                </span>
+                                <span x-show="Boolean(settings.show_labor ?? true) && Number(activeProduct.labor_fee || 0) > 0"
+                                      class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold border"
+                                      :class="isLightTheme ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-white/5 border-white/15 text-slate-200'">
+                                    <span>اجرت ساخت:</span>
+                                    <span class="tabular-nums font-black" x-text="formatNumber(activeProduct.labor_fee)"></span>
+                                    <span>تومان</span>
+                                </span>
+                                <template x-if="activeProductSpecChip">
+                                    <span class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold border"
+                                          :class="isLightTheme ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-white/5 border-white/15 text-slate-200'">
+                                        <span x-text="activeProductSpecChip.label"></span>
+                                        <span class="tabular-nums font-black" x-text="activeProductSpecChip.value"></span>
+                                        <span x-text="activeProductSpecChip.unit"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="flex items-center justify-between pt-2 border-t"
+                                 :class="isLightTheme ? 'border-slate-200' : 'border-white/10'">
+                                <span class="text-xs font-bold opacity-75">مبلغ نهایی ویترین</span>
+                                <div x-show="activeProductFinalPrice > 0" class="flex items-baseline gap-1">
+                                    <span class="text-xl font-black tabular-nums text-amber-500" x-text="formatNumber(activeProductFinalPrice)"></span>
+                                    <span class="text-xs font-bold opacity-80">تومان</span>
+                                </div>
+                                <span x-show="activeProductFinalPrice <= 0" class="text-xs font-bold text-amber-500">در حال استعلام نرخ...</span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            {{-- پیام خوش‌آمدگویی وقتی ویترین خالی است --}}
+            <div x-show="!Boolean(settings.hide_showcase) && !activeProduct && settings.empty_showcase_mode === 'custom_message'"
+                 class="rounded-2xl border p-4 text-center space-y-1.5"
+                 :class="isLightTheme ? 'bg-white/95 border-slate-200 text-slate-900' : 'bg-slate-900/90 border-white/15 text-white'">
+                <h3 class="text-sm font-black" x-text="settings.empty_showcase_title || 'خوش‌آمدگویی به مشتریان محترم گالری'"></h3>
+                <p class="text-xs leading-relaxed opacity-80" x-text="settings.empty_showcase_text || ''"></p>
+            </div>
+
+            {{-- فوتر موبایل --}}
+            <footer class="pt-2 pb-4 text-center text-[11px] font-semibold opacity-75 space-y-1">
+                <p>
+                    <span>آخرین به‌روزرسانی تابلو:</span>
+                    <span dir="ltr" class="font-mono" x-text="snapshotData?.updatedAt ? new Date(snapshotData.updatedAt).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '---'"></span>
+                </p>
+            </footer>
+        </section>
+
+        {{-- مودال اختصاصی قطع اتصال سازگار با ریموت کنترل تلویزیون --}}
+        <div x-show="showDisconnectModal"
+             x-cloak
+             @click.self="closeDisconnectModal()"
+             class="fixed inset-0 z-[260] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4"
+             dir="rtl"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="disconnect-modal-title">
+            <div class="w-full max-w-md rounded-3xl border border-white/15 bg-slate-900 text-white p-6 shadow-2xl space-y-5">
+                <div class="space-y-2 text-center">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                    </div>
+                    <h3 id="disconnect-modal-title" class="text-lg font-black">قطع اتصال این دستگاه از تابلو؟</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        با تایید این گزینه، اتصال فعلی این نمایشگر لغو شده و به صفحه جفت‌سازی بازمی‌گردید.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button type="button"
+                            x-ref="disconnectCancelBtn"
+                            @click="closeDisconnectModal()"
+                            :class="disconnectFocusIndex === 0 ? 'ring-2 ring-amber-400 bg-slate-700 text-white border-amber-400' : 'bg-slate-800 text-slate-200 border-white/10 hover:bg-slate-700'"
+                            class="min-h-[48px] px-4 py-2.5 rounded-2xl border text-sm font-black transition-all cursor-pointer focus:outline-none">
+                        انصراف و ماندن
+                    </button>
+                    <button type="button"
+                            x-ref="disconnectConfirmBtn"
+                            @click="confirmDisconnectBoard()"
+                            :class="disconnectFocusIndex === 1 ? 'ring-2 ring-rose-300 bg-rose-600 text-white border-rose-300' : 'bg-rose-600/80 text-white border-rose-500/50 hover:bg-rose-600'"
+                            class="min-h-[48px] px-4 py-2.5 rounded-2xl border text-sm font-black transition-all cursor-pointer focus:outline-none">
+                        تایید و قطع اتصال
+                    </button>
+                </div>
+                <p class="text-[11px] text-center text-slate-400">
+                    جابجایی با کلیدهای چپ و راست ریموت · تایید با Enter · بستن با Esc
+                </p>
             </div>
         </div>
 
@@ -2934,7 +3237,7 @@
             <div class="w-24 h-24 rounded-full border-[3px] border-transparent border-t-amber-400 absolute inset-0 animate-spin"></div>
             <span class="absolute inset-0 flex items-center justify-center text-3xl">✦</span>
         </div>
-        <h2 class="text-2xl font-black text-amber-400 mb-2">Live Gold</h2>
+        <h2 class="text-2xl font-black text-amber-400 mb-2">{{ $galleryDisplayName ?? 'طلالایو' }}</h2>
         <p class="text-slate-400 animate-pulse">در حال بارگذاری قیمت‌ها...</p>
     </div>
 
@@ -3208,6 +3511,19 @@
                 hudFeedbackTimer: null,
                 showControls: false,
                 controlsTimer: null,
+                previewTheme: (typeof window !== 'undefined') ? (new URLSearchParams(window.location.search).get('preview_theme') || '') : '',
+                sliderPaused: false,
+                touchStartX: null,
+                touchStartY: null,
+                showDisconnectModal: false,
+                disconnectFocusIndex: 0,
+                isMobileViewport: (typeof window !== 'undefined') ? (window.innerWidth < 768 && window.innerHeight > window.innerWidth) : false,
+                forceTvView: (function() {
+                    try { return sessionStorage.getItem('display_force_tv') === '1'; } catch (e) { return false; }
+                })(),
+                currentTehranMinutes: (typeof initialSnapshot?.tehranMinutes === 'number') ? initialSnapshot.tehranMinutes : null,
+                tehranAnchorMinutes: (typeof initialSnapshot?.tehranMinutes === 'number') ? initialSnapshot.tehranMinutes : null,
+                tehranAnchorPerfMs: (typeof performance !== 'undefined') ? performance.now() : 0,
                 ecoMode: (function() {
                     try {
                         const saved = localStorage.getItem('display_eco_mode');
@@ -3277,12 +3593,175 @@
                     }
                     return Boolean(item.is_stale);
                 },
-                                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic' || this.themeKey === 'imperial-pearl'; },
+                get isForcedTvByUrl() {
+                    const p = new URLSearchParams(window.location.search);
+                    return p.get('tv') === '1' || p.get('app') === '1' || Boolean(p.get('preview_theme')) || {{ (($isTv ?? false) || ($isApp ?? false)) ? 'true' : 'false' }};
+                },
+                get isMobileCustomerView() {
+                    return this.isMobileViewport && !this.forceTvView && !this.isForcedTvByUrl;
+                },
+                get showTvStage() {
+                    return !this.isMobileCustomerView;
+                },
+                forceTvLayout() {
+                    this.forceTvView = true;
+                    try { sessionStorage.setItem('display_force_tv', '1'); } catch (e) {}
+                    this.$nextTick(() => this.applyStageScale());
+                },
+                setMobileView() {
+                    this.forceTvView = false;
+                    try { sessionStorage.removeItem('display_force_tv'); } catch (e) {}
+                },
+                updateViewportMode() {
+                    this.isMobileViewport = (window.innerWidth < 768) && (window.innerHeight > window.innerWidth);
+                },
+                get footerTickerText() {
+                    return String(this.settings?.footer_ticker_text || '').trim();
+                },
+                get hasFooterTicker() {
+                    return this.footerTickerText.length > 0;
+                },
+                cleanPhoneHref(val) {
+                    return String(val || '').replace(/[^0-9+]/g, '');
+                },
+                instagramHref(handle) {
+                    const raw = String(handle || '').trim();
+                    if (/^https?:\/\//i.test(raw)) return raw;
+                    return 'https://instagram.com/' + raw.replace(/^@+/, '');
+                },
+                async copyText(text, toastMsg) {
+                    const value = String(text || '').trim();
+                    if (!value) return;
+                    try {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(value);
+                        } else {
+                            const ta = document.createElement('textarea');
+                            ta.value = value;
+                            ta.style.position = 'fixed';
+                            ta.style.opacity = '0';
+                            document.body.appendChild(ta);
+                            ta.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(ta);
+                        }
+                        if (toastMsg) this.showHudFeedback(toastMsg);
+                    } catch (e) {}
+                },
+                copyBoardShareLink() {
+                    const uname = this.snapshotData?.username || '{{ $username }}';
+                    this.copyText(window.location.origin + '/' + uname, 'لینک اختصاصی تابلو کپی شد');
+                },
+                get qrTargetUrl() {
+                    const link = String(this.settings?.qr_link || '').trim();
+                    if (link) return link;
+                    const uname = this.snapshotData?.username || '{{ $username }}';
+                    return window.location.origin + '/' + uname;
+                },
+                get qrSvgMarkup() {
+                    const target = this.qrTargetUrl;
+                    if (!target || typeof window.qrcode !== 'function') {
+                        return '<div class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">QR</div>';
+                    }
+                    try {
+                        const utf8Bytes = encodeURIComponent(target).replace(/%([0-9A-F]{2})/g, function(_, hex) {
+                            return String.fromCharCode(parseInt(hex, 16));
+                        });
+                        const qr = window.qrcode(0, 'M');
+                        qr.addData(utf8Bytes, 'Byte');
+                        qr.make();
+                        const count = qr.getModuleCount();
+                        const pad = 2;
+                        const size = count + pad * 2;
+                        let pathData = '';
+                        for (let r = 0; r < count; r++) {
+                            for (let c = 0; c < count; c++) {
+                                if (qr.isDark(r, c)) {
+                                    pathData += `M${c + pad},${r + pad}h1v1h-1z`;
+                                }
+                            }
+                        }
+                        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" class="w-full h-full block" shape-rendering="crispEdges" role="img" aria-label="QR Code"><rect width="100%" height="100%" fill="#ffffff"/><path d="${pathData}" fill="#0f172a"/></svg>`;
+                    } catch (e) {
+                        return '<div class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">QR</div>';
+                    }
+                },
+                parseTimeToMinutes(hhmm, fallbackMinutes) {
+                    const m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(hhmm || '').trim());
+                    if (!m) return fallbackMinutes;
+                    return (parseInt(m[1], 10) * 60) + parseInt(m[2], 10);
+                },
+                get effectiveTehranMinutes() {
+                    if (typeof this.currentTehranMinutes === 'number' && !isNaN(this.currentTehranMinutes)) {
+                        return this.currentTehranMinutes;
+                    }
+                    try {
+                        const tehranClock = this.now.toLocaleTimeString('en-GB', {
+                            timeZone: 'Asia/Tehran',
+                            hour12: false,
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        return this.parseTimeToMinutes(tehranClock, (this.now.getHours() * 60) + this.now.getMinutes());
+                    } catch (e) {
+                        return (this.now.getHours() * 60) + this.now.getMinutes();
+                    }
+                },
+                get isDayWindow() {
+                    const nowMin = this.effectiveTehranMinutes;
+                    const dayStart = this.parseTimeToMinutes(this.settings?.day_start_time, 420);
+                    const nightStart = this.parseTimeToMinutes(this.settings?.night_start_time, 1110);
+                    if (dayStart < nightStart) {
+                        return nowMin >= dayStart && nowMin < nightStart;
+                    }
+                    if (dayStart > nightStart) {
+                        return nowMin >= dayStart || nowMin < nightStart;
+                    }
+                    return true;
+                },
+                get isLightTheme() { return this.themeKey === 'light-modern' || this.themeKey === 'bing-ceramic' || this.themeKey === 'imperial-pearl'; },
                 get isBingTheme() { return this.themeKey === 'bing-daily' || this.themeKey === 'bing-studio' || this.themeKey === 'bing-ceramic'; },
                 get bingWallpaper() { return this.snapshotData?.bingWallpaper || { url: '/images/bing/today.jpg', title: 'عکس روز بینگ', copyright: 'Bing Daily Wallpaper' }; },
                 get bingWallpaperUrl() { return this.bingWallpaper?.url || '/images/bing/today.jpg'; },
-                get themeKey() { return this.settings.theme_mode && THEMES[this.settings.theme_mode] ? this.settings.theme_mode : 'light-modern'; },
+                get themeKey() {
+                    if (this.previewTheme && THEMES[this.previewTheme]) {
+                        return this.previewTheme;
+                    }
+                    if (Boolean(this.settings?.auto_theme_enabled)) {
+                        const scheduledTheme = this.isDayWindow ? this.settings?.day_theme_mode : this.settings?.night_theme_mode;
+                        if (scheduledTheme && THEMES[scheduledTheme]) {
+                            return scheduledTheme;
+                        }
+                    }
+                    return this.settings.theme_mode && THEMES[this.settings.theme_mode] ? this.settings.theme_mode : 'light-modern';
+                },
                 get theme() { return THEMES[this.themeKey]; },
+                get activeProductSpecChip() {
+                    if (!this.activeProduct) return null;
+                    const showLabor = Boolean(this.settings.show_labor ?? true);
+                    const showProfit = Boolean(this.settings.show_profit ?? true);
+                    const laborFee = Number(this.activeProduct.labor_fee || 0);
+                    const pType = this.activeProduct.profit_type || 'percent';
+                    const pVal = Number(this.activeProduct.profit_value || 0);
+
+                    if (laborFee > 0) {
+                        if (!showProfit || pVal <= 0) return null;
+                        return this.formatSpecValue('سود:', pType, pVal);
+                    }
+                    if (pVal <= 0 || (!showProfit && !showLabor)) return null;
+                    const label = (showLabor && showProfit) ? 'سود و اجرت:' : (showLabor ? 'اجرت ساخت:' : 'سود:');
+                    return this.formatSpecValue(label, pType, pVal);
+                },
+                formatSpecValue(label, pType, pVal) {
+                    if (pType === 'percent') {
+                        const hasFraction = Math.abs(pVal % 1) > 0.001;
+                        return { label, value: formatNumber(pVal, hasFraction ? 1 : 0), unit: '٪' };
+                    }
+                    if (pType === 'amount_per_gram') {
+                        return { label, value: formatNumber(pVal), unit: 'ت/گرم' };
+                    }
+                    return { label, value: formatNumber(pVal), unit: 'تومان' };
+                },
                 get activeProductProfitPercent() {
                     if (!this.activeProduct) return 0;
                     if (this.activeProduct.profit_type === 'percent') return this.activeProduct.profit_value;
@@ -3334,9 +3813,16 @@
                 startSlider() {
                     if (this.sliderTimer) {
                         clearInterval(this.sliderTimer);
+                        this.sliderTimer = null;
+                    }
+                    if (this.sliderPaused) {
+                        return;
                     }
                     const intervalSec = Number(this.settings?.slider_interval_sec) || 8;
                     this.sliderTimer = setInterval(() => {
+                        if (this.sliderPaused || Boolean(this.settings?.hide_showcase)) {
+                            return;
+                        }
                         if (this.products.length > 0) {
                             // چرخش تصاویر در صورتی که محصول چند تصویر داشته باشد
                             if (this.activeProduct && this.activeProduct.images && this.activeProduct.images.length > 1) {
@@ -3355,6 +3841,69 @@
                             this.emptyGuideIndex = (this.emptyGuideIndex + 1) % 3;
                         }
                     }, Math.max(intervalSec, 3) * 1000);
+                },
+
+                nextProduct() {
+                    if (!this.products.length) return;
+                    this.activeIndex = (this.activeIndex + 1) % this.products.length;
+                    this.productImageIndex = 0;
+                    this.transitionToNextSlide();
+                    if (!this.sliderPaused) this.startSlider();
+                    if (this.products.length > 1) {
+                        this.showHudFeedback(`محصول ${this.activeIndex + 1} از ${this.products.length}${this.activeProduct?.title ? ': ' + this.activeProduct.title : ''}`);
+                    }
+                },
+
+                prevProduct() {
+                    if (!this.products.length) return;
+                    this.activeIndex = (this.activeIndex - 1 + this.products.length) % this.products.length;
+                    this.productImageIndex = 0;
+                    this.transitionToNextSlide();
+                    if (!this.sliderPaused) this.startSlider();
+                    if (this.products.length > 1) {
+                        this.showHudFeedback(`محصول ${this.activeIndex + 1} از ${this.products.length}${this.activeProduct?.title ? ': ' + this.activeProduct.title : ''}`);
+                    }
+                },
+
+                toggleSliderPause() {
+                    this.sliderPaused = !this.sliderPaused;
+                    if (this.sliderPaused) {
+                        if (this.sliderTimer) clearInterval(this.sliderTimer);
+                        this.sliderTimer = null;
+                        this.storyActive = false;
+                        this.showHudFeedback('اسلایدر ویترین متوقف شد');
+                    } else {
+                        this.storyActive = true;
+                        this.startSlider();
+                        this.showHudFeedback('پخش خودکار اسلایدر ادامه یافت');
+                    }
+                },
+
+                onTouchStart(e) {
+                    const t = e.touches && e.touches[0];
+                    if (!t) return;
+                    this.touchStartX = t.clientX;
+                    this.touchStartY = t.clientY;
+                },
+
+                onTouchEnd(e) {
+                    if (this.touchStartX === null) return;
+                    const t = e.changedTouches && e.changedTouches[0];
+                    if (!t) {
+                        this.touchStartX = null;
+                        return;
+                    }
+                    const dx = t.clientX - this.touchStartX;
+                    const dy = this.touchStartY !== null ? (t.clientY - this.touchStartY) : 0;
+                    this.touchStartX = null;
+                    this.touchStartY = null;
+                    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2 && this.products.length > 1) {
+                        if (dx < 0) {
+                            this.prevProduct();
+                        } else {
+                            this.nextProduct();
+                        }
+                    }
                 },
 
                 transitionToNextSlide() {
@@ -3468,6 +4017,18 @@
                                 });
                             }
                             this.snapshotData = newData;
+                            if (typeof newData.tehranMinutes === 'number') {
+                                this.tehranAnchorMinutes = newData.tehranMinutes;
+                                this.tehranAnchorPerfMs = (typeof performance !== 'undefined') ? performance.now() : 0;
+                                this.currentTehranMinutes = newData.tehranMinutes;
+                            }
+                            if (this.products.length > 0 && this.activeIndex >= this.products.length) {
+                                this.activeIndex = 0;
+                                this.productImageIndex = 0;
+                            } else if (this.products.length === 0) {
+                                this.activeIndex = 0;
+                                this.productImageIndex = 0;
+                            }
                             if (newData && newData.subscriptionWarning !== undefined) {
                                 this.subscriptionWarning = newData.subscriptionWarning;
                                 if (!this.subscriptionWarning || !this.subscriptionWarning.active) {
@@ -3573,16 +4134,30 @@
                     this.showHudFeedback('تنظیمات مقیاس بازنشانی شد');
                 },
 
+                openDisconnectModal() {
+                    this.disconnectFocusIndex = 0;
+                    this.showDisconnectModal = true;
+                    this.$nextTick(() => {
+                        this.$refs.disconnectCancelBtn?.focus();
+                    });
+                },
+
+                closeDisconnectModal() {
+                    this.showDisconnectModal = false;
+                },
+
+                confirmDisconnectBoard() {
+                    try {
+                        localStorage.removeItem('display_username');
+                        localStorage.removeItem('display_token');
+                        document.cookie = 'display_token=; path=/; max-age=0;';
+                        sessionStorage.removeItem('skip_redirect');
+                    } catch (e) {}
+                    window.location.href = '/tv?reset=1';
+                },
+
                 disconnectBoard() {
-                    if (confirm('آیا می‌خواهید اتصال این دستگاه به تابلوی طلا قطع شود و به صفحه جفت‌سازی برگردید؟')) {
-                        try {
-                            localStorage.removeItem('display_username');
-                            localStorage.removeItem('display_token');
-                            document.cookie = 'display_token=; path=/; max-age=0;';
-                            sessionStorage.removeItem('skip_redirect');
-                        } catch (e) {}
-                        window.location.href = '/tv?reset=1';
-                    }
+                    this.openDisconnectModal();
                 },
 
                 initSubscriptionWarning() {
@@ -3613,11 +4188,46 @@
 
                 handleKeydown(e) {
                     this.triggerControls();
-                    if (['input', 'textarea', 'select'].includes(e.target.tagName?.toLowerCase())) return;
+                    const tagName = e.target.tagName?.toLowerCase();
+                    if (['input', 'textarea', 'select'].includes(tagName)) return;
+
+                    if (this.showDisconnectModal) {
+                        if (e.key === 'Escape' || e.key === 'Backspace') {
+                            e.preventDefault();
+                            this.closeDisconnectModal();
+                            return;
+                        }
+                        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab'].includes(e.key)) {
+                            e.preventDefault();
+                            this.disconnectFocusIndex = this.disconnectFocusIndex === 0 ? 1 : 0;
+                            this.$nextTick(() => {
+                                if (this.disconnectFocusIndex === 0) {
+                                    this.$refs.disconnectCancelBtn?.focus();
+                                } else {
+                                    this.$refs.disconnectConfirmBtn?.focus();
+                                }
+                            });
+                            return;
+                        }
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            if (this.disconnectFocusIndex === 1) {
+                                this.confirmDisconnectBoard();
+                            } else {
+                                this.closeDisconnectModal();
+                            }
+                            return;
+                        }
+                        return;
+                    }
 
                     if (e.key === 'Escape' && this.showSubscriptionWarning) {
                         e.preventDefault();
                         this.dismissSubscriptionWarning();
+                        return;
+                    }
+
+                    if ((tagName === 'button' || tagName === 'a') && (e.key === ' ' || e.key === 'Enter')) {
                         return;
                     }
 
@@ -3633,6 +4243,26 @@
                         case '_':
                             e.preventDefault();
                             this.zoomOut();
+                            break;
+                        case 'ArrowLeft':
+                            if (!this.isMobileCustomerView && !Boolean(this.settings?.hide_showcase) && this.products.length > 1) {
+                                e.preventDefault();
+                                this.nextProduct();
+                            }
+                            break;
+                        case 'ArrowRight':
+                            if (!this.isMobileCustomerView && !Boolean(this.settings?.hide_showcase) && this.products.length > 1) {
+                                e.preventDefault();
+                                this.prevProduct();
+                            }
+                            break;
+                        case ' ':
+                        case 'p':
+                        case 'P':
+                            if (!this.isMobileCustomerView && !Boolean(this.settings?.hide_showcase) && this.products.length > 0) {
+                                e.preventDefault();
+                                this.toggleSliderPause();
+                            }
                             break;
                         case 'f':
                         case 'F':
@@ -3659,6 +4289,8 @@
                 },
 
                 init() {
+                    this.updateViewportMode();
+
                     // مقداردهی و بررسی وضعیت هشدار انقضای اشتراک
                     this.initSubscriptionWarning();
 
@@ -3701,6 +4333,7 @@
                     window.addEventListener('keydown', () => this.triggerControls(), { passive: true });
 
                     const multiPassScale = () => {
+                        this.updateViewportMode();
                         this.applyStageScale();
                         setTimeout(() => this.applyStageScale(), 60);
                         setTimeout(() => this.applyStageScale(), 200);
@@ -3720,6 +4353,11 @@
                     window.addEventListener('orientationchange', () => {
                         setTimeout(() => multiPassScale(), 200);
                     });
+                    this.$watch('isMobileCustomerView', val => {
+                        if (!val) {
+                            this.$nextTick(() => multiPassScale());
+                        }
+                    });
                     this.$watch('zoomLevel', () => this.applyStageScale());
                     this.$watch('overscanMargin', () => this.applyStageScale());
 
@@ -3738,8 +4376,14 @@
                     this.startSlider();
                     this.$watch('settings.slider_interval_sec', () => this.startSlider());
 
-                    // ساعت
-                    setInterval(() => { this.now = new Date(); }, 1000);
+                    // ساعت و همگام‌سازی خودکار ساعت تهران برای پوسته روز و شب
+                    setInterval(() => {
+                        this.now = new Date();
+                        if (typeof this.tehranAnchorMinutes === 'number' && typeof performance !== 'undefined') {
+                            const elapsedMinutes = Math.floor((performance.now() - this.tehranAnchorPerfMs) / 60000);
+                            this.currentTehranMinutes = (this.tehranAnchorMinutes + Math.max(0, elapsedMinutes)) % 1440;
+                        }
+                    }, 1000);
 
                     this.scheduleSnapshotRefresh();
 

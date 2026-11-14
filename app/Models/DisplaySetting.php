@@ -27,6 +27,13 @@ class DisplaySetting extends Model
         'empty_showcase_title',
         'empty_showcase_text',
         'empty_showcase_theme',
+        'hide_showcase',
+        'auto_theme_enabled',
+        'day_theme_mode',
+        'night_theme_mode',
+        'day_start_time',
+        'night_start_time',
+        'footer_ticker_text',
         'published_at',
     ];
     protected $casts = [
@@ -35,6 +42,8 @@ class DisplaySetting extends Model
         'show_profit' => 'boolean',
         'show_weather' => 'boolean',
         'show_weather_bg' => 'boolean',
+        'hide_showcase' => 'boolean',
+        'auto_theme_enabled' => 'boolean',
         'published_at' => 'datetime',
     ];
 }

@@ -192,18 +192,15 @@ class PublicDisplayController extends Controller
         $lastFetch = \App\Models\MarketCache::max('fetched_at');
         $ageSeconds = $lastFetch ? max(0, (int) (now()->timestamp - \Illuminate\Support\Carbon::parse($lastFetch)->timestamp)) : null;
 
-        $validPreviewThemes = [
-            'dark-glass', 'light-modern', 'gold-royal', 'blue-ocean', 'purple-haze',
-            'emerald-night', 'rose-dark', 'imperial-onyx', 'imperial-pearl',
-            'pure-black', 'bing-daily', 'bing-studio', 'bing-ceramic',
-        ];
+        $validPreviewThemes = \App\Http\Controllers\Admin\DisplaySettingController::VALID_THEMES;
         $requestedPreviewTheme = (string) request()->query('preview_theme', '');
-        $effectiveThemeMode = in_array($requestedPreviewTheme, $validPreviewThemes, true)
+        $isPreviewMode = in_array($requestedPreviewTheme, $validPreviewThemes, true);
+        $effectiveThemeMode = $isPreviewMode
             ? $requestedPreviewTheme
             : ($settings->theme_mode ?? 'light-modern');
 
         $bingWallpaper = null;
-        if (str_starts_with($effectiveThemeMode, 'bing-')) {
+        if (str_starts_with($effectiveThemeMode, 'bing-') || ($settings->auto_theme_enabled ?? false)) {
             try {
                 $bingWallpaper = app(\App\Services\BingWallpaperService::class)->getTodayWallpaper();
             } catch (\Throwable $e) {
@@ -221,6 +218,7 @@ class PublicDisplayController extends Controller
 
         \App\Http\Controllers\Admin\DisplaySettingController::ensureEmptyShowcaseColumnsExist();
         \App\Http\Controllers\Admin\DisplaySettingController::ensureWeatherColumnsExist();
+        \App\Http\Controllers\Admin\DisplaySettingController::ensureBoardEnhancementColumnsExist();
 
         $weather = null;
         if ($settings->show_weather ?? true) {
@@ -246,6 +244,15 @@ class PublicDisplayController extends Controller
         $settingsData['empty_showcase_theme'] = $settings->empty_showcase_theme ?? 'gold';
         $settingsData['show_weather'] = (bool) ($settings->show_weather ?? true);
         $settingsData['show_weather_bg'] = (bool) ($settings->show_weather_bg ?? true);
+        $settingsData['hide_showcase'] = (bool) ($settings->hide_showcase ?? false);
+        $settingsData['auto_theme_enabled'] = $isPreviewMode ? false : (bool) ($settings->auto_theme_enabled ?? false);
+        $settingsData['day_theme_mode'] = $settings->day_theme_mode ?: 'light-modern';
+        $settingsData['night_theme_mode'] = $settings->night_theme_mode ?: 'imperial-onyx';
+        $settingsData['day_start_time'] = $settings->day_start_time ?: '07:00';
+        $settingsData['night_start_time'] = $settings->night_start_time ?: '18:30';
+        $settingsData['footer_ticker_text'] = (string) ($settings->footer_ticker_text ?? '');
+
+        $tehranNow = now('Asia/Tehran');
 
         // محاسبه هوشمند وضعیت انقضای اشتراک (نمایش هشدار ۳ روز پایانی اعتبار)
         $subscriptionWarning = null;
@@ -279,6 +286,8 @@ class PublicDisplayController extends Controller
             'dataAgeSeconds'         => $ageSeconds,
             'isStale'                => $ageSeconds === null || $ageSeconds > 180,
             'serverTime'             => now()->toIso8601String(),
+            'tehranMinutes'          => ($tehranNow->hour * 60) + $tehranNow->minute,
+            'tehranTimeFormatted'    => $tehranNow->format('H:i'),
             'apiTime'                => \Cache::get('market_api_last_time', '---'),
             'refreshIntervalSeconds' => $this->marketService->currentRefreshIntervalSeconds(),
             'displayItems'           => $items,

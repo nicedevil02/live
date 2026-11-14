@@ -6,15 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\DisplaySetting;
 use App\Models\DisplayItem;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DisplaySettingController extends Controller
 {
+    public const VALID_THEMES = [
+        'dark-glass', 'light-modern', 'gold-royal', 'blue-ocean', 'purple-haze',
+        'emerald-night', 'rose-dark', 'imperial-onyx', 'imperial-pearl',
+        'pure-black', 'bing-daily', 'bing-studio', 'bing-ceramic',
+    ];
+
     /**
      * نمایش صفحه تنظیمات تابلو
      */
     public function index()
     {
         self::ensureWeatherColumnsExist();
+        self::ensureBoardEnhancementColumnsExist();
         $settings = DisplaySetting::firstOrCreate(['user_id' => auth()->id()], [
             'theme_mode' => 'light-modern',
             'slider_interval_sec' => 8,
@@ -23,6 +31,13 @@ class DisplaySettingController extends Controller
             'show_profit' => true,
             'show_weather' => true,
             'show_weather_bg' => true,
+            'hide_showcase' => false,
+            'auto_theme_enabled' => false,
+            'day_theme_mode' => 'light-modern',
+            'night_theme_mode' => 'imperial-onyx',
+            'day_start_time' => '07:00',
+            'night_start_time' => '18:30',
+            'footer_ticker_text' => '',
             'shop_name' => auth()->user()->name ?? 'گالری طلای جدید',
             'phone' => '',
             'instagram' => '',
@@ -50,17 +65,25 @@ class DisplaySettingController extends Controller
     {
         $this->ensureCityColumnsExist();
         self::ensureWeatherColumnsExist();
+        self::ensureBoardEnhancementColumnsExist();
         $user = auth()->user();
         $settings = DisplaySetting::firstOrCreate(['user_id' => $user->id]);
 
         $validated = $request->validate([
-            'theme_mode'          => 'required|string',
+            'theme_mode'          => ['required', 'string', Rule::in(self::VALID_THEMES)],
             'slider_interval_sec' => 'required|integer|min:3',
             'show_weight'         => 'sometimes|boolean',
             'show_labor'          => 'sometimes|boolean',
             'show_profit'         => 'sometimes|boolean',
             'show_weather'        => 'sometimes|boolean',
             'show_weather_bg'     => 'sometimes|boolean',
+            'hide_showcase'       => 'sometimes|boolean',
+            'auto_theme_enabled'  => 'sometimes|boolean',
+            'day_theme_mode'      => ['nullable', 'string', Rule::in(self::VALID_THEMES)],
+            'night_theme_mode'    => ['nullable', 'string', Rule::in(self::VALID_THEMES)],
+            'day_start_time'      => ['nullable', 'string', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
+            'night_start_time'    => ['nullable', 'string', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
+            'footer_ticker_text'  => 'nullable|string|max:300',
             'shop_name'           => 'nullable|string|max:255',
             'city'                => 'nullable|string|max:50',
             'phone'               => 'nullable|string|max:20',
@@ -71,12 +94,18 @@ class DisplaySettingController extends Controller
             'qr_desc'             => 'nullable|string|max:255',
         ]);
 
-        if ($request->has('show_weather')) {
-            $validated['show_weather'] = $request->boolean('show_weather');
+        foreach (['show_weight', 'show_labor', 'show_profit', 'show_weather', 'show_weather_bg', 'hide_showcase', 'auto_theme_enabled'] as $boolField) {
+            if ($request->has($boolField)) {
+                $validated[$boolField] = $request->boolean($boolField);
+            }
         }
 
-        if ($request->has('show_weather_bg')) {
-            $validated['show_weather_bg'] = $request->boolean('show_weather_bg');
+        $validated['day_theme_mode'] = !empty($validated['day_theme_mode']) ? $validated['day_theme_mode'] : ($settings->day_theme_mode ?: 'light-modern');
+        $validated['night_theme_mode'] = !empty($validated['night_theme_mode']) ? $validated['night_theme_mode'] : ($settings->night_theme_mode ?: 'imperial-onyx');
+        $validated['day_start_time'] = !empty($validated['day_start_time']) ? $validated['day_start_time'] : ($settings->day_start_time ?: '07:00');
+        $validated['night_start_time'] = !empty($validated['night_start_time']) ? $validated['night_start_time'] : ($settings->night_start_time ?: '18:30');
+        if (array_key_exists('footer_ticker_text', $validated)) {
+            $validated['footer_ticker_text'] = trim((string) ($validated['footer_ticker_text'] ?? ''));
         }
 
         if ($request->has('city')) {
@@ -344,6 +373,40 @@ class DisplaySettingController extends Controller
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('ensureWeatherColumnsExist error: ' . $e->getMessage());
+        }
+    }
+
+    public static function ensureBoardEnhancementColumnsExist(): void
+    {
+        try {
+            $existing = array_flip(\Illuminate\Support\Facades\Schema::getColumnListing('display_settings'));
+            $specs = [
+                'hide_showcase'      => ['boolean', [], false, false],
+                'auto_theme_enabled' => ['boolean', [], false, false],
+                'day_theme_mode'     => ['string', [40], 'light-modern', false],
+                'night_theme_mode'   => ['string', [40], 'imperial-onyx', false],
+                'day_start_time'     => ['string', [5], '07:00', false],
+                'night_start_time'   => ['string', [5], '18:30', false],
+                'footer_ticker_text' => ['string', [300], null, true],
+            ];
+            $missing = array_diff_key($specs, $existing);
+            if (empty($missing)) {
+                return;
+            }
+
+            \Illuminate\Support\Facades\Schema::table('display_settings', function ($table) use ($missing) {
+                foreach ($missing as $name => [$type, $args, $default, $nullable]) {
+                    $column = $table->{$type}($name, ...$args);
+                    if ($nullable) {
+                        $column->nullable();
+                    }
+                    if ($default !== null) {
+                        $column->default($default);
+                    }
+                }
+            });
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureBoardEnhancementColumnsExist error: ' . $e->getMessage());
         }
     }
 
