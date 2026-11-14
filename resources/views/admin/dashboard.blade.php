@@ -1065,6 +1065,15 @@
 @endpush
 
 @push('scripts')
+@php
+    $resolvedShopMeta = $shopMeta ?? ['shopName' => 'گالری طلا', 'shopPhone' => '', 'publicUrl' => ''];
+    $resolvedNotice = $showcaseConfig ?? [
+        'empty_showcase_mode' => 'guide',
+        'empty_showcase_title' => '',
+        'empty_showcase_text' => '',
+        'empty_showcase_theme' => 'gold',
+    ];
+@endphp
 <script src="{{ asset('vendor/html5-qrcode.min.js') }}"></script>
 <script>
 window.copyAdminText = function(text, successMsg) {
@@ -1098,10 +1107,10 @@ window.copyAdminText = function(text, successMsg) {
 
 function dashboardPage() {
     return {
-        shopMeta: @json($shopMeta ?? ['shopName' => 'گالری طلا', 'shopPhone' => '', 'publicUrl' => '']),
+        shopMeta: @json($resolvedShopMeta),
         showNoticeEditor: @json(($productsCount ?? 0) === 0),
         isSavingNotice: false,
-        notice: @json($showcaseConfig ?? ['empty_showcase_mode' => 'guide', 'empty_showcase_title' => '', 'empty_showcase_text' => '', 'empty_showcase_theme' => 'gold']),
+        notice: @json($resolvedNotice),
         keyRates: [
             { symbol: 'gold18', label: 'طلای ۱۸ عیار', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
             { symbol: 'buy_gold', label: 'گرم خرید ۱۸', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
