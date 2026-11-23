@@ -627,7 +627,7 @@
                         </div>
                         <div>
                             <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">نرخ‌های کلیدی تابلو</h3>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400">به‌روزرسانی خودکار هر ۱۰ ثانیه برای پاسخ سریع به مشتری</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">سایر نرخ‌های پرکاربرد جهت بررسی و ارسال سریع به مشتری</p>
                         </div>
                     </div>
                     <button type="button"
@@ -1112,8 +1112,8 @@ function dashboardPage() {
         isSavingNotice: false,
         notice: @json($resolvedNotice),
         keyRates: [
-            { symbol: 'gold18', label: 'طلای ۱۸ عیار', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
             { symbol: 'buy_gold', label: 'گرم خرید ۱۸', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
+            { symbol: 'gold24', label: 'طلای ۲۴ عیار', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
             { symbol: 'mesghal17', label: 'آبشده', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
             { symbol: 'coin_emami', label: 'سکه امامی', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
             { symbol: 'usdt', label: 'تتر (دلار دیجیتال)', formatted: '---', value: 0, changePercent: 0, unit: 'تومان' },
@@ -1193,6 +1193,9 @@ function dashboardPage() {
                 'ساعت بروزرسانی: ' + nowTime,
                 '-----------------------'
             ];
+            if (this.calc.liveGoldPrice > 0) {
+                lines.push('طلای ۱۸ عیار: ' + this.formatFa(this.calc.liveGoldPrice) + ' تومان');
+            }
             this.keyRates.forEach(item => {
                 if (item.value > 0) {
                     lines.push(item.label + ': ' + item.formatted + ' ' + item.unit);
