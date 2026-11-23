@@ -117,6 +117,7 @@
                         ['r' => 'admin.transactions.index', 'l' => 'تراکنش‌ها و مالی', 'i' => 'wallet', 'super_only' => true],
                         ['r' => 'admin.users.index', 'l' => 'مدیریت کاربران', 'i' => 'users', 'super_only' => true],
                         ['r' => 'admin.sms-status', 'l' => 'درگاه پیامک (s.api.ir)', 'i' => 'message-square', 'super_only' => true],
+                        ['r' => 'admin.notifications', 'l' => 'ربات بله و تلگرام', 'i' => 'send', 'super_only' => true],
                         ['r' => 'admin.sources', 'l' => 'منابع دریافت API', 'i' => 'rss', 'super_only' => true],
                         ['r' => 'admin.logs', 'l' => 'گزارشات سیستم', 'i' => 'file-text', 'super_only' => true],
                     ];

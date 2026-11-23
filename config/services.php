@@ -58,4 +58,17 @@ return [
     'zibal' => [
         'merchant_id' => env('ZIBAL_MERCHANT_ID', 'zibal'),
     ],
+
+    'bale' => [
+        'enabled'   => filter_var(env('BALE_BOT_ENABLED', true), FILTER_VALIDATE_BOOL),
+        'bot_token' => env('BALE_BOT_TOKEN'),
+        'chat_id'   => env('BALE_CHAT_ID'),
+    ],
+
+    'telegram' => [
+        'enabled'   => filter_var(env('TELEGRAM_BOT_ENABLED', true), FILTER_VALIDATE_BOOL),
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id'   => env('TELEGRAM_CHAT_ID'),
+        'api_base'  => env('TELEGRAM_API_BASE', 'https://api.telegram.org'),
+    ],
 ];

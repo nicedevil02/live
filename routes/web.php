@@ -142,6 +142,12 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
         Route::post('/transactions/{payment}/reject', [TransactionController::class, 'rejectPayment'])->name('transactions.reject');
         Route::post('/transactions/coupons', [TransactionController::class, 'storeCoupon'])->name('transactions.coupons.store');
         Route::post('/transactions/coupons/{coupon}/toggle', [TransactionController::class, 'toggleCoupon'])->name('transactions.coupons.toggle');
+
+        // تنظیمات اطلاع‌رسانی ثبت‌نام از طریق ربات بله و تلگرام (سوپر ادمین)
+        Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'index'])->name('notifications');
+        Route::put('/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'update'])->name('notifications.update');
+        Route::post('/notifications/detect-chat-id', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'detectChatId'])->name('notifications.detect-chat-id');
+        Route::post('/notifications/test', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'test'])->name('notifications.test');
     });
 
     // خروج از حساب کاربری طلافروش و بازگشت به سوپرادمین

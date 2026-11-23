@@ -704,6 +704,9 @@ class AuthController extends Controller
         // اطلاع‌رسانی پیامکی آنی به مدیریت
         $smsService->notifyAdminNewRegistration($user->name, $user->phone);
 
+        // اطلاع‌رسانی فوری از طریق ربات بله و تلگرام (غیرمسدودکننده و ایمن)
+        app(\App\Services\AdminBotNotificationService::class)->dispatchNewRegistrationNotification($user);
+
         // ارسال پیامک خوش‌آمد و لینک تابلوی تلویزیون به طلافروش
         $smsService->sendWelcomeSms($user->phone, $user->name, $user->username);
 
