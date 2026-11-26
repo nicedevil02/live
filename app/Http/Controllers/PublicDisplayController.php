@@ -404,6 +404,157 @@ class PublicDisplayController extends Controller
     }
 
     /**
+     * صفحه اختصاصی و سبک نمودار تغییرات قیمت هر کارت تابلو (۱ روزه، ۷ روزه، ۳۰ روزه، ۱ ساله)
+     */
+    public function showChart(Request $request, string $username, string $symbol)
+    {
+        $resolved = $this->resolveChartTarget($username, $symbol);
+        $user = $resolved['user'];
+
+        $range = (string) $request->query('range', '7d');
+        if (!in_array($range, \App\Services\MarketHistoryService::VALID_RANGES, true)) {
+            $range = '7d';
+        }
+
+        $historyService = app(\App\Services\MarketHistoryService::class);
+        $chartData = $historyService->getChartSeries($symbol, $range, $user);
+
+        if (!empty($resolved['customLabel'])) {
+            $chartData['label'] = $resolved['customLabel'];
+        }
+
+        $isEmbed = $request->boolean('embed');
+        $isTv = $request->boolean('tv');
+        $themeKey = (string) $request->query('theme', $resolved['defaultTheme']);
+        $isLightTheme = in_array($themeKey, ['light-modern', 'imperial-pearl'], true);
+
+        $response = response()->view('display.chart', [
+            'username'           => $username,
+            'symbol'             => $symbol,
+            'range'              => $range,
+            'galleryDisplayName' => $resolved['galleryDisplayName'],
+            'cityFullDisplay'    => $resolved['cityFullDisplay'],
+            'backUrl'            => $resolved['backUrl'],
+            'standaloneUrl'      => url("/{$username}/chart/{$symbol}"),
+            'apiUrl'             => url("/api/display/chart/{$username}/{$symbol}"),
+            'isEmbed'            => $isEmbed,
+            'isTv'               => $isTv,
+            'themeKey'           => $themeKey,
+            'isLightTheme'       => $isLightTheme,
+            'chartData'          => $chartData,
+            'switchItems'        => $resolved['switchItems'],
+        ])->header('X-Frame-Options', 'SAMEORIGIN');
+
+        if ($isEmbed || $isTv || $username === 'demo') {
+            $response->header('X-Robots-Tag', 'noindex, follow');
+        }
+
+        return $response;
+    }
+
+    /**
+     * خروجی JSON سری زمانی نمودار برای سوییچ لحظه‌ای بین بازه‌های زمانی
+     */
+    public function chartData(Request $request, string $username, string $symbol)
+    {
+        $resolved = $this->resolveChartTarget($username, $symbol);
+        $user = $resolved['user'];
+
+        $range = (string) $request->query('range', '7d');
+        if (!in_array($range, \App\Services\MarketHistoryService::VALID_RANGES, true)) {
+            $range = '7d';
+        }
+
+        $cacheKey = 'chart_series_' . md5($username . '_' . $symbol . '_' . $range);
+        $series = Cache::remember($cacheKey, 20, function () use ($symbol, $range, $user, $resolved) {
+            $data = app(\App\Services\MarketHistoryService::class)->getChartSeries($symbol, $range, $user);
+            if (!empty($resolved['customLabel'])) {
+                $data['label'] = $resolved['customLabel'];
+            }
+            return $data;
+        });
+
+        return response()->json($series);
+    }
+
+    /**
+     * اعتبارسنجی کاربر و نماد برای صفحه نمودار (پشتیبانی از حالت دمو و گالری‌های ثبت‌شده)
+     */
+    private function resolveChartTarget(string $username, string $symbol): array
+    {
+        if (!\App\Services\MarketHistoryService::isValidSymbol($symbol)) {
+            abort(404, 'نماد مورد نظر یافت نشد.');
+        }
+
+        if ($username === 'demo') {
+            $switchItems = [];
+            foreach (\App\Services\MarketHistoryService::SYMBOL_META as $key => $meta) {
+                if ($key === 'buy_gold') {
+                    continue;
+                }
+                $switchItems[] = ['key' => $key, 'label' => $meta['label']];
+            }
+
+            return [
+                'user'               => null,
+                'galleryDisplayName' => 'گالری نمونه طلالایو',
+                'cityFullDisplay'    => 'پیش‌نمایش زنده',
+                'backUrl'            => url('/demo'),
+                'defaultTheme'       => 'dark-glass',
+                'customLabel'        => null,
+                'switchItems'        => $switchItems,
+            ];
+        }
+
+        $user = \App\Models\User::where('username', $username)->firstOrFail();
+
+        if (!$user->is_approved && !$user->is_super_admin) {
+            abort(403, 'حساب کاربری این گالری هنوز تأیید نشده است.');
+        }
+
+        if ($user->expires_at && $user->expires_at->isPast() && !$user->is_super_admin) {
+            abort(402, 'اعتبار زمانی این تابلو به پایان رسیده است.');
+        }
+
+        $settings = DisplaySetting::where('user_id', $user->id)->first();
+        $resolved = $this->resolveGalleryCityInfo($user, $settings);
+
+        $activeItems = DisplayItem::where('user_id', $user->id)
+            ->where('enabled', true)
+            ->where('key', '!=', 'exchange_gold')
+            ->orderBy('order')
+            ->get(['key', 'label']);
+
+        $customLabel = null;
+        $switchItems = [];
+        foreach ($activeItems as $di) {
+            if (!\App\Services\MarketHistoryService::isValidSymbol($di->key)) {
+                continue;
+            }
+            $lbl = $di->label ?: (\App\Services\MarketHistoryService::SYMBOL_META[$di->key]['label'] ?? $di->key);
+            if ($di->key === $symbol) {
+                $customLabel = $lbl;
+            }
+            $switchItems[] = ['key' => $di->key, 'label' => $lbl];
+        }
+
+        if (empty($switchItems)) {
+            $meta = \App\Services\MarketHistoryService::SYMBOL_META[$symbol];
+            $switchItems[] = ['key' => $symbol, 'label' => $meta['label']];
+        }
+
+        return [
+            'user'               => $user,
+            'galleryDisplayName' => $resolved['galleryDisplayName'],
+            'cityFullDisplay'    => $resolved['cityFullDisplay'],
+            'backUrl'            => url('/' . $user->username),
+            'defaultTheme'       => $settings?->theme_mode ?? 'dark-glass',
+            'customLabel'        => $customLabel,
+            'switchItems'        => $switchItems,
+        ];
+    }
+
+    /**
      * نمایش صفحه انتظار جفت‌سازی تلویزیون
      */
     public function showPairingScreen()

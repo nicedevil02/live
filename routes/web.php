@@ -274,5 +274,8 @@ Route::get('/api-docs', [PublicPageController::class, 'apiDocs'])->name('public.
 // صفحه فرود اپلیکیشن موبایل و تلویزیون هوشمند طلالایو
 Route::get('/app', [PublicPageController::class, 'appLanding'])->name('public.app');
 
+// صفحه اختصاصی و سبک نمودار تغییرات قیمت هر کارت تابلو (مجزا از صفحه اصلی تابلو)
+Route::get('/{username}/chart/{symbol}', [PublicDisplayController::class, 'showChart'])->name('display.chart');
+
 // صفحه نمایشگر اختصاصی مغازه (باید آخرین مسیر باشد تا با سایر آدرس‌ها تداخل نداشته باشد)
 Route::get('/{username}', [PublicDisplayController::class, 'show'])->name('display.live');

@@ -97,8 +97,14 @@
         {{-- گرید کارت‌های نئومورفیک زنده قیمت --}}
         <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
             <template x-for="item in feed" :key="item.symbol">
-                <div class="relative overflow-hidden rounded-2xl p-4 sm:p-5"
-                     :class="item.symbol === 'gold18' ? 'tl-neu-card-gold' : 'tl-neu-card'">
+                <div class="relative overflow-hidden rounded-2xl p-4 sm:p-5 cursor-pointer transition-transform hover:-translate-y-0.5 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                     :class="item.symbol === 'gold18' ? 'tl-neu-card-gold' : 'tl-neu-card'"
+                     @click="openCardChart(item.symbol)"
+                     @keydown.enter.prevent="openCardChart(item.symbol)"
+                     @keydown.space.prevent="openCardChart(item.symbol)"
+                     role="button"
+                     tabindex="0"
+                     title="مشاهده نمودار تغییرات قیمت">
                     
                     {{-- هدر کارت --}}
                     <div class="flex items-center justify-between mb-2.5">
@@ -115,13 +121,13 @@
                               x-text="formatNumber(item.value)"></span>
                     </div>
 
-                    {{-- وضعیت زنده --}}
+                    {{-- وضعیت زنده و لینک نمودار --}}
                     <div class="mt-3 flex items-center justify-between text-[11px] text-stone-400 pt-2.5 border-t border-white/10">
                         <span class="flex items-center gap-1.5 text-emerald-400 font-semibold">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                             <span>نرخ زنده تابلوی ابری</span>
                         </span>
-                        <span class="text-[10px] text-stone-400 tabular-nums">TalaLive Cloud</span>
+                        <span class="text-[11px] text-amber-400 font-bold">مشاهده نمودار ←</span>
                     </div>
                 </div>
             </template>
@@ -169,11 +175,41 @@
         </div>
     </footer>
 
+    {{-- پنجره هم‌نشین صفحه مستقل نمودار کارت --}}
+    <template x-if="activeChartUrl">
+        <div class="fixed inset-0 z-[120] bg-slate-950/85 backdrop-blur-md flex flex-col"
+             @click.self="closeCardChart()"
+             @keydown.escape.window="closeCardChart()"
+             role="dialog"
+             aria-modal="true"
+             aria-label="نمودار تغییرات قیمت">
+            <iframe :src="activeChartUrl"
+                    class="w-full h-full flex-1 border-0 bg-transparent"
+                    allow="clipboard-write"
+                    title="نمودار تغییرات قیمت"></iframe>
+        </div>
+    </template>
+
     <script>
         function demoDisplayApp(initialSnapshot) {
             return {
                 snapshot: initialSnapshot,
                 feed: initialSnapshot.priceFeed || [],
+                activeChartUrl: '',
+                init() {
+                    window.addEventListener('message', (ev) => {
+                        if (ev && ev.data && ev.data.type === 'talalive-close-chart') {
+                            this.closeCardChart();
+                        }
+                    });
+                },
+                openCardChart(symbol) {
+                    if (!symbol) return;
+                    this.activeChartUrl = '/demo/chart/' + encodeURIComponent(symbol) + '?embed=1&theme=dark-glass';
+                },
+                closeCardChart() {
+                    this.activeChartUrl = '';
+                },
                 formatNumber(val) {
                     if (!val) return '---';
                     return new Intl.NumberFormat('fa-IR').format(Math.round(val));

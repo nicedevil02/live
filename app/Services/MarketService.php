@@ -816,6 +816,16 @@ class MarketService
             ['symbol' => $symbol],
             $payload
         );
+
+        try {
+            app(\App\Services\MarketHistoryService::class)->recordTick(
+                $symbol,
+                (float) $value,
+                ($todayOpenPrice !== null && $todayOpenPrice > 0) ? (float) $todayOpenPrice : null
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::debug('MarketHistory recordTick skipped: ' . $e->getMessage());
+        }
     }
 
     protected function markAllStale(): void

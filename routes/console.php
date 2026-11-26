@@ -19,3 +19,7 @@ Schedule::command('bing:wallpaper')
 Schedule::command('bing:wallpaper')
     ->dailyAt('06:00')
     ->withoutOverlapping();
+
+Schedule::command('market:backfill-history --days=14')
+    ->dailyAt('01:15')
+    ->withoutOverlapping();

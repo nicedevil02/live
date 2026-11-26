@@ -2774,7 +2774,13 @@
                                  item.symbol === 'gold18' ? (theme.heroCard || 'neu-hero-gold-imperial') : (theme.card + ' ' + theme.cardHover),
                                  index < 3 ? 'col-span-4 px-5 xl:px-6 pb-5 pt-4' : 'col-span-3 px-3.5 xl:px-4 pb-3.5 pt-3.5'
                                  ]"
-                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-[transform,box-shadow,border-color] duration-300 h-full min-h-0">
+                                 @click="openCardChart(item.symbol)"
+                                 @keydown.enter.prevent.stop="openCardChart(item.symbol)"
+                                 @keydown.space.prevent.stop="openCardChart(item.symbol)"
+                                 role="button"
+                                 tabindex="0"
+                                 title="مشاهده نمودار تغییرات قیمت"
+                                 class="relative overflow-hidden flex min-w-0 flex-col justify-between rounded-[1.75rem] transition-[transform,box-shadow,border-color] duration-300 h-full min-h-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400">
 
                                 <template x-if="item.symbol === 'gold18'">
                                     <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-[1.75rem] z-0">
@@ -3092,7 +3098,13 @@
                                 ? (isLightTheme ? 'bg-gradient-to-br from-amber-50 to-amber-100/80 border-amber-300 text-amber-950' : 'bg-gradient-to-br from-amber-950/80 to-slate-900 border-amber-500/45 text-amber-100')
                                 : (isLightTheme ? 'bg-white/95 border-slate-200 text-slate-900' : 'bg-slate-900/90 border-white/15 text-white')
                          ]"
-                         class="rounded-2xl border shadow-sm flex flex-col justify-between gap-2 min-w-0">
+                         @click="openCardChart(item.symbol)"
+                         @keydown.enter.prevent="openCardChart(item.symbol)"
+                         @keydown.space.prevent="openCardChart(item.symbol)"
+                         role="button"
+                         tabindex="0"
+                         title="مشاهده نمودار تغییرات قیمت"
+                         class="rounded-2xl border shadow-sm flex flex-col justify-between gap-2 min-w-0 cursor-pointer active:scale-[0.99] transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400">
                         <div class="flex items-center justify-between gap-1.5">
                             <p class="font-black leading-snug truncate" :class="index === 0 ? 'text-base' : 'text-xs'" x-text="item.label"></p>
                             <span class="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold border"
@@ -3280,6 +3292,20 @@
             <span class="text-amber-400">📺</span>
             <span x-text="hudFeedbackText"></span>
         </div>
+
+        {{-- پنجره هم‌نشین صفحه مستقل نمودار کارت (فقط در لحظه کلیک رندر می‌شود تا صفحه تابلو کاملاً سبک بماند) --}}
+        <template x-if="activeChartUrl">
+            <div class="fixed inset-0 z-[270] bg-slate-950/85 backdrop-blur-md flex flex-col animate-fadeIn"
+                 @click.self="closeCardChart()"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-label="نمودار تغییرات قیمت">
+                <iframe :src="activeChartUrl"
+                        class="w-full h-full flex-1 border-0 bg-transparent"
+                        allow="clipboard-write"
+                        title="نمودار تغییرات قیمت"></iframe>
+            </div>
+        </template>
     </main>
 
     {{-- Loading Screen --}}
@@ -3683,6 +3709,7 @@
                 touchStartY: null,
                 showDisconnectModal: false,
                 disconnectFocusIndex: 0,
+                activeChartUrl: '',
                 lastServerHideShowcase: Boolean(initialSnapshot?.settings?.hide_showcase),
                 localHideShowcase: (function() {
                     try {
@@ -4383,6 +4410,18 @@
                     this.openDisconnectModal();
                 },
 
+                openCardChart(symbol) {
+                    if (!symbol) return;
+                    const uname = this.snapshotData?.username || '{{ $username }}';
+                    const th = encodeURIComponent(this.themeKey || 'dark-glass');
+                    const tvParam = this.isForcedTvByUrl ? '&tv=1' : '';
+                    this.activeChartUrl = '/' + encodeURIComponent(uname) + '/chart/' + encodeURIComponent(symbol) + '?embed=1&theme=' + th + tvParam;
+                },
+
+                closeCardChart() {
+                    this.activeChartUrl = '';
+                },
+
                 initSubscriptionWarning() {
                     if (!this.subscriptionWarning || !this.subscriptionWarning.active) {
                         this.showSubscriptionWarning = false;
@@ -4413,6 +4452,14 @@
                     this.triggerControls();
                     const tagName = e.target.tagName?.toLowerCase();
                     if (['input', 'textarea', 'select'].includes(tagName)) return;
+
+                    if (this.activeChartUrl) {
+                        if (e.key === 'Escape' || e.key === 'Backspace') {
+                            e.preventDefault();
+                            this.closeCardChart();
+                        }
+                        return;
+                    }
 
                     if (this.showDisconnectModal) {
                         if (e.key === 'Escape' || e.key === 'Backspace') {
@@ -4516,6 +4563,13 @@
 
                     // مقداردهی و بررسی وضعیت هشدار انقضای اشتراک
                     this.initSubscriptionWarning();
+
+                    // بستن صفحه هم‌نشین نمودار با پیام دکمه «بازگشت به تابلو» یا تایمر عدم فعالیت
+                    window.addEventListener('message', (ev) => {
+                        if (ev && ev.data && ev.data.type === 'talalive-close-chart') {
+                            this.closeCardChart();
+                        }
+                    });
 
                     // ذخیره پایدار توکن و نام کاربری در حافظه محلی و کوکی تلویزیون جهت اتصال همیشگی
                     try {

@@ -28,6 +28,7 @@ if (!is_dir($targetDir)) {
 
 $criticalSyncFiles = [
     'routes/web.php',
+    'routes/api.php',
     'routes/console.php',
     'config/tv.php',
     'config/navigation.php',
@@ -35,6 +36,7 @@ $criticalSyncFiles = [
     'config/services.php',
     'app/Console/Commands/FetchBingWallpaper.php',
     'app/Console/Commands/AuditSeoRoutes.php',
+    'app/Console/Commands/BackfillMarketHistory.php',
     'app/Models/DisplaySetting.php',
     'app/Models/BotNotificationSetting.php',
     'app/Http/Controllers/PublicDisplayController.php',
@@ -50,6 +52,7 @@ $criticalSyncFiles = [
     'app/Services/AdminBotNotificationService.php',
     'app/Services/BingWallpaperService.php',
     'app/Services/MarketService.php',
+    'app/Services/MarketHistoryService.php',
     'app/Services/WeatherService.php',
     'app/Services/SmsService.php',
     'app/Services/Payment/PaymentService.php',
@@ -131,6 +134,7 @@ $criticalSyncFiles = [
     'resources/views/admin/formulas/index.blade.php',
     'resources/views/admin/notifications/index.blade.php',
     'resources/views/display/pairing.blade.php',
+    'resources/views/display/chart.blade.php',
     'database/migrations/2026_09_26_170500_remove_silver_items_from_display_items_and_cache.php',
     'database/migrations/2026_11_08_130000_update_display_items_currency_to_commodities.php',
     'database/migrations/2026_11_08_141500_update_display_items_labels_and_positions.php',
@@ -138,10 +142,11 @@ $criticalSyncFiles = [
     'database/migrations/2026_11_08_154500_set_usdt_label_to_digital_dollar.php',
     'database/migrations/2026_11_14_160000_add_board_enhancement_columns_to_display_settings_table.php',
     'database/migrations/2026_11_23_105000_create_bot_notification_settings_table.php',
+    'database/migrations/2026_11_26_163000_create_market_history_tables.php',
     'public_html/vendor/sortable.min.js',
     'public_html/vendor/qrcode-generator.min.js',
     'public_html/build/manifest.json',
-    'public_html/build/assets/app-CvPJp2oh.css',
+    'public_html/build/assets/app-DyZ85WGY.css',
     'public_html/build/assets/app-34mOoJaZ.js',
     'public_html/downloads/talalive-tv.json',
     'public_html/deploy-run.php',
@@ -601,6 +606,17 @@ if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/boo
 
         $tableStatus['tv_devices'] = \Illuminate\Support\Facades\Schema::hasTable('tv_devices');
         $tableStatus['tv_sessions'] = \Illuminate\Support\Facades\Schema::hasTable('tv_sessions');
+        $tableStatus['market_daily_candles'] = \Illuminate\Support\Facades\Schema::hasTable('market_daily_candles');
+        $tableStatus['market_price_points'] = \Illuminate\Support\Facades\Schema::hasTable('market_price_points');
+
+        if ($tableStatus['market_daily_candles'] && \Illuminate\Support\Facades\DB::table('market_daily_candles')->count() < 100) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('market:backfill-history', ['--days' => 370]);
+                $log[] = 'Artisan market:backfill-history: ' . trim(\Illuminate\Support\Facades\Artisan::output());
+            } catch (\Throwable $mEx) {
+                $log[] = 'Artisan market:backfill-history notice: ' . $mEx->getMessage();
+            }
+        }
 
         if (\Illuminate\Support\Facades\Schema::hasTable('display_items')) {
             $purgedItems = \Illuminate\Support\Facades\DB::table('display_items')->whereIn('key', ['silver999', 'silver925'])->delete();
