@@ -162,6 +162,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 
     // درخواست تماس و نصب رایگان تلویزیون توسط کارشناس
     Route::post('/request-setup-call', [DashboardController::class, 'requestSetupCall'])->name('request-setup-call');
+    // ثبت تایید دستی راه‌اندازی تلویزیون با آدرس مستقیم تابلو (باز شدن میز کار داشبورد)
+    Route::post('/confirm-direct-tv', [DashboardController::class, 'confirmDirectTv'])->name('confirm-direct-tv');
 
     // محصولات (ویترین)
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');

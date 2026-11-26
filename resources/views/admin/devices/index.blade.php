@@ -20,6 +20,11 @@
         </div>
     @endif
 
+    @php
+        $directBoardUrl = url('/' . auth()->user()->username);
+        $directBoardDisplay = preg_replace('#^https?://#i', '', $directBoardUrl);
+        $activeDevicesCount = $devices->whereNull('revoked_at')->count();
+    @endphp
     {{-- هاب یکپارچه مدیریت و اتصال تلویزیون‌های گالری --}}
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm">
         {{-- بخش بالایی: عنوان، اتصال سریع با کد ۶ رقمی و اسکنر QR --}}
@@ -31,7 +36,6 @@
                 <div class="min-w-0">
                     <div class="flex items-center gap-2.5 flex-wrap">
                         <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">تلویزیون‌های من</h2>
-                        @php $activeDevicesCount = $devices->whereNull('revoked_at')->count(); @endphp
                         <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black {{ $activeDevicesCount > 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' }}">
                             {{ $activeDevicesCount }} نمایشگر فعال
                         </span>
@@ -40,7 +44,7 @@
                         </button>
                     </div>
                     <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
-                        در مرورگر تلویزیون مغازه آدرس <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">talalive.ir/tv</strong> را باز کنید و کد ۶ رقمی روی صفحه تلویزیون را اینجا وارد نمایید.
+                        در مرورگر تلویزیون مغازه آدرس <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">talalive.ir/tv</strong> را باز کنید و کد ۶ رقمی را اینجا بزنید؛ یا مستقیماً آدرس <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">{{ $directBoardDisplay }}</strong> را در نوار آدرس مرورگر وارد نمایید.
                     </p>
                 </div>
             </div>
@@ -79,21 +83,21 @@
             </div>
         </div>
 
-        {{-- نوار فشرده لینک مستقیم پخش تابلو --}}
+        {{-- نوار فشرده آدرس مستقیم پخش تابلو --}}
         <div class="px-5 sm:px-6 py-3.5 bg-slate-50/80 dark:bg-slate-950/60 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-semibold shrink-0">
                 <i data-lucide="link-2" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
-                <span>لینک مستقیم تابلوی اختصاصی گالری:</span>
+                <span>آدرس مستقیم تابلوی گالری (قابل وارد کردن در نوار آدرس مرورگر تلویزیون):</span>
             </div>
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 md:max-w-xl min-w-0" dir="ltr">
-                <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
+                <input type="text" readonly value="{{ $directBoardUrl }}" id="displayUrlInput"
                        class="tl-neu-inset rounded-xl px-3.5 py-2 text-xs text-slate-800 dark:text-amber-300 flex-1 min-w-0 select-all font-mono font-bold">
                 <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0" dir="rtl">
                     <button @click="copyDisplayUrl()" type="button"
                             class="tl-neu-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer text-center">
-                        <span x-text="copiedLink ? 'کپی شد ✓' : 'کپی لینک'"></span>
+                        <span x-text="copiedLink ? 'کپی شد ✓' : 'کپی آدرس'"></span>
                     </button>
-                    <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
+                    <a href="{{ $directBoardUrl }}" target="_blank"
                        class="px-3.5 py-2 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-white text-amber-400 dark:text-stone-950 font-black text-xs whitespace-nowrap transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
                         <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                     </a>
@@ -110,7 +114,7 @@
             </div>
             <h3 class="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 mb-2">هنوز هیچ تلویزیونی متصل نشده است</h3>
             <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-6 leading-relaxed">
-                مرورگر تلویزیون مغازه (سامسونگ، ال‌جی، سونی، اسنوا، دوو یا اندروید) را باز کنید، نشانی <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">talalive.ir/tv</strong> را وارد نمایید و کد ۶ رقمی نمایش داده‌شده را در کادر بالا ثبت کنید.
+                مرورگر تلویزیون مغازه (سامسونگ، ال‌جی، سونی، اسنوا، دوو یا اندروید) را باز کنید، نشانی <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">talalive.ir/tv</strong> را وارد نمایید و کد ۶ رقمی نمایش داده‌شده را در کادر بالا ثبت کنید؛ یا مستقیماً آدرس <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">{{ $directBoardDisplay }}</strong> را در نوار آدرس مرورگر تلویزیون وارد کنید.
             </p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button @click="openWizard()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-black shadow-md shadow-amber-500/20 transition-all cursor-pointer">
@@ -331,13 +335,20 @@
                     <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pr-8">
                         اپلیکیشن <b class="text-slate-900 dark:text-white">طلالایو TV</b> را اجرا کنید یا مرورگر تلویزیون (سامسونگ: <b class="text-slate-900 dark:text-white">Internet</b> | ال‌جی: <b class="text-slate-900 dark:text-white">Web Browser</b> | اندروید: <b class="text-slate-900 dark:text-white">مرورگر</b>) را باز کرده و نشانی زیر را وارد فرمایید:
                     </p>
-                    <div class="pr-8 pt-1 flex items-center gap-3">
-                        <span class="inline-block px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 font-mono font-black text-sm text-amber-600 dark:text-amber-400" dir="ltr">
-                            talalive.ir/tv
-                        </span>
-                        <a href="{{ url('/downloads/talalive-tv.apk?v=2') }}" target="_blank" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                            ⬇️ دانلود فایل نصبی اندروید TV
-                        </a>
+                    <div class="pr-8 pt-1 space-y-2">
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <span class="inline-block px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 font-mono font-black text-sm text-amber-600 dark:text-amber-400" dir="ltr">
+                                talalive.ir/tv
+                            </span>
+                            <a href="{{ url('/downloads/talalive-tv.apk?v=2') }}" target="_blank" class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline">
+                                دانلود فایل نصبی اندروید TV
+                            </a>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                            یا بدون نیاز به کد، آدرس اختصاصی تابلوی خود یعنی
+                            <span class="font-mono font-black text-amber-700 dark:text-amber-300" dir="ltr">{{ $directBoardDisplay }}</span>
+                            را مستقیماً در نوار آدرس مرورگر تلویزیون وارد کنید.
+                        </p>
                     </div>
                 </div>
 

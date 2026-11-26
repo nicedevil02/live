@@ -41,81 +41,119 @@
         $tvConnected = !empty($onboardingChecklist['tv_connected']);
         $productAdded = !empty($onboardingChecklist['product_added']);
         $profileCustomized = !empty($onboardingChecklist['profile_customized']);
+        $showFullWorkspace = auth()->user()->is_super_admin || $tvConnected;
+        $shortBoardUrl = url('/' . auth()->user()->username);
+        $shortBoardDisplay = preg_replace('#^https?://#i', '', $shortBoardUrl);
     @endphp
 
-    {{-- ۱. هاب هوشمند راه‌اندازی و اتصال تلویزیون مغازه (فاز ۱ و ۲: تک‌مقصدی، بدون شلوغی و متن اضافه) --}}
-    @if(!auth()->user()->is_super_admin && !$tvConnected)
+    {{-- ۱. صفحه تمرکزشده راه‌اندازی تلویزیون (تا پیش از اتصال اولین تلویزیون نمایش داده می‌شود) --}}
+    @if(!$showFullWorkspace)
         <div x-data="{
                 callRequested: false,
                 callLoading: false,
                 callMsg: ''
              }"
-             class="rounded-2xl sm:rounded-3xl p-5 sm:p-7 bg-white dark:bg-slate-900 border-2 border-amber-500/40 shadow-xl shadow-amber-500/5 space-y-4 sm:space-y-5">
+             class="rounded-2xl sm:rounded-3xl p-5 sm:p-7 bg-white dark:bg-slate-900 border-2 border-amber-500/40 shadow-xl shadow-amber-500/5 space-y-5">
 
-            {{-- سربرگ هاب: عنوان و گام‌ها --}}
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            {{-- سربرگ کارت راه‌اندازی --}}
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-xl sm:text-2xl font-black shadow-md shadow-amber-500/20 shrink-0">
-                        📺
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20">
+                        <i data-lucide="tv" class="w-6 h-6"></i>
                     </div>
                     <div>
+                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 mb-1">
+                            گام اول برای شروع کار
+                        </span>
                         <h2 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                            راه‌اندازی تابلوی طلا روی تلویزیون مغازه (۳۰ ثانیه)
+                            راه‌اندازی و اتصال تلویزیون مغازه به تابلوی گالری
                         </h2>
-                        <p class="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                            در مرورگر تلویزیون آدرس <span class="font-mono font-bold text-amber-700 dark:text-amber-400" dir="ltr">talalive.ir/tv</span> را باز کنید و کد ۶ رقمی را اینجا بزنید:
-                        </p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2 self-end sm:self-auto shrink-0 flex-wrap">
                     <button type="button"
                             @click="openWizard()"
-                            class="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
-                        <span>✨</span>
-                        <span>راهنمای مرحله‌ای (۳ گام)</span>
+                            class="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-black transition-all cursor-pointer flex items-center gap-1.5">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        <span>راهنمای تصویری (۳ گام)</span>
                     </button>
                 </div>
             </div>
 
-            {{-- فرم ورودی کد ۶ رقمی و اسکن QR --}}
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5">
-                <div class="flex-1 relative">
-                    <input type="text"
-                           maxlength="8"
-                           x-model="pairCode"
-                           :inputmode="pairAlphaMode ? 'text' : 'numeric'"
-                           autocomplete="one-time-code"
-                           dir="ltr"
-                           placeholder="کد ۶ رقمی تلویزیون (مثلاً 584921)"
-                           @keydown.enter.prevent="pairWithCodeManual()"
-                           @input="handlePairCodeInput()"
-                           class="w-full h-12 sm:h-13 bg-slate-50 dark:bg-slate-950 border-2 border-amber-500/40 rounded-2xl px-4 text-center font-mono font-black text-lg sm:text-xl tracking-[0.25em] text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-amber-500 shadow-inner">
-                    <button type="button"
-                            @click="pairAlphaMode = !pairAlphaMode"
-                            class="mt-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer block"
-                            x-text="pairAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
+            {{-- روش اول: ورود با کد ۶ رقمی یا اسکن بارکد --}}
+            <div class="space-y-3">
+                <div class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-1 leading-relaxed">
+                    <p><strong class="text-slate-900 dark:text-white">۱.</strong> در مرورگر تلویزیون مغازه نشانی <span class="font-mono font-bold text-amber-700 dark:text-amber-400" dir="ltr">talalive.ir/tv</span> (یا صفحه اصلی سایت را با نمایشگر بزرگ) باز کنید.</p>
+                    <p><strong class="text-slate-900 dark:text-white">۲.</strong> کد ۶ رقمی نمایش‌داده‌شده روی صفحه تلویزیون را در کادر زیر وارد کنید یا بارکد را اسکن نمایید:</p>
                 </div>
 
-                <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0">
-                    <button type="button"
-                            @click="pairWithCodeManual()"
-                            :disabled="isPairing || pairCode.length < 6"
-                            class="h-12 sm:h-13 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 whitespace-nowrap">
-                        <span x-text="isPairing ? 'در حال اتصال...' : 'اتصال تلویزیون'"></span>
-                    </button>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5">
+                    <div class="flex-1 relative">
+                        <input type="text"
+                               maxlength="8"
+                               x-model="pairCode"
+                               :inputmode="pairAlphaMode ? 'text' : 'numeric'"
+                               autocomplete="one-time-code"
+                               dir="ltr"
+                               placeholder="کد ۶ رقمی تلویزیون (مثلاً 584921)"
+                               @keydown.enter.prevent="pairWithCodeManual()"
+                               @input="handlePairCodeInput()"
+                               class="w-full h-12 sm:h-13 bg-slate-50 dark:bg-slate-950 border-2 border-amber-500/40 rounded-2xl px-4 text-center font-mono font-black text-lg sm:text-xl tracking-[0.25em] text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                        <button type="button"
+                                @click="pairAlphaMode = !pairAlphaMode"
+                                class="mt-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer block"
+                                x-text="pairAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
+                    </div>
 
-                    <button type="button"
-                            @click="openScanner()"
-                            class="qr-scan-btn h-12 sm:h-13 px-3.5 sm:px-4 rounded-2xl font-black text-xs whitespace-nowrap transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                        <i data-lucide="camera" class="w-4 h-4 shrink-0"></i>
-                        <span>اسکن بارکد QR</span>
-                    </button>
+                    <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0">
+                        <button type="button"
+                                @click="pairWithCodeManual()"
+                                :disabled="isPairing || pairCode.length < 6"
+                                class="h-12 sm:h-13 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 whitespace-nowrap">
+                            <span x-text="isPairing ? 'در حال اتصال...' : 'اتصال تلویزیون'"></span>
+                        </button>
+
+                        <button type="button"
+                                @click="openScanner()"
+                                class="qr-scan-btn h-12 sm:h-13 px-3.5 sm:px-4 rounded-2xl font-black text-xs whitespace-nowrap transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                            <i data-lucide="camera" class="w-4 h-4 shrink-0"></i>
+                            <span>اسکن بارکد QR</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {{-- نوار ابزار کمکی پایین: لینک مستقیم + درخواست تماس رایگان --}}
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 text-xs">
+            {{-- روش مستقیم بدون کد: معرفی آدرس اختصاصی تابلو برای تایپ در نوار آدرس مرورگر --}}
+            <div class="rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 p-4 space-y-2.5">
+                <div class="flex items-center gap-2 text-xs font-black text-slate-800 dark:text-slate-100">
+                    <i data-lucide="globe" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0"></i>
+                    <span>روش مستقیم (بدون نیاز به کد اتصال)</span>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    آدرس اختصاصی تابلوی گالری شما عبارت زیر است؛ می‌توانید همین نشانی را مستقیماً در نوار آدرس (Address Bar) مرورگر تلویزیون وارد کنید تا تابلو بلافاصله باز شود:
+                </p>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
+                    <span class="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-amber-500/35 font-mono font-black text-xs sm:text-sm text-amber-700 dark:text-amber-300 text-center select-all" dir="ltr">
+                        {{ $shortBoardDisplay }}
+                    </span>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button"
+                                onclick="window.copyAdminText(@js($shortBoardUrl), 'آدرس اختصاصی تابلوی گالری کپی شد.');"
+                                class="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors cursor-pointer">
+                            کپی آدرس تابلو
+                        </button>
+                        <a href="{{ $shortBoardUrl }}" target="_blank"
+                           class="px-3.5 py-2 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-white text-amber-400 dark:text-stone-950 text-xs font-black transition-colors inline-flex items-center gap-1.5">
+                            <span>پیش‌نمایش تابلو</span>
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- نوار پایین: درخواست پشتیبانی تلفنی یا ورود به داشبورد پس از راه‌اندازی با آدرس مستقیم --}}
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
                 <div class="flex items-center gap-2 flex-wrap">
                     <button type="button"
                             x-show="!callRequested"
@@ -140,33 +178,28 @@
                                 })
                                 .catch(e => { callLoading = false; });
                             "
-                            class="text-[11.5px] font-bold text-indigo-700 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50">
-                        <span>📞</span>
-                        <span x-text="callLoading ? 'در حال ثبت درخواست...' : 'فرصت ندارید؟ درخواست تماس و راه‌اندازی تلفنی توسط کارشناس'"></span>
+                            class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline flex items-center gap-1.5 cursor-pointer disabled:opacity-50">
+                        <i data-lucide="phone-call" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span x-text="callLoading ? 'در حال ثبت درخواست...' : 'فرصت ندارید؟ درخواست تماس و راه‌اندازی رایگان توسط کارشناس'"></span>
                     </button>
-                    <span x-show="callRequested" x-cloak class="text-[11.5px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span x-show="callRequested" x-cloak class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                         <span>✓</span>
-                        <span>درخواست تماس با موفقیت ثبت شد؛ کارشناس فنی به زودی تماس می‌گیرد.</span>
+                        <span>درخواست تماس ثبت شد؛ کارشناس فنی به زودی با شما تماس می‌گیرد.</span>
                     </span>
                 </div>
 
-                <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-                    <span class="text-[11px] text-slate-400">لینک پخش:</span>
-                    <button type="button"
-                            onclick="window.copyAdminText('{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}', 'لینک اختصاصی تابلو کپی شد.');"
-                            class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors cursor-pointer">
-                        کپی لینک
+                <form method="POST" action="{{ route('admin.confirm-direct-tv') }}" class="m-0 shrink-0">
+                    @csrf
+                    <button type="submit"
+                            class="w-full sm:w-auto px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 dark:hover:bg-emerald-600 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors cursor-pointer">
+                        تلویزیون را با آدرس مستقیم باز کردم · ورود به داشبورد
                     </button>
-                    <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-                       class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-bold transition-colors flex items-center gap-1">
-                        <span>پیش‌نمایش</span>
-                        <span>↗</span>
-                    </a>
-                </div>
+                </form>
             </div>
         </div>
     @endif
 
+    @if($showFullWorkspace)
     {{-- ۲. افشای تدریجی (Progressive Disclosure - پیشنهاد ۳): گام‌های پس از اتصال موفق تلویزیون --}}
     @if(!auth()->user()->is_super_admin && $tvConnected)
         @if(!$productAdded)
@@ -473,34 +506,39 @@
             </div>
         </div>
 
-        {{-- بخش ۱: لینک پخش مستقیم تابلوی اختصاصی --}}
-        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
-            <div class="flex-1 flex items-center gap-2 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-1.5 pl-2" dir="ltr">
-                <input type="text" readonly
-                       value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}"
-                       id="displayUrlInput"
-                       class="bg-transparent border-none text-xs text-slate-800 dark:text-amber-300 w-full select-all font-mono font-bold focus:outline-none px-2 py-1">
-                <button type="button"
-                        onclick="window.copyAdminText(document.getElementById('displayUrlInput').value, 'لینک اختصاصی تابلو کپی شد.');"
-                        class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold whitespace-nowrap cursor-pointer transition-colors shadow-xs">
-                    کپی لینک
-                </button>
-            </div>
+        {{-- بخش ۱: آدرس مستقیم تابلوی اختصاصی گالری --}}
+        <div class="space-y-1.5">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5">
+                <div class="flex-1 flex items-center gap-2 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-1.5 pl-2" dir="ltr">
+                    <input type="text" readonly
+                           value="{{ $shortBoardUrl }}"
+                           id="displayUrlInput"
+                           class="bg-transparent border-none text-xs text-slate-800 dark:text-amber-300 w-full select-all font-mono font-bold focus:outline-none px-2 py-1">
+                    <button type="button"
+                            onclick="window.copyAdminText(document.getElementById('displayUrlInput').value, 'آدرس اختصاصی تابلو کپی شد.');"
+                            class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold whitespace-nowrap cursor-pointer transition-colors shadow-xs">
+                        کپی آدرس
+                    </button>
+                </div>
 
-            <div class="flex items-center gap-2 shrink-0">
-                <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-                   class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs whitespace-nowrap shadow-sm shadow-emerald-600/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
-                    <span>مشاهده تابلو</span>
-                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                </a>
+                <div class="flex items-center gap-2 shrink-0">
+                    <a href="{{ $shortBoardUrl }}" target="_blank"
+                       class="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs whitespace-nowrap shadow-sm shadow-emerald-600/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>مشاهده تابلو</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    </a>
 
-                <button type="button"
-                        @click="showPairingBox = !showPairingBox"
-                        class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1">
-                    <span x-text="showPairingBox ? 'بستن فرم اتصال' : 'اتصال تلویزیون دیگر'"></span>
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" :class="showPairingBox ? 'rotate-180' : ''"></i>
-                </button>
+                    <button type="button"
+                            @click="showPairingBox = !showPairingBox"
+                            class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1">
+                        <span x-text="showPairingBox ? 'بستن فرم اتصال' : 'اتصال تلویزیون دیگر'"></span>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" :class="showPairingBox ? 'rotate-180' : ''"></i>
+                    </button>
+                </div>
             </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                برای باز کردن مستقیم تابلو بدون نیاز به کد، کافیست <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">{{ $shortBoardDisplay }}</strong> را در نوار آدرس مرورگر تلویزیون وارد کنید.
+            </p>
         </div>
 
         {{-- بخش ۲: فرم اتصال تلویزیون دوم در صورت نیاز --}}
@@ -550,89 +588,34 @@
     </div>
     @endif
 
-    {{-- کارت‌های شاخص‌های کلیدی (شبکه ۲ در ۲ موبایل-فرست بدون فضای مرده) --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-        {{-- ۱. قیمت طلای ۱۸ عیار زنده تابلو --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">قیمت طلای ۱۸ عیار تابلو</span>
-                <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="trending-up" class="w-4 h-4"></i>
-                </div>
-            </div>
-            <div class="mt-2.5">
-                <h3 class="text-base sm:text-2xl font-black text-amber-600 dark:text-amber-400 tabular-nums tracking-tight"
-                    x-text="isLoading ? '...' : status.gold18Price"></h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">قیمت پایه فرمول‌های خرید</p>
-            </div>
-        </div>
-
-        {{-- ۲. قیمت محاسبه‌شده طلای ۱۸ عیار جهانی (فرمول اونس و تتر) --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">طلای ۱۸ جهانی (فرمول)</span>
-                <div class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                    <i data-lucide="calculator" class="w-4 h-4"></i>
-                </div>
-            </div>
-            <div class="mt-2.5">
-                <h3 class="text-base sm:text-2xl font-black text-amber-600 dark:text-amber-400 tabular-nums tracking-tight"
-                    x-text="isLoading ? '...' : status.formula18Price"></h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">محاسبه بر اساس اونس و تتر (دلار دیجیتال)</p>
-            </div>
-        </div>
-
-        {{-- ۳. آخرین همگام‌سازی تابلو --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">آخرین همگام‌سازی تابلو</span>
-                <button type="button" @click="loadData()" title="به‌روزرسانی دستی"
-                        class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25 flex items-center justify-center transition-all cursor-pointer shrink-0">
-                    <i data-lucide="refresh-cw" :class="isLoading ? 'animate-spin' : ''" class="w-4 h-4"></i>
-                </button>
-            </div>
-            <div class="mt-2.5">
-                <h3 class="text-base sm:text-2xl font-black text-slate-800 dark:text-slate-100 tabular-nums tracking-tight"
-                    x-text="isLoading ? '...' : status.updatedAt"></h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">رفرش خودکار هر ۱۰ ثانیه</p>
-            </div>
-        </div>
-
-        {{-- ۴. وضعیت سرویس‌ها و هشدارها --}}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between">
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">وضعیت سرویس‌ها</span>
-                <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                     :class="status.isHealthy ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-rose-500/15 text-rose-600 dark:text-rose-400'">
-                    <i x-show="status.isHealthy" data-lucide="check-circle" class="w-4 h-4"></i>
-                    <i x-show="!status.isHealthy" data-lucide="alert-triangle" class="w-4 h-4"></i>
-                </div>
-            </div>
-            <div class="mt-2.5">
-                <h3 class="text-xs sm:text-base font-black truncate"
-                    :class="status.isHealthy ? (status.staleCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400') : 'text-rose-600 dark:text-rose-400'"
-                    x-text="status.apiStatus"></h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1 truncate"
-                   x-text="status.alerts"></p>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- میز کار روزانه طلافروش (نرخ‌های کلیدی + ماشین‌حساب پشت دخل + پیام ویترین) --}}
+    {{-- میز کار روزانه طلافروش (کارت یکپارچه نرخ‌های زنده + ماشین‌حساب پشت دخل + پیام ویترین) --}}
     <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-5">
-        {{-- ستون راست: نرخ‌های کلیدی تابلو و اشتراک‌گذاری + وضعیت ویترین --}}
+        {{-- ستون راست: نرخ‌های زنده و کلیدی تابلو + وضعیت همگام‌سازی + وضعیت ویترین --}}
         <div class="xl:col-span-7 space-y-4">
-            {{-- کارت نرخ‌های کلیدی تابلو --}}
+            {{-- کارت یکپارچه نرخ‌های زنده تابلو --}}
             <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
-                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
                     <div class="flex items-center gap-2.5">
                         <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
                             <i data-lucide="coins" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">نرخ‌های کلیدی تابلو</h3>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400">سایر نرخ‌های پرکاربرد جهت بررسی و ارسال سریع به مشتری</p>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">نرخ‌های زنده تابلو</h3>
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] font-bold border"
+                                      :class="status.isHealthy ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25' : 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25'">
+                                    <span class="w-1.5 h-1.5 rounded-full"
+                                          :class="status.isHealthy ? (status.staleCount > 0 ? 'bg-amber-500' : 'bg-emerald-500') : 'bg-rose-500'"></span>
+                                    <span x-text="status.isHealthy ? 'متصل' : 'اختلال ارتباط'"></span>
+                                    <span class="opacity-50">&middot;</span>
+                                    <span class="font-mono tabular-nums" dir="ltr" x-text="isLoading ? '...' : status.updatedAt"></span>
+                                </span>
+                                <button type="button" @click="loadData()" title="به‌روزرسانی دستی نرخ‌ها" aria-label="به‌روزرسانی دستی نرخ‌ها"
+                                        class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500/15 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 flex items-center justify-center transition-colors cursor-pointer">
+                                    <i data-lucide="refresh-cw" :class="isLoading ? 'animate-spin' : ''" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">نرخ‌های لحظه‌ای تابلو برای بررسی و اشتراک‌گذاری سریع با مشتری</p>
                         </div>
                     </div>
                     <button type="button"
@@ -643,6 +626,40 @@
                     </button>
                 </div>
 
+                {{-- اعلان فشرده خطا فقط در صورت اختلال سرویس --}}
+                <div x-show="!isLoading && !status.isHealthy" x-cloak
+                     class="px-3.5 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
+                        <span class="truncate" x-text="status.apiStatus + ' (' + status.alerts + ')'"></span>
+                    </div>
+                    <button type="button" @click="loadData()" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-[11px] font-black shrink-0 cursor-pointer">
+                        تلاش مجدد
+                    </button>
+                </div>
+
+                {{-- ردیف شاخص‌های اصلی طلای ۱۸ عیار --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                    <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <span class="text-xs font-black text-amber-900 dark:text-amber-300 block">قیمت طلای ۱۸ عیار تابلو</span>
+                            <span class="text-[10.5px] text-amber-800/75 dark:text-amber-400/80 block mt-0.5">نرخ پایه فرمول‌های خرید و فروش</span>
+                        </div>
+                        <span class="text-base sm:text-xl font-black text-amber-700 dark:text-amber-300 tabular-nums shrink-0"
+                              x-text="isLoading ? '...' : status.gold18Price"></span>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/90 dark:border-slate-700/80 flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <span class="text-xs font-black text-slate-800 dark:text-slate-100 block">طلای ۱۸ جهانی (فرمول)</span>
+                            <span class="text-[10.5px] text-slate-500 dark:text-slate-400 block mt-0.5">محاسبه از انس جهانی و تتر</span>
+                        </div>
+                        <span class="text-base sm:text-xl font-black text-slate-900 dark:text-white tabular-nums shrink-0"
+                              x-text="isLoading ? '...' : status.formula18Price"></span>
+                    </div>
+                </div>
+
+                {{-- شبکه ۶ نرخ کلیدی دیگر تابلو --}}
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
                     <template x-for="tile in keyRates" :key="tile.symbol">
                         <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/70">
@@ -884,6 +901,7 @@
         </a>
         @endif
     </div>
+    @endif
     {{-- مودال اسکن بارکد تلویزیون با دوربین --}}
     <div x-show="isScannerOpen" 
          x-cloak
@@ -994,10 +1012,15 @@
                     <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pr-8">
                         کنترل تلویزیون را بردارید، برنامه مرورگر اینترنت (سامسونگ: <b class="text-slate-900 dark:text-white">Internet</b> | ال‌جی: <b class="text-slate-900 dark:text-white">Web Browser</b> | اندروید: <b class="text-slate-900 dark:text-white">کروم یا مرورگر</b>) را باز کرده و نشانی زیر را وارد فرمایید:
                     </p>
-                    <div class="pr-8 pt-1">
+                    <div class="pr-8 pt-1 space-y-2">
                         <span class="inline-block px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 font-mono font-black text-sm text-amber-600 dark:text-amber-400" dir="ltr">
                             talalive.ir/tv
                         </span>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                            یا مستقیماً آدرس اختصاصی تابلوی خود یعنی
+                            <span class="font-mono font-black text-amber-700 dark:text-amber-300" dir="ltr">{{ $shortBoardDisplay }}</span>
+                            را در نوار آدرس مرورگر تلویزیون وارد کنید تا تابلو بدون کد باز شود.
+                        </p>
                     </div>
                 </div>
 
@@ -1274,8 +1297,10 @@ function dashboardPage() {
         },
 
         async init() {
-            await this.loadData();
-            setInterval(() => this.loadData(), 10000);
+            if (@json($showFullWorkspace)) {
+                await this.loadData();
+                setInterval(() => this.loadData(), 10000);
+            }
         },
 
         openWizard() {

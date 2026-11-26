@@ -583,6 +583,32 @@
                         </div>
                     </div>
 
+                    {{-- ویجت کد اتصال تلویزیون (فقط نمایشگرهای بزرگ دسکتاپ/تلویزیون، مخفی در موبایل) --}}
+                    <div id="homeTvCodeWidget" class="hidden lg:block relative z-10 w-full rounded-2xl p-3.5 bg-stone-950 text-stone-100 border border-amber-500/40 shadow-lg">
+                        <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10">
+                            <div class="flex items-center gap-2 min-w-0">
+                                @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-amber-400 shrink-0'])
+                                <span class="text-xs font-bold text-amber-300 truncate">با تلویزیون وارد شده‌اید؟ کد اتصال نمایشگر</span>
+                            </div>
+                            <a href="{{ route('display.tv') }}"
+                               class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-bold text-stone-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 shrink-0">
+                                نمای تمام‌صفحه (/tv)
+                            </a>
+                        </div>
+                        <div class="pt-2.5 flex items-center justify-between gap-3">
+                            <p id="homeTvCodeHint" class="text-[11px] text-stone-300 leading-relaxed">
+                                این کد ۶ رقمی را در پنل گوشی وارد کنید تا همین صفحه به تابلوی گالری شما تبدیل شود.
+                            </p>
+                            <div class="flex items-center gap-1.5 shrink-0" dir="ltr">
+                                <span id="homeTvActivationCode" class="px-3 py-1.5 rounded-xl bg-black border border-amber-500/50 font-mono text-base font-black tracking-[0.18em] text-amber-400 tabular-nums select-all">--- ---</span>
+                                <button type="button" id="homeTvRefreshBtn" title="دریافت کد جدید" aria-label="دریافت کد جدید"
+                                        class="p-2 rounded-xl bg-white/5 hover:bg-white/15 text-stone-300 hover:text-amber-300 border border-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- برچسب سازگاری تلویزیون --}}
                     <div class="text-center space-y-1 relative z-10">
                         <p class="text-xs font-semibold text-stone-800 dark:text-stone-200">
@@ -1514,4 +1540,176 @@
             </a>
         </div>
     </section>
+
+    {{-- اسکریپت ES5 کد اتصال صفحه اصلی: فقط در نمایشگرهای بزرگ (>= 1024px) فعال می‌شود تا موبایل درخواست اضافه ندهد --}}
+    <script>
+        (function () {
+            var widgetEl = document.getElementById('homeTvCodeWidget');
+            var codeEl = document.getElementById('homeTvActivationCode');
+            var hintEl = document.getElementById('homeTvCodeHint');
+            var refreshBtn = document.getElementById('homeTvRefreshBtn');
+            if (!widgetEl || !codeEl) return;
+
+            var initialized = false;
+            var sessionCode = '';
+            var pollTimer = null;
+            var pollCount = 0;
+            var isChecking = false;
+            var isPairedDone = false;
+            var regXhr = null;
+            var checkXhr = null;
+            var reqSeq = 0;
+
+            function formatCode(c) {
+                var clean = String(c || '').replace(/\s+/g, '');
+                if (clean.length === 6) {
+                    return clean.substring(0, 3) + ' ' + clean.substring(3, 6);
+                }
+                return clean || '--- ---';
+            }
+
+            function stopPoll() {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+            }
+
+            function checkHomeTvPairing() {
+                if (isPairedDone || !sessionCode || isChecking) return;
+                if (document.visibilityState && document.visibilityState === 'hidden') return;
+
+                pollCount += 1;
+                if (pollCount > 225) {
+                    stopPoll();
+                    if (hintEl) {
+                        hintEl.innerHTML = 'برای دریافت کد جدید، دکمه بازخوانی کنار کد را بزنید.';
+                    }
+                    return;
+                }
+
+                isChecking = true;
+                try {
+                    checkXhr = new XMLHttpRequest();
+                    checkXhr.open('GET', '/api/tv/check/' + encodeURIComponent(sessionCode) + '?_t=' + new Date().getTime(), true);
+                    checkXhr.timeout = 8000;
+                    checkXhr.setRequestHeader('Accept', 'application/json');
+                    checkXhr.onreadystatechange = function () {
+                        if (checkXhr.readyState !== 4) return;
+                        isChecking = false;
+                        if (checkXhr.status < 200 || checkXhr.status >= 300) return;
+
+                        var data = null;
+                        try { data = JSON.parse(checkXhr.responseText); } catch (e) { data = null; }
+                        if (data && data.paired && data.username && (data.display_token || data.token)) {
+                            isPairedDone = true;
+                            stopPoll();
+
+                            var finalDisplayToken = data.display_token || data.token;
+                            var finalDeviceToken = data.device_token || data.token || '';
+                            try {
+                                localStorage.setItem('display_username', data.username);
+                                localStorage.setItem('display_token', finalDisplayToken);
+                                if (finalDeviceToken) {
+                                    localStorage.setItem('tv_device_token', finalDeviceToken);
+                                    localStorage.setItem('tv_device_username', data.username);
+                                }
+                                sessionStorage.removeItem('skip_redirect');
+                            } catch (e2) {}
+
+                            document.cookie = 'display_token=' + encodeURIComponent(finalDisplayToken) + '; path=/; max-age=31536000';
+                            if (hintEl) {
+                                hintEl.innerHTML = 'متصل شد! در حال باز کردن تابلوی زنده گالری...';
+                            }
+                            window.location.replace('/' + encodeURIComponent(data.username) + '?key=' + encodeURIComponent(finalDisplayToken) + '&tv=1&paired=1');
+                        }
+                    };
+                    checkXhr.ontimeout = function () { isChecking = false; };
+                    checkXhr.onerror = function () { isChecking = false; };
+                    checkXhr.send();
+                } catch (err) {
+                    isChecking = false;
+                }
+            }
+
+            function registerHomeTvSession() {
+                if (isPairedDone) return;
+                reqSeq += 1;
+                var mySeq = reqSeq;
+
+                stopPoll();
+                pollCount = 0;
+                isChecking = false;
+
+                if (regXhr && regXhr.readyState !== 4) {
+                    try { regXhr.abort(); } catch (e) {}
+                }
+                if (checkXhr && checkXhr.readyState !== 4) {
+                    try { checkXhr.abort(); } catch (e2) {}
+                }
+
+                codeEl.innerHTML = '--- ---';
+                if (hintEl) {
+                    hintEl.innerHTML = 'این کد ۶ رقمی را در پنل گوشی وارد کنید تا همین صفحه به تابلوی گالری شما تبدیل شود.';
+                }
+
+                try {
+                    regXhr = new XMLHttpRequest();
+                    regXhr.open('POST', '/api/tv/register-session?_t=' + new Date().getTime(), true);
+                    regXhr.timeout = 10000;
+                    regXhr.setRequestHeader('Content-Type', 'application/json');
+                    regXhr.setRequestHeader('Accept', 'application/json');
+                    regXhr.onreadystatechange = function () {
+                        if (regXhr.readyState !== 4 || mySeq !== reqSeq) return;
+                        if (regXhr.status < 200 || regXhr.status >= 300) {
+                            if (hintEl) hintEl.innerHTML = 'دریافت کد با خطا مواجه شد. دکمه بازخوانی را بزنید یا صفحه /tv را باز کنید.';
+                            return;
+                        }
+                        var res = null;
+                        try { res = JSON.parse(regXhr.responseText); } catch (e3) { res = null; }
+                        if (!res || !res.success || !res.activation_code || !res.session_code) return;
+
+                        sessionCode = String(res.session_code);
+                        codeEl.innerHTML = formatCode(res.activation_code);
+                        pollTimer = setInterval(checkHomeTvPairing, 4000);
+                    };
+                    regXhr.ontimeout = function () {
+                        if (mySeq === reqSeq && hintEl) {
+                            hintEl.innerHTML = 'پاسخی از سرور دریافت نشد. دکمه بازخوانی را بزنید.';
+                        }
+                    };
+                    regXhr.send('{}');
+                } catch (err) {}
+            }
+
+            function maybeStartWidget() {
+                if (initialized) return;
+                var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+                if (vw < 1024) return;
+
+                try {
+                    var u = localStorage.getItem('display_username');
+                    var k = localStorage.getItem('display_token');
+                    if (u && k) {
+                        widgetEl.style.display = 'none';
+                        initialized = true;
+                        return;
+                    }
+                } catch (e) {}
+
+                initialized = true;
+                if (refreshBtn) {
+                    refreshBtn.onclick = function () {
+                        registerHomeTvSession();
+                    };
+                }
+                registerHomeTvSession();
+            }
+
+            maybeStartWidget();
+            if (!initialized && window.addEventListener) {
+                window.addEventListener('resize', maybeStartWidget);
+            }
+        })();
+    </script>
 @endsection

@@ -181,4 +181,44 @@ class DashboardController extends Controller
             'message' => 'درخواست تماس شما با اولویت بالا ثبت شد. کارشناس فنی طلالایو جهت راه‌اندازی سریع تلویزیون مغازه به زودی با شما تماس می‌گیرد.',
         ]);
     }
+
+    /**
+     * ثبت تایید راه‌اندازی تلویزیون از طریق وارد کردن آدرس مستقیم تابلو در مرورگر
+     */
+    public function confirmDirectTv(\Illuminate\Http\Request $request)
+    {
+        $user = auth()->user();
+
+        try {
+            if (Schema::hasTable('tv_devices')) {
+                $hasActive = TvDevice::where('user_id', $user->id)
+                    ->whereNull('revoked_at')
+                    ->exists();
+
+                if (!$hasActive) {
+                    TvDevice::create([
+                        'device_token' => bin2hex(random_bytes(24)),
+                        'user_id'      => $user->id,
+                        'username'     => $user->username,
+                        'label'        => 'تلویزیون مغازه (آدرس مستقیم)',
+                        'render_mode'  => 'web',
+                        'app_version'  => 'direct-url',
+                        'last_seen_at' => now(),
+                    ]);
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('confirmDirectTv failed: ' . $e->getMessage());
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success'  => true,
+                'redirect' => route('admin.dashboard'),
+            ]);
+        }
+
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'راه‌اندازی تلویزیون ثبت شد و میز کار کامل گالری فعال گردید.');
+    }
 }

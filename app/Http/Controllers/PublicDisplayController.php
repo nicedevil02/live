@@ -41,6 +41,30 @@ class PublicDisplayController extends Controller
             ]);
         }
 
+        // ثبت خودکار اتصال در صورتی که تابلوی اختصاصی مستقیماً در مرورگر تلویزیون هوشمند باز شود
+        if ($username !== 'demo') {
+            $ua = (string) $request->userAgent();
+            $isSmartTvUa = (bool) preg_match('/SmartTV|SMART-TV|Tizen|Web0S|webOS|NetCast|HbbTV|CrKey|Android TV|GoogleTV|BRAVIA|Hisense|VIDAA|Viera|Opera TV|MIBOX|MiTV|AFT[A-Z0-9]|S905|rk3[0-9]{3}|Allwinner/i', $ua);
+            if (($isSmartTvUa || $request->boolean('tv')) && Cache::add('direct_tv_touch_' . $user->id, 1, 120)) {
+                try {
+                    if (Schema::hasTable('tv_devices') && \App\Models\TvDevice::where('user_id', $user->id)->whereNull('revoked_at')->doesntExist()) {
+                        \App\Models\TvDevice::create([
+                            'device_token'    => bin2hex(random_bytes(24)),
+                            'user_id'         => $user->id,
+                            'username'        => $user->username,
+                            'label'           => 'مرورگر تلویزیون هوشمند',
+                            'render_mode'     => 'web',
+                            'app_version'     => 'direct-url',
+                            'webview_version' => mb_substr($ua, 0, 120),
+                            'last_seen_at'    => now(),
+                        ]);
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('Direct TV auto-touch failed: ' . $e->getMessage());
+                }
+            }
+        }
+
         $snapshot = $this->buildSnapshot($user);
 
         // استخراج نام، شهر و مشخصات گالری جهت بهینه‌سازی لوکال سئو و اسکیما

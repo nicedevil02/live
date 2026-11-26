@@ -1,7 +1,8 @@
 @auth
 @php
     $guideUser = auth()->user();
-    $guideBoardUrl = url('/' . $guideUser->username . '?key=' . $guideUser->display_token);
+    $guideShortUrl = url('/' . $guideUser->username);
+    $guideShortDisplay = preg_replace('#^https?://#i', '', $guideShortUrl);
     $guideAutoOpen = (bool) session('show_onboarding_tour', false);
     $tvApkUrl = config('tv.apk_url', url('/downloads/talalive-tv.apk'));
     $tvApkVersion = config('tv.latest_version', '1.0.8');
@@ -108,10 +109,27 @@
 
                     {{-- کادر آدرس کوتاه --}}
                     <div class="p-3.5 rounded-2xl bg-amber-500/10 border-2 border-dashed border-amber-500/40 text-center space-y-1">
-                        <span class="text-[11px] text-slate-600 dark:text-slate-300 block">در نوار آدرس تلویزیون این نشانی را بنویسید:</span>
+                        <span class="text-[11px] text-slate-600 dark:text-slate-300 block">در نوار آدرس مرورگر تلویزیون این نشانی را بنویسید:</span>
                         <span class="inline-block px-4 py-1.5 rounded-xl bg-amber-500/20 font-mono font-black text-base text-amber-700 dark:text-amber-300" dir="ltr">
                             talalive.ir/tv
                         </span>
+                    </div>
+
+                    {{-- معرفی آدرس اختصاصی تابلو برای وارد کردن مستقیم بدون کد --}}
+                    <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 text-right space-y-2">
+                        <p class="text-[11.5px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <strong class="text-slate-900 dark:text-white">روش مستقیم بدون کد:</strong>
+                            همچنین می‌توانید آدرس اختصاصی تابلوی خود یعنی
+                            <span class="font-mono font-black text-amber-700 dark:text-amber-300" dir="ltr">{{ $guideShortDisplay }}</span>
+                            را مستقیماً در نوار آدرس (Address Bar) مرورگر تلویزیون وارد کنید تا تابلو فوراً باز شود.
+                        </p>
+                        <div class="flex items-center justify-between gap-2 pt-0.5">
+                            <span class="font-mono text-xs font-bold text-slate-700 dark:text-slate-200 truncate" dir="ltr">{{ $guideShortDisplay }}</span>
+                            <button type="button" @click="copyBoardLink(@js($guideShortUrl))"
+                                    class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-bold transition-colors cursor-pointer shrink-0">
+                                <span x-text="copiedBoardUrl ? 'کپی شد ✓' : 'کپی آدرس مستقیم'"></span>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- لینک کمکی برای دانلود اپ اندروید --}}
@@ -227,14 +245,14 @@
                     <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-2">
                         <span class="text-xs text-slate-500 dark:text-slate-400 block">مشاهده خروجی تابلوی زنده:</span>
                         <div class="flex items-center justify-center gap-2">
-                            <a href="{{ $guideBoardUrl }}" target="_blank"
+                            <a href="{{ $guideShortUrl }}" target="_blank"
                                class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-sm">
                                 <span>مشاهده زنده تابلوی مغازه</span>
                                 <span>↗</span>
                             </a>
-                            <button type="button" @click="copyBoardLink(@js($guideBoardUrl))"
+                            <button type="button" @click="copyBoardLink(@js($guideShortUrl))"
                                     class="px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition-colors cursor-pointer">
-                                <span x-text="copiedBoardUrl ? 'کپی شد ✓' : 'کپی لینک'"></span>
+                                <span x-text="copiedBoardUrl ? 'کپی شد ✓' : 'کپی آدرس تابلو'"></span>
                             </button>
                         </div>
                     </div>
