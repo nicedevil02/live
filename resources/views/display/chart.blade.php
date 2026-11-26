@@ -43,14 +43,26 @@
             overflow-x: hidden;
         }
         .page-shell {
+            width: 100%;
             min-height: 100vh;
             min-height: 100dvh;
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 14px 16px 20px;
+            margin: 0;
+            padding: 12px 18px 14px;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 10px;
+        }
+        @media (min-width: 721px) and (min-height: 580px) {
+            .page-shell {
+                height: 100vh;
+                height: 100dvh;
+            }
+            .hero-card {
+                min-height: 0;
+            }
+            .chart-stage {
+                min-height: 0;
+            }
         }
         .topbar {
             display: flex;
@@ -247,7 +259,7 @@
         .chart-stage {
             position: relative;
             width: 100%;
-            min-height: 290px;
+            min-height: 260px;
             flex: 1;
             display: flex;
             align-items: stretch;
@@ -255,16 +267,16 @@
             border-radius: 16px;
             background: var(--bg-inset);
             border: 1px solid var(--border-subtle);
-            padding: 10px 8px 6px;
+            padding: 8px;
             overflow: hidden;
             touch-action: pan-y;
         }
         .chart-svg {
             width: 100%;
             height: 100%;
-            min-height: 270px;
-            max-height: 430px;
+            min-height: 240px;
             display: block;
+            direction: ltr;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -359,10 +371,6 @@
 
                 @if($isEmbed)
                     <span id="inactivityPill" class="timer-pill">بازگشت خودکار: ۶۰ ثانیه</span>
-                    <a id="openStandaloneLink" href="{{ $standaloneUrl }}" target="_blank" rel="noopener" class="btn" title="باز کردن در صفحه مستقل">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        <span>صفحه مستقل</span>
-                    </a>
                 @else
                     <button type="button" id="copyChartUrlBtn" class="btn">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
@@ -395,7 +403,7 @@
             </div>
 
             <div class="chart-stage" id="chartStage">
-                <svg id="chartSvg" class="chart-svg" viewBox="0 0 960 360" preserveAspectRatio="none" role="img" aria-label="نمودار قیمت">
+                <svg id="chartSvg" class="chart-svg" viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="نمودار قیمت">
                     <defs>
                         <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
                             <stop id="gradTopStop" offset="0%" stop-color="#10b981" stop-opacity="0.34" />
@@ -472,6 +480,12 @@
         var isHovering = false;
         var autoCloseSeconds = 60;
         var autoCloseTimer = null;
+        var svgWidth = 1200;
+        var svgHeight = 480;
+        var svgPadLeft = 44;
+        var svgPadRight = 108;
+        var svgPadTop = 22;
+        var svgPadBottom = 42;
 
         var fmtInt = new Intl.NumberFormat('fa-IR', { maximumFractionDigits: 0 });
         var fmtDec2 = new Intl.NumberFormat('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -644,14 +658,41 @@
             document.getElementById('endPointHalo').setAttribute('fill', strokeColor);
             document.getElementById('hoverDot').setAttribute('fill', strokeColor);
 
-            var W = 960;
-            var H = 360;
-            var padLeft = 24;
-            var padRight = 98;
-            var padTop = 24;
-            var padBottom = 46;
-            var plotW = W - padLeft - padRight;
-            var plotH = H - padTop - padBottom;
+            var stageEl = document.getElementById('chartStage');
+            var stRect = stageEl ? stageEl.getBoundingClientRect() : null;
+            if (stRect && stRect.width > 200 && stRect.height > 150) {
+                svgWidth = Math.round(stRect.width - 16);
+                svgHeight = Math.round(stRect.height - 16);
+            } else {
+                svgWidth = 1200;
+                svgHeight = 480;
+            }
+            svgEl.setAttribute('viewBox', '0 0 ' + svgWidth + ' ' + svgHeight);
+            var hitEl = document.getElementById('interactionLayer');
+            if (hitEl) {
+                hitEl.setAttribute('width', svgWidth);
+                hitEl.setAttribute('height', svgHeight);
+            }
+
+            var W = svgWidth;
+            var H = svgHeight;
+            var isNarrow = W < 540;
+            var padLeft = isNarrow ? 22 : 44;
+            var padRight = isNarrow ? 78 : 112;
+            var padTop = 22;
+            var padBottom = isNarrow ? 36 : 42;
+            svgPadLeft = padLeft;
+            svgPadRight = padRight;
+            svgPadTop = padTop;
+            svgPadBottom = padBottom;
+            var plotW = Math.max(80, W - padLeft - padRight);
+            var plotH = Math.max(80, H - padTop - padBottom);
+
+            var crossEl = document.getElementById('crosshairLine');
+            if (crossEl) {
+                crossEl.setAttribute('y1', padTop);
+                crossEl.setAttribute('y2', H - padBottom);
+            }
 
             var prices = pts.map(function(p) { return Number(p.price); });
             var minP = Math.min.apply(null, prices);
@@ -777,7 +818,7 @@
             var rect = svg.getBoundingClientRect();
             if (!rect.width) return;
 
-            var relX = ((clientX - rect.left) / rect.width) * 960;
+            var relX = ((clientX - rect.left) / rect.width) * svgWidth;
             var nearest = plottedCoords[0];
             var minDist = Math.abs(relX - nearest.x);
 
@@ -801,6 +842,8 @@
 
             crossLine.setAttribute('x1', nearest.x.toFixed(2));
             crossLine.setAttribute('x2', nearest.x.toFixed(2));
+            crossLine.setAttribute('y1', svgPadTop);
+            crossLine.setAttribute('y2', svgHeight - svgPadBottom);
             crossLine.setAttribute('visibility', 'visible');
 
             hoverDot.setAttribute('cx', nearest.x.toFixed(2));
@@ -811,11 +854,12 @@
             tooltipPrice.textContent = formatPrice(nearest.point.price, decimals) + ' ' + (activeSeries.unit || 'تومان');
             tooltipDate.textContent = nearest.point.label || '';
 
-            var boxW = 196;
+            var boxW = svgWidth < 540 ? 168 : 196;
             var boxH = 52;
+            var maxBx = Math.max(svgPadLeft + 10, svgWidth - svgPadRight - boxW);
             var bx = nearest.x - (boxW / 2);
-            if (bx < 16) bx = 16;
-            if (bx + boxW > 856) bx = 856 - boxW;
+            if (bx < svgPadLeft) bx = svgPadLeft;
+            if (bx > maxBx) bx = maxBx;
             var by = nearest.y - boxH - 14;
             if (by < 10) by = nearest.y + 14;
 
@@ -932,6 +976,19 @@
         });
 
         renderSeries(INITIAL_DATA);
+        if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(function() {
+                if (activeSeries && !isHovering) renderSeries(activeSeries);
+            });
+        }
+
+        var resizeTimer = null;
+        window.addEventListener('resize', function() {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (activeSeries && !isHovering) renderSeries(activeSeries);
+            }, 90);
+        }, { passive: true });
 
         // همگام‌سازی خودکار قیمت و نقطه آخر نمودار هر ۳۰ ثانیه بدون رفرش صفحه
         setInterval(function() {
