@@ -56,8 +56,10 @@ if (($_GET['action'] ?? '') === 'import_history') {
     }
 
     if (!empty($minute)) {
-        $minRecorded = min(array_column($minute, 'recorded_at'));
-        \Illuminate\Support\Facades\DB::table('market_price_points')->where('recorded_at', '>=', $minRecorded)->delete();
+        if (!empty($payload['clear_minute'])) {
+            $minRecorded = min(array_column($minute, 'recorded_at'));
+            \Illuminate\Support\Facades\DB::table('market_price_points')->where('recorded_at', '>=', $minRecorded)->delete();
+        }
         foreach (array_chunk($minute, 400) as $chunk) {
             \Illuminate\Support\Facades\DB::table('market_price_points')->insert($chunk);
             $mCount += count($chunk);
