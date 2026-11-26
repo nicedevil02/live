@@ -698,8 +698,12 @@
 
             plottedCoords = [];
             var count = pts.length;
+            var useTime = pts.every(function(p) { return typeof p.ts === 'number'; });
+            var t0 = useTime ? pts[0].ts : 0;
+            var t1 = useTime ? pts[count - 1].ts : 0;
+            if (!(t1 > t0)) useTime = false;
             for (var i = 0; i < count; i++) {
-                var ratioX = count > 1 ? (i / (count - 1)) : 0.5;
+                var ratioX = useTime ? ((pts[i].ts - t0) / (t1 - t0)) : (count > 1 ? (i / (count - 1)) : 0.5);
                 var px = padLeft + (plotW * ratioX);
                 var py = padTop + ((maxP - Number(pts[i].price)) / span) * plotH;
                 plottedCoords.push({
@@ -743,11 +747,17 @@
             var tickCount = Math.min(5, plottedCoords.length);
             var chosenIdx = Object.create(null);
             for (var k = 0; k < tickCount; k++) {
-                var idx = tickCount === 1 ? 0 : Math.round((k / (tickCount - 1)) * (plottedCoords.length - 1));
+                var targetX = padLeft + (plotW * (tickCount === 1 ? 0 : k / (tickCount - 1)));
+                var idx = 0;
+                var bestDist = Infinity;
+                for (var q = 0; q < plottedCoords.length; q++) {
+                    var dq = Math.abs(plottedCoords[q].x - targetX);
+                    if (dq < bestDist) { bestDist = dq; idx = q; }
+                }
                 if (chosenIdx[idx]) continue;
                 chosenIdx[idx] = true;
                 var c = plottedCoords[idx];
-                var anchor = idx === 0 ? 'start' : (idx === plottedCoords.length - 1 ? 'end' : 'middle');
+                var anchor = k === 0 ? 'start' : (k === tickCount - 1 ? 'end' : 'middle');
                 var xLbl = createSvgEl('text', {
                     x: c.x.toFixed(1),
                     y: (H - 14).toFixed(1),

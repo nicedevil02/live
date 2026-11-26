@@ -72,6 +72,17 @@ class MarketHistoryService
                     $table->index(['symbol', 'recorded_at']);
                 });
             }
+
+            if (!Schema::hasTable('market_hourly_points')) {
+                Schema::create('market_hourly_points', function (Blueprint $table) {
+                    $table->id();
+                    $table->string('symbol', 40);
+                    $table->timestamp('bucket_at');
+                    $table->decimal('price', 20, 2);
+
+                    $table->unique(['symbol', 'bucket_at']);
+                });
+            }
         } catch (\Throwable $e) {
             Log::warning('MarketHistoryService ensureTablesExist error: ' . $e->getMessage());
         }
@@ -150,7 +161,8 @@ class MarketHistoryService
             Cache::put($lastGuardKey, $cleanVal, 3600);
         }
 
-        if (Cache::add("mkt_pt_{$symbol}", 1, 290)) {
+        // یک نقطه در هر دقیقه برای نمودار ۱ روزه
+        if (Cache::add("mkt_pt_{$symbol}", 1, 55)) {
             DB::table('market_price_points')->insert([
                 'symbol'      => $symbol,
                 'price'       => $cleanVal,
@@ -158,9 +170,25 @@ class MarketHistoryService
             ]);
         }
 
+        // آخرین نرخ هر ساعت برای نمودار ۷ روزه
+        if (Cache::add("mkt_hr_{$symbol}", 1, 50)) {
+            DB::table('market_hourly_points')->upsert(
+                [[
+                    'symbol'    => $symbol,
+                    'bucket_at' => now()->startOfHour()->format('Y-m-d H:i:s'),
+                    'price'     => $cleanVal,
+                ]],
+                ['symbol', 'bucket_at'],
+                ['price']
+            );
+        }
+
         if (Cache::add('mkt_pt_prune_lock', 1, 3600)) {
             DB::table('market_price_points')
                 ->where('recorded_at', '<', now()->subHours(48))
+                ->delete();
+            DB::table('market_hourly_points')
+                ->where('bucket_at', '<', now()->subDays(9))
                 ->delete();
         }
     }
@@ -454,13 +482,22 @@ class MarketHistoryService
         $baseline = $livePrice;
         $periodHigh = $livePrice;
         $periodLow = $livePrice;
+        $jalaliCache = [];
+        $jalaliOf = function (Carbon $dt) use (&$jalaliCache) {
+            $key = $dt->format('Y-m-d');
+            if (!isset($jalaliCache[$key])) {
+                $jalaliCache[$key] = User::toJalali($dt, false);
+            }
+            return $jalaliCache[$key];
+        };
 
         if ($range === '1d') {
+            // نمودار ۱ روزه: نرخ هر دقیقه در ۲۴ ساعت گذشته
             $tickRows = DB::table('market_price_points')
                 ->where('symbol', $baseSymbol)
                 ->where('recorded_at', '>=', now()->subHours(24))
                 ->orderBy('recorded_at', 'asc')
-                ->get();
+                ->get(['price', 'recorded_at']);
 
             $tickPoints = [];
             foreach ($tickRows as $row) {
@@ -471,13 +508,9 @@ class MarketHistoryService
                 $dt = Carbon::parse($row->recorded_at)->setTimezone('Asia/Tehran');
                 $tickPoints[] = [
                     'ts'    => $dt->timestamp,
-                    't'     => $dt->toIso8601String(),
-                    'label' => User::toJalali($dt, false) . ' · ساعت ' . $dt->format('H:i'),
+                    'label' => $jalaliOf($dt) . ' · ساعت ' . $dt->format('H:i'),
                     'short' => $dt->format('H:i'),
                     'price' => $p,
-                    'open'  => $p,
-                    'high'  => $p,
-                    'low'   => $p,
                 ];
             }
 
@@ -492,7 +525,7 @@ class MarketHistoryService
                 }
             }
 
-            // اگر هنوز نقاط درون‌روزی کامل نشده‌اند، از نرخ‌های واقعی پایانی دیروز و بازگشایی امروز به عنوان لنگر واقعی استفاده کن
+            // تا زمانی که نقاط دقیقه‌ای کافی ثبت نشده، از نرخ‌های واقعی پایانی دیروز و بازگشایی امروز به عنوان لنگر استفاده می‌شود
             $prefixPoints = [];
             if (count($tickPoints) < 4) {
                 $firstTickTs = !empty($tickPoints) ? $tickPoints[0]['ts'] : $tehranNow->timestamp;
@@ -502,13 +535,9 @@ class MarketHistoryService
                     if ($yDt->timestamp < $firstTickTs - 300) {
                         $prefixPoints[] = [
                             'ts'    => $yDt->timestamp,
-                            't'     => $yDt->toIso8601String(),
                             'label' => 'نرخ پایانی دیروز',
                             'short' => 'دیروز',
                             'price' => $yesterdayPrice,
-                            'open'  => $yesterdayPrice,
-                            'high'  => $yesterdayPrice,
-                            'low'   => $yesterdayPrice,
                         ];
                     }
                 }
@@ -521,13 +550,9 @@ class MarketHistoryService
                     if ($openDt->timestamp < $firstTickTs - 120) {
                         $prefixPoints[] = [
                             'ts'    => $openDt->timestamp,
-                            't'     => $openDt->toIso8601String(),
                             'label' => 'بازگشایی امروز · ساعت ' . $openDt->format('H:i'),
                             'short' => $openDt->format('H:i'),
                             'price' => $todayOpenPrice,
-                            'open'  => $todayOpenPrice,
-                            'high'  => $todayOpenPrice,
-                            'low'   => $todayOpenPrice,
                         ];
                     }
                 }
@@ -540,39 +565,29 @@ class MarketHistoryService
                 if (!$last || ($tehranNow->timestamp - $last['ts'] > 55) || abs($last['price'] - $livePrice) > 0.0001) {
                     $points[] = [
                         'ts'    => $tehranNow->timestamp,
-                        't'     => $tehranNow->toIso8601String(),
                         'label' => 'نرخ فعلی · ساعت ' . $tehranNow->format('H:i'),
                         'short' => $tehranNow->format('H:i'),
                         'price' => $livePrice,
-                        'open'  => $livePrice,
-                        'high'  => $livePrice,
-                        'low'   => $livePrice,
                     ];
                 }
             } elseif (!empty($points)) {
                 $livePrice = (float) $points[count($points) - 1]['price'];
             }
 
-            // حذف فیلد کمکی ts از خروجی نهایی
-            $points = array_map(static function (array $pt) {
-                unset($pt['ts']);
-                return $pt;
-            }, $points);
-
             $baseline = $yesterdayPrice > 0
                 ? $yesterdayPrice
                 : (!empty($points) ? (float) $points[0]['price'] : $livePrice);
 
             $prices = array_column($points, 'price');
-            $todayCandle = DB::table('market_daily_candles')
-                ->where('symbol', $baseSymbol)
-                ->where('trade_date', $todayStr)
-                ->first();
-
             if (!empty($prices)) {
                 $periodHigh = max($prices);
                 $periodLow = min($prices);
             }
+
+            $todayCandle = DB::table('market_daily_candles')
+                ->where('symbol', $baseSymbol)
+                ->where('trade_date', $todayStr)
+                ->first();
             if ($todayCandle) {
                 $cHigh = round(((float) $todayCandle->high_price) * $multiplier, $decimals);
                 $cLow  = round(((float) $todayCandle->low_price) * $multiplier, $decimals);
@@ -583,9 +598,118 @@ class MarketHistoryService
                     $periodLow = $periodLow > 0 ? min($periodLow, $cLow) : $cLow;
                 }
             }
+        } elseif ($range === '7d') {
+            // نمودار ۷ روزه: نرخ هر ساعت. بخش‌هایی از هفته که هنوز نقطه ساعتی ثبت نشده با نرخ پایانی روزانه واقعی پر می‌شود
+            $sinceTs = now()->subDays(7);
+            $hourly = [];
+
+            $hourRows = DB::table('market_hourly_points')
+                ->where('symbol', $baseSymbol)
+                ->where('bucket_at', '>=', $sinceTs)
+                ->orderBy('bucket_at', 'asc')
+                ->get(['price', 'bucket_at']);
+            foreach ($hourRows as $row) {
+                $dt = Carbon::parse($row->bucket_at)->setTimezone('Asia/Tehran');
+                $hourly[$dt->copy()->startOfHour()->timestamp] = (float) $row->price;
+            }
+
+            $tickRows = DB::table('market_price_points')
+                ->where('symbol', $baseSymbol)
+                ->where('recorded_at', '>=', $sinceTs)
+                ->orderBy('recorded_at', 'asc')
+                ->get(['price', 'recorded_at']);
+            $tickByHour = [];
+            foreach ($tickRows as $row) {
+                $dt = Carbon::parse($row->recorded_at)->setTimezone('Asia/Tehran');
+                $tickByHour[$dt->copy()->startOfHour()->timestamp] = (float) $row->price;
+            }
+            foreach ($tickByHour as $hourTs => $price) {
+                if (!isset($hourly[$hourTs])) {
+                    $hourly[$hourTs] = $price;
+                }
+            }
+            ksort($hourly);
+
+            $firstHourlyTs = !empty($hourly) ? array_key_first($hourly) : PHP_INT_MAX;
+
+            $sinceDate = $tehranNow->copy()->subDays(7)->format('Y-m-d');
+            $candleRows = DB::table('market_daily_candles')
+                ->where('symbol', $baseSymbol)
+                ->where('trade_date', '>=', $sinceDate)
+                ->orderBy('trade_date', 'asc')
+                ->get();
+
+            $candleHigh = 0.0;
+            $candleLow = 0.0;
+            foreach ($candleRows as $row) {
+                $close = round(((float) $row->close_price) * $multiplier, $decimals);
+                if ($close <= 0) {
+                    continue;
+                }
+                $high = round(((float) $row->high_price) * $multiplier, $decimals);
+                $low  = round(((float) $row->low_price) * $multiplier, $decimals);
+                $candleHigh = max($candleHigh, $high);
+                $candleLow = $candleLow > 0 ? min($candleLow, $low > 0 ? $low : $close) : ($low > 0 ? $low : $close);
+
+                $dayDt = Carbon::parse($row->trade_date . ' 12:00:00', 'Asia/Tehran');
+                if ($dayDt->timestamp >= $firstHourlyTs - 3600) {
+                    continue;
+                }
+                $jDate = $row->jalali_date ?: $jalaliOf($dayDt);
+                $points[] = [
+                    'ts'    => $dayDt->timestamp,
+                    'label' => $jDate . ' · نرخ پایانی روز',
+                    'short' => substr($jDate, 5),
+                    'price' => $close,
+                ];
+            }
+
+            foreach ($hourly as $hourTs => $rawPrice) {
+                $p = round($rawPrice * $multiplier, $decimals);
+                if ($p <= 0) {
+                    continue;
+                }
+                $dt = Carbon::createFromTimestamp($hourTs, 'Asia/Tehran');
+                $jDate = $jalaliOf($dt);
+                $points[] = [
+                    'ts'    => $hourTs,
+                    'label' => $jDate . ' · ساعت ' . $dt->format('H:i'),
+                    'short' => substr($jDate, 5) . ' ' . $dt->format('H:i'),
+                    'price' => $p,
+                ];
+            }
+
+            if ($livePrice > 0) {
+                $last = !empty($points) ? $points[count($points) - 1] : null;
+                if (!$last || ($tehranNow->timestamp - $last['ts'] > 600) || abs($last['price'] - $livePrice) > 0.0001) {
+                    $jDate = $jalaliOf($tehranNow);
+                    $points[] = [
+                        'ts'    => $tehranNow->timestamp,
+                        'label' => $jDate . ' · نرخ فعلی ' . $tehranNow->format('H:i'),
+                        'short' => substr($jDate, 5) . ' ' . $tehranNow->format('H:i'),
+                        'price' => $livePrice,
+                    ];
+                }
+            } elseif (!empty($points)) {
+                $livePrice = (float) $points[count($points) - 1]['price'];
+            }
+
+            usort($points, static fn (array $a, array $b) => $a['ts'] <=> $b['ts']);
+
+            $baseline = !empty($points) ? (float) $points[0]['price'] : $livePrice;
+            if (!empty($points)) {
+                $prices = array_column($points, 'price');
+                $periodHigh = max($prices);
+                $periodLow = min($prices);
+                if ($candleHigh > 0) {
+                    $periodHigh = max($periodHigh, $candleHigh);
+                }
+                if ($candleLow > 0) {
+                    $periodLow = min($periodLow, $candleLow);
+                }
+            }
         } else {
-            $daysMap = ['7d' => 7, '30d' => 30, '1y' => 365];
-            $days = $daysMap[$range];
+            $days = $range === '30d' ? 30 : 365;
             $sinceDate = $tehranNow->copy()->subDays($days)->format('Y-m-d');
 
             $candleRows = DB::table('market_daily_candles')
@@ -594,54 +718,53 @@ class MarketHistoryService
                 ->orderBy('trade_date', 'asc')
                 ->get();
 
+            $highs = [];
+            $lows = [];
             foreach ($candleRows as $row) {
                 $close = round(((float) $row->close_price) * $multiplier, $decimals);
                 if ($close <= 0) {
                     continue;
                 }
-                $open = round(((float) $row->open_price) * $multiplier, $decimals);
                 $high = round(((float) $row->high_price) * $multiplier, $decimals);
                 $low  = round(((float) $row->low_price) * $multiplier, $decimals);
+                $highs[] = max($close, $high);
+                $lows[] = min($close, $low > 0 ? $low : $close);
 
-                $jDate = $row->jalali_date ?: User::toJalali(Carbon::parse($row->trade_date), false);
+                $dayDt = Carbon::parse($row->trade_date . ' 12:00:00', 'Asia/Tehran');
+                $jDate = $row->jalali_date ?: $jalaliOf($dayDt);
                 $points[] = [
-                    't'     => $row->trade_date,
+                    'ts'    => $dayDt->timestamp,
                     'label' => $jDate,
                     'short' => substr($jDate, 5),
                     'price' => $close,
-                    'open'  => $open > 0 ? $open : $close,
-                    'high'  => max($close, $high > 0 ? $high : $close),
-                    'low'   => min($close, $low > 0 ? $low : $close),
                 ];
             }
 
             if ($livePrice > 0) {
-                $todayJalali = User::toJalali($tehranNow, false);
+                $todayJalali = $jalaliOf($tehranNow);
                 $lastIdx = count($points) - 1;
-                if ($lastIdx >= 0 && $points[$lastIdx]['t'] === $todayStr) {
+                $todayNoon = Carbon::parse($todayStr . ' 12:00:00', 'Asia/Tehran')->timestamp;
+                if ($lastIdx >= 0 && $points[$lastIdx]['ts'] === $todayNoon) {
                     $points[$lastIdx]['price'] = $livePrice;
-                    $points[$lastIdx]['high'] = max($points[$lastIdx]['high'], $livePrice);
-                    $points[$lastIdx]['low']  = min($points[$lastIdx]['low'], $livePrice);
+                    $points[$lastIdx]['ts'] = $tehranNow->timestamp;
                 } else {
-                    $openT = $todayOpenPrice > 0 ? $todayOpenPrice : $livePrice;
                     $points[] = [
-                        't'     => $todayStr,
+                        'ts'    => $tehranNow->timestamp,
                         'label' => $todayJalali . ' (امروز)',
                         'short' => substr($todayJalali, 5),
                         'price' => $livePrice,
-                        'open'  => $openT,
-                        'high'  => max($openT, $livePrice),
-                        'low'   => min($openT, $livePrice),
                     ];
                 }
+                $highs[] = $livePrice;
+                $lows[] = $livePrice;
             } elseif (!empty($points)) {
                 $livePrice = (float) $points[count($points) - 1]['price'];
             }
 
             $baseline = !empty($points) ? (float) $points[0]['price'] : $livePrice;
-            if (!empty($points)) {
-                $periodHigh = max(array_column($points, 'high'));
-                $periodLow  = min(array_column($points, 'low'));
+            if (!empty($highs)) {
+                $periodHigh = max($highs);
+                $periodLow = min($lows);
             }
         }
 

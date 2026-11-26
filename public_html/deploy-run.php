@@ -143,6 +143,7 @@ $criticalSyncFiles = [
     'database/migrations/2026_11_14_160000_add_board_enhancement_columns_to_display_settings_table.php',
     'database/migrations/2026_11_23_105000_create_bot_notification_settings_table.php',
     'database/migrations/2026_11_26_163000_create_market_history_tables.php',
+    'database/migrations/2026_11_26_193000_create_market_hourly_points_table.php',
     'public_html/vendor/sortable.min.js',
     'public_html/vendor/qrcode-generator.min.js',
     'public_html/build/manifest.json',
