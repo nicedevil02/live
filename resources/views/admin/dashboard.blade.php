@@ -79,22 +79,22 @@
             </div>
 
             {{-- فرم ورودی کد ۶ رقمی و اسکن QR --}}
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5">
                 <div class="flex-1 relative">
                     <input type="text"
                            maxlength="8"
                            x-model="pairCode"
+                           :inputmode="pairAlphaMode ? 'text' : 'numeric'"
+                           autocomplete="one-time-code"
                            dir="ltr"
-                           placeholder="کد ۶ رقمی تلویزیون (مثلاً 548291)"
+                           placeholder="کد ۶ رقمی تلویزیون (مثلاً 584921)"
                            @keydown.enter.prevent="pairWithCodeManual()"
-                           @input="
-                               let val = pairCode.toString();
-                               const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-                               const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-                               for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
-                               pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-                           "
+                           @input="handlePairCodeInput()"
                            class="w-full h-12 sm:h-13 bg-slate-50 dark:bg-slate-950 border-2 border-amber-500/40 rounded-2xl px-4 text-center font-mono font-black text-lg sm:text-xl tracking-[0.25em] text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                    <button type="button"
+                            @click="pairAlphaMode = !pairAlphaMode"
+                            class="mt-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer block"
+                            x-text="pairAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
                 </div>
 
                 <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0">
@@ -102,14 +102,14 @@
                             @click="pairWithCodeManual()"
                             :disabled="isPairing || pairCode.length < 6"
                             class="h-12 sm:h-13 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 whitespace-nowrap">
-                        <span x-text="isPairing ? 'در حال اتصال...' : '🚀 اتصال تلویزیون'"></span>
+                        <span x-text="isPairing ? 'در حال اتصال...' : 'اتصال تلویزیون'"></span>
                     </button>
 
                     <button type="button"
                             @click="openScanner()"
-                            class="h-12 sm:h-13 px-3.5 sm:px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs whitespace-nowrap shadow-md shadow-indigo-600/20 transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                        <span>📷</span>
-                        <span>اسکن با دوربین</span>
+                            class="qr-scan-btn h-12 sm:h-13 px-3.5 sm:px-4 rounded-2xl font-black text-xs whitespace-nowrap transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                        <i data-lucide="camera" class="w-4 h-4 shrink-0"></i>
+                        <span>اسکن بارکد QR</span>
                     </button>
                 </div>
             </div>
@@ -512,33 +512,38 @@
                 <span>پین ۶ رقمی نمایش داده شده روی تلویزیون دوم را وارد کنید یا بارکد را اسکن نمایید:</span>
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-2">
                 <button @click="openScanner()"
                         type="button"
-                        class="qr-scan-btn font-black px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all shadow-sm hover:scale-[1.01] cursor-pointer flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
-                        style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">
-                    <svg class="w-3.5 h-3.5 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="qr-scan-btn font-black px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all shadow-sm hover:scale-[1.01] cursor-pointer flex items-center justify-center gap-1.5 flex-1 sm:flex-none">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span>اسکن QR با دوربین</span>
                 </button>
 
-                <div class="flex items-center gap-1.5 flex-1 sm:flex-none">
-                    <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی" dir="ltr"
-                           @keydown.enter.prevent="pairWithCodeManual()"
-                           @input="
-                               let val = pairCode.toString();
-                               const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-                               const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-                               for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
-                               pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-                           "
-                           class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-850 dark:text-slate-100 w-full sm:w-32 text-center font-mono font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
-                    <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
-                            class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all cursor-pointer disabled:opacity-50 shrink-0">
-                        <span x-text="isPairing ? 'اتصال...' : 'ثبت'"></span>
-                    </button>
+                <div class="flex-1 sm:flex-none">
+                    <div class="flex items-center gap-1.5">
+                        <input type="text"
+                               maxlength="8"
+                               x-model="pairCode"
+                               :inputmode="pairAlphaMode ? 'text' : 'numeric'"
+                               autocomplete="one-time-code"
+                               placeholder="کد ۶ رقمی"
+                               dir="ltr"
+                               @keydown.enter.prevent="pairWithCodeManual()"
+                               @input="handlePairCodeInput()"
+                               class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-850 dark:text-slate-100 w-full sm:w-32 text-center font-mono font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                        <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
+                                class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all cursor-pointer disabled:opacity-50 shrink-0">
+                            <span x-text="isPairing ? 'اتصال...' : 'ثبت'"></span>
+                        </button>
+                    </div>
+                    <button type="button"
+                            @click="pairAlphaMode = !pairAlphaMode"
+                            class="mt-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer block"
+                            x-text="pairAlphaMode ? 'صفحه‌کلید عددی' : 'کد شامل حروف است؟'"></button>
                 </div>
             </div>
         </div>
@@ -1003,20 +1008,28 @@
                         <span>وارد کردن کد ۶ رقمی نمایش داده شده روی تلویزیون</span>
                     </div>
                     <div class="pr-8 space-y-3">
-                        <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی (حروف/اعداد)" dir="ltr"
-                               @keydown.enter.prevent="pairWithCodeManual()"
-                               @input="
-                                   let val = pairCode.toString();
-                                   const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-                                   const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-                                   for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
-                                   pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-                               "
-                               class="w-full bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-2xl py-3 px-4 text-center font-mono font-black text-2xl tracking-widest text-slate-900 dark:text-white placeholder:font-sans placeholder:text-sm placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                        <div>
+                            <input type="text"
+                                   maxlength="8"
+                                   x-model="pairCode"
+                                   :inputmode="pairAlphaMode ? 'text' : 'numeric'"
+                                   autocomplete="one-time-code"
+                                   placeholder="کد ۶ رقمی روی تلویزیون (مثلاً 584921)"
+                                   dir="ltr"
+                                   @keydown.enter.prevent="pairWithCodeManual()"
+                                   @input="handlePairCodeInput()"
+                                   class="w-full bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-2xl py-3 px-4 text-center font-mono font-black text-2xl tracking-widest text-slate-900 dark:text-white placeholder:font-sans placeholder:text-sm placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                            <div class="mt-1.5 text-center">
+                                <button type="button"
+                                        @click="pairAlphaMode = !pairAlphaMode"
+                                        class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer"
+                                        x-text="pairAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
+                            </div>
+                        </div>
                         <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
                                 class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
                             <i data-lucide="zap" class="w-4 h-4"></i>
-                            <span x-text="isPairing ? 'در حال برقراری ارتباط...' : '🚀 اتصال و روشن کردن تلویزیون مغازه'"></span>
+                            <span x-text="isPairing ? 'در حال برقراری ارتباط...' : 'اتصال و روشن کردن تلویزیون مغازه'"></span>
                         </button>
                     </div>
                 </div>
@@ -1141,6 +1154,8 @@ function dashboardPage() {
         },
         isLoading: true,
         pairCode: '',
+        pairAlphaMode: false,
+        lastAutoPairCode: '',
         isPairing: false,
         isScannerOpen: false,
         isWizardOpen: false,
@@ -1276,12 +1291,24 @@ function dashboardPage() {
             });
         },
 
-        async pairWithCodeManual() {
-            let code = this.pairCode.toString();
+        handlePairCodeInput(autoSubmit = true) {
+            let val = String(this.pairCode || '');
             const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
             const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-            for(let i=0; i<p.length; i++) code = code.replaceAll(p[i], e[i]);
-            code = code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
+            for (let i = 0; i < p.length; i++) val = val.replaceAll(p[i], e[i]);
+            const cleaned = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
+            this.pairCode = cleaned;
+            if (cleaned.length < 6) {
+                this.lastAutoPairCode = '';
+            } else if (autoSubmit && !this.isPairing && this.lastAutoPairCode !== cleaned) {
+                this.lastAutoPairCode = cleaned;
+                this.$nextTick(() => this.pairWithCodeManual());
+            }
+        },
+
+        async pairWithCodeManual() {
+            this.handlePairCodeInput(false);
+            const code = this.pairCode.trim();
 
             if (!code || code.length < 6) {
                 if (window.showAdminToast) window.showAdminToast('لطفاً کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.', 'error');

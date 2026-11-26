@@ -88,11 +88,11 @@
                 </label>
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                     <template x-for="b in [
-                        { id: 'none', label: 'پیشنهاد شگفت‌انگیز' },
-                        { id: 'no_wage', label: '🏷️ کم‌اجرت / بی‌اجرت' },
-                        { id: 'best_seller', label: '🔥 پرفروش‌ترین' },
-                        { id: 'new_collection', label: '✨ کالکشن جدید' },
-                        { id: 'special_discount', label: '🎁 تخفیف ویژه' }
+                        { id: 'none', label: 'بدون نشان' },
+                        { id: 'no_wage', label: 'کم‌اجرت / بی‌اجرت' },
+                        { id: 'best_seller', label: 'پرفروش‌ترین' },
+                        { id: 'new_collection', label: 'کالکشن جدید' },
+                        { id: 'special_discount', label: 'تخفیف ویژه' }
                     ]" :key="b.id">
                         <button type="button" @click="form.badge = b.id"
                                 class="flex items-center justify-center text-center p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer"

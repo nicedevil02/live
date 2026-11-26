@@ -184,31 +184,46 @@
     {{-- کانتینر پویا جهت نمایش اعلان دستگاه متصل / تایمر انتقال هوشمند تلویزیون --}}
     <div id="paired-device-root" class="relative z-50"></div>
 
-    {{-- مدیریت هوشمند اتصال تلویزیون و تابلوی جفت‌شده --}}
+    {{-- مدیریت هوشمند اتصال تلویزیون و تابلوی جفت‌شده (ES5 سازگار با مرورگرهای قدیمی تلویزیون) --}}
     <script>
         (function() {
+            function getQueryParam(name) {
+                var search = window.location.search || '';
+                if (search.charAt(0) === '?') search = search.substring(1);
+                if (!search) return '';
+                var parts = search.split('&');
+                for (var i = 0; i < parts.length; i++) {
+                    var kv = parts[i].split('=');
+                    if (decodeURIComponent(kv[0] || '') === name) {
+                        return decodeURIComponent((kv[1] || '').replace(/\+/g, ' '));
+                    }
+                }
+                return '';
+            }
+
             try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const isReset = urlParams.get('reset') === '1' || urlParams.get('disconnect') === '1';
-                const isHomeParam = urlParams.get('home') === '1' || urlParams.get('skip_redirect') === '1';
+                var isReset = getQueryParam('reset') === '1' || getQueryParam('disconnect') === '1';
+                var isHomeParam = getQueryParam('home') === '1' || getQueryParam('skip_redirect') === '1';
 
                 if (isReset) {
                     localStorage.removeItem('display_username');
                     localStorage.removeItem('display_token');
-                    document.cookie = "display_token=; path=/; max-age=0;";
-                    try { sessionStorage.removeItem('skip_redirect'); } catch(e) {}
+                    localStorage.removeItem('tv_device_token');
+                    localStorage.removeItem('tv_device_username');
+                    document.cookie = 'display_token=; path=/; max-age=0;';
+                    try { sessionStorage.removeItem('skip_redirect'); } catch (e) {}
                     return;
                 }
 
                 if (isHomeParam) {
-                    try { sessionStorage.setItem('skip_redirect', '1'); } catch(e) {}
+                    try { sessionStorage.setItem('skip_redirect', '1'); } catch (e2) {}
                 }
 
-                const savedUsername = localStorage.getItem('display_username');
-                const savedToken = localStorage.getItem('display_token');
-                const isTv = /SmartTV|Tizen|Web0S|NetCast|HbbTV|CrKey|Android TV|BRAVIA|Hisense/i.test(navigator.userAgent);
-                const skipRedirect = (function() {
-                    try { return sessionStorage.getItem('skip_redirect') === '1'; } catch(e) { return false; }
+                var savedUsername = localStorage.getItem('display_username');
+                var savedToken = localStorage.getItem('display_token');
+                var isTv = /SmartTV|SMART-TV|Tizen|Web0S|webOS|NetCast|HbbTV|CrKey|Android TV|GoogleTV|BRAVIA|Hisense|VIDAA|Viera|Opera TV|MIBOX|MiTV|AFT[A-Z0-9]|S905|rk3[0-9]{3}|Allwinner/i.test(navigator.userAgent || '');
+                var skipRedirect = (function() {
+                    try { return sessionStorage.getItem('skip_redirect') === '1'; } catch (e3) { return false; }
                 })();
 
                 if (!savedUsername || !savedToken) {
@@ -218,60 +233,55 @@
                     return;
                 }
 
-                const targetBoardUrl = '/' + encodeURIComponent(savedUsername) + '?key=' + encodeURIComponent(savedToken);
-                const safeShopName = savedUsername.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                var targetBoardUrl = '/' + encodeURIComponent(savedUsername) + '?key=' + encodeURIComponent(savedToken);
+                var safeShopName = savedUsername.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
                 // ۱. سناریوی تلویزیون: شمارش معکوس ۳ ثانیه‌ای با امکان انصراف
                 if (isTv && !skipRedirect && !isHomeParam) {
-                    let secondsLeft = 3;
-                    let countdownTimer = null;
+                    var secondsLeft = 3;
+                    var countdownTimer = null;
 
-                    const mountTvCountdown = function() {
-                        const root = document.getElementById('paired-device-root');
+                    var mountTvCountdown = function() {
+                        var root = document.getElementById('paired-device-root');
                         if (!root) return;
 
-                        root.innerHTML = `
-                            <div id="tv-countdown-banner" class="fixed top-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-[100] max-w-2xl w-full mx-auto p-4 sm:p-5 rounded-2xl bg-stone-900 text-stone-50 border border-amber-500/40 shadow-xl font-sans" dir="rtl">
-                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-                                        </div>
-                                        <div>
-                                            <div class="font-bold text-sm text-amber-300 flex items-center gap-2">
-                                                <span>انتقال خودکار به تابلوی طلای ${safeShopName}</span>
-                                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                            </div>
-                                            <p class="text-xs text-stone-300 mt-0.5">
-                                                تا <span id="tv-countdown-num" class="font-bold text-amber-400 font-mono text-sm px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 tabular-nums">${secondsLeft}</span> ثانیه دیگر به تابلوی زنده هدایت می‌شوید...
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
-                                        <button type="button" id="tv-cancel-redirect-btn" class="min-h-11 px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold border border-stone-700 transition-colors cursor-pointer">
-                                            انصراف و مشاهده سایت
-                                        </button>
-                                        <a href="${targetBoardUrl}" class="min-h-11 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-colors inline-flex items-center gap-1.5">
-                                            <span>ورود فوری</span>
-                                            <svg class="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        root.innerHTML =
+                            '<div id="tv-countdown-banner" class="fixed top-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-[100] max-w-2xl w-full mx-auto p-4 sm:p-5 rounded-2xl bg-stone-900 text-stone-50 border border-amber-500/40 shadow-xl font-sans" dir="rtl">' +
+                                '<div class="flex flex-col sm:flex-row items-center justify-between gap-4">' +
+                                    '<div class="flex items-center gap-3">' +
+                                        '<div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">' +
+                                            '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>' +
+                                        '</div>' +
+                                        '<div>' +
+                                            '<div class="font-bold text-sm text-amber-300 flex items-center gap-2">' +
+                                                '<span>انتقال خودکار به تابلوی طلای ' + safeShopName + '</span>' +
+                                                '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>' +
+                                            '</div>' +
+                                            '<p class="text-xs text-stone-300 mt-0.5">' +
+                                                'تا <span id="tv-countdown-num" class="font-bold text-amber-400 font-mono text-sm px-1.5 py-0.5 rounded bg-stone-800 border border-stone-700 tabular-nums">' + secondsLeft + '</span> ثانیه دیگر به تابلوی زنده هدایت می‌شوید...' +
+                                            '</p>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">' +
+                                        '<button type="button" id="tv-cancel-redirect-btn" class="min-h-11 px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold border border-stone-700 transition-colors cursor-pointer">' +
+                                            'انصراف و مشاهده سایت' +
+                                        '</button>' +
+                                        '<a href="' + targetBoardUrl + '" class="min-h-11 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-colors inline-flex items-center gap-1.5">' +
+                                            '<span>ورود فوری</span>' +
+                                        '</a>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>';
 
-                        const cancelBtn = document.getElementById('tv-cancel-redirect-btn');
+                        var cancelBtn = document.getElementById('tv-cancel-redirect-btn');
                         if (cancelBtn) {
                             cancelBtn.focus();
                             cancelBtn.addEventListener('click', function() {
                                 if (countdownTimer) clearInterval(countdownTimer);
-                                try { sessionStorage.setItem('skip_redirect', '1'); } catch(e) {}
-                                const banner = document.getElementById('tv-countdown-banner');
-                                if (banner) {
-                                    banner.style.transition = 'opacity 0.2s, transform 0.2s';
-                                    banner.style.opacity = '0';
-                                    banner.style.transform = 'translateY(-10px)';
-                                    setTimeout(() => banner.remove(), 200);
+                                try { sessionStorage.setItem('skip_redirect', '1'); } catch (e4) {}
+                                var banner = document.getElementById('tv-countdown-banner');
+                                if (banner && banner.parentNode) {
+                                    banner.parentNode.removeChild(banner);
                                 }
                                 mountDesktopPill();
                             });
@@ -279,7 +289,7 @@
 
                         countdownTimer = setInterval(function() {
                             secondsLeft--;
-                            const numElem = document.getElementById('tv-countdown-num');
+                            var numElem = document.getElementById('tv-countdown-num');
                             if (numElem) numElem.textContent = secondsLeft;
                             if (secondsLeft <= 0) {
                                 clearInterval(countdownTimer);
@@ -297,41 +307,42 @@
                 }
 
                 // ۲. سناریوی دستگاه متصل: نمایش نوار شیک و تمیز بالای صفحه
-                const mountDesktopPill = function() {
-                    const root = document.getElementById('paired-device-root');
+                var mountDesktopPill = function() {
+                    var root = document.getElementById('paired-device-root');
                     if (!root) return;
 
-                    root.innerHTML = `
-                        <div id="paired-quick-bar" class="relative z-40 bg-stone-100 dark:bg-stone-900 border-b border-amber-500/30 text-stone-900 dark:text-stone-100 px-4 py-2.5 transition-colors" dir="rtl">
-                            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
-                                <div class="flex items-center gap-2.5 font-semibold">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                                    <span>دستگاه به تابلوی طلا متصل است:</span>
-                                    <span class="px-2.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-500/30 font-mono">${safeShopName}</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <a href="${targetBoardUrl}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold shadow-xs transition-colors">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-                                        <span>ورود به تابلوی فعال</span>
-                                    </a>
-                                    <button type="button" id="paired-disconnect-btn" class="px-3 py-1.5 rounded-lg bg-white dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-semibold transition-colors border border-stone-300 dark:border-stone-700 cursor-pointer" title="قطع اتصال این دستگاه">
-                                        قطع اتصال
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    root.innerHTML =
+                        '<div id="paired-quick-bar" class="relative z-40 bg-stone-100 dark:bg-stone-900 border-b border-amber-500/30 text-stone-900 dark:text-stone-100 px-4 py-2.5 transition-colors" dir="rtl">' +
+                            '<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">' +
+                                '<div class="flex items-center gap-2.5 font-semibold">' +
+                                    '<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>' +
+                                    '<span>دستگاه به تابلوی طلا متصل است:</span>' +
+                                    '<span class="px-2.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-500/30 font-mono">' + safeShopName + '</span>' +
+                                '</div>' +
+                                '<div class="flex items-center gap-2">' +
+                                    '<a href="' + targetBoardUrl + '" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold shadow-xs transition-colors">' +
+                                        '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>' +
+                                        '<span>ورود به تابلوی فعال</span>' +
+                                    '</a>' +
+                                    '<button type="button" id="paired-disconnect-btn" class="px-3 py-1.5 rounded-lg bg-white dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-semibold transition-colors border border-stone-300 dark:border-stone-700 cursor-pointer" title="قطع اتصال این دستگاه">' +
+                                        'قطع اتصال' +
+                                    '</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
 
-                    const disBtn = document.getElementById('paired-disconnect-btn');
+                    var disBtn = document.getElementById('paired-disconnect-btn');
                     if (disBtn) {
                         disBtn.addEventListener('click', function() {
                             if (confirm('آیا می‌خواهید اتصال این دستگاه به تابلوی طلا قطع شود؟')) {
                                 localStorage.removeItem('display_username');
                                 localStorage.removeItem('display_token');
-                                document.cookie = "display_token=; path=/; max-age=0;";
-                                try { sessionStorage.removeItem('skip_redirect'); } catch(e) {}
-                                const bar = document.getElementById('paired-quick-bar');
-                                if (bar) bar.remove();
+                                localStorage.removeItem('tv_device_token');
+                                localStorage.removeItem('tv_device_username');
+                                document.cookie = 'display_token=; path=/; max-age=0;';
+                                try { sessionStorage.removeItem('skip_redirect'); } catch (e5) {}
+                                var bar = document.getElementById('paired-quick-bar');
+                                if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
                             }
                         });
                     }
@@ -344,7 +355,9 @@
                 }
 
             } catch (err) {
-                console.warn('Paired device handler error:', err);
+                if (window.console && console.warn) {
+                    console.warn('Paired device handler error:', err);
+                }
             }
         })();
     </script>
@@ -412,19 +425,21 @@
                             </button>
                         </form>
 
-                        {{-- نوار هدایت به دموی زنده و اتصال تلویزیون --}}
-                        <div class="pt-3.5 border-t border-stone-300/60 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                            <div class="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-medium">
-                                @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400'])
-                                <span>می‌خواهید تابلوی زنده را بدون ثبت‌نام مشاهده کنید؟</span>
+                        {{-- نوار هدایت مستقیم تلویزیون و دموی زنده تابلو --}}
+                        <div class="pt-3.5 border-t border-stone-300/60 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                            <div class="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-semibold">
+                                @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0'])
+                                <span>پای تلویزیون مغازه هستید؟</span>
                             </div>
                             <div class="flex items-center gap-2 flex-wrap">
-                                <a href="{{ url('/demo') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold shrink-0">
-                                    <span>مشاهده دموی زنده تابلو (/demo)</span>
-                                    @include('partials.ui-icon', ['name' => 'arrow-left', 'class' => 'w-3.5 h-3.5'])
+                                <a href="{{ route('display.tv') }}"
+                                   class="min-h-11 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-900 dark:bg-stone-100 text-amber-400 dark:text-stone-950 hover:bg-stone-800 dark:hover:bg-white font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 shrink-0">
+                                    @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-4 h-4'])
+                                    <span>راه‌اندازی روی این تلویزیون (/tv)</span>
                                 </a>
-                                <a href="{{ route('display.tv') }}" class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-800 dark:text-stone-200 hover:text-amber-800 dark:hover:text-amber-300 font-semibold shrink-0">
-                                    <span>اتصال تلویزیون (/tv)</span>
+                                <a href="{{ url('/demo') }}"
+                                   class="min-h-11 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl tl-neu-btn text-stone-900 dark:text-stone-100 hover:text-amber-800 dark:hover:text-amber-300 font-semibold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 shrink-0">
+                                    <span>مشاهده دموی زنده (/demo)</span>
                                 </a>
                             </div>
                         </div>

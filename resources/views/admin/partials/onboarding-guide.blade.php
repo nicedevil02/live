@@ -146,22 +146,32 @@
                         <span class="leading-relaxed" x-text="pairFeedback"></span>
                     </div>
 
-                    {{-- کادر ورودی پین کد --}}
+                    {{-- کادر ورودی کد ۶ رقمی با صفحه‌کلید عددی و ثبت خودکار --}}
                     <div class="space-y-3">
-                        <input type="text"
-                               maxlength="8"
-                               x-model="guidePairCode"
-                               @input="normalizePairInput()"
-                               @keydown.enter.prevent="submitGuidePairCode()"
-                               dir="ltr"
-                               placeholder="کد ۶ رقمی (مثلاً 548291)"
-                               class="w-full h-14 bg-slate-50 dark:bg-slate-950 border-2 border-amber-500/50 rounded-2xl px-4 text-center font-mono font-black text-2xl tracking-[0.25em] text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                        <div>
+                            <input type="text"
+                                   maxlength="8"
+                                   x-model="guidePairCode"
+                                   :inputmode="guideAlphaMode ? 'text' : 'numeric'"
+                                   autocomplete="one-time-code"
+                                   @input="normalizePairInput()"
+                                   @keydown.enter.prevent="submitGuidePairCode()"
+                                   dir="ltr"
+                                   placeholder="کد ۶ رقمی روی تلویزیون (مثلاً 584921)"
+                                   class="w-full h-14 bg-slate-50 dark:bg-slate-950 border-2 border-amber-500/50 rounded-2xl px-4 text-center font-mono font-black text-2xl tracking-[0.25em] text-slate-900 dark:text-white placeholder:font-sans placeholder:text-xs placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                            <div class="mt-1.5 text-center">
+                                <button type="button"
+                                        @click="guideAlphaMode = !guideAlphaMode"
+                                        class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer"
+                                        x-text="guideAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
+                            </div>
+                        </div>
 
                         <button type="button"
                                 @click="submitGuidePairCode()"
                                 :disabled="isGuidePairing || guidePairCode.length < 6"
                                 class="w-full h-12 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm shadow-md shadow-amber-500/25 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2">
-                            <span x-text="isGuidePairing ? 'در حال برقراری اتصال...' : '🚀 اتصال و روشن کردن تلویزیون مغازه'"></span>
+                            <span x-text="isGuidePairing ? 'در حال برقراری اتصال...' : 'اتصال و روشن کردن تلویزیون مغازه'"></span>
                         </button>
                     </div>
 
@@ -372,6 +382,8 @@
 
             // وضعیت جفت‌سازی مستقیم داخل ویزارد
             guidePairCode: '',
+            guideAlphaMode: false,
+            lastAutoGuideCode: '',
             isGuidePairing: false,
             pairFeedback: '',
             pairFeedbackType: 'success',
@@ -523,18 +535,25 @@
                 }
             },
 
-            normalizePairInput() {
+            normalizePairInput(autoSubmit = true) {
                 let val = String(this.guidePairCode || '');
                 const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
                 const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
                 for (let i = 0; i < p.length; i++) {
                     val = val.replaceAll(p[i], e[i]);
                 }
-                this.guidePairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
+                const cleaned = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
+                this.guidePairCode = cleaned;
+                if (cleaned.length < 6) {
+                    this.lastAutoGuideCode = '';
+                } else if (autoSubmit && !this.isGuidePairing && this.lastAutoGuideCode !== cleaned) {
+                    this.lastAutoGuideCode = cleaned;
+                    this.$nextTick(() => this.submitGuidePairCode());
+                }
             },
 
             async submitGuidePairCode() {
-                this.normalizePairInput();
+                this.normalizePairInput(false);
                 const code = this.guidePairCode.trim();
                 if (code.length < 6) {
                     this.pairFeedbackType = 'error';

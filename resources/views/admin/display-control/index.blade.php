@@ -77,9 +77,14 @@
                                     <div class="w-3 h-3 rounded-full" :class="theme.dot"></div>
                                     <div class="w-8 h-1.5 rounded-full opacity-50" :class="theme.dot"></div>
                                     <div class="w-2 h-2 rounded-full opacity-35" :class="theme.dot"></div>
-                                    <span x-show="settings.theme_mode === theme.id"
+                                    <span x-show="initialSettings && initialSettings.theme_mode === theme.id"
+                                          class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-600 text-white shadow-xs">
+                                        فعال روی تابلو
+                                    </span>
+                                    <span x-show="settings.theme_mode === theme.id && (!initialSettings || initialSettings.theme_mode !== theme.id)"
+                                          x-cloak
                                           class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md text-[10px] font-black bg-amber-500 text-slate-950 shadow-xs">
-                                        فعال
+                                        انتخاب‌شده · ذخیره کنید
                                     </span>
                                 </div>
                                 <div class="flex items-center gap-2 mt-2.5">
@@ -417,6 +422,43 @@
                 <button type="button" @click="saveAndApply()" :disabled="isSaving"
                         class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition-colors cursor-pointer disabled:opacity-50">
                     <span x-text="isSaving ? 'در حال اعمال...' : 'ذخیره و اعمال روی تابلو'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- نوار چسبان تغییرات ذخیره نشده (فقط هنگام تغییر تنظیمات یا ترتیب کاشی‌ها ظاهر می‌شود) --}}
+    <div x-show="isDirty"
+         x-cloak
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-y-3"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-3"
+         role="region"
+         aria-label="ذخیره تغییرات تابلو"
+         class="sticky bottom-20 lg:bottom-4 z-30">
+        <div class="rounded-2xl bg-slate-900/95 dark:bg-stone-900/95 text-white border border-amber-500/45 px-4 py-3 sm:px-5 sm:py-3.5 shadow-2xl backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+                <div class="min-w-0">
+                    <div class="text-xs sm:text-sm font-black text-amber-300">تغییرات ذخیره نشده دارید</div>
+                    <p class="text-[11px] text-slate-300 truncate">برای اعمال روی تلویزیون مغازه، تغییرات را ذخیره کنید.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 justify-end">
+                <button type="button"
+                        @click="resetChanges()"
+                        :disabled="isSaving"
+                        class="min-h-10 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-colors cursor-pointer disabled:opacity-50">
+                    بازگردانی
+                </button>
+                <button type="button"
+                        @click="saveAndApply()"
+                        :disabled="isSaving"
+                        class="min-h-10 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-sm">
+                    <span x-text="isSaving ? 'در حال ذخیره...' : 'ذخیره و اعمال روی تابلو'"></span>
                 </button>
             </div>
         </div>

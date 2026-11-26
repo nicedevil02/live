@@ -426,6 +426,18 @@ class PublicDisplayController extends Controller
     }
 
     /**
+     * پاسخ JSON بدون کش شدن در مرورگرهای قدیمی تلویزیون هوشمند (Tizen / webOS)
+     */
+    private function noCacheJson(array $payload, int $status = 200)
+    {
+        return response()->json($payload, $status)->withHeaders([
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma'        => 'no-cache',
+            'Expires'       => '0',
+        ]);
+    }
+
+    /**
      * چک کردن وضعیت جفت‌سازی توسط تلویزیون (Fast Cache + DB Persistence Fallback)
      */
     public function checkPairingStatus($session_code)
@@ -435,7 +447,7 @@ class PublicDisplayController extends Controller
         if ($data && !empty($data['username']) && !empty($data['token'])) {
             $deviceToken = $data['device_token'] ?? $data['token'];
             $displayToken = $data['display_token'] ?? $data['token'];
-            return response()->json([
+            return $this->noCacheJson([
                 'paired'                => true,
                 'username'              => $data['username'],
                 'device_token'          => $deviceToken,
@@ -466,7 +478,7 @@ class PublicDisplayController extends Controller
                     'display_token' => $displayToken,
                 ], 7200);
 
-                return response()->json([
+                return $this->noCacheJson([
                     'paired'                => true,
                     'username'              => $dbSession->paired_username,
                     'device_token'          => $dbSession->paired_token,
@@ -479,7 +491,7 @@ class PublicDisplayController extends Controller
             \Log::warning('checkPairingStatus DB error: ' . $e->getMessage());
         }
 
-        return response()->json(['paired' => false, 'poll_interval_seconds' => 3]);
+        return $this->noCacheJson(['paired' => false, 'poll_interval_seconds' => 3]);
     }
 
     /**
@@ -569,22 +581,31 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * تولید کد فعال‌سازی ۶ کاراکتری با الفبای غیرمبهم (بدون 0, O, 1, I, L)
+     * تولید کد فعال‌سازی ۶ رقمی عددی بدون صفر اول جهت تایپ سریع با کیبورد عددی گوشی و خوانایی روی تلویزیون
      */
     public static function makeActivationCode(int $length = 6): string
     {
-        $alphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
-        $max = strlen($alphabet) - 1;
-        for ($attempt = 0; $attempt < 8; $attempt++) {
-            $code = '';
-            for ($i = 0; $i < $length; $i++) {
-                $code .= $alphabet[random_int(0, $max)];
+        for ($attempt = 0; $attempt < 15; $attempt++) {
+            if ($length === 6) {
+                $code = (string) random_int(100000, 999999);
+            } else {
+                $code = (string) random_int(1, 9);
+                for ($i = 1; $i < $length; $i++) {
+                    $code .= (string) random_int(0, 9);
+                }
             }
-            $taken = DB::table('tv_sessions')
-                ->where('activation_code', $code)
-                ->where('expires_at', '>', now())
-                ->exists();
-            if (!$taken) {
+
+            $taken = false;
+            try {
+                $taken = DB::table('tv_sessions')
+                    ->where('activation_code', $code)
+                    ->where('expires_at', '>', now())
+                    ->exists();
+            } catch (\Throwable $e) {
+                $taken = false;
+            }
+
+            if (!$taken && !Cache::has('tv_session_' . $code)) {
                 return $code;
             }
         }
@@ -596,20 +617,20 @@ class PublicDisplayController extends Controller
      */
     public function registerSession(Request $request)
     {
-        $sessionCode = $request->input('session_code');
+        $rawSessionCode = trim((string) $request->input('session_code', ''));
+        $sessionCode = preg_match('/^[a-zA-Z0-9_\-]{6,64}$/', $rawSessionCode)
+            ? $rawSessionCode
+            : ('sess-' . Str::random(16));
+
         $rawCode = (string) $request->input('activation_code', '');
         $activationCode = self::normalizeDigits($rawCode);
-
-        if (!$sessionCode) {
-            $sessionCode = 'sess-' . Str::random(16);
-        }
 
         // پاکسازی خودکار سشن‌های قدیمی‌تر از ۲۴ ساعت جهت جلوگیری از انباشت رکوردها
         try {
             DB::table('tv_sessions')->where('expires_at', '<', now()->subDay())->delete();
         } catch (\Throwable $e) {}
 
-        // اگر کدی ارسال نشده یا کمتر از ۶ کاراکتر است، با الفبای غیرمبهم تولید می‌کنیم
+        // اگر کدی ارسال نشده یا کمتر از ۶ کاراکتر است (مانند صفحه وب /tv)، کد عددی ۶ رقمی در سرور صادر می‌شود
         if (empty($activationCode) || strlen($activationCode) < 6) {
             $activationCode = self::makeActivationCode();
         }
@@ -639,7 +660,7 @@ class PublicDisplayController extends Controller
         Cache::put('tv_session_' . $activationCode, $sessionCode, 7200);
         Cache::put('tv_code_for_' . $sessionCode, $activationCode, 7200);
 
-        return response()->json([
+        return $this->noCacheJson([
             'success'               => true,
             'activation_code'       => $activationCode,
             'session_code'          => $sessionCode,
@@ -649,15 +670,15 @@ class PublicDisplayController extends Controller
     }
 
     /**
-     * جفت‌سازی دستی تلویزیون با پین ۶ رقمی یا حروفی-عددی در پنل مدیریت طلافروش
+     * جفت‌سازی دستی تلویزیون با کد ۶ رقمی (عددی یا کد حروفی نسخه‌های پیشین اپ) در پنل مدیریت
      */
     public function pairWithCode(Request $request)
     {
         $rawCode = (string) $request->input('activation_code', '');
         $activationCode = self::normalizeDigits($rawCode);
-        
+
         if (empty($activationCode) || strlen($activationCode) < 6) {
-            return response()->json(['success' => false, 'message' => 'کد فعال‌سازی ۶ کاراکتری را وارد کنید.'], 400);
+            return response()->json(['success' => false, 'message' => 'کد ۶ رقمی نمایش داده‌شده روی تلویزیون را وارد کنید.'], 400);
         }
 
         $sessionCode = null;
@@ -707,14 +728,14 @@ class PublicDisplayController extends Controller
                 if ($expiredCheck) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'اعتبار این کد به پایان رسیده است. لطفاً صفحه تلویزیون را رفرش فرمایید تا کد جدید تولید شود.'
+                        'message' => 'اعتبار این کد به پایان رسیده است. لطفاً در صفحه تلویزیون دکمه «دریافت کد جدید» را بزنید یا صفحه را رفرش کنید.'
                     ], 404);
                 }
             } catch (\Throwable $e) {}
 
             return response()->json([
                 'success' => false,
-                'message' => 'کد فعال‌سازی وارد شده یافت نشد. لطفاً کد ۶ کاراکتری نمایش داده شده روی تلویزیون را با دقت وارد کنید.'
+                'message' => 'کد واردشده یافت نشد. لطفاً کد ۶ رقمی روی صفحه تلویزیون را بررسی کنید.'
             ], 404);
         }
 
@@ -798,7 +819,7 @@ class PublicDisplayController extends Controller
         }
 
         if (!$sessionCode) {
-            return response("<div style='font-family: Tahoma, sans-serif; direction: rtl; text-align: center; padding: 80px 20px; background: #fff1f2; min-height: 100vh; display: flex; align-items: center; justify-content: center;'><div style='max-width: 440px; background: #fff; border: 1px solid #fecdd3; padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(225,29,72,0.1);'><div style='font-size: 56px; margin-bottom: 20px;'>⏱️</div><h2 style='color: #9f1239; margin-bottom: 12px; font-weight: 800; font-size: 20px;'>کد اتصال منقضی شده است</h2><p style='color: #881337; font-size: 14px; line-height: 1.8; margin-bottom: 24px;'>کد اتصال این تلویزیون به پایان رسیده است. لطفاً صفحه مرورگر تلویزیون مغازه را یکبار بازخوانی (رفرش) کنید تا کد جدید ۶ رقمی ایجاد شود.</p><a href='/tv' style='display: inline-block; background: #be123c; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: bold; font-size: 14px;'>مشاهده صفحه تلویزیون</a></div></div>", 404);
+            return response("<!DOCTYPE html><html lang='fa' dir='rtl'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>انقضای کد اتصال تلویزیون | طلالایو</title><style>body{font-family:Vazirmatn,Tahoma,sans-serif;background:#09090b;color:#f5f5f4;min-height:100vh;margin:0;padding:24px;display:flex;align-items:center;justify-content:center}.card{max-width:440px;width:100%;background:#18181b;border:1px solid rgba(245,158,11,.35);border-radius:24px;padding:36px 28px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,.45)}h2{color:#fbbf24;margin:0 0 12px;font-size:20px;font-weight:800}p{color:#d6d3d1;font-size:14px;line-height:1.8;margin:0 0 24px}.actions{display:flex;flex-direction:column;gap:10px}.btn-primary{display:block;background:#f59e0b;color:#09090b;text-decoration:none;padding:13px 20px;border-radius:14px;font-weight:800;font-size:14px}.btn-secondary{display:block;background:#27272a;color:#e7e5e4;text-decoration:none;padding:12px 20px;border-radius:14px;font-weight:700;font-size:13px;border:1px solid #3f3f46}</style></head><body><div class='card'><h2>کد اتصال منقضی شده است</h2><p>مهلت این کد به پایان رسیده است. اگر پای تلویزیون هستید صفحه تلویزیون را یک بار رفرش کنید؛ یا از طریق گوشی وارد بخش تلویزیون‌های من شوید و کد جدید روی تلویزیون را ثبت نمایید.</p><div class='actions'><a href='/admin/devices' class='btn-primary'>ورود به پنل موبایل و ثبت کد جدید</a><a href='/tv' class='btn-secondary'>باز کردن صفحه دریافت کد تلویزیون</a></div></div></body></html>", 404);
         }
 
         if (auth()->check()) {

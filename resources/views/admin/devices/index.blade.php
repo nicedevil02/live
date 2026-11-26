@@ -20,124 +20,109 @@
         </div>
     @endif
 
-    {{-- ۱. نوار نمایش لینک تابلوی اختصاصی طلافروشی با استایل لوکس طلایی --}}
-    <div class="rounded-3xl p-4 sm:p-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/40 dark:via-stone-900/80 dark:to-stone-900/80 shadow-lg shadow-amber-500/5">
-        <div class="flex items-start sm:items-center gap-3">
-            <div class="p-3 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-2xl border border-amber-500/30 shadow-sm shrink-0">
-                <i data-lucide="tv" class="w-6 h-6"></i>
-            </div>
-            <div class="min-w-0">
-                <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-amber-300">لینک تابلوی نمایشی اختصاصی شما</h3>
-                <p class="text-xs sm:text-sm text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">از این لینک امن یا اسکن QR کد در تلویزیون مغازه استفاده کنید تا تابلوی اختصاصی شما با نرخ‌های زنده پخش شود.</p>
-            </div>
-        </div>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto min-w-0" dir="ltr">
-            <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
-                   class="tl-neu-inset rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-amber-300 w-full md:w-80 min-w-0 select-all font-mono font-bold">
-            <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0" dir="rtl">
-                <button @click="copyDisplayUrl()"
-                        class="tl-neu-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer text-center">
-                    <span x-text="copiedLink ? 'کپی شد! ✓' : 'کپی لینک'"></span>
-                </button>
-                <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
-                   class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-md shadow-amber-500/25 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
-                    <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-4 h-4"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    {{-- ۲. نوار اتصال تلویزیون به تابلوی مغازه (راهنمای مرحله‌ای ویزارد + ثبت کد + اسکن QR) --}}
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
-        <div class="flex items-start sm:items-center gap-3">
-            <div class="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl shrink-0">
-                <i data-lucide="tv-2" class="w-6 h-6"></i>
-            </div>
-            <div class="min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
-                    <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">اتصال تلویزیون به تابلوی مغازه</h3>
-                    <button @click="openWizard()" type="button" class="px-2.5 py-1 rounded-full text-[11px] font-black bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-colors cursor-pointer">
-                        ✨ راهنمای مرحله‌ای (ویزارد)
-                    </button>
+    {{-- هاب یکپارچه مدیریت و اتصال تلویزیون‌های گالری --}}
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm">
+        {{-- بخش بالایی: عنوان، اتصال سریع با کد ۶ رقمی و اسکنر QR --}}
+        <div class="p-5 sm:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+            <div class="flex items-start gap-3.5 min-w-0">
+                <div class="p-3 bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25 rounded-2xl shrink-0">
+                    <i data-lucide="tv" class="w-6 h-6"></i>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">پین ۶ رقمی نمایش داده شده روی تلویزیون را وارد کنید یا با دوربین بارکد را اسکن نمایید.</p>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">تلویزیون‌های من</h2>
+                        @php $activeDevicesCount = $devices->whereNull('revoked_at')->count(); @endphp
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black {{ $activeDevicesCount > 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' }}">
+                            {{ $activeDevicesCount }} نمایشگر فعال
+                        </span>
+                        <button @click="openWizard()" type="button" class="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition-colors cursor-pointer">
+                            راهنمای گام‌به‌گام اتصال
+                        </button>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                        در مرورگر تلویزیون مغازه آدرس <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">talalive.ir/tv</strong> را باز کنید و کد ۶ رقمی روی صفحه تلویزیون را اینجا وارد نمایید.
+                    </p>
+                </div>
             </div>
-        </div>
-        
-        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full lg:w-auto">
-            {{-- دکمه اسکن بارکد QR با دوربین --}}
-            <button @click="openScanner()" 
-                    type="button"
-                    class="qr-scan-btn flex-1 sm:flex-none font-bold px-4 py-2.5 rounded-xl text-sm whitespace-nowrap transition-all shadow-md hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
-                    style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35) !important;">
-                <svg class="w-4 h-4 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span style="color: #ffffff !important; font-weight: 800 !important;">اسکن بارکد (QR)</span>
-            </button>
 
-            <span class="hidden sm:inline text-xs text-slate-400 font-bold px-1">یا</span>
-
-            {{-- ورودی کد دستی ۶ رقمی --}}
-            <div class="flex items-center gap-1.5 w-full sm:w-auto">
-                <input type="text" maxlength="8" x-model="pairCode" id="mainPairCodeInput" placeholder="کد ۶ رقمی (حروف/اعداد)" dir="ltr"
-                       @keydown.enter.prevent="pairWithCodeManual()"
-                       @input="
-                           let val = pairCode.toString();
-                           const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-                           const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-                           for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
-                           pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-                       "
-                       class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-850 dark:text-slate-100 w-full sm:w-40 text-center font-mono font-bold placeholder:font-sans placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-amber-500/40">
-                <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
-                        class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-all hover:scale-[1.01] cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0">
-                    <span x-text="isPairing ? 'در حال اتصال...' : 'ثبت کد'"></span>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5 shrink-0">
+                <button @click="openScanner()"
+                        type="button"
+                        class="qr-scan-btn font-bold px-4 h-11 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <i data-lucide="camera" class="w-4 h-4 shrink-0"></i>
+                    <span>اسکن بارکد QR</span>
                 </button>
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <input type="text"
+                               maxlength="8"
+                               x-model="pairCode"
+                               :inputmode="pairAlphaMode ? 'text' : 'numeric'"
+                               autocomplete="one-time-code"
+                               id="mainPairCodeInput"
+                               placeholder="کد ۶ رقمی تلویزیون"
+                               dir="ltr"
+                               @keydown.enter.prevent="pairWithCodeManual()"
+                               @input="handlePairCodeInput()"
+                               class="h-11 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 text-sm text-slate-900 dark:text-white w-full sm:w-44 text-center font-mono font-bold tracking-widest placeholder:font-sans placeholder:font-normal placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500">
+                        <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
+                                class="h-11 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-4 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5 shrink-0">
+                            <span x-text="isPairing ? 'در حال اتصال...' : 'ثبت کد'"></span>
+                        </button>
+                    </div>
+                    <button type="button"
+                            @click="pairAlphaMode = !pairAlphaMode"
+                            class="mt-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer block"
+                            x-text="pairAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
+                </div>
             </div>
         </div>
-    </div>
 
-    {{-- Header Card --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
-        <div class="flex items-center gap-4">
-            <div class="p-3.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl shadow-inner">
-                <i data-lucide="tv" class="w-7 h-7"></i>
+        {{-- نوار فشرده لینک مستقیم پخش تابلو --}}
+        <div class="px-5 sm:px-6 py-3.5 bg-slate-50/80 dark:bg-slate-950/60 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-semibold shrink-0">
+                <i data-lucide="link-2" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+                <span>لینک مستقیم تابلوی اختصاصی گالری:</span>
             </div>
-            <div>
-                <h2 class="text-xl font-black text-slate-800 dark:text-slate-100">تلویزیون‌های متصل به تابلو</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    مدیریت هوشمند، نام‌گذاری و نظارت بر دستگاه‌های تلویزیون و کیوسک‌های اختصاصی گالری
-                </p>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 md:max-w-xl min-w-0" dir="ltr">
+                <input type="text" readonly value="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" id="displayUrlInput"
+                       class="tl-neu-inset rounded-xl px-3.5 py-2 text-xs text-slate-800 dark:text-amber-300 flex-1 min-w-0 select-all font-mono font-bold">
+                <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0" dir="rtl">
+                    <button @click="copyDisplayUrl()" type="button"
+                            class="tl-neu-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer text-center">
+                        <span x-text="copiedLink ? 'کپی شد ✓' : 'کپی لینک'"></span>
+                    </button>
+                    <a href="{{ url('/' . auth()->user()->username . '?key=' . auth()->user()->display_token) }}" target="_blank"
+                       class="px-3.5 py-2 rounded-xl bg-stone-900 dark:bg-stone-100 hover:bg-stone-800 dark:hover:bg-white text-amber-400 dark:text-stone-950 font-black text-xs whitespace-nowrap transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>مشاهده تابلو</span> <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold transition-all">
-                <span>داشبورد</span>
-            </a>
-            <button @click="openWizard()" type="button" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-600/20 transition-all cursor-pointer">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>اتصال تلویزیون جدید</span>
-            </button>
         </div>
     </div>
 
     {{-- Device Cards / List --}}
     @if($devices->isEmpty())
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center shadow-sm">
-            <div class="w-16 h-16 rounded-3xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto mb-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-12 text-center shadow-sm">
+            <div class="w-16 h-16 rounded-3xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
                 <i data-lucide="tv-minimal" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-base font-black text-slate-700 dark:text-slate-200 mb-2">هنوز هیچ دستگاهی متصل نشده است</h3>
-            <p class="text-xs text-slate-400 dark:text-slate-500 max-w-md mx-auto mb-6 leading-relaxed">
-                برای نمایش قیمت‌های زنده در ویترین مغازه، اپلیکیشن «طلالایو TV» را روی تلویزیون هوشمند یا اندروید باکس نصب کنید و کد ۶ رقمی را ثبت کنید.
+            <h3 class="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 mb-2">هنوز هیچ تلویزیونی متصل نشده است</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-6 leading-relaxed">
+                مرورگر تلویزیون مغازه (سامسونگ، ال‌جی، سونی، اسنوا، دوو یا اندروید) را باز کنید، نشانی <strong class="font-mono text-amber-700 dark:text-amber-300" dir="ltr">talalive.ir/tv</strong> را وارد نمایید و کد ۶ رقمی نمایش داده‌شده را در کادر بالا ثبت کنید.
             </p>
-            <button @click="openWizard()" type="button" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all cursor-pointer">
-                <i data-lucide="scan-line" class="w-4 h-4"></i>
-                <span>راه‌اندازی و دریافت کد اتصال</span>
-            </button>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button @click="openWizard()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-black shadow-md shadow-amber-500/20 transition-all cursor-pointer">
+                    <i data-lucide="scan-line" class="w-4 h-4"></i>
+                    <span>مشاهده راهنمای گام‌به‌گام اتصال</span>
+                </button>
+                <a href="{{ config('tv.apk_url', url('/downloads/talalive-tv.apk')) }}" target="_blank"
+                   class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold transition-colors">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>دانلود فایل نصبی ویژه اندروید تی‌وی (APK)</span>
+                </a>
+            </div>
         </div>
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -216,8 +201,8 @@
                                 <span class="font-bold text-slate-700 dark:text-slate-200 font-mono text-[11px]">{{ $dev->app_version ?: '1' }}</span>
                             </div>
                             <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
-                                <span>اندروید:</span>
-                                <span class="font-bold text-slate-700 dark:text-slate-200 font-mono text-[11px]">{{ $dev->android_release ? 'android ' . $dev->android_release : '---' }}</span>
+                                <span>سیستم‌عامل / مرورگر:</span>
+                                <span class="font-bold text-slate-700 dark:text-slate-200 font-mono text-[11px]">{{ $dev->android_release ? 'Android ' . $dev->android_release : ($dev->render_mode === 'web' ? 'مرورگر تلویزیون هوشمند' : '---') }}</span>
                             </div>
                             <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
                                 <span>موتور وب‌ویو:</span>
@@ -270,8 +255,8 @@
             </button>
 
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold">
-                    📷
+                <div class="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25 flex items-center justify-center">
+                    <i data-lucide="camera" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <h3 class="text-base font-black text-slate-900 dark:text-white">اسکن بارکد تلویزیون</h3>
@@ -280,12 +265,12 @@
             </div>
 
             {{-- کادر دوربین / اسکنر --}}
-            <div class="relative bg-black rounded-2xl overflow-hidden aspect-square flex items-center justify-center border-2 border-dashed border-indigo-500/40">
+            <div class="relative bg-black rounded-2xl overflow-hidden aspect-square flex items-center justify-center border-2 border-dashed border-amber-500/40">
                 <div id="qr-reader" class="w-full h-full"></div>
                 
                 {{-- لودینگ وضعیت --}}
                 <div x-show="!isCameraRunning && !cameraError" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 text-white gap-3 p-4 text-center">
-                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-indigo-400"></i>
+                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-amber-400"></i>
                     <span class="text-xs font-bold text-slate-300">در حال فعال‌سازی دوربین...</span>
                 </div>
 
@@ -294,7 +279,7 @@
                     <i data-lucide="alert-triangle" class="w-10 h-10 text-amber-400"></i>
                     <p class="text-xs text-slate-300 leading-relaxed" x-text="cameraError"></p>
                     <div class="flex items-center gap-2 mt-2">
-                        <button @click="retryCamera()" type="button" class="qr-scan-modal-btn px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer" style="background-color: #4f46e5 !important; color: #ffffff !important;">
+                        <button @click="retryCamera()" type="button" class="qr-scan-modal-btn px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer">
                             تلاش مجدد
                         </button>
                         <button @click="closeScanner()" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors cursor-pointer">
@@ -307,7 +292,7 @@
             {{-- Footer Guidance --}}
             <div class="mt-4 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span>پس از شناسایی، اتصال فوری انجام می‌شود.</span>
-                <button @click="closeScanner()" type="button" class="font-bold hover:underline cursor-pointer" style="color: #4f46e5;">
+                <button @click="closeScanner()" type="button" class="font-bold text-amber-700 dark:text-amber-400 hover:underline cursor-pointer">
                     انصراف و بستن
                 </button>
             </div>
@@ -363,20 +348,28 @@
                         <span>وارد کردن کد ۶ رقمی نمایش داده شده روی تلویزیون</span>
                     </div>
                     <div class="pr-8 space-y-3">
-                        <input type="text" maxlength="8" x-model="pairCode" placeholder="کد ۶ رقمی (حروف/اعداد)" dir="ltr"
-                               @keydown.enter.prevent="pairWithCodeManual()"
-                               @input="
-                                   let val = pairCode.toString();
-                                   const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-                                   const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-                                   for(let i=0; i<p.length; i++) val = val.replaceAll(p[i], e[i]);
-                                   pairCode = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-                               "
-                               class="w-full bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-2xl py-3 px-4 text-center font-mono font-black text-2xl tracking-widest text-slate-900 dark:text-white placeholder:font-sans placeholder:text-sm placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                        <div>
+                            <input type="text"
+                                   maxlength="8"
+                                   x-model="pairCode"
+                                   :inputmode="pairAlphaMode ? 'text' : 'numeric'"
+                                   autocomplete="one-time-code"
+                                   placeholder="کد ۶ رقمی روی تلویزیون (مثلاً 584921)"
+                                   dir="ltr"
+                                   @keydown.enter.prevent="pairWithCodeManual()"
+                                   @input="handlePairCodeInput()"
+                                   class="w-full bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-2xl py-3 px-4 text-center font-mono font-black text-2xl tracking-widest text-slate-900 dark:text-white placeholder:font-sans placeholder:text-sm placeholder:font-normal focus:outline-none focus:border-amber-500 shadow-inner">
+                            <div class="mt-1.5 text-center">
+                                <button type="button"
+                                        @click="pairAlphaMode = !pairAlphaMode"
+                                        class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer"
+                                        x-text="pairAlphaMode ? 'بازگشت به صفحه‌کلید عددی' : 'کد شامل حروف انگلیسی است؟ تغییر صفحه‌کلید'"></button>
+                            </div>
+                        </div>
                         <button @click="pairWithCodeManual()" :disabled="isPairing || pairCode.length < 6"
                                 class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
                             <i data-lucide="zap" class="w-4 h-4"></i>
-                            <span x-text="isPairing ? 'در حال برقراری ارتباط...' : '🚀 اتصال و روشن کردن تلویزیون مغازه'"></span>
+                            <span x-text="isPairing ? 'در حال برقراری ارتباط...' : 'اتصال و روشن کردن تلویزیون مغازه'"></span>
                         </button>
                     </div>
                 </div>
@@ -384,7 +377,7 @@
                 {{-- گزینه اسکن با دوربین --}}
                 <div class="text-center pt-2">
                     <button type="button" @click="isWizardOpen = false; openScanner();"
-                            class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer">
+                            class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer">
                         <i data-lucide="camera" class="w-4 h-4"></i>
                         <span>یا ترجیح می‌دهید بارکد تلویزیون را با دوربین گوشی اسکن کنید؟</span>
                     </button>
@@ -399,22 +392,22 @@
 @push('styles')
 <style>
     .qr-scan-btn {
-        background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
-        color: #ffffff !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35) !important;
+        background: linear-gradient(135deg, #292524 0%, #1c1917 100%) !important;
+        color: #fbbf24 !important;
+        border: 1px solid rgba(251, 191, 36, 0.35) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
     }
     .qr-scan-btn:hover {
-        background: linear-gradient(135deg, #4338ca 0%, #312e81 100%) !important;
-        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.5) !important;
-        transform: translateY(-1px);
+        background: linear-gradient(135deg, #35302d 0%, #221f1d 100%) !important;
+        border-color: rgba(251, 191, 36, 0.55) !important;
     }
     .qr-scan-modal-btn {
-        background: #4f46e5 !important;
-        color: #ffffff !important;
+        background: #f59e0b !important;
+        color: #09090b !important;
+        font-weight: 800 !important;
     }
     .qr-scan-modal-btn:hover {
-        background: #4338ca !important;
+        background: #fbbf24 !important;
     }
     #qr-reader { border: none !important; }
     #qr-reader video { border-radius: 1rem; object-fit: cover; width: 100% !important; height: 100% !important; }
@@ -429,6 +422,8 @@
 function devicesPage() {
     return {
         pairCode: '',
+        pairAlphaMode: false,
+        lastAutoPairCode: '',
         isPairing: false,
         isScannerOpen: false,
         isWizardOpen: false,
@@ -470,12 +465,24 @@ function devicesPage() {
             });
         },
 
-        async pairWithCodeManual() {
-            let code = this.pairCode.toString();
+        handlePairCodeInput(autoSubmit = true) {
+            let val = String(this.pairCode || '');
             const p = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹','٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
             const e = ['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6','7','8','9'];
-            for(let i=0; i<p.length; i++) code = code.replaceAll(p[i], e[i]);
-            code = code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
+            for (let i = 0; i < p.length; i++) val = val.replaceAll(p[i], e[i]);
+            const cleaned = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
+            this.pairCode = cleaned;
+            if (cleaned.length < 6) {
+                this.lastAutoPairCode = '';
+            } else if (autoSubmit && !this.isPairing && this.lastAutoPairCode !== cleaned) {
+                this.lastAutoPairCode = cleaned;
+                this.$nextTick(() => this.pairWithCodeManual());
+            }
+        },
+
+        async pairWithCodeManual() {
+            this.handlePairCodeInput(false);
+            const code = this.pairCode.trim();
 
             if (!code || code.length < 6) {
                 window.showAdminToast ? window.showAdminToast('لطفاً کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.', 'error') : alert('لطفا کد ۶ رقمی نمایش داده شده در تلویزیون را با دقت وارد کنید.');

@@ -738,68 +738,103 @@ class AuthController extends Controller
     }
 
     /**
-     * اتصال خودکار تلویزیون در صورت وجود سشن معلق (از طریق لینک کوتاه /p/{code})
+     * اتصال خودکار تلویزیون در صورت وجود سشن معلق (از طریق لینک کوتاه /p/{code} یا /admin/pair/{session_code})
      */
     protected function handlePendingPairing($user): bool
     {
         try {
+            $sessionCode = null;
+            $cleanCode = null;
+
             $pendingCode = session()->pull('pending_pair_code');
             if ($pendingCode) {
                 $cleanCode = \App\Http\Controllers\PublicDisplayController::normalizeDigits((string) $pendingCode);
-                $sessionCode = null;
 
-                $dbSession = \Illuminate\Support\Facades\DB::table('tv_sessions')
-                    ->where('activation_code', $cleanCode)
-                    ->where('expires_at', '>', now())
-                    ->latest('id')
-                    ->first();
-
-                if ($dbSession) {
-                    $sessionCode = $dbSession->session_code;
-                }
+                try {
+                    $dbSession = \Illuminate\Support\Facades\DB::table('tv_sessions')
+                        ->where('activation_code', $cleanCode)
+                        ->where('expires_at', '>', now())
+                        ->latest('id')
+                        ->first();
+                    if ($dbSession) {
+                        $sessionCode = $dbSession->session_code;
+                    }
+                } catch (\Throwable $e) {}
 
                 if (!$sessionCode) {
                     $sessionCode = \Illuminate\Support\Facades\Cache::get('tv_session_' . $cleanCode);
                 }
+            }
 
-                if ($sessionCode) {
-                    if (empty($user->display_token)) {
-                        $user->display_token = \Illuminate\Support\Str::random(32);
-                        $user->save();
-                    }
-
-                    $device = \App\Models\TvDevice::create([
-                        'device_token' => bin2hex(random_bytes(24)),
-                        'user_id'      => $user->id,
-                        'username'     => $user->username,
-                        'label'        => null,
-                        'last_seen_at' => now(),
-                    ]);
+            // پشتیبانی از اسکن لینک مستقیم /admin/pair/{session_code} پیش از لاگین یا ثبت‌نام
+            if (!$sessionCode) {
+                $intendedUrl = (string) session('url.intended', '');
+                if (preg_match('#/admin/pair/(sess-[a-zA-Z0-9_\-]+)#i', $intendedUrl, $matches)) {
+                    $candidateSession = $matches[1];
+                    $isValidSession = false;
 
                     try {
-                        \Illuminate\Support\Facades\DB::table('tv_sessions')
-                            ->where('session_code', $sessionCode)
-                            ->update([
-                                'is_paired'       => true,
-                                'paired_user_id'  => $user->id,
-                                'paired_username' => $user->username,
-                                'paired_token'    => $device->device_token,
-                                'updated_at'      => now(),
-                            ]);
+                        $row = \Illuminate\Support\Facades\DB::table('tv_sessions')
+                            ->where('session_code', $candidateSession)
+                            ->where('expires_at', '>', now())
+                            ->first();
+                        if ($row) {
+                            $isValidSession = true;
+                            $cleanCode = $row->activation_code;
+                        }
                     } catch (\Throwable $e) {}
 
-                    \Illuminate\Support\Facades\Cache::put('pairing_' . $sessionCode, [
-                        'paired'        => true,
-                        'user_id'       => $user->id,
-                        'username'      => $user->username,
-                        'device_token'  => $device->device_token,
-                        'token'         => $device->device_token,
-                        'display_token' => $user->display_token ?: $device->device_token,
-                    ], 7200);
+                    if (!$isValidSession && \Illuminate\Support\Facades\Cache::has('tv_code_for_' . $candidateSession)) {
+                        $isValidSession = true;
+                        $cleanCode = \Illuminate\Support\Facades\Cache::get('tv_code_for_' . $candidateSession);
+                    }
 
-                    \Illuminate\Support\Facades\Cache::forget('tv_session_' . $cleanCode);
-                    return true;
+                    if ($isValidSession) {
+                        session()->forget('url.intended');
+                        $sessionCode = $candidateSession;
+                    }
                 }
+            }
+
+            if ($sessionCode) {
+                if (empty($user->display_token)) {
+                    $user->display_token = \Illuminate\Support\Str::random(32);
+                    $user->save();
+                }
+
+                $device = \App\Models\TvDevice::create([
+                    'device_token' => bin2hex(random_bytes(24)),
+                    'user_id'      => $user->id,
+                    'username'     => $user->username,
+                    'label'        => null,
+                    'last_seen_at' => now(),
+                ]);
+
+                try {
+                    \Illuminate\Support\Facades\DB::table('tv_sessions')
+                        ->where('session_code', $sessionCode)
+                        ->update([
+                            'is_paired'       => true,
+                            'paired_user_id'  => $user->id,
+                            'paired_username' => $user->username,
+                            'paired_token'    => $device->device_token,
+                            'updated_at'      => now(),
+                        ]);
+                } catch (\Throwable $e) {}
+
+                \Illuminate\Support\Facades\Cache::put('pairing_' . $sessionCode, [
+                    'paired'        => true,
+                    'user_id'       => $user->id,
+                    'username'      => $user->username,
+                    'device_token'  => $device->device_token,
+                    'token'         => $device->device_token,
+                    'display_token' => $user->display_token ?: $device->device_token,
+                ], 7200);
+
+                if ($cleanCode) {
+                    \Illuminate\Support\Facades\Cache::forget('tv_session_' . $cleanCode);
+                }
+                return true;
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('handlePendingPairing error: ' . $e->getMessage());

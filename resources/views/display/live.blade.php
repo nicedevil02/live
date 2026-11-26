@@ -2357,8 +2357,8 @@
                                 <span>پخش متوقف است</span>
                             </div>
 
-                            <!-- نشان لوکس داینامیک محصول در بالای اسلایدر -->
-                            <div class="absolute top-5 left-5 z-20 select-none pointer-events-none">
+                            <!-- نشان لوکس داینامیک محصول در بالای اسلایدر (فقط هنگام انتخاب نشان توسط کاربر نمایش داده می‌شود) -->
+                            <div x-show="activeProduct.badge && activeProduct.badge !== 'none'" x-cloak class="absolute top-5 left-5 z-20 select-none pointer-events-none">
                                 <div class="relative flex items-center gap-2.5 rounded-full px-4 py-2.5 shadow-xl border border-white/20 backdrop-blur-md"
                                      :class="{
                                          'slider-top-badge': !activeProduct.badge || activeProduct.badge === 'none',
@@ -4371,6 +4371,8 @@
                     try {
                         localStorage.removeItem('display_username');
                         localStorage.removeItem('display_token');
+                        localStorage.removeItem('tv_device_token');
+                        localStorage.removeItem('tv_device_username');
                         document.cookie = 'display_token=; path=/; max-age=0;';
                         sessionStorage.removeItem('skip_redirect');
                     } catch (e) {}
@@ -4527,6 +4529,42 @@
                     } catch (e) {
                         console.warn('LocalStorage persistence error:', e);
                     }
+
+                    // ارسال نبض دوره‌ای برای تلویزیون‌های متصل‌شده از طریق مرورگر (/tv) و تشخیص قطع اتصال از راه دور
+                    try {
+                        const tvDeviceToken = localStorage.getItem('tv_device_token');
+                        const tvDeviceUsername = localStorage.getItem('tv_device_username');
+                        if (tvDeviceToken && tvDeviceUsername === '{{ $username }}') {
+                            let heartbeatTimer = null;
+                            const sendWebTvHeartbeat = () => {
+                                if (document.visibilityState === 'hidden') return;
+                                fetch('/api/tv/heartbeat', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        device_token: tvDeviceToken,
+                                        render_mode: 'web',
+                                        app_version: 'web-tv',
+                                        webview_version: (navigator.userAgent || '').slice(0, 120)
+                                    })
+                                })
+                                .then(r => r.ok ? r.json() : null)
+                                .then(data => {
+                                    if (data && data.revoked === true) {
+                                        if (heartbeatTimer) clearInterval(heartbeatTimer);
+                                        this.confirmDisconnectBoard();
+                                    }
+                                })
+                                .catch(() => {});
+                            };
+
+                            setTimeout(sendWebTvHeartbeat, 3000);
+                            heartbeatTimer = setInterval(sendWebTvHeartbeat, 60000);
+                        }
+                    } catch (e) {}
 
                     // جلوگیری از به خواب رفتن تلویزیون (Wake Lock API)
                     let wakeLock = null;
