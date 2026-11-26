@@ -37,6 +37,7 @@ $criticalSyncFiles = [
     'app/Console/Commands/FetchBingWallpaper.php',
     'app/Console/Commands/AuditSeoRoutes.php',
     'app/Console/Commands/BackfillMarketHistory.php',
+    'app/Console/Commands/BackfillTelegramHistory.php',
     'app/Models/DisplaySetting.php',
     'app/Models/BotNotificationSetting.php',
     'app/Http/Controllers/PublicDisplayController.php',
@@ -616,6 +617,15 @@ if (file_exists("$targetDir/vendor/autoload.php") && file_exists("$targetDir/boo
                 $log[] = 'Artisan market:backfill-history: ' . trim(\Illuminate\Support\Facades\Artisan::output());
             } catch (\Throwable $mEx) {
                 $log[] = 'Artisan market:backfill-history notice: ' . $mEx->getMessage();
+            }
+        }
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('market_hourly_points') && \Illuminate\Support\Facades\DB::table('market_hourly_points')->count() < 100) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('market:backfill-telegram', ['--hours' => 168, '--pages' => 80]);
+                $log[] = 'Artisan market:backfill-telegram: ' . trim(\Illuminate\Support\Facades\Artisan::output());
+            } catch (\Throwable $tEx) {
+                $log[] = 'Artisan market:backfill-telegram notice: ' . $tEx->getMessage();
             }
         }
 

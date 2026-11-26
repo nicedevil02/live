@@ -405,6 +405,189 @@ class MarketHistoryService
         return count($upsertRows);
     }
 
+    /**
+     * استخراج و ذخیره نرخ‌های دقیقه‌ای (۴۸ ساعت) و ساعتی (۷ روز) از آرشیو کانال تلگرام @talalive_ir
+     */
+    public function backfillFromTelegramChannel(int $hours = 168, int $maxPages = 80): array
+    {
+        self::ensureTablesExist();
+
+        $cutoffHourly = now()->subHours(max(24, $hours));
+        $cutoffMinute = now()->subHours(48);
+
+        $beforeId = null;
+        $pagesFetched = 0;
+        $postsParsed = 0;
+        $minutePoints = [];
+        $hourlyPoints = [];
+        $reachedCutoff = false;
+
+        $patterns = [
+            'gold18'       => '/طلای\s*۱۸\s*عیار\s*:\s*([\d,\.]+)/u',
+            'gold24'       => '/طلای\s*۲۴\s*عیار\s*:\s*([\d,\.]+)/u',
+            'mesghal17'    => '/مظنه\s*طلا\s*:\s*([\d,\.]+)/u',
+            'ounce'        => '/انس\s*جهانی\s*طلا\s*:\s*([\d,\.]+)/u',
+            'silver_ounce' => '/انس\s*جهانی\s*نقره\s*:\s*([\d,\.]+)/u',
+            'coin_emami'   => '/سکه\s*امامی\s*:\s*([\d,\.]+)/u',
+            'coin_bahar'   => '/سکه\s*بهار\s*آزادی\s*:\s*([\d,\.]+)/u',
+            'coin_nim'     => '/نیم\s*سکه\s*:\s*([\d,\.]+)/u',
+            'coin_rob'     => '/ربع\s*سکه\s*:\s*([\d,\.]+)/u',
+            'coin_gerami'  => '/سکه\s*گرمی\s*:\s*([\d,\.]+)/u',
+            'usdt'         => '/تتر\s*\(ارز\s*دیجیتال\)\s*:\s*([\d,\.]+)/u',
+            'usdt_dollar'  => '/تتر\s*\(دلار\s*دیجیتال\)\s*:\s*([\d,\.]+)/u',
+            'oil_brent'    => '/نفت\s*برنت\s*:\s*([\d,\.]+)/u',
+            'bitcoin'      => '/بیت[‌\s]*کوین\s*:\s*([\d,\.]+)/u',
+        ];
+
+        while ($pagesFetched < $maxPages && !$reachedCutoff) {
+            $url = 'https://t.me/s/talalive_ir' . ($beforeId ? ('?before=' . $beforeId) : '');
+            try {
+                $response = Http::withOptions(['verify' => false])
+                    ->timeout(12)
+                    ->withHeaders(['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) TalaLive/1.0'])
+                    ->get($url);
+
+                if (!$response->successful()) {
+                    break;
+                }
+                $html = $response->body();
+            } catch (\Throwable $e) {
+                Log::warning('Telegram channel backfill fetch error: ' . $e->getMessage());
+                break;
+            }
+
+            $pagesFetched++;
+
+            if (!preg_match_all('/data-post="talalive_ir\/(\d+)"(.*?)(?=data-post="talalive_ir\/|\z)/s', $html, $blocks, PREG_SET_ORDER)) {
+                break;
+            }
+
+            $minIdOnPage = null;
+            foreach ($blocks as $block) {
+                $postId = (int) $block[1];
+                if ($minIdOnPage === null || $postId < $minIdOnPage) {
+                    $minIdOnPage = $postId;
+                }
+
+                $chunk = $block[2];
+                if (!preg_match('/datetime="([^"]+)"/', $chunk, $dtMatch)) {
+                    continue;
+                }
+                if (!preg_match('/<div class="tgme_widget_message_text[^"]*"[^>]*>(.*?)<\/div>/s', $chunk, $txtMatch)) {
+                    continue;
+                }
+
+                try {
+                    $dt = Carbon::parse($dtMatch[1])->setTimezone(config('app.timezone', 'UTC'));
+                } catch (\Throwable $e) {
+                    continue;
+                }
+
+                if ($dt->lessThan($cutoffHourly)) {
+                    $reachedCutoff = true;
+                    continue;
+                }
+
+                $text = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $txtMatch[1]));
+                $text = $this->convertPersianToEnglishText($text);
+
+                $parsed = [];
+                foreach ($patterns as $sym => $regex) {
+                    if (preg_match($regex, $text, $m)) {
+                        $val = (float) str_replace(',', '', $m[1]);
+                        if ($val > 0) {
+                            $parsed[$sym] = $val;
+                        }
+                    }
+                }
+
+                if (empty($parsed)) {
+                    continue;
+                }
+
+                if (empty($parsed['usdt']) && !empty($parsed['usdt_dollar'])) {
+                    $parsed['usdt'] = $parsed['usdt_dollar'];
+                }
+
+                if (!empty($parsed['ounce'])) {
+                    $uRef = $parsed['usdt_dollar'] ?? ($parsed['usdt'] ?? 0);
+                    if ($uRef > 0) {
+                        $parsed['global_mesghal'] = round(($parsed['ounce'] * $uRef) / 9.5742);
+                    }
+                }
+                unset($parsed['usdt_dollar']);
+
+                $postsParsed++;
+                $hourBucket = $dt->copy()->startOfHour()->format('Y-m-d H:i:s');
+                $minBucket = $dt->format('Y-m-d H:i:00');
+                $isWithin48h = $dt->greaterThanOrEqualTo($cutoffMinute);
+
+                foreach ($parsed as $sym => $val) {
+                    if (!isset(self::SYMBOL_META[$sym])) {
+                        continue;
+                    }
+                    $decimals = (int) self::SYMBOL_META[$sym]['decimals'];
+                    $cleanVal = round($val, $decimals);
+
+                    $hourlyPoints[$sym . '|' . $hourBucket] = [
+                        'symbol'    => $sym,
+                        'bucket_at' => $hourBucket,
+                        'price'     => $cleanVal,
+                    ];
+
+                    if ($isWithin48h) {
+                        $minutePoints[$sym . '|' . $minBucket] = [
+                            'symbol'      => $sym,
+                            'price'       => $cleanVal,
+                            'recorded_at' => $dt->format('Y-m-d H:i:s'),
+                        ];
+                    }
+                }
+            }
+
+            if ($minIdOnPage === null || ($beforeId !== null && $minIdOnPage >= $beforeId)) {
+                break;
+            }
+            $beforeId = $minIdOnPage;
+        }
+
+        $hourlyInserted = 0;
+        if (!empty($hourlyPoints)) {
+            foreach (array_chunk(array_values($hourlyPoints), 400) as $chunk) {
+                DB::table('market_hourly_points')->upsert($chunk, ['symbol', 'bucket_at'], ['price']);
+                $hourlyInserted += count($chunk);
+            }
+        }
+
+        $minuteInserted = 0;
+        if (!empty($minutePoints)) {
+            // حذف نقاط تکراری احتمالی در بازه زمانی دریافت‌شده تا جدول تمیز بماند
+            $minRecorded = min(array_column($minutePoints, 'recorded_at'));
+            DB::table('market_price_points')
+                ->where('recorded_at', '>=', $minRecorded)
+                ->delete();
+
+            foreach (array_chunk(array_values($minutePoints), 400) as $chunk) {
+                DB::table('market_price_points')->insert($chunk);
+                $minuteInserted += count($chunk);
+            }
+        }
+
+        return [
+            'pages'          => $pagesFetched,
+            'posts'          => $postsParsed,
+            'hourly_synced'  => $hourlyInserted,
+            'minute_synced'  => $minuteInserted,
+        ];
+    }
+
+    protected function convertPersianToEnglishText(string $text): string
+    {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٬', '،'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', ','];
+        return str_replace($persian, $english, $text);
+    }
+
     public function parseTgjuNumber($raw): float
     {
         $text = strip_tags((string) $raw);
