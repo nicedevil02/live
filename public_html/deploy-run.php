@@ -26,6 +26,51 @@ if (!is_dir($targetDir)) {
     $targetDir = dirname(__DIR__);
 }
 
+if (($_GET['action'] ?? '') === 'import_history') {
+    $raw = file_get_contents('php://input');
+    $payload = @json_decode((string) $raw, true);
+    if (!is_array($payload)) {
+        http_response_code(400);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON payload']);
+        exit;
+    }
+
+    require_once "$targetDir/vendor/autoload.php";
+    $app = require_once "$targetDir/bootstrap/app.php";
+    $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+    $kernel->bootstrap();
+
+    \App\Services\MarketHistoryService::ensureTablesExist();
+
+    $hourly = $payload['hourly'] ?? [];
+    $minute = $payload['minute'] ?? [];
+    $hCount = 0;
+    $mCount = 0;
+
+    if (!empty($hourly)) {
+        foreach (array_chunk($hourly, 400) as $chunk) {
+            \Illuminate\Support\Facades\DB::table('market_hourly_points')->upsert($chunk, ['symbol', 'bucket_at'], ['price']);
+            $hCount += count($chunk);
+        }
+    }
+
+    if (!empty($minute)) {
+        $minRecorded = min(array_column($minute, 'recorded_at'));
+        \Illuminate\Support\Facades\DB::table('market_price_points')->where('recorded_at', '>=', $minRecorded)->delete();
+        foreach (array_chunk($minute, 400) as $chunk) {
+            \Illuminate\Support\Facades\DB::table('market_price_points')->insert($chunk);
+            $mCount += count($chunk);
+        }
+    }
+
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => true, 'hourly_imported' => $hCount, 'minute_imported' => $mCount]);
+    exit;
+}
+
 $criticalSyncFiles = [
     'routes/web.php',
     'routes/api.php',
