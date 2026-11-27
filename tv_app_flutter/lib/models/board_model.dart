@@ -94,6 +94,18 @@ bool _parseBool(dynamic val, bool def) {
   return def;
 }
 
+class WeatherInfo {
+  final String tempText;
+  final String description;
+  final String condition;
+
+  const WeatherInfo({
+    required this.tempText,
+    required this.description,
+    required this.condition,
+  });
+}
+
 class BoardModel {
   final String username;
   final String shopName;
@@ -109,6 +121,17 @@ class BoardModel {
   final String? galleryDisplayName;
   final String? bingWallpaperUrl;
   final String themeMode;
+  final bool autoThemeEnabled;
+  final String dayThemeMode;
+  final String nightThemeMode;
+  final String dayStartTime;
+  final String nightStartTime;
+  final int? tehranMinutes;
+  final bool hideShowcase;
+  final bool showWeather;
+  final WeatherInfo? weather;
+  final String footerTickerText;
+  final String? subscriptionWarningMessage;
   final int sliderIntervalSec;
   final String customMessage;
   final String emptyShowcaseMode;
@@ -138,6 +161,17 @@ class BoardModel {
     this.galleryDisplayName,
     this.bingWallpaperUrl,
     required this.themeMode,
+    this.autoThemeEnabled = false,
+    this.dayThemeMode = 'light-modern',
+    this.nightThemeMode = 'imperial-onyx',
+    this.dayStartTime = '07:00',
+    this.nightStartTime = '18:30',
+    this.tehranMinutes,
+    this.hideShowcase = false,
+    this.showWeather = true,
+    this.weather,
+    this.footerTickerText = '',
+    this.subscriptionWarningMessage,
     required this.sliderIntervalSec,
     required this.customMessage,
     this.emptyShowcaseMode = 'guide',
@@ -152,6 +186,32 @@ class BoardModel {
     required this.refreshIntervalSeconds,
     required this.rawJson,
   });
+
+  static int _timeToMinutes(String hhmm, int fallback) {
+    final parts = hhmm.split(':');
+    if (parts.length < 2) return fallback;
+    final h = int.tryParse(parts[0].trim());
+    final m = int.tryParse(parts[1].trim());
+    if (h == null || m == null) return fallback;
+    return (h.clamp(0, 23) * 60) + m.clamp(0, 59);
+  }
+
+  String get effectiveThemeMode {
+    if (!autoThemeEnabled) return themeMode;
+    final dayMin = _timeToMinutes(dayStartTime, 7 * 60);
+    final nightMin = _timeToMinutes(nightStartTime, 18 * 60 + 30);
+    int nowMin;
+    if (tehranMinutes != null) {
+      nowMin = tehranMinutes!;
+    } else {
+      final tehranNow = DateTime.now().toUtc().add(const Duration(hours: 3, minutes: 30));
+      nowMin = (tehranNow.hour * 60) + tehranNow.minute;
+    }
+    final isDay = dayMin < nightMin
+        ? (nowMin >= dayMin && nowMin < nightMin)
+        : (nowMin >= dayMin || nowMin < nightMin);
+    return isDay ? dayThemeMode : nightThemeMode;
+  }
 
   factory BoardModel.fromJson(Map<String, dynamic> json, String rawString) {
     final username = json['username']?.toString() ?? '';
@@ -201,6 +261,45 @@ class BoardModel {
         ? PersianUtils.resolveCityName(rawCityName.trim())
         : PersianUtils.resolveCityName(rawCitySlug);
     final themeMode = settings?['theme_mode']?.toString() ?? 'light-modern';
+    final autoThemeEnabled = _parseBool(settings?['auto_theme_enabled'], false);
+    final dayThemeMode = (settings?['day_theme_mode']?.toString().trim().isNotEmpty == true)
+        ? settings!['day_theme_mode'].toString().trim()
+        : 'light-modern';
+    final nightThemeMode = (settings?['night_theme_mode']?.toString().trim().isNotEmpty == true)
+        ? settings!['night_theme_mode'].toString().trim()
+        : 'imperial-onyx';
+    final dayStartTime = (settings?['day_start_time']?.toString().trim().isNotEmpty == true)
+        ? settings!['day_start_time'].toString().trim()
+        : '07:00';
+    final nightStartTime = (settings?['night_start_time']?.toString().trim().isNotEmpty == true)
+        ? settings!['night_start_time'].toString().trim()
+        : '18:30';
+    final tehranMinutes = json['tehranMinutes'] != null ? _parseInt(json['tehranMinutes'], 0) : null;
+    final hideShowcase = _parseBool(settings?['hide_showcase'], false);
+    final showWeather = _parseBool(settings?['show_weather'], true);
+    final footerTickerText = settings?['footer_ticker_text']?.toString().trim() ?? '';
+
+    WeatherInfo? weatherInfo;
+    final rawWeather = json['weather'];
+    if (rawWeather is Map) {
+      final wMap = Map<String, dynamic>.from(rawWeather);
+      final rawTemp = wMap['temp'] ?? wMap['temp_c'] ?? wMap['temperature'];
+      final desc = wMap['description']?.toString().trim() ?? wMap['label']?.toString().trim() ?? '';
+      final cond = wMap['condition']?.toString().trim() ?? '';
+      if (rawTemp != null || desc.isNotEmpty) {
+        final tNum = num.tryParse(rawTemp?.toString() ?? '');
+        final tempStr = tNum != null ? '${tNum.round()}°' : (rawTemp?.toString() ?? '');
+        weatherInfo = WeatherInfo(tempText: tempStr, description: desc, condition: cond);
+      }
+    }
+
+    String? subWarnMsg;
+    final rawSubWarn = json['subscriptionWarning'];
+    if (rawSubWarn is Map && _parseBool(rawSubWarn['active'], false)) {
+      final m = rawSubWarn['message']?.toString().trim() ?? '';
+      if (m.isNotEmpty) subWarnMsg = m;
+    }
+
     final sliderInterval = _parseInt(settings?['slider_interval_sec'], 8).clamp(3, 60);
     final customMessage = settings?['custom_message']?.toString() ??
         'به سامانه تابلوی هوشمند نرخ لحظه‌ای طلالایو خوش آمدید • نمایش دقیق و لحظه‌ای مظنه طلا، سکه و مسکوکات';
@@ -232,12 +331,14 @@ class BoardModel {
         final d = displayItems[i];
         if (d is Map) {
           final dMap = Map<String, dynamic>.from(d);
+          final key = dMap['key']?.toString().trim() ?? '';
           final enabled = dMap['enabled'] != false;
-          if (enabled) {
+          if (enabled && key != 'exchange_gold') {
             entries.add(dMap);
           }
         }
       }
+      entries.sort((a, b) => _parseInt(a['order'], 0).compareTo(_parseInt(b['order'], 0)));
 
       for (final entry in entries) {
         final key = entry['key']?.toString().trim() ?? '';
@@ -379,6 +480,17 @@ class BoardModel {
       galleryDisplayName: galleryDisplayName,
       bingWallpaperUrl: bingWallpaperUrl,
       themeMode: themeMode,
+      autoThemeEnabled: autoThemeEnabled,
+      dayThemeMode: dayThemeMode,
+      nightThemeMode: nightThemeMode,
+      dayStartTime: dayStartTime,
+      nightStartTime: nightStartTime,
+      tehranMinutes: tehranMinutes,
+      hideShowcase: hideShowcase,
+      showWeather: showWeather,
+      weather: weatherInfo,
+      footerTickerText: footerTickerText,
+      subscriptionWarningMessage: subWarnMsg,
       sliderIntervalSec: sliderInterval,
       customMessage: customMessage,
       emptyShowcaseMode: emptyShowcaseMode,

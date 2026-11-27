@@ -11,6 +11,7 @@ class PriceCard extends StatefulWidget {
   final bool isHero;
   final bool isTopRow;
   final bool isEcoMode;
+  final VoidCallback? onTap;
 
   const PriceCard({
     super.key,
@@ -19,6 +20,7 @@ class PriceCard extends StatefulWidget {
     this.isHero = false,
     this.isTopRow = false,
     this.isEcoMode = false,
+    this.onTap,
   });
 
   @override
@@ -311,7 +313,14 @@ class _PriceCardState extends State<PriceCard> with TickerProviderStateMixin {
           ),
         ],
       ),
-      child: glassCard,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(26),
+          child: glassCard,
+        ),
+      ),
     );
   }
 

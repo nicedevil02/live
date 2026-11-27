@@ -5,7 +5,7 @@
     $guideShortDisplay = preg_replace('#^https?://#i', '', $guideShortUrl);
     $guideAutoOpen = (bool) session('show_onboarding_tour', false);
     $tvApkUrl = config('tv.apk_url', url('/downloads/talalive-tv.apk'));
-    $tvApkVersion = config('tv.latest_version', '1.0.8');
+    $tvApkVersion = config('tv.latest_version', '1.1.0');
 @endphp
 
 <div x-data="talaliveOnboardingGuide()"

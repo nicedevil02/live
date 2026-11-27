@@ -16,6 +16,7 @@ import '../widgets/board_header.dart';
 import '../widgets/price_card.dart';
 import '../widgets/product_slider.dart';
 import '../widgets/ambient_orbs.dart';
+import '../widgets/chart_modal.dart';
 import 'pairing_screen.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -41,16 +42,24 @@ class _BoardScreenState extends State<BoardScreen> {
 
   Timer? _clockTimer;
   Timer? _refreshTimer;
+  Timer? _heartbeatTimer;
+  Timer? _webLoadWatchdog;
   Timer? _updateCheckTimer;
   Timer? _updatePeriodicTimer;
 
-  static const String _prefKeyWebMode = 'tv_webview_mode';
+  static const String _prefKeyModeV2 = 'tv_render_mode_v2';
   static const String _prefKeyZoom = 'talalive_zoom_level';
   static const String _prefKeyEcoMode = 'tv_eco_mode';
   double _zoomLevel = 1.0;
   bool _isEcoMode = false;
+  String? _webErrorMessage;
 
-  String _installedVersion = '1.0.0';
+  String _installedVersion = '1.1.0';
+  int _installedVersionCode = 11;
+  String _androidRelease = '';
+  int _sdkInt = 0;
+  String _webviewVersion = '';
+  int _webviewMajor = 0;
   UpdateInfo? _availableUpdate;
 
   static const MethodChannel _nativeChannel = MethodChannel('ir.talalive.tv/updater');
@@ -62,15 +71,8 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) {
-      _initWebViewController();
-    }
     _setupNativeKeyHandler();
-    _loadInstalledVersion();
-    _loadSavedMode();
-    _loadSavedZoom();
-    _loadSavedEcoMode();
-    _fetchData();
+    _initBoardRuntime();
 
     // Zero-overhead clock timer: updates ValueNotifier only, ZERO root rebuilds!
     _startClockTimer();
@@ -87,6 +89,69 @@ class _BoardScreenState extends State<BoardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _focusNode.requestFocus();
     });
+  }
+
+  Future<void> _initBoardRuntime() async {
+    await UpdateService.clearCachedApk();
+    final ver = await UpdateService.getAppVersion();
+    final dev = await UpdateService.getDeviceInfo();
+    final prefs = await SharedPreferences.getInstance();
+
+    _installedVersion = (ver['versionName'] as String?) ?? '1.1.0';
+    _installedVersionCode = (ver['versionCode'] as int?) ?? 11;
+    _androidRelease = (dev['androidRelease'] as String?) ?? '';
+    _sdkInt = (dev['sdkInt'] as int?) ?? 0;
+    _webviewVersion = (dev['webviewVersion'] as String?) ?? '';
+    _webviewMajor = (dev['webviewMajor'] as int?) ?? 0;
+    _zoomLevel = prefs.getDouble(_prefKeyZoom) ?? 1.0;
+    _isEcoMode = prefs.getBool(_prefKeyEcoMode) ?? false;
+
+    final savedMode = prefs.getString(_prefKeyModeV2) ?? 'auto';
+    final bool canUseModernWeb = _sdkInt == 0 || (_sdkInt >= 24 && (_webviewMajor == 0 || _webviewMajor >= 85));
+    final bool useWeb = savedMode == 'web' || (savedMode == 'auto' && canUseModernWeb);
+
+    if (!mounted) return;
+    setState(() {
+      _isWebViewMode = useWeb;
+    });
+
+    if (useWeb && !kIsWeb) {
+      _initWebViewController();
+    } else {
+      _fetchData();
+    }
+
+    _startHeartbeatTimer();
+  }
+
+  void _startHeartbeatTimer() {
+    _heartbeatTimer?.cancel();
+    Timer(const Duration(seconds: 5), () {
+      if (mounted) _sendHeartbeat();
+    });
+    _heartbeatTimer = Timer.periodic(const Duration(seconds: 60), (_) {
+      if (mounted) _sendHeartbeat();
+    });
+  }
+
+  Future<void> _sendHeartbeat() async {
+    final res = await ApiService.sendHeartbeat(
+      appVersion: _installedVersion,
+      appVersionCode: _installedVersionCode,
+      androidRelease: _androidRelease,
+      webviewVersion: _webviewVersion,
+      renderMode: _isWebViewMode ? 'web' : 'native',
+    );
+    if (!mounted || res == null) return;
+    if (res['revoked'] == true) {
+      _heartbeatTimer?.cancel();
+      await ApiService.unpair();
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const PairingScreen()),
+        );
+      }
+    }
   }
 
   void _startClockTimer() {
@@ -124,6 +189,7 @@ class _BoardScreenState extends State<BoardScreen> {
 
   void _initWebViewController() {
     final webUrl = 'https://talalive.ir/${widget.username}?tv=1&app=1';
+    _webErrorMessage = null;
 
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is AndroidWebViewPlatform) {
@@ -138,41 +204,62 @@ class _BoardScreenState extends State<BoardScreen> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFF020617))
       ..setUserAgent(
-        'Mozilla/5.0 (Linux; Android 10; SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TalaLiveTV/2.0',
+        'Mozilla/5.0 (Linux; Android 10; SmartTV) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 TalaLiveTV/2.1',
       )
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (progress) {
             if (progress >= 70 && mounted && _isWebLoading) {
-              setState(() => _isWebLoading = false);
+              setState(() {
+                _isWebLoading = false;
+                _webErrorMessage = null;
+              });
             }
           },
           onPageStarted: (url) {
-            if (mounted) setState(() => _isWebLoading = true);
-            Timer(const Duration(seconds: 4), () {
+            _webLoadWatchdog?.cancel();
+            if (mounted) {
+              setState(() {
+                _isWebLoading = true;
+                _webErrorMessage = null;
+              });
+            }
+            _webLoadWatchdog = Timer(const Duration(seconds: 16), () {
               if (mounted && _isWebLoading) {
-                setState(() => _isWebLoading = false);
+                setState(() {
+                  _isWebLoading = false;
+                  _webErrorMessage = 'بارگذاری نسخه وب زمان‌بر شد. می‌توانید دوباره تلاش کنید یا به حالت بومی سریع بروید.';
+                });
               }
             });
           },
           onPageFinished: (url) {
-            if (mounted) setState(() => _isWebLoading = false);
+            _webLoadWatchdog?.cancel();
+            if (mounted) {
+              setState(() {
+                _isWebLoading = false;
+                _webErrorMessage = null;
+              });
+            }
             _webViewController?.runJavaScript('''
               (function() {
                 if (document.getElementById('talalive-app-tuning')) return;
                 const s = document.createElement('style');
                 s.id = 'talalive-app-tuning';
-                s.textContent = `
-                  /* .ambient-orb-container { display: none !important; } */
-                  #tv-stage-canvas { transform-style: flat !important; }
-                `;
+                s.textContent = '#tv-stage-canvas { transform-style: flat !important; }';
                 document.head.appendChild(s);
               })();
             ''');
           },
           onWebResourceError: (error) {
-            debugPrint('[TalaLiveTV] Web resource error: ${error.description}');
-            if (mounted) setState(() => _isWebLoading = false);
+            debugPrint('[TalaLiveTV] Web resource error: ${error.description} (main=${error.isForMainFrame})');
+            if (error.isForMainFrame == true && mounted) {
+              _webLoadWatchdog?.cancel();
+              setState(() {
+                _isWebLoading = false;
+                _webErrorMessage = 'خطا در اتصال نسخه وب به سرور طلالایو.';
+              });
+            }
           },
         ),
       );
@@ -230,57 +317,28 @@ class _BoardScreenState extends State<BoardScreen> {
     );
   }
 
-  void _loadSavedMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedMode = prefs.getBool(_prefKeyWebMode) ?? false;
-    if (savedMode && mounted) {
-      setState(() {
-        _isWebViewMode = true;
-      });
-    }
-  }
-
   void _setWebViewMode(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefKeyWebMode, enabled);
+    await prefs.setString(_prefKeyModeV2, enabled ? 'web' : 'native');
     if (mounted) {
       setState(() {
         _isWebViewMode = enabled;
+        _webErrorMessage = null;
       });
       if (enabled) {
-        // Pause background polling and clock on TV to conserve CPU and RAM
         _refreshTimer?.cancel();
         _clockTimer?.cancel();
-        Timer(const Duration(milliseconds: 3500), () {
-          if (mounted && _isWebLoading) {
-            setState(() => _isWebLoading = false);
-          }
-        });
+        if (!kIsWeb && _webViewController == null) {
+          _initWebViewController();
+        } else {
+          _webViewController?.reload();
+        }
       } else {
-        // Resume clock and immediately fetch latest snapshot for Native board
+        _webLoadWatchdog?.cancel();
         _startClockTimer();
         _fetchData();
       }
-    }
-  }
-
-  void _loadSavedZoom() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedZoom = prefs.getDouble(_prefKeyZoom) ?? 1.0;
-    if (mounted) {
-      setState(() {
-        _zoomLevel = savedZoom;
-      });
-    }
-  }
-
-  void _loadSavedEcoMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getBool(_prefKeyEcoMode) ?? false;
-    if (mounted) {
-      setState(() {
-        _isEcoMode = saved;
-      });
+      _sendHeartbeat();
     }
   }
 
@@ -344,15 +402,6 @@ class _BoardScreenState extends State<BoardScreen> {
     });
   }
 
-  void _loadInstalledVersion() async {
-    final info = await UpdateService.getAppVersion();
-    if (mounted) {
-      setState(() {
-        _installedVersion = info['versionName'] as String;
-      });
-    }
-  }
-
   void _fetchData() async {
     final model = await ApiService.fetchSnapshot(widget.username);
 
@@ -386,12 +435,60 @@ class _BoardScreenState extends State<BoardScreen> {
   void dispose() {
     _clockTimer?.cancel();
     _refreshTimer?.cancel();
+    _heartbeatTimer?.cancel();
+    _webLoadWatchdog?.cancel();
     _updateCheckTimer?.cancel();
     _updatePeriodicTimer?.cancel();
     _zoomFeedbackTimer?.cancel();
     _focusNode.dispose();
     _timeNotifier.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleWebBackKey() async {
+    if (_webViewController != null) {
+      try {
+        final res = await _webViewController!.runJavaScriptReturningResult('''
+          (function() {
+            if (document.querySelector('iframe[src*="/chart/"]')) {
+              window.postMessage({ type: 'talalive-close-chart' }, '*');
+              window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+              return 'closed';
+            }
+            return 'none';
+          })();
+        ''');
+        if (res.toString().contains('closed')) {
+          return;
+        }
+      } catch (_) {}
+    }
+    if (mounted) {
+      _showExitDialog();
+    }
+  }
+
+  void _openCardChart(PriceRow row) {
+    if (row.symbol.isEmpty || _isSettingsOpen) return;
+    final theme = BoardThemeData.fromKey(_model?.effectiveThemeMode);
+    _isSettingsOpen = true;
+    _nativeChannel.invokeMethod('setDialogState', {'isOpen': true});
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => ChartModal(
+        username: widget.username,
+        symbol: row.symbol,
+        initialLabel: row.title,
+        unit: row.unit,
+        theme: theme,
+      ),
+    ).then((_) {
+      _isSettingsOpen = false;
+      _nativeChannel.invokeMethod('setDialogState', {'isOpen': false});
+      _focusNode.requestFocus();
+    });
   }
 
   void _handleKey(KeyEvent event) {
@@ -424,7 +521,7 @@ class _BoardScreenState extends State<BoardScreen> {
           return;
         }
         if (_isWebViewMode) {
-          _setWebViewMode(false);
+          _handleWebBackKey();
         } else {
           _showExitDialog();
         }
@@ -1526,8 +1623,71 @@ class _BoardScreenState extends State<BoardScreen> {
               children: [
                 _buildWebViewWidget(),
 
+                // Error fallback when WebView fails or times out on old boxes
+                if (_webErrorMessage != null)
+                  Container(
+                    color: const Color(0xFF020617).withOpacity(0.95),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(32),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 520),
+                        padding: const EdgeInsets.all(28),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F172A),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.4)),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.wifi_tethering_error_rounded, color: Color(0xFFF59E0B), size: 48),
+                            const SizedBox(height: 16),
+                            Text(
+                              _webErrorMessage!,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold, height: 1.6),
+                            ),
+                            const SizedBox(height: 22),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      _webErrorMessage = null;
+                                      _isWebLoading = true;
+                                    });
+                                    _webViewController?.reload();
+                                  },
+                                  icon: const Icon(Icons.refresh),
+                                  label: const Text('تلاش مجدد', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF59E0B),
+                                    foregroundColor: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                OutlinedButton.icon(
+                                  onPressed: () => _setWebViewMode(false),
+                                  icon: const Icon(Icons.bolt),
+                                  label: const Text('اجرا با حالت بومی سریع'),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    side: const BorderSide(color: Color(0xFF475569)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
                 // Smooth Loading Indicator
-                if (_isWebLoading)
+                if (_isWebLoading && _webErrorMessage == null)
                   Container(
                     color: const Color(0xFF020617),
                     alignment: Alignment.center,
@@ -1583,7 +1743,7 @@ class _BoardScreenState extends State<BoardScreen> {
     // =========================================================================
     // 2. High-Fidelity Native Flutter Board Mode
     // =========================================================================
-    final theme = BoardThemeData.fromKey(_model?.themeMode);
+    final theme = BoardThemeData.fromKey(_model?.effectiveThemeMode);
 
     return KeyboardListener(
       focusNode: _focusNode,
@@ -1705,6 +1865,28 @@ class _BoardScreenState extends State<BoardScreen> {
                                       )
                                     : Column(
                                         children: [
+                                          if (_model!.subscriptionWarningMessage != null) ...[
+                                            Container(
+                                              width: double.infinity,
+                                              margin: const EdgeInsets.only(bottom: 10),
+                                              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFF59E0B).withOpacity(0.16),
+                                                borderRadius: BorderRadius.circular(14),
+                                                border: Border.all(color: const Color(0xFFF59E0B).withOpacity(0.45)),
+                                              ),
+                                              child: Text(
+                                                _model!.subscriptionWarningMessage!,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: theme.isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w800,
+                                                  fontFamily: 'Vazirmatn',
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                           // 1. Header (zero-overhead clock)
                                           BoardHeader(
                                             model: _model!,
@@ -1800,6 +1982,12 @@ class _BoardScreenState extends State<BoardScreen> {
 
     final gold18Price = parsePrice(gold18Row.sellPrice);
 
+    if (_model!.hideShowcase) {
+      return RepaintBoundary(
+        child: _buildPriceGrid(allRows, theme),
+      );
+    }
+
     return Row(
       textDirection: TextDirection.rtl,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1885,6 +2073,7 @@ class _BoardScreenState extends State<BoardScreen> {
                     isHero: index == 0 && row.symbol == 'gold18',
                     isTopRow: true,
                     isEcoMode: _isEcoMode,
+                    onTap: () => _openCardChart(row),
                   ),
                 ),
               );
@@ -1916,6 +2105,7 @@ class _BoardScreenState extends State<BoardScreen> {
                         isHero: false,
                         isTopRow: false,
                         isEcoMode: _isEcoMode,
+                        onTap: () => _openCardChart(row),
                       ),
                     ),
                   );
@@ -2031,38 +2221,53 @@ class _BoardScreenState extends State<BoardScreen> {
 
           const Spacer(),
 
-          // Center: Platform & Developer Credit
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'پلتفرم هوشمند نمایش نرخ و ویترین آنلاین طلا',
+          // Center: Custom Footer Ticker OR Platform Credit
+          if (_model!.footerTickerText.isNotEmpty)
+            Flexible(
+              child: Text(
+                _model!.footerTickerText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: theme.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  color: theme.goldPrimary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Vazirmatn',
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                '✦',
-                style: TextStyle(
-                  color: theme.goldPrimary.withOpacity(0.6),
-                  fontSize: 10,
+            )
+          else
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'پلتفرم هوشمند نمایش نرخ و ویترین آنلاین طلا',
+                  style: TextStyle(
+                    color: theme.textSecondary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'By Bahman Dev',
-                style: TextStyle(
-                  color: theme.textMuted,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'monospace',
+                const SizedBox(width: 8),
+                Text(
+                  '✦',
+                  style: TextStyle(
+                    color: theme.goldPrimary.withOpacity(0.6),
+                    fontSize: 10,
+                  ),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 8),
+                Text(
+                  'By Bahman Dev',
+                  style: TextStyle(
+                    color: theme.textMuted,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ],
+            ),
 
           const Spacer(),
 

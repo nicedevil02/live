@@ -94,6 +94,54 @@ class UpdateService {
     return {'versionCode': 1, 'versionName': '1.0.0'};
   }
 
+  /// دریافت مشخصات سیستم‌عامل اندروید و نسخه WebView دستگاه
+  static Future<Map<String, dynamic>> getDeviceInfo() async {
+    if (kIsWeb || !Platform.isAndroid) {
+      return {
+        'androidRelease': '',
+        'sdkInt': 0,
+        'deviceModel': '',
+        'webviewVersion': '',
+        'webviewMajor': 0,
+      };
+    }
+    try {
+      final res = await _channel.invokeMethod<Map<dynamic, dynamic>>('getDeviceInfo');
+      if (res != null) {
+        return {
+          'androidRelease': (res['androidRelease'] as String?) ?? '',
+          'sdkInt': (res['sdkInt'] as num?)?.toInt() ?? 0,
+          'deviceModel': (res['deviceModel'] as String?) ?? '',
+          'webviewVersion': (res['webviewVersion'] as String?) ?? '',
+          'webviewMajor': (res['webviewMajor'] as num?)?.toInt() ?? 0,
+        };
+      }
+    } catch (e) {
+      debugPrint('[UpdateService] getDeviceInfo error: $e');
+    }
+    return {
+      'androidRelease': '',
+      'sdkInt': 0,
+      'deviceModel': '',
+      'webviewVersion': '',
+      'webviewMajor': 0,
+    };
+  }
+
+  /// پاکسازی فایل نصبی قدیمی از کش پس از به‌روزرسانی موفق
+  static Future<void> clearCachedApk() async {
+    if (kIsWeb || !Platform.isAndroid) return;
+    try {
+      final cacheDirPath = await _channel.invokeMethod<String>('getCacheDir') ?? '';
+      if (cacheDirPath.isNotEmpty) {
+        final f = File('$cacheDirPath/talalive-tv-update.apk');
+        if (f.existsSync()) {
+          f.deleteSync();
+        }
+      }
+    } catch (_) {}
+  }
+
   /// استعلام نسخه از سرور و مقایسه با نسخه فعلی (پشتیبانی دوگانه از API و فایل مانیفست)
   static Future<UpdateInfo> checkUpdate() async {
     final localInfo = await getAppVersion();
@@ -307,9 +355,9 @@ class UpdateService {
       await sink.close();
       sink = null;
 
-      // 3. بررسی فایل نهایی
-      if (!targetFile.existsSync() || targetFile.lengthSync() == 0) {
-        onError('فایل بروزرسانی به صورت کامل دریافت نشد.');
+      // 3. بررسی فایل نهایی و جلوگیری از نصب فایل‌های ناقص یا خطای سرور
+      if (!targetFile.existsSync() || targetFile.lengthSync() < 2000000) {
+        onError('فایل بروزرسانی به صورت کامل دریافت نشد. لطفاً دوباره امتحان کنید.');
         return;
       }
 

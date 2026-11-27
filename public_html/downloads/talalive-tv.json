@@ -1,10 +1,10 @@
 {
-  "version_code": 10,
-  "version_name": "1.0.8",
-  "sha256": "EFE400DB8F17531058D25B12D67D241C45EC8669E68A0EBEDBB6DD1F82962A2C",
-  "size_bytes": 48683203,
-  "size_formatted": "46.4 MB",
-  "released_at": "2026-09-21T13:13:00+03:30",
+  "version_code": 11,
+  "version_name": "1.1.0",
+  "sha256": "F5978A5125337D95CD57B05B614D4025AA2C262F86CD9253DBBC0AE8F18791C7",
+  "size_bytes": 49189058,
+  "size_formatted": "46.9 MB",
+  "released_at": "2026-11-27T21:13:00+03:30",
   "min_version_code": 2,
   "download_url": "https://talalive.ir/downloads/talalive-tv.apk"
 }

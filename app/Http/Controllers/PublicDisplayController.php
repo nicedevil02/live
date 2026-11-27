@@ -1081,9 +1081,9 @@ class PublicDisplayController extends Controller
             }
         }
 
-        $versionCode = $manifest['version_code'] ?? ($tvConfig['latest_version_code'] ?? 10);
-        $versionName = $manifest['version_name'] ?? ($tvConfig['latest_version'] ?? '1.0.8');
-        $fileSize = $manifest['size_formatted'] ?? ($tvConfig['file_size'] ?? '46.4 MB');
+        $versionCode = $manifest['version_code'] ?? ($tvConfig['latest_version_code'] ?? 11);
+        $versionName = $manifest['version_name'] ?? ($tvConfig['latest_version'] ?? '1.1.0');
+        $fileSize = $manifest['size_formatted'] ?? ($tvConfig['file_size'] ?? '46.9 MB');
         $downloadUrl = $manifest['download_url'] ?? ($tvConfig['apk_url'] ?? ($baseUrl . '/downloads/talalive-tv.apk'));
         $minVersionCode = $manifest['min_version_code'] ?? ($tvConfig['min_version_code'] ?? 2);
         $releasedAt = $manifest['released_at'] ?? now()->toDateString();
@@ -1096,8 +1096,8 @@ class PublicDisplayController extends Controller
             'download_url'       => (string) $downloadUrl,
             'file_size'          => (string) $fileSize,
             'mandatory'          => false,
-            'title'              => 'نسخه جدید طلالایو TV موجود است',
-            'changelog'          => "• بهینه‌سازی پردازش گرافیکی GPU و کاهش چشمگیر مصرف رم و باتری\n• ترنزیشن روان و سینمایی اسلایدها و استوری‌بار هوشمند\n• ارتقا و درخشان‌سازی حباب‌های امبینت پس‌زمینه و شفافیت کریستالی کاشی‌ها\n• رفع باگ‌های گزارش‌شده و ارتقای ثبات و هماهنگی با انواع تلویزیون هوشمند",
+            'title'              => 'نسخه جدید طلالایو TV آماده نصب است',
+            'changelog'          => "• همگام‌سازی کامل با امکانات جدید سایت (حالت پیش‌فرض نسخه زنده وب با فال‌بک خودکار بومی)\n• افزودن نمودار تعاملی تغییرات قیمت (۱ روزه دقیقه‌ای، ۷ روزه ساعتی، ۳۰ روزه و ۱ ساله) با لمس یا کلیک کارت‌ها\n• پشتیبانی از ویجت آب‌وهوا، تغییر خودکار تم روز و شب، مخفی‌سازی ویترین و پیام نوار پایین\n• سازگاری کامل نصب روی تلویزیون‌ها و اندروید باکس‌ها (اندروید ۷ تا ۱۶، targetSdk 34 و امضای دوگانه v1+v2)",
             'released_at'        => (string) $releasedAt,
         ])->withHeaders([
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',

@@ -146,7 +146,7 @@ class BoardHeader extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '✦  نرخ‌گذاری لحظه‌ای طلا و ارز — ${model.cityFullDisplay ?? model.cityName ?? 'تهران'}  ✦',
+                      '✦  نرخ‌گذاری لحظه‌ای طلا و ارز · ${model.cityFullDisplay ?? model.cityName ?? 'تهران'}  ✦',
                       style: TextStyle(
                         color: theme.isDark ? theme.goldPrimary : const Color(0xFF1D4ED8),
                         fontSize: 12,
@@ -156,36 +156,72 @@ class BoardHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: theme.goldPrimary.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: theme.goldPrimary.withOpacity(0.25)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 5,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: theme.goldPrimary,
-                            shape: BoxShape.circle,
-                          ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: theme.goldPrimary.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: theme.goldPrimary.withOpacity(0.25)),
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'صفحه اصلی طلالایو',
-                          style: TextStyle(
-                            color: theme.isDark ? theme.goldPrimary : const Color(0xFF78350F),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: 'Vazirmatn',
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 5,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                color: theme.goldPrimary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'صفحه اصلی طلالایو',
+                              style: TextStyle(
+                                color: theme.isDark ? theme.goldPrimary : const Color(0xFF78350F),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'Vazirmatn',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (model.showWeather && model.weather != null) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.06),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: (theme.isDark ? Colors.white : Colors.black).withOpacity(0.14),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.wb_sunny_outlined, size: 13, color: Color(0xFFF59E0B)),
+                              const SizedBox(width: 5),
+                              Text(
+                                PersianUtils.toPersianDigits(
+                                  '${model.weather!.tempText}${model.weather!.description.isNotEmpty ? ' · ${model.weather!.description}' : ''}',
+                                ),
+                                style: TextStyle(
+                                  color: theme.textSecondary,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Vazirmatn',
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
+                    ],
                   ),
                 ],
               ),

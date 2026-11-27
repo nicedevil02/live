@@ -1,10 +1,12 @@
 package ir.talalive.tv_app_flutter
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.view.KeyEvent
+import android.webkit.WebView
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -25,6 +27,53 @@ class MainActivity : FlutterActivity() {
                 "setDialogState" -> {
                     isDialogOpen = call.argument<Boolean>("isOpen") ?: false
                     result.success(true)
+                }
+
+                "getDeviceInfo" -> {
+                    val info = HashMap<String, Any>()
+                    info["androidRelease"] = Build.VERSION.RELEASE ?: "unknown"
+                    info["sdkInt"] = Build.VERSION.SDK_INT
+                    info["deviceModel"] = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
+
+                    var webViewVersion = ""
+                    var webViewMajor = 0
+                    try {
+                        val pkg = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            WebView.getCurrentWebViewPackage()
+                        } else {
+                            null
+                        }
+                        if (pkg != null && !pkg.versionName.isNullOrEmpty()) {
+                            webViewVersion = pkg.versionName!!
+                        } else {
+                            val candidates = listOf(
+                                "com.google.android.webview",
+                                "com.android.webview",
+                                "com.android.chrome"
+                            )
+                            for (pkgName in candidates) {
+                                try {
+                                    @Suppress("DEPRECATION")
+                                    val p = packageManager.getPackageInfo(pkgName, 0)
+                                    if (!p.versionName.isNullOrEmpty()) {
+                                        webViewVersion = p.versionName!!
+                                        break
+                                    }
+                                } catch (_: PackageManager.NameNotFoundException) {
+                                } catch (_: Exception) {
+                                }
+                            }
+                        }
+                        if (webViewVersion.isNotEmpty()) {
+                            val majorStr = webViewVersion.split('.').firstOrNull() ?: ""
+                            webViewMajor = majorStr.toIntOrNull() ?: 0
+                        }
+                    } catch (_: Exception) {
+                    }
+
+                    info["webviewVersion"] = webViewVersion
+                    info["webviewMajor"] = webViewMajor
+                    result.success(info)
                 }
 
                 "getAppVersion" -> {

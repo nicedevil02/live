@@ -28,6 +28,11 @@ class ApiService {
     return prefs.getString(_prefKeyUsername);
   }
 
+  static Future<String?> getSavedDeviceToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_prefKeyDeviceToken);
+  }
+
   static Future<void> savePairing(String username, String? token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefKeyUsername, username);
@@ -155,6 +160,89 @@ class ApiService {
       }
     }
 
+    return null;
+  }
+
+  // =========================================================================
+  // Chart Series API (1d, 7d, 30d, 1y)
+  // =========================================================================
+  static Future<Map<String, dynamic>?> fetchChartSeries(
+    String username,
+    String symbol,
+    String range,
+  ) async {
+    for (final base in baseUrls) {
+      try {
+        final url = Uri.parse(
+          '$base/api/display/chart/${Uri.encodeComponent(username)}/${Uri.encodeComponent(symbol)}?range=${Uri.encodeComponent(range)}',
+        );
+        final response = await http.get(
+          url,
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache',
+            if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.1',
+          },
+        ).timeout(const Duration(seconds: 10));
+
+        if (response.statusCode == 200) {
+          final decoded = json.decode(response.body);
+          if (decoded is Map<String, dynamic>) {
+            return decoded;
+          }
+        }
+      } catch (e) {
+        debugPrint('[TalaLiveTV] fetchChartSeries error on $base: $e');
+      }
+    }
+    return null;
+  }
+
+  // =========================================================================
+  // Device Heartbeat & Remote Revocation Check
+  // =========================================================================
+  static Future<Map<String, dynamic>?> sendHeartbeat({
+    required String appVersion,
+    required int appVersionCode,
+    required String androidRelease,
+    required String webviewVersion,
+    required String renderMode,
+  }) async {
+    final token = await getSavedDeviceToken();
+    if (token == null || token.trim().isEmpty) {
+      return null;
+    }
+
+    for (final base in baseUrls) {
+      try {
+        final url = Uri.parse('$base/api/tv/heartbeat');
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json',
+            if (!kIsWeb) 'User-Agent': 'TalaLiveTV-Flutter/2.1',
+          },
+          body: json.encode({
+            'device_token': token,
+            'app_version': appVersion,
+            'app_version_code': appVersionCode,
+            'android_release': androidRelease,
+            'webview_version': webviewVersion,
+            'render_mode': renderMode,
+          }),
+        ).timeout(const Duration(seconds: 8));
+
+        if (response.statusCode >= 200 && response.statusCode < 500) {
+          final decoded = json.decode(response.body);
+          if (decoded is Map<String, dynamic>) {
+            return decoded;
+          }
+        }
+      } catch (e) {
+        debugPrint('[TalaLiveTV] heartbeat error on $base: $e');
+      }
+    }
     return null;
   }
 }

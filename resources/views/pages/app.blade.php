@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'دانلود اپلیکیشن طلالایو | نرم‌افزار تابلوی طلافروشی و تلویزیون هوشمند Android TV')
-@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۱.۰.۸ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه بدون مینی‌کیس با راه‌اندازی در ۶۰ ثانیه.')
+@section('meta_description', 'دانلود مستقیم اپلیکیشن طلالایو نسخه ۱.۱.۰ ویژه تلویزیون هوشمند و اندروید باکس. مدیریت آنلاین تابلوی نرخ لحظه‌ای طلا، سکه و ارز مغازه با نمودار و تم خودکار بدون مینی‌کیس.')
 @section('canonical', 'https://talalive.ir/app')
 
 {{-- استانداردهای سئوی تصویر پیش‌نمایش در شبکه‌های اجتماعی و پیام‌رسان‌ها (Open Graph / Twitter) --}}
@@ -93,7 +93,7 @@
                     {{-- بج نسخه جدید شیشه‌ای --}}
                     <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tl-glass-badge text-stone-800 dark:text-stone-200 text-xs font-bold">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>نسخه ۱.۰.۸ • مجهز به سیستم بروزرسانی آنلاین (OTA) و کنترل ریموت</span>
+                        <span>نسخه ۱.۱.۰ • نمودار قیمت‌ها، تم خودکار روز و شب و سازگاری گسترده‌تر</span>
                     </div>
 
                     {{-- تیتر اصلی H1 --}}
@@ -127,15 +127,15 @@
                         {{-- دکمه‌های دانلود --}}
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- دانلود مستقیم APK برای تلویزیون -->
-                            <a href="/downloads/talalive-tv.apk?v=1.0.8" 
+                            <a href="/downloads/talalive-tv.apk?v=1.1.0" 
                                 class="min-h-11 flex items-center gap-3.5 px-5 py-4 tl-btn-bullion rounded-2xl font-bold text-right group">
                                 <span class="text-stone-950 shrink-0">
                                     @include('partials.ui-icon', ['name' => 'tv', 'class' => 'w-7 h-7'])
                                 </span>
                                 <div class="min-w-0 flex-1">
                                     <span class="block text-[11px] font-semibold text-stone-900">دانلود مستقیم اپلیکیشن تلویزیون</span>
-                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۰.۸)</span>
-                                    <span class="block text-[10px] text-stone-800 font-semibold">حجم ۴۶ مگابایت • اندروید تی‌وی و باکس</span>
+                                    <span class="block text-base font-black truncate">طلالایو TV (نسخه ۱.۱.۰)</span>
+                                    <span class="block text-[10px] text-stone-800 font-semibold">حجم ۴۶.۹ مگابایت • اندروید ۷ به بالا و باکس</span>
                                 </div>
                             </a>
 
@@ -223,7 +223,7 @@
                                 {{-- برچسب زنده بودن و اتصال در گوشه تصویر --}}
                                 <div class="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-950/85 backdrop-blur-md border border-white/15 text-[10px] font-bold text-stone-100">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                    <span>پیش‌نمایش زنده اپلیکیشن (v1.0.8)</span>
+                                    <span>پیش‌نمایش زنده اپلیکیشن (v1.1.0)</span>
                                 </div>
                             </figure>
                         </div>
@@ -237,7 +237,7 @@
                             </span>
                             <span>کنترل کامل بزرگ‌نمایی و تنظیمات با ریموت تلویزیون</span>
                         </div>
-                        <span class="px-2.5 py-1 rounded-lg tl-neu-inset text-stone-600 dark:text-stone-300 font-bold tabular-nums">v1.0.8</span>
+                        <span class="px-2.5 py-1 rounded-lg tl-neu-inset text-stone-600 dark:text-stone-300 font-bold tabular-nums">v1.1.0</span>
                     </div>
                 </div>
 
@@ -450,7 +450,7 @@
                         </h3>
                     </div>
                     <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
-                        سامانه طلالایو از فناوری نسل جدید جاوااسکریپت برای به‌روزرسانی ثانیه‌ای نرخ‌ها استفاده می‌کند که نیازمند <strong>Android System WebView</strong> نسخه ۸۰ به بالاست:
+                        نسخه جدید طلالایو (۱.۱.۰) روی اندروید ۷ به بالا با امضای دوگانه v1/v2 نصب می‌شود و در صورت قدیمی بودن WebView به‌طور خودکار با موتور نیتیو پیشرفته (نمودار و هواشناسی) اجرا می‌گردد؛ برای فعال شدن کامل حالت وب‌اپ، <strong>Android System WebView</strong> نسخه ۸۵ به بالا پیشنهاد می‌شود:
                     </p>
                     <div class="p-4 rounded-2xl tl-neu-inset text-xs text-stone-700 dark:text-stone-300 space-y-1.5">
                         <p>۱. فروشگاه <strong>Google Play Store</strong> یا <strong>بازار</strong> را در تلویزیون باز کنید.</p>
@@ -577,8 +577,8 @@
       "operatingSystem": "Android TV, Google TV, Android Box, Web Browser",
       "applicationCategory": "BusinessApplication",
       "description": "نرم‌افزار هوشمند مدیریت تابلوی طلافروشی، نمایش لحظه‌ای نرخ طلا و سکه روی تلویزیون مغازه بدون نیاز به کامپیوتر یا مینی‌کیس.",
-      "softwareVersion": "1.0.8",
-      "fileSize": "48683203",
+      "softwareVersion": "1.1.0",
+      "fileSize": "49189058",
       "downloadUrl": "https://talalive.ir/downloads/talalive-tv.apk",
       "image": {
         "@@type": "ImageObject",
