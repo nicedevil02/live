@@ -139,6 +139,36 @@ class DashboardController extends Controller
             'empty_showcase_theme' => $setting?->empty_showcase_theme ?: 'gold',
         ];
 
+        $recentSetupCalls = [];
+        if ($user->is_super_admin) {
+            try {
+                if (Schema::hasTable('audit_logs')) {
+                    $callRows = \App\Models\AuditLog::where('action', 'request_setup_call')
+                        ->where('created_at', '>=', now()->subDays(7))
+                        ->latest('created_at')
+                        ->limit(6)
+                        ->get();
+
+                    foreach ($callRows as $row) {
+                        $pl = json_decode((string) $row->payload, true);
+                        $pl = is_array($pl) ? $pl : [];
+                        $recentSetupCalls[] = [
+                            'id'        => $row->id,
+                            'shop_name' => $pl['shop_name'] ?? $pl['name'] ?? $row->actor ?? 'گالری طلا',
+                            'phone'     => $pl['phone'] ?? '',
+                            'city'      => $pl['city'] ?? 'ثبت‌نشده',
+                            'username'  => $pl['username'] ?? '',
+                            'time'      => $row->created_at
+                                ? \App\Models\User::toJalali($row->created_at->copy()->setTimezone('Asia/Tehran'), true)
+                                : '',
+                        ];
+                    }
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Super admin setup calls fetch failed: ' . $e->getMessage());
+            }
+        }
+
         return view('admin.dashboard', compact(
             'username',
             'onboardingChecklist',
@@ -147,7 +177,8 @@ class DashboardController extends Controller
             'tvTelemetry',
             'productsCount',
             'shopMeta',
-            'showcaseConfig'
+            'showcaseConfig',
+            'recentSetupCalls'
         ));
     }
 
@@ -158,15 +189,26 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        if (!\Illuminate\Support\Facades\Cache::add("setup_call_cooldown_{$user->id}", 1, 180)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'درخواست تماس شما قبلاً ثبت شده و کارشناس فنی طلالایو به زودی با شما تماس می‌گیرد.',
+            ]);
+        }
+
+        $shopName = $user->displaySetting?->shop_name ?: ($user->name ?? 'طلافروشی');
+
         \App\Models\AuditLog::create([
             'id'          => 'call-' . now()->timestamp . rand(100, 999),
-            'actor'       => $user->name ?? $user->phone ?? 'کاربر',
+            'actor'       => $shopName,
             'action'      => 'request_setup_call',
             'entity_type' => 'user',
             'entity_id'   => (string) $user->id,
             'payload'     => json_encode([
+                'shop_name'    => $shopName,
                 'phone'        => $user->phone,
                 'name'         => $user->name,
+                'username'     => $user->username,
                 'city'         => $user->city_name,
                 'ip'           => $request->ip(),
                 'requested_at' => now()->toDateTimeString(),
@@ -174,7 +216,8 @@ class DashboardController extends Controller
             'created_at'  => now(),
         ]);
 
-        $smsService->notifyAdminSetupCallRequest($user->name ?? 'طلافروشی', $user->phone ?? '');
+        $smsService->notifyAdminSetupCallRequest($shopName, $user->phone ?? '');
+        app(\App\Services\AdminBotNotificationService::class)->dispatchSetupCallNotification($user, $request->ip());
 
         return response()->json([
             'success' => true,

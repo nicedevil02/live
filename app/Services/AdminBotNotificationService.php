@@ -86,39 +86,95 @@ class AdminBotNotificationService
     }
 
     /**
-     * زمان‌بندی ارسال غیرمسدودکننده اعلان پس از پاسخ HTTP ثبت‌نام
+     * بررسی فعال بودن حداقل یکی از پلتفرم‌های ربات (بله یا تلگرام)
+     */
+    protected function hasActivePlatform(?array $config = null): bool
+    {
+        $config = $config ?? $this->getEffectiveConfig();
+        foreach ($config['platforms'] as $platform) {
+            if ($platform['enabled'] && $platform['configured']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * ارسال غیرمسدودکننده پیام به پلتفرم‌های فعال پس از پاسخ HTTP
+     */
+    protected function dispatchAsyncMessage(string $message, string $context = 'notification'): void
+    {
+        app()->terminating(function () use ($message, $context) {
+            try {
+                $this->sendToActivePlatforms($message);
+            } catch (\Throwable $e) {
+                Log::warning("AdminBotNotification ({$context}) terminating dispatch failed: " . $e->getMessage());
+            }
+        });
+    }
+
+    /**
+     * زمان‌بندی ارسال غیرمسدودکننده اعلان ثبت‌نام پس از پاسخ HTTP
      */
     public function dispatchNewRegistrationNotification(User $user): void
     {
         try {
             $config = $this->getEffectiveConfig();
-            if (!$config['notify_on_register']) {
-                return;
-            }
-
-            $hasActivePlatform = false;
-            foreach ($config['platforms'] as $platform) {
-                if ($platform['enabled'] && $platform['configured']) {
-                    $hasActivePlatform = true;
-                    break;
-                }
-            }
-
-            if (!$hasActivePlatform) {
+            if (!$config['notify_on_register'] || !$this->hasActivePlatform($config)) {
                 return;
             }
 
             $message = $this->buildNewRegistrationMessage($user);
-
-            app()->terminating(function () use ($message) {
-                try {
-                    $this->sendToActivePlatforms($message);
-                } catch (\Throwable $e) {
-                    Log::warning('AdminBotNotification terminating dispatch failed: ' . $e->getMessage());
-                }
-            });
+            $this->dispatchAsyncMessage($message, 'registration');
         } catch (\Throwable $e) {
-            Log::warning('AdminBotNotification dispatch setup failed: ' . $e->getMessage());
+            Log::warning('AdminBotNotification registration dispatch setup failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * ساخت متن پیام درخواست تماس و راه‌اندازی رایگان تلویزیون توسط کارشناس
+     */
+    public function buildSetupCallRequestMessage(User $user, ?string $ip = null): string
+    {
+        $requestedAt = now()->setTimezone('Asia/Tehran');
+        $jalaliDate = User::toJalali($requestedAt, true);
+        $shopName = trim((string) ($user->displaySetting?->shop_name ?: $user->name ?: 'طلافروشی'));
+        $cityName = trim((string) ($user->city_name ?: 'ثبت‌نشده'));
+        $boardUrl = rtrim((string) config('app.url', 'https://talalive.ir'), '/') . '/' . ltrim((string) $user->username, '/');
+
+        $lines = [
+            '📞 درخواست تماس و راه‌اندازی رایگان تلویزیون',
+            '',
+            "🏪 نام گالری: {$shopName}",
+            "📱 شماره تماس: {$user->phone}",
+            "📍 شهر: {$cityName}",
+            "👤 نام کاربری: @{$user->username}",
+            "🔗 لینک تابلو: {$boardUrl}",
+            "🕒 زمان ثبت: {$jalaliDate}",
+        ];
+
+        if ($ip) {
+            $lines[] = "🌐 IP: {$ip}";
+        }
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * زمان‌بندی ارسال غیرمسدودکننده اعلان درخواست تماس و راه‌اندازی کارشناس
+     */
+    public function dispatchSetupCallNotification(User $user, ?string $ip = null): void
+    {
+        try {
+            if (!$this->hasActivePlatform()) {
+                return;
+            }
+
+            $message = $this->buildSetupCallRequestMessage($user, $ip);
+            $this->dispatchAsyncMessage($message, 'setup_call');
+        } catch (\Throwable $e) {
+            Log::warning('AdminBotNotification setup call dispatch failed: ' . $e->getMessage());
         }
     }
 

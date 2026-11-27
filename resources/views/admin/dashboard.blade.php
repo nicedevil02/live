@@ -200,6 +200,41 @@
     @endif
 
     @if($showFullWorkspace)
+    @if(auth()->user()->is_super_admin && !empty($recentSetupCalls))
+        <div class="rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-amber-500/35 bg-amber-50/70 dark:bg-amber-950/20 shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
+                        <i data-lucide="phone-incoming" class="w-4 h-4"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">درخواست‌های تماس و راه‌اندازی کارشناس (۷ روز اخیر)</h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">طلافروشانی که روی دکمه راه‌اندازی تلفنی کلیک کرده‌اند</p>
+                    </div>
+                </div>
+                <a href="{{ route('admin.logs') }}" class="text-xs font-black text-amber-700 dark:text-amber-400 hover:underline">
+                    مشاهده کامل در گزارشات سیستم ←
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                @foreach($recentSetupCalls as $call)
+                    <div class="rounded-xl bg-white dark:bg-slate-900 border border-amber-500/25 p-3 flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-xs font-black text-slate-900 dark:text-white truncate">{{ $call['shop_name'] }}</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">{{ $call['city'] }} · {{ $call['time'] }}</p>
+                        </div>
+                        @if(!empty($call['phone']))
+                            <a href="tel:{{ $call['phone'] }}" dir="ltr"
+                               class="px-2.5 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-mono text-xs font-black shrink-0 hover:bg-emerald-500/25">
+                                {{ $call['phone'] }}
+                            </a>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     {{-- ۲. افشای تدریجی (Progressive Disclosure - پیشنهاد ۳): گام‌های پس از اتصال موفق تلویزیون --}}
     @if(!auth()->user()->is_super_admin && $tvConnected)
         @if(!$productAdded)

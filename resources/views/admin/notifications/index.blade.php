@@ -9,10 +9,10 @@
         <div>
             <h1 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
                 <i data-lucide="send" class="w-5 h-5 text-amber-500 shrink-0"></i>
-                <span>اطلاع‌رسانی ثبت‌نام از طریق ربات بله و تلگرام</span>
+                <span>اطلاع‌رسانی ربات بله و تلگرام</span>
             </h1>
             <p class="text-xs sm:text-sm text-slate-500 dark:text-stone-400 mt-1.5 leading-relaxed">
-                روال ثبت‌نام کاربران تغییری نمی‌کند؛ بلافاصله پس از ثبت‌نام موفق هر کاربر جدید، مشخصات گالری به‌صورت غیرمسدودکننده به پیام‌رسان‌های زیر ارسال می‌شود.
+                بلافاصله پس از ثبت‌نام کاربر جدید یا ثبت درخواست تماس و راه‌اندازی کارشناس، مشخصات گالری و شماره تماس به‌صورت غیرمسدودکننده به پیام‌رسان‌های زیر ارسال می‌شود.
             </p>
         </div>
         <a href="{{ route('admin.dashboard') }}" class="min-h-[44px] px-4 py-2 text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-slate-700 dark:text-stone-300 rounded-xl transition-colors inline-flex items-center justify-center shrink-0">
